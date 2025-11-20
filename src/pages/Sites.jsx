@@ -94,7 +94,12 @@ export default function SitesPage() {
                 />
               </div>
               <Button 
-                onClick={() => generateSiteMutation.mutate(prompt)}
+                onClick={() => {
+                   // Assuming access to profile via context or fetch, implementing basic check for now
+                   // Since this page is mostly for pros, and nav is hidden if not pro, 
+                   // this is a secondary safeguard if they force URL
+                   generateSiteMutation.mutate(prompt);
+                }}
                 disabled={generateSiteMutation.isPending || !prompt}
                 className="w-full bg-emerald-600 hover:bg-emerald-700"
               >

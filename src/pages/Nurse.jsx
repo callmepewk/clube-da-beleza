@@ -97,6 +97,16 @@ export default function NursePage() {
 
   const handleSend = () => {
     if (!message.trim()) return;
+    
+    if (!profile) {
+      setChatHistory(prev => [...prev, 
+        { role: 'user', content: message },
+        { role: 'assistant', content: '⚠️ **Acesso Restrito**: Para continuar nossa conversa e receber orientações de saúde personalizadas, por favor **finalize seu cadastro** clicando no banner acima.' }
+      ]);
+      setMessage('');
+      return;
+    }
+
     const newMsg = message;
     setChatHistory(prev => [...prev, { role: 'user', content: newMsg }]);
     setMessage('');

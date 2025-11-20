@@ -47,12 +47,7 @@ export default function Layout({ children }) {
     enabled: !!user
   });
 
-  // Redirect to onboarding if no profile (and not already there)
-  useEffect(() => {
-    if (user && !isLoading && !profile && location.pathname !== '/onboarding') {
-      navigate(createPageUrl('Onboarding'));
-    }
-  }, [user, profile, isLoading, location.pathname, navigate]);
+  // Redirect logic removed to allow optional browsing
 
   const handleLogout = async () => {
     await base44.auth.logout();
@@ -184,6 +179,22 @@ export default function Layout({ children }) {
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Registration Banner for Guest Users */}
+        {user && !isLoading && !profile && location.pathname !== '/onboarding' && (
+          <div className="bg-indigo-600 text-white px-4 py-2 text-sm flex items-center justify-between shadow-md relative z-10">
+            <div className="flex items-center gap-2">
+              <span className="bg-white/20 p-1 rounded"><UserCircle className="w-4 h-4" /></span>
+              <span className="font-medium">Complete seu perfil para desbloquear todas as funcionalidades.</span>
+            </div>
+            <Link 
+              to={createPageUrl('Onboarding')}
+              className="bg-white text-indigo-600 px-3 py-1 rounded text-xs font-bold hover:bg-indigo-50 transition-colors"
+            >
+              Cadastrar Agora
+            </Link>
+          </div>
+        )}
+
         <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 lg:px-8">
           <button 
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}

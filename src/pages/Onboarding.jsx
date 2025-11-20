@@ -327,10 +327,31 @@ export default function OnboardingPage() {
                           <DialogDescription>Última atualização: {new Date().toLocaleDateString()}</DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4 text-sm text-slate-600">
-                          <p><strong>1. Aceitação</strong><br/>Ao utilizar a plataforma HealthAI, você concorda com o tratamento de seus dados...</p>
-                          <p><strong>2. Privacidade de Dados</strong><br/>Seus dados de saúde são criptografados e utilizados apenas para fins de agendamento e histórico médico...</p>
-                          <p><strong>3. Responsabilidades</strong><br/>A plataforma conecta pacientes a profissionais. Não somos responsáveis pelos atos médicos...</p>
-                          <p><strong>4. Geolocalização</strong><br/>A utilização da localização serve apenas para facilitar o preenchimento de endereço...</p>
+                          <div className="space-y-4 text-justify">
+                            <p><strong>1. ACEITAÇÃO DOS TERMOS</strong><br/>
+                            Ao acessar e utilizar a plataforma HealthAI ("Plataforma"), você concorda, sem restrições, com estes Termos e Condições de Uso ("Termos"). Se você não concorda com qualquer parte destes Termos, não deve utilizar nossos serviços. Estes Termos aplicam-se a todos os visitantes, usuários e outras pessoas que acessam ou usam o Serviço.</p>
+                            
+                            <p><strong>2. PRIVACIDADE E PROTEÇÃO DE DADOS (LGPD)</strong><br/>
+                            Sua privacidade é fundamental para nós. Coletamos, armazenamos e processamos seus dados pessoais e de saúde (dados sensíveis) em estrita conformidade com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).<br/>
+                            a) <strong>Dados Coletados:</strong> Nome, CPF, dados de contato, localização, histórico médico, alergias e informações profissionais (quando aplicável).<br/>
+                            b) <strong>Finalidade:</strong> Os dados são utilizados exclusivamente para agendamento de consultas, fornecimento de recomendações de saúde pela IA, histórico médico digital e conexão entre paciente e profissional.<br/>
+                            c) <strong>Segurança:</strong> Utilizamos criptografia de ponta a ponta. Seus dados de saúde não são compartilhados com terceiros para fins publicitários.</p>
+                            
+                            <p><strong>3. USO DA INTELIGÊNCIA ARTIFICIAL</strong><br/>
+                            A HealthAI utiliza sistemas de Inteligência Artificial para fornecer recomendações, lembretes e triagem inicial.<br/>
+                            a) <strong>Não Substituição:</strong> A IA NÃO SUBSTITUI o aconselhamento, diagnóstico ou tratamento médico profissional. Sempre procure o conselho de seu médico ou outro profissional de saúde qualificado.<br/>
+                            b) <strong>Limitações:</strong> Embora nos esforcemos pela precisão, a IA pode gerar informações imprecisas. O usuário deve verificar informações críticas.</p>
+                            
+                            <p><strong>4. RESPONSABILIDADES DOS USUÁRIOS</strong><br/>
+                            a) <strong>Pacientes:</strong> São responsáveis pela veracidade das informações de saúde fornecidas e pelo comparecimento aos agendamentos.<br/>
+                            b) <strong>Profissionais:</strong> São inteiramente responsáveis pelos atos médicos, diagnósticos e tratamentos realizados, bem como pela validação de seu registro profissional (CRM/COREN).</p>
+                            
+                            <p><strong>5. GEOLOCALIZAÇÃO</strong><br/>
+                            A funcionalidade de geolocalização é utilizada para sugerir endereços e encontrar profissionais próximos. Ao autorizar, você concorda com a coleta momentânea de sua posição geográfica.</p>
+                            
+                            <p><strong>6. ALTERAÇÕES NOS TERMOS</strong><br/>
+                            Reservamo-nos o direito de modificar ou substituir estes Termos a qualquer momento. Alterações materiais serão notificadas com 30 dias de antecedência.</p>
+                          </div>
                         </div>
                       </DialogContent>
                     </Dialog>
