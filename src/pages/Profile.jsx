@@ -127,52 +127,57 @@ export default function ProfilePage() {
     onError: () => alert("Erro ao salvar perfil.")
   });
 
-  if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
+  if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin text-purple-500" /></div>;
+
+  // Dark Theme Classes
+  const cardClass = "bg-[#181818] border border-[#282828] text-white hover:bg-[#282828] transition-all hover:scale-[1.02] duration-300 shadow-lg";
+  const inputClass = "bg-[#282828] border-none text-white focus:ring-2 focus:ring-purple-500 h-12 rounded-md placeholder:text-[#555]";
+  const labelClass = "text-[#B3B3B3] text-sm font-bold mb-1 block";
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-10">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900">Meu Perfil</h1>
-        <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))}>
+        <h1 className="text-2xl font-bold text-white">Meu Perfil</h1>
+        <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))} className="border-[#282828] bg-[#181818] text-white hover:bg-[#282828] hover:text-white">
            <CreditCard className="w-4 h-4 mr-2" /> Ver Meu Plano
         </Button>
       </div>
 
-      <Tabs defaultValue="personal">
-        <TabsList className="w-full">
-          <TabsTrigger value="personal">Dados Pessoais</TabsTrigger>
-          {profile?.type === 'patient' && <TabsTrigger value="medical">Ficha Médica</TabsTrigger>}
-          {profile?.type === 'professional' && <TabsTrigger value="professional">Profissional</TabsTrigger>}
+      <Tabs defaultValue="personal" className="w-full">
+        <TabsList className="w-full bg-[#181818] border border-[#282828] p-1">
+          <TabsTrigger value="personal" className="data-[state=active]:bg-[#282828] data-[state=active]:text-white text-[#B3B3B3]">Dados Pessoais</TabsTrigger>
+          {profile?.type === 'patient' && <TabsTrigger value="medical" className="data-[state=active]:bg-[#282828] data-[state=active]:text-white text-[#B3B3B3]">Ficha Médica</TabsTrigger>}
+          {profile?.type === 'professional' && <TabsTrigger value="professional" className="data-[state=active]:bg-[#282828] data-[state=active]:text-white text-[#B3B3B3]">Profissional</TabsTrigger>}
         </TabsList>
 
         {/* Profile Header Card */}
-        <Card className="mb-6 mt-6 border-emerald-200 bg-emerald-50">
+        <Card className="mb-6 mt-6 border-[#282828] bg-gradient-to-r from-[#181818] to-[#121212] shadow-xl">
           <CardContent className="flex flex-col md:flex-row items-center gap-6 p-6">
             <div className="relative group">
-               <div className="w-24 h-24 rounded-full bg-white border-4 border-white shadow-sm overflow-hidden flex items-center justify-center">
+               <div className="w-24 h-24 rounded-full bg-[#282828] border-4 border-[#3E3E3E] shadow-sm overflow-hidden flex items-center justify-center">
                   {personalData.profile_picture ? (
                      <img src={personalData.profile_picture} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
-                     <UserIcon className="w-10 h-10 text-emerald-200" />
+                     <UserIcon className="w-10 h-10 text-[#555]" />
                   )}
                </div>
-               <label className="absolute bottom-0 right-0 bg-emerald-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-emerald-700 shadow-sm">
+               <label className="absolute bottom-0 right-0 bg-purple-600 text-white p-1.5 rounded-full cursor-pointer hover:bg-purple-700 shadow-sm transition-colors">
                   <Upload className="w-3 h-3" />
                   <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
                </label>
             </div>
             
             <div className="flex-1 text-center md:text-left space-y-1">
-              <h2 className="text-xl font-bold text-emerald-900">{profile?.user_email}</h2>
-              <p className="text-emerald-700 capitalize font-medium">{profile?.type === 'professional' ? 'Profissional de Saúde' : 'Paciente'}</p>
+              <h2 className="text-xl font-bold text-white">{profile?.user_email}</h2>
+              <p className="text-purple-400 capitalize font-medium">{profile?.type === 'professional' ? 'Profissional de Saúde' : 'Paciente'}</p>
               <div className="flex items-center justify-center md:justify-start gap-2 mt-2">
-                 <span className="text-xs bg-white/50 px-2 py-1 rounded text-emerald-800 border border-emerald-100">Plano: <span className="font-bold uppercase">{profile?.plan || 'Free'}</span></span>
+                 <span className="text-xs bg-[#282828] px-3 py-1 rounded-full text-[#B3B3B3] border border-[#3E3E3E]">Plano: <span className="font-bold uppercase text-white">{profile?.plan || 'Free'}</span></span>
               </div>
             </div>
             
             <Button 
               variant="outline" 
-              className="border-emerald-600 text-emerald-700 hover:bg-emerald-100 bg-white"
+              className="border-[#3E3E3E] text-[#B3B3B3] hover:bg-[#282828] hover:text-white bg-transparent"
               onClick={() => {
                 const type = profile?.type === 'patient' ? 'Profissional' : 'Paciente';
                 if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
@@ -191,76 +196,76 @@ export default function ProfilePage() {
         </Card>
 
         <TabsContent value="personal">
-          <Card>
+          <Card className="bg-[#181818] border-[#282828] shadow-lg">
             <CardHeader>
-              <CardTitle>Informações Pessoais</CardTitle>
+              <CardTitle className="text-white">Informações Pessoais</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                 <Label>Nome Completo</Label>
-                 <Input value={personalData.full_name} onChange={e => setPersonalData({...personalData, full_name: e.target.value})} />
+                 <Label className={labelClass}>Nome Completo</Label>
+                 <Input className={inputClass} value={personalData.full_name} onChange={e => setPersonalData({...personalData, full_name: e.target.value})} />
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div className="space-y-2">
-                    <Label>Email</Label>
-                    <Input value={profile?.user_email || ''} disabled className="bg-slate-100" />
+                    <Label className={labelClass}>Email</Label>
+                    <Input value={profile?.user_email || ''} disabled className={`${inputClass} opacity-50 cursor-not-allowed`} />
                  </div>
                  <div className="space-y-2">
-                    <Label>Senha</Label>
-                    <Input type="password" value="********" disabled className="bg-slate-100" />
-                    <p className="text-xs text-slate-500">A senha pode ser alterada na tela de login (Esqueci minha senha).</p>
+                    <Label className={labelClass}>Senha</Label>
+                    <Input type="password" value="********" disabled className={`${inputClass} opacity-50 cursor-not-allowed`} />
+                    <p className="text-xs text-[#555]">A senha pode ser alterada na tela de login.</p>
                  </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div className="space-y-2">
-                    <Label>CPF</Label>
-                    <Input value={personalData.cpf} onChange={e => setPersonalData({...personalData, cpf: e.target.value})} />
+                    <Label className={labelClass}>CPF</Label>
+                    <Input className={inputClass} value={personalData.cpf} onChange={e => setPersonalData({...personalData, cpf: e.target.value})} />
                  </div>
                  <div className="space-y-2">
-                    <Label>Telefone</Label>
-                    <Input value={personalData.phone} onChange={e => setPersonalData({...personalData, phone: e.target.value})} />
+                    <Label className={labelClass}>Telefone</Label>
+                    <Input className={inputClass} value={personalData.phone} onChange={e => setPersonalData({...personalData, phone: e.target.value})} />
                  </div>
               </div>
               
-              <div className="border-t pt-4 mt-2">
-                  <h3 className="font-medium mb-4 flex items-center gap-2"><MapPin className="w-4 h-4" /> Endereço</h3>
+              <div className="border-t border-[#282828] pt-4 mt-2">
+                  <h3 className="font-medium mb-4 flex items-center gap-2 text-white"><MapPin className="w-4 h-4 text-purple-500" /> Endereço</h3>
                   <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-4 mb-4">
                      <div className="space-y-2">
-                        <Label>CEP</Label>
-                        <Input value={address.zip} onChange={e => setAddress({...address, zip: e.target.value})} />
+                        <Label className={labelClass}>CEP</Label>
+                        <Input className={inputClass} value={address.zip} onChange={e => setAddress({...address, zip: e.target.value})} />
                      </div>
                      <div className="space-y-2">
-                        <Label>Rua</Label>
-                        <Input value={address.street} onChange={e => setAddress({...address, street: e.target.value})} />
+                        <Label className={labelClass}>Rua</Label>
+                        <Input className={inputClass} value={address.street} onChange={e => setAddress({...address, street: e.target.value})} />
                      </div>
                      <div className="space-y-2">
-                        <Label>Número</Label>
-                        <Input value={address.number} onChange={e => setAddress({...address, number: e.target.value})} />
+                        <Label className={labelClass}>Número</Label>
+                        <Input className={inputClass} value={address.number} onChange={e => setAddress({...address, number: e.target.value})} />
                      </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                      <div className="space-y-2">
-                        <Label>Bairro</Label>
-                        <Input value={address.neighborhood} onChange={e => setAddress({...address, neighborhood: e.target.value})} />
+                        <Label className={labelClass}>Bairro</Label>
+                        <Input className={inputClass} value={address.neighborhood} onChange={e => setAddress({...address, neighborhood: e.target.value})} />
                      </div>
                      <div className="space-y-2">
-                        <Label>Cidade</Label>
-                        <Input value={address.city} onChange={e => setAddress({...address, city: e.target.value})} />
+                        <Label className={labelClass}>Cidade</Label>
+                        <Input className={inputClass} value={address.city} onChange={e => setAddress({...address, city: e.target.value})} />
                      </div>
                      <div className="space-y-2">
-                        <Label>Estado</Label>
-                        <Input value={address.state} onChange={e => setAddress({...address, state: e.target.value})} />
+                        <Label className={labelClass}>Estado</Label>
+                        <Input className={inputClass} value={address.state} onChange={e => setAddress({...address, state: e.target.value})} />
                      </div>
                      <div className="space-y-2">
-                        <Label>País</Label>
-                        <Input value={address.country} onChange={e => setAddress({...address, country: e.target.value})} />
+                        <Label className={labelClass}>País</Label>
+                        <Input className={inputClass} value={address.country} onChange={e => setAddress({...address, country: e.target.value})} />
                      </div>
                   </div>
               </div>
               
-              <Button onClick={() => saveMutation.mutate()} className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={saveMutation.isPending}>
+              <Button onClick={() => saveMutation.mutate()} className="w-full bg-purple-600 hover:bg-purple-700 text-white h-12 font-bold" disabled={saveMutation.isPending}>
                  {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                  Salvar Alterações
               </Button>
@@ -269,30 +274,30 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="medical">
-          <Card>
+          <Card className="bg-[#181818] border-[#282828]">
             <CardHeader>
-              <CardTitle>Ficha Médica</CardTitle>
+              <CardTitle className="text-white">Ficha Médica</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Tipo Sanguíneo</Label>
-                  <Input value={medicalData.blood_type} onChange={e => setMedicalData({...medicalData, blood_type: e.target.value})} placeholder="Ex: O+" />
+                  <Label className={labelClass}>Tipo Sanguíneo</Label>
+                  <Input className={inputClass} value={medicalData.blood_type} onChange={e => setMedicalData({...medicalData, blood_type: e.target.value})} placeholder="Ex: O+" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Tipo de Pele</Label>
-                  <Input value={medicalData.skin_type} onChange={e => setMedicalData({...medicalData, skin_type: e.target.value})} placeholder="Ex: Oleosa, Seca..." />
+                  <Label className={labelClass}>Tipo de Pele</Label>
+                  <Input className={inputClass} value={medicalData.skin_type} onChange={e => setMedicalData({...medicalData, skin_type: e.target.value})} placeholder="Ex: Oleosa, Seca..." />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label>Alergias</Label>
-                <Input value={medicalData.allergies} onChange={e => setMedicalData({...medicalData, allergies: e.target.value})} placeholder="Separe por vírgula" />
+                <Label className={labelClass}>Alergias</Label>
+                <Input className={inputClass} value={medicalData.allergies} onChange={e => setMedicalData({...medicalData, allergies: e.target.value})} placeholder="Separe por vírgula" />
               </div>
               <div className="space-y-2">
-                <Label>Doenças Crônicas / Histórico</Label>
-                <Input value={medicalData.diseases} onChange={e => setMedicalData({...medicalData, diseases: e.target.value})} placeholder="Separe por vírgula" />
+                <Label className={labelClass}>Doenças Crônicas / Histórico</Label>
+                <Input className={inputClass} value={medicalData.diseases} onChange={e => setMedicalData({...medicalData, diseases: e.target.value})} placeholder="Separe por vírgula" />
               </div>
-              <Button onClick={() => saveMutation.mutate()} className="w-full bg-emerald-600" disabled={saveMutation.isPending}>
+              <Button onClick={() => saveMutation.mutate()} className="w-full bg-purple-600 hover:bg-purple-700 text-white h-12 font-bold" disabled={saveMutation.isPending}>
                  Salvar Dados Médicos
               </Button>
             </CardContent>
@@ -300,20 +305,20 @@ export default function ProfilePage() {
         </TabsContent>
 
          <TabsContent value="professional">
-          <Card>
+          <Card className="bg-[#181818] border-[#282828]">
             <CardHeader>
-              <CardTitle>Dados Profissionais</CardTitle>
+              <CardTitle className="text-white">Dados Profissionais</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>CRM / COREN / Registro</Label>
-                <Input value={professionalData.registry} onChange={e => setProfessionalData({...professionalData, registry: e.target.value})} placeholder="00000/UF" />
+                <Label className={labelClass}>CRM / COREN / Registro</Label>
+                <Input className={inputClass} value={professionalData.registry} onChange={e => setProfessionalData({...professionalData, registry: e.target.value})} placeholder="00000/UF" />
               </div>
               <div className="space-y-2">
-                <Label>Especialidades</Label>
-                <Input value={professionalData.specialties} onChange={e => setProfessionalData({...professionalData, specialties: e.target.value})} placeholder="Ex: Dermatologia, Cirurgia Plástica" />
+                <Label className={labelClass}>Especialidades</Label>
+                <Input className={inputClass} value={professionalData.specialties} onChange={e => setProfessionalData({...professionalData, specialties: e.target.value})} placeholder="Ex: Dermatologia, Cirurgia Plástica" />
               </div>
-              <Button onClick={() => saveMutation.mutate()} className="w-full bg-emerald-600" disabled={saveMutation.isPending}>
+              <Button onClick={() => saveMutation.mutate()} className="w-full bg-purple-600 hover:bg-purple-700 text-white h-12 font-bold" disabled={saveMutation.isPending}>
                  Salvar Dados Profissionais
               </Button>
             </CardContent>

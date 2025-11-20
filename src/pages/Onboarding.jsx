@@ -408,30 +408,30 @@ export default function OnboardingPage() {
 
               {/* Termos e Submit */}
               <div className="pt-6 mt-6 border-t space-y-6">
-                <div className="flex items-start space-x-3 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                <div className="flex items-start space-x-3 bg-[#282828] p-4 rounded-lg border border-[#3E3E3E]">
                   <Checkbox 
                     id="terms" 
                     checked={acceptedTerms}
                     onCheckedChange={setAcceptedTerms}
                     required
-                    className="mt-1"
+                    className="mt-1 border-white/20 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
                   />
                   <div className="grid gap-1.5 leading-none">
-                    <Label htmlFor="terms" className="text-sm font-medium leading-snug cursor-pointer">
+                    <Label htmlFor="terms" className="text-sm font-medium leading-snug cursor-pointer text-[#B3B3B3]">
                       Li e aceito os Termos e Condições e a Política de Privacidade
                     </Label>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button variant="link" className="p-0 h-auto text-xs text-emerald-600 w-fit flex items-center gap-1">
+                        <Button variant="link" className="p-0 h-auto text-xs text-purple-400 w-fit flex items-center gap-1">
                           <ScrollText className="w-3 h-3" /> Ler termos completos
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-[#181818] border-[#282828] text-white">
                         <DialogHeader>
-                          <DialogTitle>Termos de Uso e Privacidade - HealthAI</DialogTitle>
-                          <DialogDescription>Última atualização: {new Date().toLocaleDateString()}</DialogDescription>
+                          <DialogTitle className="text-white">Termos de Uso e Privacidade - HealthAI</DialogTitle>
+                          <DialogDescription className="text-[#B3B3B3]">Última atualização: {new Date().toLocaleDateString()}</DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-4 text-sm text-slate-600">
+                        <div className="space-y-4 text-sm text-[#B3B3B3]">
                           <div className="space-y-4 text-justify">
                             <p><strong>1. ACEITAÇÃO DOS TERMOS</strong><br/>
                             Ao acessar e utilizar a plataforma HealthAI ("Plataforma"), você concorda, sem restrições, com estes Termos e Condições de Uso ("Termos"). Se você não concorda com qualquer parte destes Termos, não deve utilizar nossos serviços. Estes Termos aplicam-se a todos os visitantes, usuários e outras pessoas que acessam ou usam o Serviço.</p>
@@ -465,7 +465,7 @@ export default function OnboardingPage() {
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 h-12 text-lg shadow-md hover:shadow-lg transition-all" 
+                  className="w-full bg-purple-600 hover:bg-purple-700 h-12 text-lg shadow-md hover:shadow-lg transition-all font-bold" 
                   disabled={!acceptedTerms || createProfileMutation.isPending}
                 >
                   {createProfileMutation.isPending ? (
