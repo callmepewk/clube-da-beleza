@@ -342,20 +342,13 @@ export default function Layout({ children }) {
               {/* Top Bar (Desktop) */}
               <div className={`hidden lg:flex items-center justify-between mb-8 sticky top-0 z-30 bg-[#F8FAFC]/90 backdrop-blur-sm py-2 transition-transform duration-300 ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full absolute top-[-100px]'}`}>
                  <div className="flex gap-3">
-                    <button onClick={() => setIsHeaderVisible(false)} className="text-xs text-slate-400 hover:text-slate-600 mr-2">
-                       <div className="w-8 h-1 bg-slate-200 rounded-full mx-auto mb-1" />
-                    </button>
-                    <button onClick={() => navigate(-1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5 rotate-180" /></button>
-                    <button onClick={() => navigate(1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5" /></button>
-                 </div>
-                 <div className="flex gap-3">
-                    <button onClick={() => setIsHeaderVisible(false)} className="text-xs text-slate-400 hover:text-slate-600 mr-2 flex items-center" title="Ocultar menu">
+                    <button onClick={() => setIsHeaderVisible(false)} className="text-xs text-slate-400 hover:text-slate-600 mr-2" title="Ocultar menu">
                        <div className="w-8 h-1 bg-slate-300 rounded-full" />
                     </button>
                     <button onClick={() => navigate(-1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5 rotate-180" /></button>
                     <button onClick={() => navigate(1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5" /></button>
                  </div>
-                 
+
                  <div className="flex items-center gap-4">
                     {profile?.is_admin && (
                        <Link to={createPageUrl('AdminControl')} className="text-xs font-bold bg-[#2D3748] text-white px-4 py-2 rounded-full hover:scale-105 transition-transform shadow-md">

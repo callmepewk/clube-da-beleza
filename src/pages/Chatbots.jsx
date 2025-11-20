@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Bot, MessageCircle, Instagram, Settings, Loader2, Plus } from 'lucide-react';
+import { Bot, MessageCircle, Instagram, Settings, Loader2, Plus, Wand2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation } from '@tanstack/react-query';
 
@@ -11,6 +11,7 @@ export default function ChatbotsPage() {
   const [config, setConfig] = useState({
     name: '',
     personality: 'friendly',
+    instructions: '',
     platform: 'whatsapp',
     phone: '',
     instagram: '',
@@ -62,7 +63,7 @@ export default function ChatbotsPage() {
                           <Bot className="w-8 h-8 text-slate-300" />
                         )}
                       </div>
-                      <div className="relative">
+                      <div className="relative flex gap-2">
                          <Button variant="outline" size="sm" className="relative cursor-pointer">
                             <input 
                               type="file" 
@@ -75,11 +76,24 @@ export default function ChatbotsPage() {
                                 }
                               }}
                             />
-                            <Plus className="w-4 h-4 mr-2" /> Upload Foto
+                            <Plus className="w-4 h-4 mr-2" /> Upload
+                         </Button>
+                         <Button 
+                           variant="outline" 
+                           size="sm" 
+                           onClick={async () => {
+                              if (!config.name) { alert("Defina um nome primeiro para gerar o avatar."); return; }
+                              const res = await base44.integrations.Core.GenerateImage({
+                                 prompt: `Professional avatar for a medical chatbot named ${config.name}, style ${config.personality}, clean background, friendly face, high quality.`
+                              });
+                              setConfig({...config, avatar: res.url});
+                           }}
+                         >
+                            <Wand2 className="w-4 h-4 mr-2" /> Gerar com IA
                          </Button>
                       </div>
-                   </div>
-                </div>
+                      </div>
+                      </div>
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Personalidade / Tom de Voz</label>
@@ -92,6 +106,21 @@ export default function ChatbotsPage() {
                     <option value="formal">Formal e Direto</option>
                     <option value="clinical">Clínico e Técnico</option>
                   </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">Instruções do Sistema (Prompt)</label>
+                  <textarea
+                    className="w-full p-2 border rounded-md h-24 text-sm"
+                    placeholder="Descreva como o bot deve se comportar..."
+                    value={config.instructions}
+                    onChange={(e) => setConfig({...config, instructions: e.target.value})}
+                  />
+                  <div className="flex flex-wrap gap-2">
+                     <button onClick={() => setConfig({...config, instructions: "Você é um assistente médico focado em triagem inicial. Seja empático e faça perguntas sobre sintomas."})} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full">Triagem</button>
+                     <button onClick={() => setConfig({...config, instructions: "Seu objetivo é agendar consultas. Ofereça horários disponíveis e confirme dados do paciente."})} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full">Agendamento</button>
+                     <button onClick={() => setConfig({...config, instructions: "Tire dúvidas sobre procedimentos estéticos como Botox e Preenchimento. Use linguagem simples."})} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full">Dúvidas Estéticas</button>
+                  </div>
                 </div>
 
                 <div className="space-y-2">

@@ -107,6 +107,12 @@ export default function DesignPage() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                 />
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <button onClick={() => setPrompt("Post Instagram: Antes e Depois de Harmonização Facial, estilo minimalista e clean.")} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Antes/Depois</button>
+                  <button onClick={() => setPrompt("Story: Promoção de Botox Day, fundo dourado, texto elegante, chamada para ação.")} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Botox Day</button>
+                  <button onClick={() => setPrompt("Banner Site: Clínica de Estética Avançada, foto de mulher sorrindo, tons pastéis.")} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Banner Clínica</button>
+                  <button onClick={() => setPrompt("Cartão de Visita: Dermatologista, design moderno, azul marinho e branco.")} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Cartão Visita</button>
+                </div>
               </div>
 
               <Button 
