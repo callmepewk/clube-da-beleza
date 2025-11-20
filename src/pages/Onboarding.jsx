@@ -37,6 +37,7 @@ export default function OnboardingPage() {
   });
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const init = async () => {
