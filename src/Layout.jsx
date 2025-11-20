@@ -395,94 +395,78 @@ export default function Layout({ children }) {
       {/* Global Banner Display (Ads) */}
       {user && <BannerDisplay userProfile={profile} />}
 
-      <div className="flex flex-1 h-[calc(100vh-64px)]"> 
-        {/* Sidebar (Desktop) - Premium Clinic Style */}
-        <aside className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-[240px]'} flex-col ${theme.sidebar} border-r ${theme.border} sticky top-0 h-screen z-20 transition-all duration-300 ease-in-out`}>
-           <div className={`p-6 pb-0 ${isSidebarCollapsed ? 'px-2' : ''}`}>
-              <div className="flex items-center justify-between mb-8">
-                 {!isSidebarCollapsed && (
-                    <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80">
-                       <img 
-                          src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
-                          alt="Beauty Center"
-                          className="h-14 w-auto"
-                       />
-                       </Link>
-                 )}
-                 <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className={`p-2 hover:bg-slate-50 rounded-full text-slate-400 ${isSidebarCollapsed ? 'mx-auto' : ''}`}>
-                    {isSidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                 </button>
-              </div>
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        {/* Horizontal Navigation Header (Desktop) */}
+        <header className="hidden lg:block bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
+           <div className="max-w-[1600px] mx-auto px-6">
+              <div className="flex items-center justify-between h-20">
+                 {/* Logo */}
+                 <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80">
+                    <img 
+                       src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
+                       alt="Beauty Center"
+                       className="h-12 w-auto"
+                    />
+                 </Link>
 
-              <nav className="space-y-1">
-                 {navItems.map((item) => {
-                   const isActive = location.pathname === item.path;
-                   return (
-                     <Link
-                       key={item.path}
-                       to={createPageUrl(item.path.replace('/', ''))}
-                       className={`flex items-center ${isSidebarCollapsed ? 'justify-center px-2' : 'gap-3 px-4'} py-3.5 rounded-2xl text-sm font-bold transition-all duration-200 group relative
-                         ${isActive 
-                           ? 'bg-[#F0FDFA] text-[#0D9488] shadow-sm' 
-                           : 'text-[#64748B] hover:text-[#0D9488] hover:bg-[#FAFAFA]'
-                         }`}
-                       title={isSidebarCollapsed ? item.label : ''}
-                     >
-                       {isActive && !isSidebarCollapsed && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-[#0D9488] rounded-r-full"></div>}
-                       <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-[#0D9488]' : 'text-[#94A3B8] group-hover:text-[#0D9488]'}`} />
-                       {!isSidebarCollapsed && <span>{item.label}</span>}
-                     </Link>
-                   );
-                 })}
-              </nav>
-           </div>
-           
-           <div className={`mt-auto p-6 border-t border-[#F1F5F9] ${isSidebarCollapsed ? 'px-2' : ''}`}>
-              {user ? (
-                 <div className={`flex items-center gap-3 p-2 rounded-2xl hover:bg-[#F0FDFA] transition-all cursor-pointer group border border-transparent hover:border-[#CCFBF1] ${isSidebarCollapsed ? 'justify-center' : ''}`} onClick={() => navigate(createPageUrl('Profile'))}>
-                    <div 
-                      className="w-10 h-10 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg ring-4 ring-white min-w-[2.5rem]"
-                    >
-                       {user.full_name?.[0]?.toUpperCase() || 'U'}
-                    </div>
-                    {!isSidebarCollapsed && (
-                       <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold text-[#0F172A] truncate group-hover:text-[#0D9488] transition-colors">{user.full_name}</p>
-                          <p className="text-xs text-[#64748B] truncate font-medium">Ver Perfil</p>
+                 {/* Navigation Items */}
+                 <nav className="flex items-center gap-1">
+                    {navItems.map((item) => {
+                      const isActive = location.pathname === item.path;
+                      return (
+                        <Link
+                          key={item.path}
+                          to={createPageUrl(item.path.replace('/', ''))}
+                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200
+                            ${isActive 
+                              ? 'bg-[#F0FDFA] text-[#0D9488]' 
+                              : 'text-[#64748B] hover:text-[#0D9488] hover:bg-[#FAFAFA]'
+                            }`}
+                        >
+                          <item.icon className={`w-4 h-4 ${isActive ? 'text-[#0D9488]' : 'text-[#94A3B8]'}`} />
+                          <span>{item.label}</span>
+                        </Link>
+                      );
+                    })}
+                 </nav>
+
+                 {/* Right Side Actions */}
+                 <div className="flex items-center gap-4">
+                    <NotificationsPopover user={user} />
+                    {user ? (
+                       <div 
+                          onClick={() => navigate(createPageUrl('Profile'))}
+                          className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F0FDFA] transition-all cursor-pointer border border-transparent hover:border-[#CCFBF1]"
+                       >
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg">
+                             {user.full_name?.[0]?.toUpperCase() || 'U'}
+                          </div>
+                          <div className="text-left">
+                             <p className="text-sm font-bold text-[#0F172A] leading-tight">{user.full_name?.split(' ')[0]}</p>
+                             <p className="text-xs text-[#64748B]">Perfil</p>
+                          </div>
+                       </div>
+                    ) : (
+                       <div className="flex gap-2">
+                          <Button 
+                            onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
+                            variant="ghost"
+                            className="text-[#64748B] hover:text-[#0D9488] hover:bg-[#F0FDFA] font-bold"
+                          >
+                            Login
+                          </Button>
+                          <Button 
+                            onClick={() => navigate(createPageUrl('Onboarding'))}
+                            className="bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl shadow-lg"
+                          >
+                            Criar Conta
+                          </Button>
                        </div>
                     )}
                  </div>
-              ) : (
-                 !isSidebarCollapsed && (
-                    <div className="space-y-3">
-                       <Button 
-                         onClick={() => navigate(createPageUrl('Onboarding'))}
-                         className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 transition-all hover:scale-[1.02]"
-                       >
-                         Criar Conta
-                       </Button>
-                       <Button 
-                         onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
-                         variant="ghost"
-                         className="w-full text-[#64748B] hover:text-[#0D9488] hover:bg-[#F0FDFA] h-9 text-xs font-semibold"
-                       >
-                         Login
-                       </Button>
-                       <div className="pt-2 border-t border-slate-100">
-                          <p className="text-xs text-slate-500 text-center mb-2">Cadastro no Mapa da Estética?</p>
-                          <Button 
-                            onClick={() => window.open('https://mapa-da-estetica.base44.app', '_blank')}
-                            variant="outline"
-                            className="w-full border-purple-200 text-purple-700 hover:bg-purple-50 h-9 text-xs font-semibold"
-                          >
-                            <Globe className="w-3 h-3 mr-2" /> Acessar Mapa
-                          </Button>
-                       </div>
-                    </div>
-                 )
-              )}
+              </div>
            </div>
-        </aside>
+        </header>
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col min-w-0 overflow-hidden">

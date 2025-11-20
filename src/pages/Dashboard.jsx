@@ -308,73 +308,89 @@ export default function Dashboard() {
 
   // --- PROFESSIONAL & ADMIN VIEW (Light Mode) ---
   return (
-    <div className="space-y-8 text-[#0F172A]">
-      {/* Hero Section - Beauty Center Presentation */}
-      <div className="relative h-96 rounded-[2rem] overflow-hidden shadow-2xl border border-slate-100 bg-white">
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/80"></div>
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522338140262-f46f5913618a?q=80&w=2000')] bg-cover bg-center opacity-[0.08]"></div>
+    <div className="text-[#0F172A]">
+      {/* Hero Section - Full Width Landing Page Style */}
+      <div className="relative min-h-[70vh] bg-white -mx-4 lg:-mx-8 -mt-4 lg:-mt-8">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#F8FAFC] via-white to-[#F0FDFA]"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522338140262-f46f5913618a?q=80&w=2000')] bg-cover bg-center opacity-[0.03]"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white/95 via-white/90 to-transparent"></div>
 
-        <div className="relative z-10 h-full flex flex-col justify-center p-12 max-w-4xl">
-          <div className="mb-6">
-            <img 
-              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
-              alt="Beauty Center"
-              className="h-20 w-auto mb-6"
-            />
-          </div>
-
-          <h1 className="text-5xl font-black tracking-tight text-[#0F172A] mb-4 leading-tight">
-            Inovação em <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0D9488] to-[#2DD4BF]">Saúde Estética</span>
-          </h1>
-
-          <p className="text-xl text-[#475569] leading-relaxed max-w-2xl font-medium mb-8">
-            O Beauty Center é a plataforma mais avançada para profissionais da medicina estética. 
-            Transforme sua prática com ferramentas de IA, gestão inteligente de agendamentos, 
-            criação de sites profissionais, chatbots personalizados e muito mais.
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 shadow-sm">
-              <div className="bg-[#F0FDFA] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
-                <Calendar className="w-5 h-5 text-[#0D9488]" />
+        <div className="relative z-10 max-w-[1600px] mx-auto px-6 lg:px-12 py-20 lg:py-32">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <div className="mb-8">
+                <img 
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
+                  alt="Beauty Center"
+                  className="h-16 w-auto"
+                />
               </div>
-              <div className="text-sm font-bold text-[#0F172A]">Agendamento</div>
-              <div className="text-xs text-[#64748B] mt-1">Gestão inteligente</div>
+
+              <h1 className="text-6xl lg:text-7xl font-black tracking-tight text-[#0F172A] mb-6 leading-[1.1]">
+                Inovação em <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0D9488] to-[#2DD4BF]">Saúde Estética</span>
+              </h1>
+
+              <p className="text-xl lg:text-2xl text-[#475569] leading-relaxed font-medium mb-10">
+                O Beauty Center é a plataforma mais avançada para profissionais da medicina estética. 
+                Transforme sua prática com ferramentas de IA, gestão inteligente de agendamentos, 
+                criação de sites profissionais, chatbots personalizados e muito mais.
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                <Button className="bg-[#0D9488] hover:bg-[#0F766E] text-white h-14 px-8 text-lg font-bold shadow-xl rounded-2xl">
+                  Começar Agora
+                </Button>
+                <Button variant="outline" className="border-2 border-[#0D9488] text-[#0D9488] hover:bg-[#F0FDFA] h-14 px-8 text-lg font-bold rounded-2xl">
+                  Ver Demonstração
+                </Button>
+              </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 shadow-sm">
-              <div className="bg-[#EFF6FF] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
-                <Bot className="w-5 h-5 text-[#3B82F6]" />
+            <div className="grid grid-cols-2 gap-6">
+              <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2">
+                <div className="bg-gradient-to-br from-[#0D9488] to-[#14B8A6] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <Calendar className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-lg font-bold text-[#0F172A] mb-2">Agendamento Inteligente</div>
+                <div className="text-sm text-[#64748B] leading-relaxed">Gestão completa de consultas com IA</div>
               </div>
-              <div className="text-sm font-bold text-[#0F172A]">Chatbots</div>
-              <div className="text-xs text-[#64748B] mt-1">Atendimento 24/7</div>
-            </div>
 
-            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 shadow-sm">
-              <div className="bg-[#F5F3FF] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
-                <Globe className="w-5 h-5 text-[#7C3AED]" />
+              <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 mt-8">
+                <div className="bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <Bot className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-lg font-bold text-[#0F172A] mb-2">Chatbots 24/7</div>
+                <div className="text-sm text-[#64748B] leading-relaxed">Atendimento automático para pacientes</div>
               </div>
-              <div className="text-sm font-bold text-[#0F172A]">Sites</div>
-              <div className="text-xs text-[#64748B] mt-1">Presença digital</div>
-            </div>
 
-            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 shadow-sm">
-              <div className="bg-[#FFFBEB] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
-                <Palette className="w-5 h-5 text-[#D97706]" />
+              <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2">
+                <div className="bg-gradient-to-br from-[#7C3AED] to-[#A78BFA] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <Globe className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-lg font-bold text-[#0F172A] mb-2">Sites Profissionais</div>
+                <div className="text-sm text-[#64748B] leading-relaxed">Crie sua presença digital em minutos</div>
               </div>
-              <div className="text-sm font-bold text-[#0F172A]">Design IA</div>
-              <div className="text-xs text-[#64748B] mt-1">Criação visual</div>
+
+              <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 mt-8">
+                <div className="bg-gradient-to-br from-[#D97706] to-[#FBBF24] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
+                  <Palette className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-lg font-bold text-[#0F172A] mb-2">Design com IA</div>
+                <div className="text-sm text-[#64748B] leading-relaxed">Criação visual automatizada</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div>
-          <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight">Painel de Controle</h2>
-          <p className="text-[#64748B] mt-1">Acompanhe o desempenho da sua prática em tempo real.</p>
+      {/* Stats & Dashboard Section */}
+      <div className="mt-16 space-y-8 px-4 lg:px-0">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight">Painel de Controle</h2>
+            <p className="text-[#64748B] mt-1">Acompanhe o desempenho da sua prática em tempo real.</p>
+          </div>
         </div>
-      </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
