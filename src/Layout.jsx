@@ -21,7 +21,10 @@ import {
   FileText,
   HelpCircle,
   ChevronRight,
-  Bell
+  Bell,
+  Newspaper,
+  CheckCheck,
+  Trash
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
