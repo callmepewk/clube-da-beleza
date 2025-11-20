@@ -72,87 +72,88 @@ export default function Dashboard() {
   // --- PATIENT VIEW ---
   if (isPatient) {
     return (
-      <div className="space-y-8 pb-10">
-        <div className="relative h-64 rounded-3xl overflow-hidden shadow-xl mb-8 group">
-          <img 
-            src="https://images.unsplash.com/photo-1501854140884-074cf2b2b3e9?q=80&w=2000&auto=format&fit=crop" 
-            alt="Nature" 
-            className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-900/80 to-transparent flex flex-col justify-center px-10 text-white">
-            <h1 className="text-4xl font-bold mb-2">Olá, {user.full_name.split(' ')[0]}</h1>
-            <p className="text-emerald-100 text-lg max-w-lg">Sua saúde é nossa prioridade. Explore ferramentas exclusivas para seu bem-estar.</p>
+      <div className="space-y-8 pb-10 text-white">
+        {/* Hero Section - Gradient Background */}
+        <div className="relative h-72 rounded-xl overflow-hidden shadow-2xl group bg-gradient-to-br from-purple-900 via-indigo-900 to-black border border-white/5">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop')] opacity-20 mix-blend-overlay bg-cover bg-center"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent"></div>
+          <div className="relative z-10 flex flex-col justify-end h-full p-8">
+             <div className="flex items-end gap-4 mb-2">
+                <h1 className="text-5xl font-bold tracking-tight text-white drop-shadow-lg">Olá, {user.full_name.split(' ')[0]}</h1>
+             </div>
+             <p className="text-[#B3B3B3] text-lg max-w-xl font-medium">Sua jornada de saúde, reimaginada com inteligência artificial.</p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Action Cards - Spotify Style */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
            {/* Next Appointment */}
-           <Card className="border-l-4 border-l-blue-500 shadow-md hover:shadow-lg transition-all cursor-pointer bg-white/90 backdrop-blur">
-              <CardContent className="p-6">
-                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-slate-700">Próxima Consulta</h3>
-                    {/* Mocking a Calendar icon since I can't import everything */}
-                    <div className="text-blue-500">📅</div>
-                 </div>
-                 <p className="text-2xl font-bold text-slate-900 mb-1">14 de Out</p>
-                 <p className="text-sm text-slate-500">15:30 • Dr. Silva (Dermatologista)</p>
-              </CardContent>
-           </Card>
+           <div className="bg-[#181818] hover:bg-[#282828] transition-all duration-300 rounded-lg p-4 cursor-pointer group border border-transparent hover:border-[#ffffff10] flex items-center gap-4">
+               <div className="h-16 w-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-md shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Calendar className="text-white w-8 h-8" />
+               </div>
+               <div>
+                  <h3 className="font-bold text-white text-base group-hover:text-blue-400 transition-colors">Próxima Consulta</h3>
+                  <p className="text-[#B3B3B3] text-sm">14 Out • 15:30</p>
+               </div>
+           </div>
            
            {/* Investment */}
-           <Card className="border-l-4 border-l-emerald-500 shadow-md hover:shadow-lg transition-all cursor-pointer bg-white/90 backdrop-blur">
-              <CardContent className="p-6">
-                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-slate-700">Investimento em Saúde</h3>
-                    <DollarSign className="w-5 h-5 text-emerald-500" />
-                 </div>
-                 <p className="text-2xl font-bold text-emerald-600 mb-1">R$ {stats?.avgProcedure || 1250},00</p>
-                 <p className="text-sm text-slate-500">Economia estimada de 15%</p>
-              </CardContent>
-           </Card>
+           <div className="bg-[#181818] hover:bg-[#282828] transition-all duration-300 rounded-lg p-4 cursor-pointer group border border-transparent hover:border-[#ffffff10] flex items-center gap-4">
+               <div className="h-16 w-16 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-md shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <DollarSign className="text-white w-8 h-8" />
+               </div>
+               <div>
+                  <h3 className="font-bold text-white text-base group-hover:text-emerald-400 transition-colors">Investimento</h3>
+                  <p className="text-[#B3B3B3] text-sm">R$ {stats?.avgProcedure || 1250},00 (Economia)</p>
+               </div>
+           </div>
 
            {/* Quick Stats */}
-           <Card className="border-l-4 border-l-purple-500 shadow-md hover:shadow-lg transition-all cursor-pointer bg-white/90 backdrop-blur">
-              <CardContent className="p-6">
-                 <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-slate-700">Minhas Atividades</h3>
-                    <Activity className="w-5 h-5 text-purple-500" />
-                 </div>
-                 <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="flex items-center gap-1 text-slate-600"><Stethoscope className="w-4 h-4" /> <span>12 Pesquisas</span></div>
-                    <div className="flex items-center gap-1 text-slate-600"><Bot className="w-4 h-4" /> <span>3 Chatbots</span></div>
-                    <div className="flex items-center gap-1 text-slate-600"><Globe className="w-4 h-4" /> <span>1 Site</span></div>
-                    <div className="flex items-center gap-1 text-slate-600"><Palette className="w-4 h-4" /> <span>4 Designs</span></div>
-                 </div>
-              </CardContent>
-           </Card>
+           <div className="bg-[#181818] hover:bg-[#282828] transition-all duration-300 rounded-lg p-4 cursor-pointer group border border-transparent hover:border-[#ffffff10] flex items-center gap-4">
+               <div className="h-16 w-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-md shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform">
+                  <Activity className="text-white w-8 h-8" />
+               </div>
+               <div>
+                  <h3 className="font-bold text-white text-base group-hover:text-purple-400 transition-colors">Atividades</h3>
+                  <p className="text-[#B3B3B3] text-sm">12 Pesquisas • 3 Bots</p>
+               </div>
+           </div>
         </div>
 
-        {/* Search Bar */}
-        <div className="bg-white p-8 rounded-2xl shadow-lg border border-slate-100">
-          <h2 className="text-xl font-bold text-slate-800 mb-4">O que você procura hoje?</h2>
-          <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1 relative">
-               <Search className="absolute left-3 top-3 w-5 h-5 text-slate-400" />
-               <Input 
-                 placeholder="Buscar médicos, exames, procedimentos..." 
-                 className="pl-10 h-12 text-lg"
-                 value={searchQuery}
-                 onChange={(e) => setSearchQuery(e.target.value)}
-               />
-            </div>
-            <Button type="submit" className="h-12 px-8 bg-emerald-600 hover:bg-emerald-700 text-lg font-medium">
-              Buscar
-            </Button>
+        {/* Search Bar - Modern */}
+        <div className="bg-gradient-to-b from-[#222222] to-[#181818] p-8 rounded-xl shadow-xl border border-[#333]">
+          <h2 className="text-2xl font-bold text-white mb-6">O que você procura hoje?</h2>
+          <form onSubmit={handleSearch} className="relative">
+             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#B3B3B3]" />
+             <Input 
+               placeholder="Buscar médicos, exames, procedimentos..." 
+               className="pl-12 h-14 text-lg bg-[#121212] border-none text-white rounded-full focus:ring-2 focus:ring-white/20 placeholder:text-[#555]"
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
+             />
+             <Button type="submit" className="absolute right-2 top-2 h-10 px-6 bg-white text-black hover:bg-gray-200 rounded-full font-bold text-sm transition-transform active:scale-95">
+               Buscar
+             </Button>
           </form>
         </div>
 
-        {/* Inspiring Images Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-           <img src="https://images.unsplash.com/photo-1544367563-12123d895e29?w=500&auto=format&fit=crop&q=60" className="rounded-xl h-48 w-full object-cover shadow-md hover:scale-105 transition-transform duration-500" alt="Wellness" />
-           <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=500&auto=format&fit=crop&q=60" className="rounded-xl h-48 w-full object-cover shadow-md hover:scale-105 transition-transform duration-500" alt="Fitness" />
-           <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&auto=format&fit=crop&q=60" className="rounded-xl h-48 w-full object-cover shadow-md hover:scale-105 transition-transform duration-500" alt="Healthy Food" />
-           <img src="https://images.unsplash.com/photo-1535914254981-b5012eebbd15?w=500&auto=format&fit=crop&q=60" className="rounded-xl h-48 w-full object-cover shadow-md hover:scale-105 transition-transform duration-500" alt="Meditation" />
+        {/* Categories / Inspiration */}
+        <div>
+            <h2 className="text-2xl font-bold text-white mb-4 hover:underline cursor-pointer decoration-white">Navegar por categorias</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+               {[
+                  { title: "Bem-estar", img: "https://images.unsplash.com/photo-1544367563-12123d895e29?w=500&q=60", color: "bg-orange-600" },
+                  { title: "Fitness", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=500&q=60", color: "bg-blue-600" },
+                  { title: "Nutrição", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=60", color: "bg-green-600" },
+                  { title: "Mente", img: "https://images.unsplash.com/photo-1535914254981-b5012eebbd15?w=500&q=60", color: "bg-purple-600" }
+               ].map((cat, i) => (
+                  <div key={i} className="relative h-48 rounded-lg overflow-hidden cursor-pointer group transition-all duration-300 hover:bg-[#282828] bg-[#181818]">
+                     <div className={`absolute top-4 left-4 text-2xl font-bold text-white z-10`}>{cat.title}</div>
+                     <img src={cat.img} className="absolute -right-4 -bottom-4 w-32 h-32 rounded shadow-2xl transform rotate-[25deg] group-hover:rotate-[15deg] group-hover:scale-110 transition-all duration-500 object-cover" alt={cat.title} />
+                  </div>
+               ))}
+            </div>
         </div>
       </div>
     );
@@ -199,76 +200,96 @@ export default function Dashboard() {
     );
   }
 
-  // --- PROFESSIONAL & ADMIN VIEW (Original Layout mostly) ---
+  // --- PROFESSIONAL & ADMIN VIEW (Dark Mode) ---
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-white">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Painel Profissional</h1>
-          <p className="text-slate-500">Gerencie sua prática e acompanhe resultados.</p>
+          <h1 className="text-4xl font-bold text-white tracking-tight">Painel Profissional</h1>
+          <p className="text-[#B3B3B3] mt-1">Gerencie sua prática e acompanhe resultados com precisão.</p>
         </div>
       </div>
 
+      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-          <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">Próximas Consultas</h3>
-          <p className="text-3xl font-bold text-slate-900 mt-2 flex items-center gap-2">
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : stats?.appointments || 14}
+        <div className="bg-[#181818] p-6 rounded-xl shadow-lg border border-[#282828] hover:bg-[#282828] transition-colors group">
+          <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs font-bold text-[#B3B3B3] uppercase tracking-wider">Próximas Consultas</h3>
+              <Calendar className="w-5 h-5 text-purple-500 group-hover:scale-110 transition-transform" />
+          </div>
+          <p className="text-4xl font-bold text-white mt-2 flex items-center gap-2">
+            {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-purple-500" /> : stats?.appointments || 14}
           </p>
+          <p className="text-xs text-green-500 mt-2 font-medium">▲ 12% esta semana</p>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">Pacientes Ativos</h3>
-            <p className="text-3xl font-bold text-slate-900 mt-2 flex items-center gap-2">
-            {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : stats?.patients || 142}
+        
+        <div className="bg-[#181818] p-6 rounded-xl shadow-lg border border-[#282828] hover:bg-[#282828] transition-colors group">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs font-bold text-[#B3B3B3] uppercase tracking-wider">Pacientes Ativos</h3>
+              <Users className="w-5 h-5 text-blue-500 group-hover:scale-110 transition-transform" />
+            </div>
+            <p className="text-4xl font-bold text-white mt-2 flex items-center gap-2">
+            {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-blue-500" /> : stats?.patients || 142}
             </p>
+            <p className="text-xs text-green-500 mt-2 font-medium">▲ 5 novos hoje</p>
         </div>
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider">Receita Estimada</h3>
-            <p className="text-3xl font-bold text-emerald-600 mt-2 flex items-center gap-2">
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : `R$ ${stats?.revenue?.toFixed(2) || '3.500,00'}`}
+
+        <div className="bg-[#181818] p-6 rounded-xl shadow-lg border border-[#282828] hover:bg-[#282828] transition-colors group">
+            <div className="flex items-center justify-between mb-4">
+               <h3 className="text-xs font-bold text-[#B3B3B3] uppercase tracking-wider">Receita Estimada</h3>
+               <DollarSign className="w-5 h-5 text-emerald-500 group-hover:scale-110 transition-transform" />
+            </div>
+            <p className="text-4xl font-bold text-white mt-2 flex items-center gap-2">
+              {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-emerald-500" /> : `R$ ${stats?.revenue?.toFixed(2) || '3.500,00'}`}
             </p>
+             <p className="text-xs text-[#B3B3B3] mt-2">Baseado nos agendamentos</p>
         </div>
       </div>
 
-      {/* Banner Manager for Admins AND Professionals (Access granted) */}
-      <div className="mb-8 bg-slate-50 p-6 rounded-lg border border-slate-200 mt-8">
-         <h3 className="font-bold mb-4 text-slate-700 flex items-center gap-2">
-            <span className="bg-indigo-100 text-indigo-600 p-1 rounded text-xs uppercase">Novo</span> 
-            Gerenciador de Anúncios e Banners
-         </h3>
-         <p className="text-sm text-slate-500 mb-6">Crie campanhas para divulgar seus serviços ou produtos na plataforma.</p>
+      {/* Banner Manager Section */}
+      <div className="mb-8 bg-gradient-to-r from-[#181818] to-[#121212] p-8 rounded-xl border border-[#282828] mt-8 shadow-2xl">
+         <div className="flex items-center gap-3 mb-6">
+            <div className="bg-purple-600 p-2 rounded-lg"><Palette className="w-5 h-5 text-white" /></div>
+            <div>
+               <h3 className="font-bold text-xl text-white">Gerenciador de Anúncios</h3>
+               <p className="text-sm text-[#B3B3B3]">Crie campanhas visuais de alto impacto.</p>
+            </div>
+         </div>
          <BannerManager />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Busca Rápida no Sistema</CardTitle>
-        </CardHeader>
-        <CardContent>
+      {/* Search Section */}
+      <div className="bg-[#181818] rounded-xl border border-[#282828] p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold text-white">Busca Rápida</h2>
+        </div>
+        <div className="w-full">
           <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
             <Select value={searchCategory} onValueChange={setSearchCategory}>
-              <SelectTrigger className="w-full md:w-[200px]">
+              <SelectTrigger className="w-full md:w-[200px] bg-[#282828] border-none text-white h-12">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-[#282828] border-[#3E3E3E] text-white">
                 <SelectItem value="all">Todas as Categorias</SelectItem>
                 <SelectItem value="procedures">Procedimentos</SelectItem>
                 <SelectItem value="exams">Exames</SelectItem>
                 <SelectItem value="professionals">Profissionais</SelectItem>
               </SelectContent>
             </Select>
-            <Input 
-              placeholder="Pesquise por nome, CPF ou procedimento..." 
-              className="flex-1"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700">
+            <div className="flex-1 relative">
+               <Input 
+                 placeholder="Pesquise por nome, CPF ou procedimento..." 
+                 className="w-full bg-[#282828] border-none text-white h-12 pl-4 rounded-lg focus:ring-2 focus:ring-white/20"
+                 value={searchQuery}
+                 onChange={(e) => setSearchQuery(e.target.value)}
+               />
+            </div>
+            <Button type="submit" className="bg-white text-black hover:bg-gray-200 h-12 px-8 font-bold rounded-lg">
               <Search className="w-4 h-4 mr-2" /> Pesquisar
             </Button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

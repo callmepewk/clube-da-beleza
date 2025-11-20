@@ -175,78 +175,77 @@ export default function OnboardingPage() {
     }
   };
 
+  // Dark Theme Classes
+  const cardClass = "bg-[#181818] border border-[#282828] text-white hover:bg-[#282828] transition-all hover:scale-[1.02] duration-300 shadow-lg";
+  const inputClass = "bg-[#282828] border-none text-white focus:ring-2 focus:ring-purple-500 h-12 rounded-md placeholder:text-[#555]";
+  const labelClass = "text-[#B3B3B3] text-sm font-bold mb-1 block";
+
   return (
-    <div className="max-w-3xl mx-auto pt-10 px-4 pb-20">
+    <div className="max-w-3xl mx-auto pt-10 px-4 pb-20 text-white">
       {step === 1 && (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-slate-900">Bem-vindo ao HealthAI</h1>
-            <p className="text-slate-500">Para começarmos, selecione seu perfil de acesso</p>
+            <h1 className="text-4xl font-bold text-white tracking-tight">Bem-vindo ao HealthAI</h1>
+            <p className="text-[#B3B3B3]">Selecione como você deseja usar a plataforma</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card 
-              className="cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group"
+            <div 
+              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 rounded-xl`}
               onClick={() => { setRole('patient'); setStep(2); }}
             >
-              <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-full flex items-center justify-center shadow-lg">
                   <User className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-slate-900">Sou Paciente</h3>
-                  <p className="text-sm text-slate-500 mt-2">Busco atendimento, agendamento e acompanhamento de saúde.</p>
+                  <h3 className="font-bold text-xl text-white">Sou Paciente</h3>
+                  <p className="text-sm text-[#B3B3B3] mt-2 leading-relaxed">Busco atendimento, agendamento e acompanhamento.</p>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
 
-            <Card 
-              className="cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group"
+            <div 
+              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 rounded-xl`}
               onClick={() => { setRole('professional'); setStep(2); }}
             >
-              <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-purple-800 text-white rounded-full flex items-center justify-center shadow-lg">
                   <Stethoscope className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-slate-900">Sou Profissional</h3>
-                  <p className="text-sm text-slate-500 mt-2">Desejo gerenciar minha agenda, pacientes e oferecer serviços.</p>
+                  <h3 className="font-bold text-xl text-white">Sou Profissional</h3>
+                  <p className="text-sm text-[#B3B3B3] mt-2 leading-relaxed">Gerenciar agenda, pacientes e oferecer serviços.</p>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
 
-            <Card 
-              className="cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group md:col-span-2 lg:col-span-1"
+            <div 
+              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 rounded-xl md:col-span-2 lg:col-span-1`}
               onClick={() => { setRole('sponsor'); setStep(2); }}
             >
-              <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
-                <div className="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                <div className="w-20 h-20 bg-gradient-to-br from-amber-600 to-amber-800 text-white rounded-full flex items-center justify-center shadow-lg">
                   <Building2 className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-slate-900">Sou Patrocinador</h3>
-                  <p className="text-sm text-slate-500 mt-2">Desejo investir e promover produtos/serviços na plataforma.</p>
+                  <h3 className="font-bold text-xl text-white">Sou Patrocinador</h3>
+                  <p className="text-sm text-[#B3B3B3] mt-2 leading-relaxed">Investir e promover produtos na plataforma.</p>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
           </div>
         </div>
       )}
 
       {step === 2 && (
-        <Card className="animate-in fade-in slide-in-from-right-8 border-t-4 border-t-emerald-500 shadow-lg">
+        <Card className="bg-[#181818] border-[#282828] text-white shadow-2xl animate-in fade-in slide-in-from-right-8">
           <CardHeader>
-            <div className="flex items-center gap-2 mb-2">
-               <Button variant="ghost" size="icon" onClick={() => setStep(1)} className="h-8 w-8 -ml-2">
+            <div className="flex items-center gap-2 mb-4">
+               <Button variant="ghost" size="icon" onClick={() => setStep(1)} className="h-8 w-8 -ml-2 text-[#B3B3B3] hover:text-white hover:bg-[#282828]">
                   <ArrowLeft className="w-4 h-4" />
                </Button>
-               <span className="text-sm text-slate-500 cursor-pointer hover:text-slate-800 transition-colors" onClick={() => setStep(1)}>Voltar para seleção</span>
+               <span className="text-sm text-[#B3B3B3] cursor-pointer hover:text-white transition-colors" onClick={() => setStep(1)}>Voltar para seleção</span>
             </div>
-            <CardTitle>Cadastro de {role === 'patient' ? 'Paciente' : 'Profissional'}</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-2xl font-bold">Cadastro de {role === 'patient' ? 'Paciente' : 'Profissional'}</CardTitle>
+            <CardDescription className="text-[#B3B3B3]">
                {user 
-                  ? 'Confirme seus dados para finalizar o acesso à plataforma.' 
-                  : 'Preencha os dados abaixo. O login e senha serão criados na próxima etapa.'}
+                  ? 'Confirme seus dados para finalizar o acesso.' 
+                  : 'Preencha seus dados. Login e senha na próxima etapa.'}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -260,31 +259,31 @@ export default function OnboardingPage() {
                 
                 {/* Auth Info Handling */}
                 {user ? (
-                   <div className="grid grid-cols-1 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                   <div className="grid grid-cols-1 gap-4 bg-[#282828] p-4 rounded-lg border border-[#3E3E3E]">
                       <div className="space-y-2">
-                         <Label>Conta Conectada</Label>
-                         <div className="flex items-center gap-2 font-medium text-slate-700">
-                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                         <Label className={labelClass}>Conta Conectada</Label>
+                         <div className="flex items-center gap-2 font-medium text-white">
+                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                             {user.email}
                          </div>
-                         <p className="text-xs text-slate-500">Seus dados serão vinculados a esta conta.</p>
                       </div>
                    </div>
                 ) : (
-                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 flex gap-3 items-start">
-                      <div className="bg-blue-100 p-2 rounded-full"><LogIn className="w-4 h-4 text-blue-600" /></div>
+                   <div className="bg-[#282828] p-4 rounded-lg border border-[#3E3E3E] flex gap-3 items-start">
+                      <div className="bg-purple-900/30 p-2 rounded-full"><LogIn className="w-4 h-4 text-purple-400" /></div>
                       <div>
-                         <h4 className="font-bold text-blue-900 text-sm">Login e Senha</h4>
-                         <p className="text-xs text-blue-700 mt-1">
-                            Não se preocupe! Após preencher o formulário e clicar em "Continuar", você será redirecionado para criar seu login e senha com segurança. Todos os dados preenchidos aqui serão salvos automaticamente.
+                         <h4 className="font-bold text-white text-sm">Login e Senha</h4>
+                         <p className="text-xs text-[#B3B3B3] mt-1">
+                            Após preencher os dados, você será redirecionado para criar seu login com segurança.
                          </p>
                       </div>
                    </div>
                 )}
 
                 <div className="space-y-2">
-                   <Label>Nome Completo *</Label>
+                   <Label className={labelClass}>Nome Completo *</Label>
                    <Input 
+                     className={inputClass}
                      required 
                      value={formData.full_name} 
                      onChange={e => setFormData({...formData, full_name: e.target.value})} 
@@ -294,21 +293,21 @@ export default function OnboardingPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>CPF *</Label>
-                    <Input required value={formData.cpf} onChange={e => setFormData({...formData, cpf: e.target.value})} placeholder="000.000.000-00" />
+                    <Label className={labelClass}>CPF *</Label>
+                    <Input className={inputClass} required value={formData.cpf} onChange={e => setFormData({...formData, cpf: e.target.value})} placeholder="000.000.000-00" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Telefone *</Label>
-                    <Input required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="(00) 00000-0000" />
+                    <Label className={labelClass}>Telefone *</Label>
+                    <Input className={inputClass} required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="(00) 00000-0000" />
                   </div>
                 </div>
               </div>
 
               {/* Endereço */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between border-b pb-2">
-                   <h4 className="font-medium text-sm text-slate-900 uppercase tracking-wider flex items-center gap-2">
-                    <MapPin className="w-4 h-4" /> Endereço
+                <div className="flex items-center justify-between border-b border-[#282828] pb-2">
+                   <h4 className="font-bold text-sm text-white uppercase tracking-wider flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-purple-500" /> Endereço
                   </h4>
                   <Button 
                     type="button" 
@@ -316,7 +315,7 @@ export default function OnboardingPage() {
                     size="sm" 
                     onClick={handleLocationClick}
                     disabled={isLoadingLocation}
-                    className="text-xs h-8"
+                    className="text-xs h-8 bg-[#282828] text-[#B3B3B3] border-[#3E3E3E] hover:bg-[#3E3E3E] hover:text-white"
                   >
                     {isLoadingLocation ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <MapPin className="w-3 h-3 mr-1" />}
                     Usar minha localização
@@ -325,16 +324,16 @@ export default function OnboardingPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>CEP</Label>
-                    <Input value={formData.zip} onChange={e => setFormData({...formData, zip: e.target.value})} placeholder="00000-000" />
+                    <Label className={labelClass}>CEP</Label>
+                    <Input className={inputClass} value={formData.zip} onChange={e => setFormData({...formData, zip: e.target.value})} placeholder="00000-000" />
                   </div>
                   <div className="space-y-2">
-                    <Label>País</Label>
+                    <Label className={labelClass}>País</Label>
                     <Select value={formData.country} onValueChange={val => setFormData({...formData, country: val})}>
-                      <SelectTrigger>
+                      <SelectTrigger className={inputClass}>
                         <SelectValue placeholder="Selecione o país" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="bg-[#181818] text-white border-[#282828]">
                         <SelectItem value="Brasil">Brasil</SelectItem>
                         <SelectItem value="Estados Unidos">Estados Unidos</SelectItem>
                         <SelectItem value="Portugal">Portugal</SelectItem>
@@ -346,28 +345,28 @@ export default function OnboardingPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4">
                   <div className="space-y-2">
-                    <Label>Rua / Logradouro</Label>
-                    <Input value={formData.street} onChange={e => setFormData({...formData, street: e.target.value})} placeholder="Ex: Av. Paulista" />
+                    <Label className={labelClass}>Rua / Logradouro</Label>
+                    <Input className={inputClass} value={formData.street} onChange={e => setFormData({...formData, street: e.target.value})} placeholder="Ex: Av. Paulista" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Número</Label>
-                    <Input value={formData.number} onChange={e => setFormData({...formData, number: e.target.value})} placeholder="123" />
+                    <Label className={labelClass}>Número</Label>
+                    <Input className={inputClass} value={formData.number} onChange={e => setFormData({...formData, number: e.target.value})} placeholder="123" />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                   <Label>Bairro</Label>
-                   <Input value={formData.neighborhood} onChange={e => setFormData({...formData, neighborhood: e.target.value})} placeholder="Centro" />
+                   <Label className={labelClass}>Bairro</Label>
+                   <Input className={inputClass} value={formData.neighborhood} onChange={e => setFormData({...formData, neighborhood: e.target.value})} placeholder="Centro" />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <div className="space-y-2">
-                    <Label>Cidade</Label>
-                    <Input value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
+                    <Label className={labelClass}>Cidade</Label>
+                    <Input className={inputClass} value={formData.city} onChange={e => setFormData({...formData, city: e.target.value})} />
                   </div>
                   <div className="space-y-2">
-                    <Label>Estado</Label>
-                    <Input value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} placeholder="UF" />
+                    <Label className={labelClass}>Estado</Label>
+                    <Input className={inputClass} value={formData.state} onChange={e => setFormData({...formData, state: e.target.value})} placeholder="UF" />
                   </div>
                 </div>
               </div>
