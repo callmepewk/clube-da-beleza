@@ -107,7 +107,32 @@ export default function Dashboard() {
     alert(`Pesquisando por "${searchQuery}" em "${searchCategory}"`);
   };
 
-  if (!user) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin" /></div>;
+  // Guest View (Non-logged in)
+  if (!user) {
+     return (
+        <div className="space-y-8 pb-10">
+           <div className="relative h-80 rounded-[2rem] overflow-hidden shadow-2xl bg-white border border-slate-100">
+              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1616391182219-e080b4d1043a?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.1]"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-white via-white/90 to-white/20"></div>
+              <div className="relative z-10 flex flex-col justify-center h-full p-12 max-w-2xl">
+                 <h1 className="text-5xl font-extrabold tracking-tight text-[#0F172A] mb-6 leading-tight">Bem-vindo ao <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0D9488] to-[#2DD4BF]">Beauty Center</span></h1>
+                 <p className="text-[#475569] text-xl font-medium leading-relaxed">Sua plataforma completa de saúde, estética e bem-estar.</p>
+                 <div className="mt-8 flex gap-4">
+                    <Button onClick={() => base44.auth.redirectToLogin()} className="bg-[#0D9488] hover:bg-[#0F766E] text-white px-8 py-6 rounded-xl text-lg font-bold shadow-lg">Entrar / Cadastrar</Button>
+                 </div>
+              </div>
+           </div>
+
+           <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-[#0F172A] flex items-center gap-4">
+                 <div className="w-2 h-8 bg-[#D97706] rounded-full"></div>
+                 Últimas Notícias & Tendências
+              </h2>
+              <PatientNewsFeed />
+           </div>
+        </div>
+     );
+  }
 
   const isPatient = user.profile?.type === 'patient';
 

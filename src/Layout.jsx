@@ -111,20 +111,29 @@ export default function Layout({ children }) {
   const isProfileComplete = React.useMemo(() => {
      if (!profile) return false;
      
-     // Required fields check
      const hasName = !!user?.full_name;
      const hasBasic = !!profile.cpf && !!profile.phone && !!profile.type;
      const hasAddress = !!profile.address?.street && !!profile.address?.city && !!profile.address?.state && !!profile.address?.zip;
      
-     // Professional specific check
      if (profile.type === 'professional') {
         const hasRegistry = !!profile.professional_registry;
-        // If service address is different, check it too (simplified here to just registry for core completion)
         return hasName && hasBasic && hasAddress && hasRegistry;
      }
      
      return hasName && hasBasic && hasAddress;
   }, [profile, user]);
+
+  const [showProfileModal, setShowProfileModal] = useState(false);
+
+  useEffect(() => {
+     if (user && !isLoading && !isProfileComplete) {
+        const hasSeenModal = sessionStorage.getItem('profile_modal_seen');
+        if (!hasSeenModal) {
+           setShowProfileModal(true);
+           sessionStorage.setItem('profile_modal_seen', 'true');
+        }
+     }
+  }, [user, isLoading, isProfileComplete]);
 
   const handleLogout = async () => {
     await base44.auth.logout();
@@ -260,6 +269,7 @@ export default function Layout({ children }) {
   // Define all available pages with requested order
   const navItems = [
     { icon: LayoutDashboard, label: 'Início', path: '/' },
+    { icon: Newspaper, label: 'Notícias', path: '/news' },
     { icon: Calendar, label: 'Agendamentos', path: '/schedule' },
     { icon: Stethoscope, label: 'Enfermeira Virtual', path: '/nurse' },
     { icon: Bot, label: 'Chatbots', path: '/chatbots' },
@@ -270,12 +280,7 @@ export default function Layout({ children }) {
     { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
   ];
 
-  if (profile?.type === 'professional' || profile?.type === 'sponsor' || profile?.is_admin) {
-     navItems.splice(5, 0, { icon: Newspaper, label: 'Notícias', path: '/news' });
-  }
-
   if (profile?.is_admin) {
-     // Insert Admin Control specifically after About Us (which is last, so push is fine, but let's be explicit)
      navItems.push({ icon: Shield, label: 'Painel de Controle', path: '/admin-control' });
   }
 
@@ -301,7 +306,7 @@ export default function Layout({ children }) {
               <div className="bg-gradient-to-tr from-[#0F766E] to-[#2DD4BF] p-1.5 rounded-xl shadow-lg shadow-teal-200/50">
                   <Activity className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-xl tracking-tight text-[#0F172A]">HealthAI</span>
+              <span className="font-bold text-xl tracking-tight text-[#0F172A]">Beauty Center</span>
            </Link>
            <div className="text-sm font-medium text-[#475569]">
              Finalizando Cadastro
@@ -317,22 +322,37 @@ export default function Layout({ children }) {
   return (
     <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#0F172A]`}>
       
-      {/* Global Banner - Registration Reminder */}
-      {/* Shows ONLY if user is logged in but profile is incomplete */}
-      {user && !isLoading && !isProfileComplete && location.pathname !== '/onboarding' && (
-        <div className="bg-gradient-to-r from-[#0F766E] to-[#0D9488] text-white px-4 py-3 text-sm flex flex-col sm:flex-row items-center justify-center gap-3 shadow-lg relative z-50">
-          <div className="flex items-center gap-2">
-            <span className="bg-white/20 p-1.5 rounded-full animate-pulse"><UserCircle className="w-4 h-4" /></span>
-            <span className="font-medium tracking-wide">Complete seu perfil para desbloquear o potencial máximo da HealthAI.</span>
+      {/* Profile Completion Modal */}
+      <AlertDialog open={showProfileModal} onOpenChange={setShowProfileModal}>
+        <AlertDialogContent className="bg-white border-0 rounded-[2rem] text-[#0F172A] shadow-2xl max-w-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-2xl font-bold text-center text-[#0F766E]">Complete seu Perfil</AlertDialogTitle>
+            <AlertDialogDescription className="text-center text-[#64748B] text-base">
+               Para aproveitar todas as ferramentas exclusivas do <span className="font-bold text-[#0F172A]">Beauty Center</span>, precisamos de algumas informações adicionais. É rapidinho!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="flex justify-center py-4">
+             <div className="bg-[#F0FDFA] p-4 rounded-full">
+                <UserCircle className="w-12 h-12 text-[#0D9488]" />
+             </div>
           </div>
-          <Link 
-            to={createPageUrl('Onboarding')}
-            className="bg-white text-[#0F766E] px-6 py-2 rounded-full text-xs font-bold hover:bg-teal-50 transition-all shadow-md transform hover:scale-105 active:scale-95"
-          >
-            Terminar Cadastro
-          </Link>
-        </div>
-      )}
+          <AlertDialogFooter className="flex-col gap-2 sm:gap-0">
+            <Button 
+               onClick={() => navigate(createPageUrl('Onboarding'))} 
+               className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold h-12 rounded-xl shadow-lg shadow-teal-900/20"
+            >
+               Completar Agora
+            </Button>
+            <Button 
+               variant="ghost" 
+               onClick={() => setShowProfileModal(false)}
+               className="w-full text-[#64748B] hover:text-[#0F172A]"
+            >
+               Fazer isso depois
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Global Banner Display (Ads) */}
       {user && <BannerDisplay userProfile={profile} />}
@@ -347,8 +367,8 @@ export default function Layout({ children }) {
                        <div className="bg-gradient-to-br from-[#0F766E] to-[#2DD4BF] p-2.5 rounded-2xl shadow-lg shadow-teal-900/10">
                           <Activity className="w-6 h-6 text-white" />
                        </div>
-                       <span className="font-bold text-xl tracking-tight text-[#0F172A]">HealthAI</span>
-                    </Link>
+                       <span className="font-bold text-xl tracking-tight text-[#0F172A]">Beauty Center</span>
+                       </Link>
                  )}
                  <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className={`p-2 hover:bg-slate-50 rounded-full text-slate-400 ${isSidebarCollapsed ? 'mx-auto' : ''}`}>
                     {isSidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -421,7 +441,7 @@ export default function Layout({ children }) {
            <header className={`lg:hidden h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 sticky top-0 z-40`}>
               <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
                  <Activity className="w-6 h-6 text-[#059669]" />
-                 <span className="font-bold text-lg text-[#1E293B]">HealthAI</span>
+                 <span className="font-bold text-lg text-[#1E293B]">Beauty Center</span>
               </Link>
               
               <Sheet>

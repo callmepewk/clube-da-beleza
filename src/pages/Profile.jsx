@@ -292,10 +292,10 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-2 w-full md:w-auto justify-center md:justify-start">
+              <div className="flex flex-wrap gap-3 w-full md:w-auto justify-center md:justify-start mt-4 md:mt-0">
                 <Button 
                   variant="outline" 
-                  className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-white/5 backdrop-blur-sm hover:border-white h-auto py-2 px-4"
+                  className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-6 rounded-full font-semibold transition-all shadow-sm"
                   onClick={() => {
                     const type = profile?.type === 'patient' ? 'Profissional' : 'Paciente';
                     if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
@@ -311,15 +311,15 @@ export default function ProfilePage() {
                   Mudar Tipo de Conta
                 </Button>
                 <Button 
-                  variant="ghost"
-                  className="text-white/70 hover:text-white hover:bg-white/10"
+                  variant="outline"
+                  className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-6 rounded-full font-semibold transition-all shadow-sm"
                   onClick={() => setIsLogoutAlertOpen(true)}
                 >
                    Sair
                 </Button>
                 <Button 
-                  variant="ghost"
-                  className="text-red-300 hover:text-red-100 hover:bg-red-500/20"
+                  variant="outline"
+                  className="border-red-400/50 text-red-100 hover:bg-red-500/20 hover:text-white hover:border-red-400 bg-black/10 backdrop-blur-md h-10 px-6 rounded-full font-semibold transition-all shadow-sm"
                   onClick={() => setIsDeleteAlertOpen(true)}
                 >
                    Excluir Conta

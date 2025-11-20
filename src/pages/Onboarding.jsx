@@ -187,8 +187,8 @@ export default function OnboardingPage() {
       {step === 1 && (
         <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
           <div className="text-center space-y-4">
-            <h1 className="text-5xl font-black text-[#0F172A] tracking-tight">Bem-vindo ao <span className="text-[#0D9488]">HealthAI</span></h1>
-            <p className="text-[#64748B] text-xl font-medium max-w-xl mx-auto">A plataforma inteligente para o futuro da sua saúde.</p>
+            <h1 className="text-5xl font-black text-[#0F172A] tracking-tight">Bem-vindo ao <span className="text-[#0D9488]">Beauty Center</span></h1>
+            <p className="text-[#64748B] text-xl font-medium max-w-xl mx-auto">A plataforma inteligente para o futuro da sua saúde e beleza.</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
