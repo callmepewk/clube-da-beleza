@@ -281,6 +281,7 @@ export default function Layout({ children }) {
       { icon: Globe, label: 'Sites', path: '/sites' },
       { icon: Palette, label: 'Design', path: '/design' },
       { icon: ShoppingBag, label: 'Produtos', path: '/products' },
+      { icon: Zap, label: 'Ferramentas', path: '/tools' },
       { icon: CreditCard, label: 'Planos', path: '/plans' },
       { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
     ];

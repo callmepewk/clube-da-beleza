@@ -13,6 +13,7 @@ import Nurse from './pages/Nurse';
 import Support from './pages/Support';
 import About from './pages/About';
 import News from './pages/News';
+import Tools from './pages/Tools';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +33,7 @@ export const PAGES = {
     "Support": Support,
     "About": About,
     "News": News,
+    "Tools": Tools,
 }
 
 export const pagesConfig = {
