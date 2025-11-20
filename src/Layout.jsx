@@ -67,17 +67,24 @@ export default function Layout({ children }) {
     enabled: !!user
   });
 
-  // Strict Profile Validation Logic
+  // Enhanced Profile Validation Logic
   const isProfileComplete = React.useMemo(() => {
      if (!profile) return false;
-     const hasBasic = !!profile.cpf && !!profile.phone && !!profile.type;
-     const hasAddress = !!profile.address?.city && !!profile.address?.state;
      
+     // Required fields check
+     const hasName = !!user?.full_name;
+     const hasBasic = !!profile.cpf && !!profile.phone && !!profile.type;
+     const hasAddress = !!profile.address?.street && !!profile.address?.city && !!profile.address?.state && !!profile.address?.zip;
+     
+     // Professional specific check
      if (profile.type === 'professional') {
-        return hasBasic && hasAddress && !!profile.professional_registry;
+        const hasRegistry = !!profile.professional_registry;
+        // If service address is different, check it too (simplified here to just registry for core completion)
+        return hasName && hasBasic && hasAddress && hasRegistry;
      }
-     return hasBasic && hasAddress;
-  }, [profile]);
+     
+     return hasName && hasBasic && hasAddress;
+  }, [profile, user]);
 
   const handleLogout = async () => {
     await base44.auth.logout();
@@ -113,31 +120,31 @@ export default function Layout({ children }) {
      navItems.push({ icon: LayoutDashboard, label: 'Painel de Controle', path: '/admin-control' });
   }
 
-  // Premium Dark Spotify-inspired Theme Classes
+  // Aesthetic Medicine Premium Theme (Clinical & High-Tech)
   const theme = {
-    bg: "bg-[#121212]",
-    sidebar: "bg-[#000000]",
-    card: "bg-[#181818]",
-    hover: "hover:bg-[#282828]",
-    textPrimary: "text-white",
-    textSecondary: "text-[#B3B3B3]",
-    accent: "text-[#1DB954]", // Spotify Green
-    accentBg: "bg-[#1DB954]",
-    border: "border-[#282828]"
+    bg: "bg-[#F4F7F7]", // Cinza gelo
+    sidebar: "bg-[#FFFFFF]", // Branco puro
+    card: "bg-[#FFFFFF] shadow-sm hover:shadow-md transition-shadow",
+    hover: "hover:bg-[#F0FDF9]", // Suave menta hover
+    textPrimary: "text-[#2D3748]", // Dark gray for contrast
+    textSecondary: "text-[#A7AFB4]", // Cinza sofisticado
+    accent: "text-[#3BAE9C]", // Verde clínica
+    accentBg: "bg-[#8EE2C8]", // Verde menta tecnológico
+    border: "border-[#E2E8F0]" // Light gray border
   };
 
   // Onboarding Layout
   if (location.pathname === '/onboarding') {
     return (
-      <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-white`}>
-        <header className={`h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 lg:px-8 sticky top-0 z-50`}>
+      <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#2D3748]`}>
+        <header className={`h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 lg:px-8 sticky top-0 z-50 bg-white/80 backdrop-blur-md`}>
            <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2 transition-opacity hover:opacity-80">
-              <div className="bg-gradient-to-tr from-purple-600 to-blue-600 p-1.5 rounded-lg">
+              <div className="bg-gradient-to-tr from-[#3BAE9C] to-[#8EE2C8] p-1.5 rounded-lg shadow-lg shadow-[#3BAE9C]/20">
                   <Activity className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-xl tracking-tight text-white">HealthAI</span>
+              <span className="font-bold text-xl tracking-tight text-[#2D3748]">HealthAI</span>
            </Link>
-           <div className="text-sm font-medium text-[#B3B3B3]">
+           <div className="text-sm font-medium text-[#A7AFB4]">
              Finalizando Cadastro
            </div>
         </header>
@@ -283,31 +290,36 @@ export default function Layout({ children }) {
            </header>
 
            {/* Scrollable Page Content */}
-           <main className={`flex-1 overflow-y-auto bg-gradient-to-b from-[#1f1f1f] to-[#121212] p-4 lg:p-8`}>
+           <main className={`flex-1 overflow-y-auto bg-[#F4F7F7] p-4 lg:p-8 relative`}>
+              {/* Ambient Gradient Background */}
+              <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-[#E6FFFA] to-transparent pointer-events-none" />
+              
               {/* Top Bar (Desktop) */}
-              <div className="hidden lg:flex items-center justify-between mb-8">
-                 <div className="flex gap-4">
-                    <button onClick={() => navigate(-1)} className="bg-[#000000]/70 rounded-full p-2 text-white hover:scale-105 transition-transform"><ChevronRight className="w-6 h-6 rotate-180" /></button>
-                    <button onClick={() => navigate(1)} className="bg-[#000000]/70 rounded-full p-2 text-white hover:scale-105 transition-transform"><ChevronRight className="w-6 h-6" /></button>
+              <div className="hidden lg:flex items-center justify-between mb-8 relative z-10">
+                 <div className="flex gap-3">
+                    <button onClick={() => navigate(-1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5 rotate-180" /></button>
+                    <button onClick={() => navigate(1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5" /></button>
                  </div>
                  
                  <div className="flex items-center gap-4">
                     {profile?.is_admin && (
-                       <Link to={createPageUrl('AdminControl')} className="text-xs font-bold bg-white text-black px-3 py-1.5 rounded-full hover:scale-105 transition-transform">
+                       <Link to={createPageUrl('AdminControl')} className="text-xs font-bold bg-[#2D3748] text-white px-4 py-2 rounded-full hover:scale-105 transition-transform shadow-md">
                           Painel Admin
                        </Link>
                     )}
-                    <button className="text-[#B3B3B3] hover:text-white transition-colors"><Bell className="w-5 h-5" /></button>
+                    <button className="text-[#A7AFB4] hover:text-[#3BAE9C] transition-colors bg-white/50 p-2 rounded-full hover:bg-white"><Bell className="w-5 h-5" /></button>
                     {user && (
                        <div className="relative group">
                           <div 
                             onClick={() => navigate(createPageUrl('Profile'))}
-                            className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold cursor-pointer ring-2 ring-transparent group-hover:ring-white transition-all"
+                            className="w-9 h-9 rounded-full bg-gradient-to-br from-[#CDB7FF] to-[#3BAE9C] flex items-center justify-center text-white font-bold cursor-pointer shadow-sm ring-2 ring-white group-hover:ring-[#8EE2C8] transition-all"
                           >
                              {user.full_name?.[0]?.toUpperCase()}
                           </div>
-                          <div className="absolute right-0 mt-2 w-48 bg-[#282828] rounded-lg shadow-xl border border-[#181818] py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                             <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-[#B3B3B3] hover:bg-[#3E3E3E] hover:text-white">Sair da conta</button>
+                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-[#E2E8F0] py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 transform origin-top-right">
+                             <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-[#2D3748] hover:bg-[#F4F7F7] font-medium flex items-center gap-2">
+                                <LogOut className="w-4 h-4 text-red-400" /> Sair da conta
+                             </button>
                           </div>
                        </div>
                     )}

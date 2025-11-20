@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Search, Users, DollarSign, Activity, Microscope, Stethoscope, Globe, Palette, Bot, BarChart2, Calendar } from 'lucide-react';
+import { Loader2, Search, Users, DollarSign, Activity, Microscope, Stethoscope, Globe, Palette, Bot, BarChart2, Calendar, Sparkles, ChevronRight } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -69,88 +69,93 @@ export default function Dashboard() {
   const isSponsor = user.profile?.type === 'sponsor';
   const isProfessionalOrAdmin = user.profile?.type === 'professional' || user.profile?.is_admin;
 
-  // --- PATIENT VIEW ---
+  // --- PATIENT VIEW (Premium Medical Aesthetic) ---
   if (isPatient) {
     return (
-      <div className="space-y-8 pb-10 text-white">
-        {/* Hero Section - Gradient Background */}
-        <div className="relative h-72 rounded-xl overflow-hidden shadow-2xl group bg-gradient-to-br from-purple-900 via-indigo-900 to-black border border-white/5">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2000&auto=format&fit=crop')] opacity-20 mix-blend-overlay bg-cover bg-center"></div>
-          <div className="absolute inset-0 bg-gradient-to-t from-[#121212] via-transparent to-transparent"></div>
-          <div className="relative z-10 flex flex-col justify-end h-full p-8">
-             <div className="flex items-end gap-4 mb-2">
-                <h1 className="text-5xl font-bold tracking-tight text-white drop-shadow-lg">Olá, {user.full_name.split(' ')[0]}</h1>
-             </div>
-             <p className="text-[#B3B3B3] text-lg max-w-xl font-medium">Sua jornada de saúde, reimaginada com inteligência artificial.</p>
+      <div className="space-y-8 pb-10">
+        {/* Hero Section - Premium Aesthetic */}
+        <div className="relative h-80 rounded-3xl overflow-hidden shadow-xl group bg-white border border-[#E2E8F0]">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1616391182219-e080b4d1043a?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#F4F7F7] via-white/50 to-transparent"></div>
+          <div className="relative z-10 flex flex-col justify-center h-full p-10 max-w-2xl">
+             <h1 className="text-5xl font-bold tracking-tight text-[#2D3748] mb-4 drop-shadow-sm">Olá, <span className="text-[#3BAE9C]">{user.full_name.split(' ')[0]}</span></h1>
+             <p className="text-[#A7AFB4] text-xl font-light leading-relaxed">Sua jornada de estética avançada e bem-estar começa aqui. Tecnologia e cuidado em harmonia.</p>
           </div>
         </div>
 
-        {/* Action Cards - Spotify Style */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Action Cards - Glassmorphism & Soft Shadows */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
            {/* Next Appointment */}
-           <div className="bg-[#181818] hover:bg-[#282828] transition-all duration-300 rounded-lg p-4 cursor-pointer group border border-transparent hover:border-[#ffffff10] flex items-center gap-4">
-               <div className="h-16 w-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-md shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Calendar className="text-white w-8 h-8" />
+           <div className="bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-[#E2E8F0] flex items-center gap-5 shadow-sm">
+               <div className="h-14 w-14 bg-[#E6FFFA] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Calendar className="text-[#3BAE9C] w-6 h-6" />
                </div>
                <div>
-                  <h3 className="font-bold text-white text-base group-hover:text-blue-400 transition-colors">Próxima Consulta</h3>
-                  <p className="text-[#B3B3B3] text-sm">14 Out • 15:30</p>
+                  <h3 className="font-bold text-[#2D3748] text-lg group-hover:text-[#3BAE9C] transition-colors">Próxima Consulta</h3>
+                  <p className="text-[#A7AFB4] text-sm font-medium">14 Out • 15:30</p>
                </div>
            </div>
-           
+
            {/* Investment */}
-           <div className="bg-[#181818] hover:bg-[#282828] transition-all duration-300 rounded-lg p-4 cursor-pointer group border border-transparent hover:border-[#ffffff10] flex items-center gap-4">
-               <div className="h-16 w-16 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-md shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <DollarSign className="text-white w-8 h-8" />
+           <div className="bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-[#E2E8F0] flex items-center gap-5 shadow-sm">
+               <div className="h-14 w-14 bg-[#F3E8FF] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <DollarSign className="text-[#CDB7FF] w-6 h-6" />
                </div>
                <div>
-                  <h3 className="font-bold text-white text-base group-hover:text-emerald-400 transition-colors">Investimento</h3>
-                  <p className="text-[#B3B3B3] text-sm">R$ {stats?.avgProcedure || 1250},00 (Economia)</p>
+                  <h3 className="font-bold text-[#2D3748] text-lg group-hover:text-[#CDB7FF] transition-colors">Investimento</h3>
+                  <p className="text-[#A7AFB4] text-sm font-medium">R$ {stats?.avgProcedure || 1250},00</p>
                </div>
            </div>
 
            {/* Quick Stats */}
-           <div className="bg-[#181818] hover:bg-[#282828] transition-all duration-300 rounded-lg p-4 cursor-pointer group border border-transparent hover:border-[#ffffff10] flex items-center gap-4">
-               <div className="h-16 w-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-md shadow-lg flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <Activity className="text-white w-8 h-8" />
+           <div className="bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-[#E2E8F0] flex items-center gap-5 shadow-sm">
+               <div className="h-14 w-14 bg-[#FFFBEB] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Sparkles className="text-[#D9C79F] w-6 h-6" />
                </div>
                <div>
-                  <h3 className="font-bold text-white text-base group-hover:text-purple-400 transition-colors">Atividades</h3>
-                  <p className="text-[#B3B3B3] text-sm">12 Pesquisas • 3 Bots</p>
+                  <h3 className="font-bold text-[#2D3748] text-lg group-hover:text-[#D9C79F] transition-colors">Tratamentos</h3>
+                  <p className="text-[#A7AFB4] text-sm font-medium">3 Ativos • 1 Plano</p>
                </div>
            </div>
         </div>
 
-        {/* Search Bar - Modern */}
-        <div className="bg-gradient-to-b from-[#222222] to-[#181818] p-8 rounded-xl shadow-xl border border-[#333]">
-          <h2 className="text-2xl font-bold text-white mb-6">O que você procura hoje?</h2>
+        {/* Search Bar - Clean & Clinical */}
+        <div className="bg-white p-8 rounded-3xl shadow-lg border border-[#E2E8F0]">
+          <h2 className="text-2xl font-bold text-[#2D3748] mb-6">O que você deseja agendar hoje?</h2>
           <form onSubmit={handleSearch} className="relative">
-             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#B3B3B3]" />
+             <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#A7AFB4]" />
              <Input 
-               placeholder="Buscar médicos, exames, procedimentos..." 
-               className="pl-12 h-14 text-lg bg-[#121212] border-none text-white rounded-full focus:ring-2 focus:ring-white/20 placeholder:text-[#555]"
+               placeholder="Buscar dermatologistas, laser, harmonização..." 
+               className="pl-16 h-16 text-lg bg-[#F4F7F7] border-transparent text-[#2D3748] rounded-full focus:ring-2 focus:ring-[#3BAE9C]/50 focus:bg-white transition-all placeholder:text-[#A7AFB4]"
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
              />
-             <Button type="submit" className="absolute right-2 top-2 h-10 px-6 bg-white text-black hover:bg-gray-200 rounded-full font-bold text-sm transition-transform active:scale-95">
+             <Button type="submit" className="absolute right-3 top-3 h-10 px-8 bg-[#3BAE9C] text-white hover:bg-[#2A9D8F] rounded-full font-bold text-sm transition-all shadow-md hover:shadow-lg">
                Buscar
              </Button>
           </form>
         </div>
 
-        {/* Categories / Inspiration */}
+        {/* Categories / Inspiration - Aesthetic */}
         <div>
-            <h2 className="text-2xl font-bold text-white mb-4 hover:underline cursor-pointer decoration-white">Navegar por categorias</h2>
+            <h2 className="text-2xl font-bold text-[#2D3748] mb-6 flex items-center gap-2">
+              <div className="w-1 h-6 bg-[#3BAE9C] rounded-full"></div>
+              Explorar Procedimentos
+            </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                {[
-                  { title: "Bem-estar", img: "https://images.unsplash.com/photo-1544367563-12123d895e29?w=500&q=60", color: "bg-orange-600" },
-                  { title: "Fitness", img: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=500&q=60", color: "bg-blue-600" },
-                  { title: "Nutrição", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&q=60", color: "bg-green-600" },
-                  { title: "Mente", img: "https://images.unsplash.com/photo-1535914254981-b5012eebbd15?w=500&q=60", color: "bg-purple-600" }
+                  { title: "Skincare", img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&q=60" },
+                  { title: "Laser", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=60" },
+                  { title: "Harmonização", img: "https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=500&q=60" },
+                  { title: "Nutrologia", img: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=500&q=60" }
                ].map((cat, i) => (
-                  <div key={i} className="relative h-48 rounded-lg overflow-hidden cursor-pointer group transition-all duration-300 hover:bg-[#282828] bg-[#181818]">
-                     <div className={`absolute top-4 left-4 text-2xl font-bold text-white z-10`}>{cat.title}</div>
-                     <img src={cat.img} className="absolute -right-4 -bottom-4 w-32 h-32 rounded shadow-2xl transform rotate-[25deg] group-hover:rotate-[15deg] group-hover:scale-110 transition-all duration-500 object-cover" alt={cat.title} />
+                  <div key={i} className="relative h-56 rounded-2xl overflow-hidden cursor-pointer group transition-all duration-500 hover:shadow-2xl shadow-md">
+                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all z-10"></div>
+                     <div className={`absolute bottom-4 left-4 text-xl font-bold text-white z-20 drop-shadow-md`}>{cat.title}</div>
+                     <img src={cat.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={cat.title} />
+                     <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                        <ChevronRight className="text-white w-4 h-4" />
+                     </div>
                   </div>
                ))}
             </div>
