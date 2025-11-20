@@ -581,6 +581,142 @@ export default function ProfilePage() {
                     </div>
                  </div>
               </div>
+
+               {/* Services Catalog Section */}
+               <div className="mt-8 pt-6 border-t border-slate-100">
+                  <h3 className="font-bold text-[#0F172A] mb-6 flex items-center gap-2 text-lg">
+                     <Activity className="w-5 h-5 text-[#0D9488]" /> Catálogo de Serviços & Preços
+                  </h3>
+                  
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6">
+                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
+                        <div className="space-y-2 md:col-span-1">
+                           <Label className={labelClass}>Categoria</Label>
+                           <select 
+                              className={inputClass + " px-4"}
+                              value={newService.category}
+                              onChange={e => setNewService({...newService, category: e.target.value})}
+                           >
+                              <option value="consultation">Consulta</option>
+                              <option value="exam">Exame</option>
+                              <option value="procedure">Procedimento</option>
+                           </select>
+                        </div>
+                        <div className="space-y-2 md:col-span-2 relative">
+                           <Label className={labelClass}>Nome do Serviço</Label>
+                           <div className="relative">
+                              <Input 
+                                 className={inputClass} 
+                                 value={newService.name} 
+                                 onChange={async (e) => {
+                                    const val = e.target.value;
+                                    setNewService({...newService, name: val});
+                                    if (val.length > 2) {
+                                       setIsAiLoading(true);
+                                       try {
+                                          // Debounce logic roughly simulated or direct call
+                                          const suggestions = await base44.integrations.Core.InvokeLLM({
+                                             prompt: `Sugira 3 nomes comuns de ${newService.category} na área médica estética que comecem ou contenham "${val}". Retorne apenas JSON array de strings.`,
+                                             response_json_schema: { type: "object", properties: { items: { type: "array", items: { type: "string" } } } }
+                                          });
+                                          setAiSuggestions(suggestions.items || []);
+                                       } catch(e) {} finally { setIsAiLoading(false); }
+                                    } else {
+                                       setAiSuggestions([]);
+                                    }
+                                 }}
+                                 placeholder="Ex: Botox, Limpeza de Pele..." 
+                              />
+                              {isAiLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-4 text-slate-400" />}
+                              {aiSuggestions.length > 0 && (
+                                 <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 shadow-lg rounded-xl mt-1 z-50 overflow-hidden">
+                                    {aiSuggestions.map((s, i) => (
+                                       <div 
+                                          key={i} 
+                                          className="p-3 hover:bg-slate-50 cursor-pointer text-sm text-slate-700"
+                                          onClick={() => {
+                                             setNewService({...newService, name: s});
+                                             setAiSuggestions([]);
+                                          }}
+                                       >
+                                          {s}
+                                       </div>
+                                    ))}
+                                 </div>
+                              )}
+                           </div>
+                        </div>
+                        <div className="space-y-2 md:col-span-1">
+                           <Label className={labelClass}>Preço (R$)</Label>
+                           <Input 
+                              type="number" 
+                              className={inputClass} 
+                              value={newService.price} 
+                              onChange={e => setNewService({...newService, price: e.target.value})} 
+                              placeholder="0.00"
+                           />
+                        </div>
+                     </div>
+                     <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                           <input 
+                              type="checkbox" 
+                              id="is_free" 
+                              checked={newService.is_free} 
+                              onChange={e => setNewService({...newService, is_free: e.target.checked, price: e.target.checked ? '0' : newService.price})} 
+                              className="w-5 h-5 text-[#0D9488] rounded border-gray-300 focus:ring-[#0D9488]"
+                           />
+                           <label htmlFor="is_free" className="text-sm font-medium text-slate-700 cursor-pointer">Gratuito / Presente</label>
+                        </div>
+                        <Button 
+                           onClick={() => {
+                              if (!newService.name) return alert("Digite o nome do serviço");
+                              setServicesCatalog([...servicesCatalog, { ...newService, price: parseFloat(newService.price) || 0 }]);
+                              setNewService({ category: 'consultation', name: '', price: '', is_free: false });
+                              setAiSuggestions([]);
+                           }}
+                           className="bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl"
+                        >
+                           Adicionar
+                        </Button>
+                     </div>
+                  </div>
+
+                  {/* Services List */}
+                  <div className="space-y-3">
+                     {servicesCatalog.length === 0 && <p className="text-slate-500 text-center italic py-4">Nenhum serviço cadastrado.</p>}
+                     {servicesCatalog.map((item, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl shadow-sm">
+                           <div className="flex items-center gap-4">
+                              <div className={`p-2 rounded-lg ${item.category === 'consultation' ? 'bg-blue-50 text-blue-600' : item.category === 'exam' ? 'bg-purple-50 text-purple-600' : 'bg-pink-50 text-pink-600'}`}>
+                                 {item.category === 'consultation' ? <UserIcon className="w-5 h-5" /> : item.category === 'exam' ? <Activity className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
+                              </div>
+                              <div>
+                                 <p className="font-bold text-slate-800">{item.name}</p>
+                                 <p className="text-xs text-slate-500 capitalize">{item.category}</p>
+                              </div>
+                           </div>
+                           <div className="flex items-center gap-4">
+                              <span className={`font-bold ${item.is_free ? 'text-green-600' : 'text-slate-700'}`}>
+                                 {item.is_free ? 'Grátis' : `R$ ${item.price?.toFixed(2)}`}
+                              </span>
+                              <Button 
+                                 size="icon" 
+                                 variant="ghost" 
+                                 className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                                 onClick={() => {
+                                    const newCat = [...servicesCatalog];
+                                    newCat.splice(idx, 1);
+                                    setServicesCatalog(newCat);
+                                 }}
+                              >
+                                 <Trash2 className="w-4 h-4" />
+                              </Button>
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+               </div>
               </CardContent>
               </Card>
               </TabsContent>
