@@ -8,6 +8,51 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import BannerManager from "@/components/banners/BannerManager";
 
+const PatientNewsFeed = () => {
+   const { data: news, isLoading } = useQuery({
+      queryKey: ['patientNews'],
+      queryFn: async () => {
+         const res = await base44.integrations.Core.InvokeLLM({
+            prompt: "Gere 4 notícias recentes e interessantes sobre saúde, estética, beleza e moda. Retorne JSON array com 'title', 'category', 'image_keyword' e 'summary'.",
+            add_context_from_internet: true,
+            response_json_schema: {
+               type: "object",
+               properties: {
+                  news: { type: "array", items: { type: "object", properties: { title: {type:"string"}, category: {type:"string"}, image_keyword: {type:"string"}, summary: {type:"string"} } } }
+               }
+            }
+         });
+         return res.news || [];
+      },
+      staleTime: 1000 * 60 * 60 * 24 // 24h cache
+   });
+
+   if (isLoading) return <div className="flex gap-4"><Loader2 className="animate-spin" /> Carregando notícias...</div>;
+
+   return (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+         {news?.map((item, idx) => (
+            <div key={idx} className="bg-white rounded-2xl overflow-hidden shadow-md border border-slate-100 hover:shadow-xl transition-all flex flex-col md:flex-row">
+               <div className="h-48 md:h-auto md:w-1/3 bg-slate-100 relative overflow-hidden">
+                  <img 
+                     src={`https://source.unsplash.com/400x300/?${item.image_keyword || 'health'}`} 
+                     className="w-full h-full object-cover absolute inset-0" 
+                     alt={item.title}
+                  />
+                  <div className="absolute top-2 left-2 bg-white/90 px-2 py-1 rounded text-xs font-bold uppercase text-slate-800">
+                     {item.category}
+                  </div>
+               </div>
+               <div className="p-6 md:w-2/3">
+                  <h3 className="font-bold text-lg text-slate-900 mb-2">{item.title}</h3>
+                  <p className="text-slate-500 text-sm line-clamp-3">{item.summary}</p>
+               </div>
+            </div>
+         ))}
+      </div>
+   );
+};
+
 export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -134,6 +179,15 @@ export default function Dashboard() {
                Buscar
              </Button>
           </form>
+        </div>
+
+        {/* Patient News Feed */}
+        <div className="space-y-6">
+           <h2 className="text-2xl font-bold text-[#0F172A] flex items-center gap-4">
+              <div className="w-2 h-8 bg-[#D97706] rounded-full"></div>
+              Notícias & Tendências
+           </h2>
+           <PatientNewsFeed />
         </div>
 
         {/* Categories / Inspiration - Vivid */}

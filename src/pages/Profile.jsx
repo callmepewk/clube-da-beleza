@@ -264,23 +264,25 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <Button 
-                variant="outline" 
-                className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-white/5 backdrop-blur-sm hover:border-white"
-                onClick={() => {
-                  const type = profile?.type === 'patient' ? 'Profissional' : 'Paciente';
-                  if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
-                     base44.integrations.Core.SendEmail({
-                       to: "pedro_hbfreitas@hotmail.com",
-                       subject: `Solicitação de Mudança de Tipo de Conta - ${profile?.user_email}`,
-                       body: `O usuário ${profile?.user_email} solicitou a mudança de sua conta de ${profile?.type} para ${type.toLowerCase()}.`
-                     });
-                     alert("Solicitação enviada com sucesso! Aguarde o contato da administração.");
-                  }
-                }}
-              >
-                Mudar Tipo de Conta
-              </Button>
+              <div className="w-full md:w-auto">
+                <Button 
+                  variant="outline" 
+                  className="w-full md:w-auto border-white/30 text-white hover:bg-white/10 hover:text-white bg-white/5 backdrop-blur-sm hover:border-white whitespace-normal h-auto py-2 px-4"
+                  onClick={() => {
+                    const type = profile?.type === 'patient' ? 'Profissional' : 'Paciente';
+                    if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
+                       base44.integrations.Core.SendEmail({
+                         to: "pedro_hbfreitas@hotmail.com",
+                         subject: `Solicitação de Mudança de Tipo de Conta - ${profile?.user_email}`,
+                         body: `O usuário ${profile?.user_email} solicitou a mudança de sua conta de ${profile?.type} para ${type.toLowerCase()}.`
+                       });
+                       alert("Solicitação enviada com sucesso! Aguarde o contato da administração.");
+                    }
+                  }}
+                >
+                  Mudar Tipo de Conta
+                </Button>
+              </div>
             </CardContent>
           </Card>
 

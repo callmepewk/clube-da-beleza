@@ -169,6 +169,7 @@ export default function AdminControlPage() {
           <TabsTrigger value="nurse">Enfermeira</TabsTrigger>
           <TabsTrigger value="creations">IA & Produtos</TabsTrigger>
           <TabsTrigger value="banners">Anúncios</TabsTrigger>
+          <TabsTrigger value="notifications">Notificações</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}

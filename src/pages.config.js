@@ -12,6 +12,7 @@ import MyPlan from './pages/MyPlan';
 import Nurse from './pages/Nurse';
 import Support from './pages/Support';
 import About from './pages/About';
+import News from './pages/News';
 import __Layout from './Layout.jsx';
 
 
@@ -30,6 +31,7 @@ export const PAGES = {
     "Nurse": Nurse,
     "Support": Support,
     "About": About,
+    "News": News,
 }
 
 export const pagesConfig = {

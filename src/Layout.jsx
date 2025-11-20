@@ -136,6 +136,120 @@ export default function Layout({ children }) {
      }
   };
 
+  // Notifications Component
+  const NotificationsPopover = ({ user }) => {
+    const queryClient = useQueryClient();
+    const { data: notifications } = useQuery({
+      queryKey: ['notifications', user?.email],
+      queryFn: async () => {
+        if (!user?.email) return [];
+        // Fetch notifications for this user OR broadcast ('ALL')
+        // Since we can't do complex OR queries easily in one go with limited SDK, we fetch user specific and ALL
+        const [specific, broadcast] = await Promise.all([
+           base44.entities.Notification.list({ query: { recipient_email: user.email }, limit: 50, sort: { created_at: -1 } }),
+           base44.entities.Notification.list({ query: { recipient_email: 'ALL' }, limit: 20, sort: { created_at: -1 } })
+        ]);
+        
+        // Merge and Sort
+        let all = [...(specific.data || []), ...(broadcast.data || [])];
+        all = all.sort((a, b) => new Date(b.created_date) - new Date(a.created_date));
+        
+        // Filter out "read" broadcasts locally
+        return all.filter(n => {
+           if (n.recipient_email === 'ALL') {
+              return !n.read_by?.includes(user.email);
+           }
+           return !n.is_read;
+        });
+      },
+      enabled: !!user?.email,
+      refetchInterval: 30000 // Check every 30s
+    });
+
+    const markAllReadMutation = useMutation({
+      mutationFn: async () => {
+        if (!notifications) return;
+        for (const n of notifications) {
+           if (n.recipient_email === 'ALL') {
+              const currentReadBy = n.read_by || [];
+              if (!currentReadBy.includes(user.email)) {
+                 await base44.entities.Notification.update(n.id, { read_by: [...currentReadBy, user.email] });
+              }
+           } else {
+              await base44.entities.Notification.update(n.id, { is_read: true });
+           }
+        }
+      },
+      onSuccess: () => queryClient.invalidateQueries(['notifications'])
+    });
+
+    const deleteAllMutation = useMutation({
+      mutationFn: async () => {
+         if (!notifications) return;
+         // Only delete personal notifications. Broadcasts are just hidden (marked read logic)
+         const personal = notifications.filter(n => n.recipient_email !== 'ALL');
+         for (const n of personal) {
+            await base44.entities.Notification.delete(n.id);
+         }
+         // For broadcast, we just mark read
+         const broadcast = notifications.filter(n => n.recipient_email === 'ALL');
+         for (const n of broadcast) {
+             const currentReadBy = n.read_by || [];
+             if (!currentReadBy.includes(user.email)) {
+                 await base44.entities.Notification.update(n.id, { read_by: [...currentReadBy, user.email] });
+             }
+         }
+      },
+      onSuccess: () => queryClient.invalidateQueries(['notifications'])
+    });
+
+    return (
+      <Popover>
+        <PopoverTrigger asChild>
+          <button className="text-[#A7AFB4] hover:text-[#3BAE9C] transition-colors bg-white/50 p-2 rounded-full hover:bg-white relative">
+             <Bell className="w-5 h-5" />
+             {notifications?.length > 0 && (
+                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+             )}
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-80 p-0" align="end">
+           <div className="p-4 border-b flex justify-between items-center bg-slate-50">
+              <h4 className="font-bold text-sm text-slate-700">Notificações ({notifications?.length || 0})</h4>
+              <div className="flex gap-1">
+                 <Button variant="ghost" size="icon" className="h-6 w-6" title="Marcar lidas" onClick={() => markAllReadMutation.mutate()}>
+                    <CheckCheck className="w-4 h-4 text-green-600" />
+                 </Button>
+                 <Button variant="ghost" size="icon" className="h-6 w-6" title="Limpar" onClick={() => deleteAllMutation.mutate()}>
+                    <Trash className="w-4 h-4 text-red-500" />
+                 </Button>
+              </div>
+           </div>
+           <ScrollArea className="h-[300px]">
+              {notifications?.length === 0 ? (
+                 <div className="p-8 text-center text-slate-400 text-sm">Nenhuma notificação nova.</div>
+              ) : (
+                 <div className="divide-y">
+                    {notifications?.map(n => (
+                       <div key={n.id} className="p-4 hover:bg-slate-50 transition-colors">
+                          <h5 className="font-bold text-sm text-slate-800 mb-1">{n.title}</h5>
+                          <p className="text-xs text-slate-500 mb-2">{n.message}</p>
+                          {n.image_url && <img src={n.image_url} className="w-full h-24 object-cover rounded mb-2" />}
+                          {n.link && (
+                             <a href={n.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline font-medium">
+                                Ver detalhes
+                             </a>
+                          )}
+                       </div>
+                    ))}
+                 </div>
+              )}
+           </ScrollArea>
+        </PopoverContent>
+      </Popover>
+    );
+  };
+
   // Define all available pages with requested order
   const navItems = [
     { icon: LayoutDashboard, label: 'Início', path: '/' },
@@ -148,6 +262,10 @@ export default function Layout({ children }) {
     { icon: CreditCard, label: 'Planos', path: '/plans' },
     { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
   ];
+
+  if (profile?.type === 'professional' || profile?.type === 'sponsor' || profile?.is_admin) {
+     navItems.splice(5, 0, { icon: Newspaper, label: 'Notícias', path: '/news' });
+  }
 
   if (profile?.is_admin) {
      navItems.push({ icon: LayoutDashboard, label: 'Painel de Controle', path: '/admin-control' });
@@ -345,8 +463,6 @@ export default function Layout({ children }) {
                     <button onClick={() => setIsHeaderVisible(false)} className="text-xs text-slate-400 hover:text-slate-600 mr-2" title="Ocultar menu">
                        <div className="w-8 h-1 bg-slate-300 rounded-full" />
                     </button>
-                    <button onClick={() => navigate(-1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5 rotate-180" /></button>
-                    <button onClick={() => navigate(1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5" /></button>
                  </div>
 
                  <div className="flex items-center gap-4">
@@ -355,7 +471,7 @@ export default function Layout({ children }) {
                           Painel Admin
                        </Link>
                     )}
-                    <button className="text-[#A7AFB4] hover:text-[#3BAE9C] transition-colors bg-white/50 p-2 rounded-full hover:bg-white"><Bell className="w-5 h-5" /></button>
+                    <NotificationsPopover user={user} />
                     {user && (
                        <div className="relative group">
                           <div 
