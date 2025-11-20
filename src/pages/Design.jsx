@@ -8,14 +8,47 @@ import { Loader2, Image as ImageIcon, Wand2, Download, MessageSquare, Type, Send
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
+const DESIGN_SIZES = {
+  instagram: {
+    post: { width: 1080, height: 1080, label: 'Instagram Post (Quadrado)' },
+    story: { width: 1080, height: 1920, label: 'Instagram Stories' },
+    reel: { width: 1080, height: 1920, label: 'Instagram Reels' },
+    carousel: { width: 1080, height: 1080, label: 'Instagram Carrossel' }
+  },
+  facebook: {
+    post: { width: 1200, height: 630, label: 'Facebook Post' },
+    cover: { width: 820, height: 312, label: 'Facebook Capa' },
+    story: { width: 1080, height: 1920, label: 'Facebook Stories' }
+  },
+  linkedin: {
+    post: { width: 1200, height: 627, label: 'LinkedIn Post' },
+    banner: { width: 1584, height: 396, label: 'LinkedIn Banner' }
+  },
+  youtube: {
+    thumbnail: { width: 1280, height: 720, label: 'YouTube Thumbnail' },
+    banner: { width: 2560, height: 1440, label: 'YouTube Banner' }
+  },
+  tiktok: {
+    video: { width: 1080, height: 1920, label: 'TikTok Vídeo' }
+  },
+  outros: {
+    logo: { width: 512, height: 512, label: 'Logo Quadrado' },
+    banner_site: { width: 1920, height: 600, label: 'Banner Site' },
+    promocao: { width: 1200, height: 1200, label: 'Banner Promoção' },
+    cartao: { width: 1050, height: 600, label: 'Cartão de Visita' }
+  }
+};
+
 export default function DesignPage() {
-  const [mode, setMode] = useState('text_to_design'); // text_to_design or image_remix
+  const [mode, setMode] = useState('text_to_design');
   const [prompt, setPrompt] = useState('');
   const [result, setResult] = useState(null);
   const [chatMessage, setChatMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
   const [showTextTool, setShowTextTool] = useState(false);
   const [textConfig, setTextConfig] = useState({ content: '', position: 'center', style: 'modern' });
+  const [selectedPlatform, setSelectedPlatform] = useState('instagram');
+  const [selectedSize, setSelectedSize] = useState('post');
   const queryClient = useQueryClient();
 
   const { data: profile } = useQuery({
@@ -48,8 +81,11 @@ export default function DesignPage() {
         throw new Error('Limite atingido. Faça upgrade para criar mais designs.');
       }
 
+      const sizeInfo = DESIGN_SIZES[selectedPlatform]?.[selectedSize];
+      const dimensionText = sizeInfo ? `${sizeInfo.width}x${sizeInfo.height}px, formato ${sizeInfo.label}` : '';
+
       const res = await base44.integrations.Core.GenerateImage({
-        prompt: `Design profissional de slide ou post instagram sobre: ${prompt}. Estilo clean, médico, tipografia moderna. Alta qualidade, 4k.`
+        prompt: `Design profissional: ${prompt}. Dimensões: ${dimensionText}. Estilo clean, medicina estética, tipografia moderna, alta qualidade, otimizado para ${selectedPlatform}.`
       });
       return res.url;
     },
@@ -153,18 +189,51 @@ export default function DesignPage() {
               </div>
 
               <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-700">Selecione o Formato *</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <select 
+                    className="border rounded-md p-2 text-sm bg-white"
+                    value={selectedPlatform}
+                    onChange={(e) => {
+                      setSelectedPlatform(e.target.value);
+                      setSelectedSize(Object.keys(DESIGN_SIZES[e.target.value])[0]);
+                    }}
+                  >
+                    <option value="instagram">Instagram</option>
+                    <option value="facebook">Facebook</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="youtube">YouTube</option>
+                    <option value="tiktok">TikTok</option>
+                    <option value="outros">Outros</option>
+                  </select>
+                  <select 
+                    className="border rounded-md p-2 text-sm bg-white"
+                    value={selectedSize}
+                    onChange={(e) => setSelectedSize(e.target.value)}
+                  >
+                    {Object.entries(DESIGN_SIZES[selectedPlatform] || {}).map(([key, val]) => (
+                      <option key={key} value={key}>{val.label}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="text-xs text-slate-500 bg-slate-50 p-2 rounded">
+                  📐 Tamanho: {DESIGN_SIZES[selectedPlatform]?.[selectedSize]?.width} × {DESIGN_SIZES[selectedPlatform]?.[selectedSize]?.height}px
+                </div>
+              </div>
+
+              <div className="space-y-2">
                 <label className="text-sm font-medium text-slate-700">O que você quer criar?</label>
                 <textarea
                   className="w-full h-32 p-3 border rounded-md bg-slate-50 text-sm"
-                  placeholder="Ex: Um post para instagram anunciando Botox Day, com fundo dourado e branco..."
+                  placeholder="Ex: Promoção de Botox Day, fundo dourado e branco, foto de mulher sorrindo..."
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                 />
                 <div className="flex flex-wrap gap-2 mt-2">
-                  <button onClick={() => setPrompt("Post Instagram: Antes e Depois de Harmonização Facial, estilo minimalista e clean.")} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Antes/Depois</button>
-                  <button onClick={() => setPrompt("Story: Promoção de Botox Day, fundo dourado, texto elegante, chamada para ação.")} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Botox Day</button>
-                  <button onClick={() => setPrompt("Banner Site: Clínica de Estética Avançada, foto de mulher sorrindo, tons pastéis.")} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Banner Clínica</button>
-                  <button onClick={() => setPrompt("Cartão de Visita: Dermatologista, design moderno, azul marinho e branco.")} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Cartão Visita</button>
+                  <button onClick={() => {setPrompt("Antes e Depois de Harmonização Facial, estilo minimalista e clean."); setSelectedPlatform('instagram'); setSelectedSize('post');}} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Post Antes/Depois</button>
+                  <button onClick={() => {setPrompt("Promoção de Botox Day com 30% OFF, fundo dourado, texto elegante, chamada para ação."); setSelectedPlatform('instagram'); setSelectedSize('story');}} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Story Promoção</button>
+                  <button onClick={() => {setPrompt("Banner de clínica de estética moderna, foto de recepção luxuosa, tons pastéis."); setSelectedPlatform('outros'); setSelectedSize('banner_site');}} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Banner Site</button>
+                  <button onClick={() => {setPrompt("Logo minimalista para clínica de dermatologia, símbolo abstrato de pele, azul e dourado."); setSelectedPlatform('outros'); setSelectedSize('logo');}} className="text-xs bg-slate-100 hover:bg-slate-200 px-2 py-1 rounded-full transition-colors">Logo</button>
                 </div>
               </div>
 
