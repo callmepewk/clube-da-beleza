@@ -9,13 +9,20 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye } from 'lucide-react';
+import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye, Sparkles, RotateCcw, Save } from 'lucide-react';
 
 export default function ProductsPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newProductType, setNewProductType] = useState('ebook');
   const [activeTab, setActiveTab] = useState('all');
   const [formData, setFormData] = useState({ title: '', description: '', price: '', content_url: '' });
+  
+  // AI Generation State
+  const [creationMode, setCreationMode] = useState('manual'); // 'manual' | 'ai'
+  const [aiPrompt, setAiPrompt] = useState('');
+  const [aiDetails, setAiDetails] = useState({ audience: '', tone: '', keywords: '' });
+  const [generatedProduct, setGeneratedProduct] = useState(null);
+
   const queryClient = useQueryClient();
 
   // Fetch Products
@@ -28,15 +35,19 @@ export default function ProductsPage() {
   });
 
   const createProductMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (dataToSave) => {
        const user = await base44.auth.me();
-       await base44.entities.Product.create({
-         owner_email: user.email,
-         type: newProductType,
+       const productData = dataToSave || {
          title: formData.title,
          description: formData.description,
          price: parseFloat(formData.price) || 0,
          content_url: formData.content_url,
+       };
+
+       await base44.entities.Product.create({
+         owner_email: user.email,
+         type: newProductType,
+         ...productData,
          status: 'active'
        });
     },
@@ -44,6 +55,40 @@ export default function ProductsPage() {
       queryClient.invalidateQueries(['myProducts']);
       setIsCreateOpen(false);
       setFormData({ title: '', description: '', price: '', content_url: '' });
+      setGeneratedProduct(null);
+      setAiPrompt('');
+      setAiDetails({ audience: '', tone: '', keywords: '' });
+    }
+  });
+
+  const generateProductMutation = useMutation({
+    mutationFn: async () => {
+       const prompt = `
+         Crie um rascunho de produto digital do tipo "${newProductType}".
+         Tópico/Ideia: ${aiPrompt}
+         Público Alvo: ${aiDetails.audience}
+         Tom de Voz: ${aiDetails.tone}
+         Palavras-chave: ${aiDetails.keywords}
+
+         Gere um título atraente, uma descrição detalhada de venda (max 300 caracteres) e uma sugestão de preço em BRL.
+         Retorne APENAS JSON.
+       `;
+
+       const res = await base44.integrations.Core.InvokeLLM({
+          prompt,
+          response_json_schema: {
+             type: "object",
+             properties: {
+                title: { type: "string" },
+                description: { type: "string" },
+                price: { type: "number" }
+             }
+          }
+       });
+       return res;
+    },
+    onSuccess: (data) => {
+       setGeneratedProduct(data);
     }
   });
 
@@ -114,40 +159,138 @@ export default function ProductsPage() {
               <Plus className="w-4 h-4 mr-2" /> Novo Produto
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Criar Novo Produto</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label>Tipo de Produto</Label>
-                <Select value={newProductType} onValueChange={setNewProductType}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="ebook">E-book / PDF</SelectItem>
-                    <SelectItem value="3d_model">Modelo 3D</SelectItem>
-                    <SelectItem value="course">Curso Online</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label>Título</Label>
-                <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
-              </div>
-              <div className="space-y-2">
-                <Label>Preço (R$)</Label>
-                <Input type="number" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
-              </div>
-              <div className="space-y-2">
-                <Label>Descrição</Label>
-                <Textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
-              </div>
-              <Button onClick={() => createProductMutation.mutate()} className="w-full bg-emerald-600" disabled={createProductMutation.isPending}>
-                {createProductMutation.isPending ? <Loader2 className="animate-spin" /> : 'Criar Produto'}
-              </Button>
-            </div>
+            
+            <Tabs value={creationMode} onValueChange={setCreationMode} className="w-full">
+               <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="manual">Manual</TabsTrigger>
+                  <TabsTrigger value="ai" className="flex gap-2"><Sparkles className="w-3 h-3" /> Assistente IA</TabsTrigger>
+               </TabsList>
+
+               <TabsContent value="manual" className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Tipo de Produto</Label>
+                    <Select value={newProductType} onValueChange={setNewProductType}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ebook">E-book / PDF</SelectItem>
+                        <SelectItem value="3d_model">Modelo 3D</SelectItem>
+                        <SelectItem value="course">Curso Online</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Título</Label>
+                    <Input value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Preço (R$)</Label>
+                    <Input type="number" value={formData.price} onChange={e => setFormData({...formData, price: e.target.value})} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Descrição</Label>
+                    <Textarea value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} />
+                  </div>
+                  <Button onClick={() => createProductMutation.mutate()} className="w-full bg-emerald-600" disabled={createProductMutation.isPending}>
+                    {createProductMutation.isPending ? <Loader2 className="animate-spin" /> : 'Criar Produto'}
+                  </Button>
+               </TabsContent>
+
+               <TabsContent value="ai" className="space-y-4">
+                  {!generatedProduct ? (
+                    <div className="space-y-4 animate-in fade-in">
+                       <div className="space-y-2">
+                          <Label>Tipo de Produto a Gerar</Label>
+                          <Select value={newProductType} onValueChange={setNewProductType}>
+                            <SelectTrigger><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="ebook">E-book</SelectItem>
+                              <SelectItem value="3d_model">Modelo 3D</SelectItem>
+                              <SelectItem value="course">Curso</SelectItem>
+                            </SelectContent>
+                          </Select>
+                       </div>
+                       <div className="space-y-2">
+                          <Label>Ideia Principal / Tópico</Label>
+                          <Textarea 
+                             placeholder="Ex: Um guia completo sobre nutrição vegana para iniciantes..." 
+                             value={aiPrompt}
+                             onChange={(e) => setAiPrompt(e.target.value)}
+                             className="h-24"
+                          />
+                       </div>
+                       <div className="grid grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                             <Label>Público Alvo</Label>
+                             <Input placeholder="Ex: Jovens adultos" value={aiDetails.audience} onChange={e => setAiDetails({...aiDetails, audience: e.target.value})} />
+                          </div>
+                          <div className="space-y-2">
+                             <Label>Tom de Voz</Label>
+                             <Input placeholder="Ex: Motivacional, Técnico" value={aiDetails.tone} onChange={e => setAiDetails({...aiDetails, tone: e.target.value})} />
+                          </div>
+                       </div>
+                       <div className="space-y-2">
+                          <Label>Palavras-chave (Opcional)</Label>
+                          <Input placeholder="Ex: saúde, dieta, verde..." value={aiDetails.keywords} onChange={e => setAiDetails({...aiDetails, keywords: e.target.value})} />
+                       </div>
+                       <Button 
+                          onClick={() => generateProductMutation.mutate()} 
+                          className="w-full bg-purple-600 hover:bg-purple-700" 
+                          disabled={generateProductMutation.isPending || !aiPrompt}
+                       >
+                          {generateProductMutation.isPending ? <><Loader2 className="animate-spin mr-2" /> Gerando Ideias...</> : <><Sparkles className="mr-2 w-4 h-4" /> Gerar com IA</>}
+                       </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4 animate-in zoom-in-95">
+                       <div className="bg-purple-50 border border-purple-100 rounded-lg p-4">
+                          <h3 className="font-bold text-purple-900 text-lg mb-1">{generatedProduct.title}</h3>
+                          <p className="text-purple-700 text-sm mb-3">{generatedProduct.description}</p>
+                          <div className="flex items-center gap-2">
+                             <span className="bg-white px-2 py-1 rounded border border-purple-200 text-purple-800 font-bold text-sm">
+                                Sugestão de Preço: R$ {generatedProduct.price}
+                             </span>
+                          </div>
+                       </div>
+                       
+                       <div className="flex gap-2">
+                          <Button 
+                             variant="outline" 
+                             className="flex-1" 
+                             onClick={() => setGeneratedProduct(null)} // "Delete"/Discard logic simply resets the state
+                          >
+                             <Trash2 className="w-4 h-4 mr-2" /> Descartar
+                          </Button>
+                          <Button 
+                             variant="outline" 
+                             className="flex-1" 
+                             onClick={() => generateProductMutation.mutate()}
+                             disabled={generateProductMutation.isPending}
+                          >
+                             <RotateCcw className="w-4 h-4 mr-2" /> Gerar Outro
+                          </Button>
+                       </div>
+                       <Button 
+                          className="w-full bg-green-600 hover:bg-green-700"
+                          onClick={() => createProductMutation.mutate({
+                             title: generatedProduct.title,
+                             description: generatedProduct.description,
+                             price: generatedProduct.price,
+                             content_url: '' // Placeholder
+                          })}
+                          disabled={createProductMutation.isPending}
+                       >
+                          {createProductMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <><Save className="w-4 h-4 mr-2" /> Salvar Produto</>}
+                       </Button>
+                    </div>
+                  )}
+               </TabsContent>
+            </Tabs>
           </DialogContent>
         </Dialog>
       </div>
