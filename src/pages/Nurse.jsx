@@ -2,14 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { 
-  Send, Bot, Activity, Calendar, MapPin, Loader2 
+  Send, Bot, Activity, Calendar, MapPin, Loader2, Sparkles 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { format, differenceInDays } from 'date-fns';
+import { ScrollArea } from '@/components/ui/scroll-area'; // Ensure ScrollArea is imported or use div
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { format, differenceInDays, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const NURSE_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/6ad7fd07e_nurse.png";
 
 const EXAM_OPTIONS = [
   "Hemograma Completo", "Ultrassom Dermatológico", "Biópsia de Pele", 
@@ -142,110 +147,214 @@ export default function NursePage() {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[calc(100vh-8rem)]">
-      {/* Timeline (Left) */}
-      <Card className="hidden lg:flex lg:col-span-1 flex-col overflow-hidden h-full border-slate-200 shadow-sm">
-        <CardHeader className="bg-emerald-50 border-b border-emerald-100 pb-4">
-          <CardTitle className="text-emerald-800 flex items-center gap-2">
-            <Activity className="w-5 h-5" />
-            Timeline de Cuidados
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 overflow-y-auto p-0 bg-slate-50/50">
-          {appointments?.length > 0 ? (
-            <div className="p-6 space-y-6">
-               {appointments.map((appt, idx) => {
-                 const days = differenceInDays(new Date(appt.start_time), new Date());
-                 return (
-                   <div key={idx} className="bg-white p-4 rounded-lg border border-slate-100 shadow-sm">
-                     <div className="text-xs font-bold text-slate-400 uppercase mb-1">
-                       {days === 0 ? 'Hoje' : `Em ${days} dias`}
-                     </div>
-                     <h4 className="font-semibold text-slate-900">{appt.title}</h4>
-                     <div className="flex items-center gap-1 text-sm text-slate-500 mt-1">
-                       <Calendar className="w-3 h-3" />
-                       {format(new Date(appt.start_time), "dd/MM/yyyy HH:mm")}
-                     </div>
-                   </div>
-                 );
-               })}
-            </div>
-          ) : (
-            <div className="p-8 text-center text-slate-400">Nenhum agendamento.</div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Chat (Right) */}
-      <Card className="lg:col-span-2 flex flex-col overflow-hidden h-full border-slate-200 shadow-sm">
-        <CardHeader className="bg-white border-b border-slate-100 py-3">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-              <Bot className="w-6 h-6" />
-            </div>
-            <div>
-              <CardTitle className="text-lg">Enfermeira Digital</CardTitle>
-              <p className="text-xs text-emerald-600 font-medium flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Online
-              </p>
-            </div>
-          </div>
-        </CardHeader>
+    <div className="max-w-7xl mx-auto h-[calc(100vh-8rem)] flex gap-6 overflow-hidden">
+      
+      {/* Interactive Nurse Avatar Section */}
+      <div className="w-1/3 hidden lg:flex flex-col items-center justify-center relative">
+        <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
+          <motion.div
+             animate={{ y: [0, -10, 0] }}
+             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+             className="relative"
+          >
+             <div className="absolute -inset-4 bg-emerald-400/20 blur-3xl rounded-full" />
+             <img 
+               src={NURSE_IMAGE} 
+               alt="Nurse" 
+               className="w-auto max-h-[60vh] object-contain drop-shadow-2xl relative z-10" 
+             />
+             
+             {/* Speech Bubble */}
+             <AnimatePresence>
+                {chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === 'assistant' && (
+                   <motion.div 
+                     initial={{ opacity: 0, scale: 0.8, x: -20 }}
+                     animate={{ opacity: 1, scale: 1, x: 0 }}
+                     exit={{ opacity: 0, scale: 0.8 }}
+                     className="absolute -top-4 -right-20 bg-white p-4 rounded-2xl rounded-bl-none shadow-xl border-2 border-emerald-100 max-w-[250px] z-20"
+                   >
+                      <p className="text-sm text-slate-700 line-clamp-3">
+                        {chatHistory[chatHistory.length - 1].content}
+                      </p>
+                      <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-white border-b-2 border-l-2 border-emerald-100 transform rotate-45" />
+                   </motion.div>
+                )}
+             </AnimatePresence>
+          </motion.div>
+        </div>
         
-        <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-50" ref={scrollRef}>
-          {chatHistory.map((msg, idx) => (
-            <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-[85%] rounded-2xl p-4 shadow-sm ${msg.role === 'user' ? 'bg-emerald-600 text-white rounded-tr-none' : 'bg-white text-slate-800 border border-slate-100 rounded-tl-none'}`}>
-                <ReactMarkdown className={`prose prose-sm max-w-none ${msg.role === 'user' ? 'prose-invert' : 'text-slate-700'}`}>{msg.content}</ReactMarkdown>
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-b from-emerald-50/50 to-white/0 rounded-3xl -z-0" />
+      </div>
+
+      {/* Main Interface Area */}
+      <div className="flex-1 flex flex-col h-full gap-4">
+         
+         {/* Top Stats / Context */}
+         <div className="grid grid-cols-2 gap-4 shrink-0">
+            <Card className="bg-white/80 backdrop-blur border-emerald-100">
+               <CardContent className="p-4 flex items-center gap-3">
+                  <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg">
+                     <Sparkles className="w-5 h-5" />
+                  </div>
+                  <div>
+                     <p className="text-xs text-slate-500">Status da IA</p>
+                     <p className="text-sm font-bold text-emerald-700">Ativa e Pronta</p>
+                  </div>
+               </CardContent>
+            </Card>
+            <Card className="bg-white/80 backdrop-blur border-emerald-100">
+               <CardContent className="p-4 flex items-center gap-3">
+                  <div className="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                     <Calendar className="w-5 h-5" />
+                  </div>
+                  <div>
+                     <p className="text-xs text-slate-500">Próximo Compromisso</p>
+                     <p className="text-sm font-bold text-slate-700">
+                        {appointments?.[0] ? formatDistanceToNow(new Date(appointments[0].start_time), { locale: ptBR, addSuffix: true }) : 'Nenhum agendado'}
+                     </p>
+                  </div>
+               </CardContent>
+            </Card>
+         </div>
+
+         {/* Chat Card */}
+         <Card className="flex-1 flex flex-col shadow-xl border-slate-200 overflow-hidden bg-white/90 backdrop-blur rounded-2xl">
+            {/* Chat Header */}
+            <div className="p-4 border-b flex items-center gap-3 bg-white shadow-sm z-10">
+              <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-emerald-500 overflow-hidden">
+                <img src={NURSE_IMAGE} alt="Icon" className="w-full h-full object-cover scale-150 pt-2" />
+              </div>
+              <div>
+                <h2 className="font-bold text-slate-800">Enfermeira Virtual</h2>
+                <p className="text-xs text-slate-500 flex items-center gap-1">
+                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  Online • IA Assistente de Saúde
+                </p>
               </div>
             </div>
-          ))}
-          
-          {/* Suggestion Chips */}
-          {step === 'ask_topic' && (
-            <div className="space-y-4 animate-in fade-in slide-in-from-bottom-2">
-               <div>
-                 <p className="text-xs font-bold text-slate-400 uppercase ml-1 mb-2">Exames Estéticos</p>
-                 <div className="flex flex-wrap gap-2">
-                   {EXAM_OPTIONS.map(opt => (
-                     <button key={opt} onClick={() => handleOptionClick(opt, 'exam')} className="px-3 py-1.5 bg-white border border-emerald-200 text-emerald-700 rounded-full text-sm hover:bg-emerald-50 transition-colors">
-                       {opt}
-                     </button>
-                   ))}
-                 </div>
-               </div>
-               <div>
-                 <p className="text-xs font-bold text-slate-400 uppercase ml-1 mb-2">Procedimentos Estéticos</p>
-                 <div className="flex flex-wrap gap-2">
-                   {PROCEDURE_OPTIONS.map(opt => (
-                     <button key={opt} onClick={() => handleOptionClick(opt, 'procedure')} className="px-3 py-1.5 bg-white border border-purple-200 text-purple-700 rounded-full text-sm hover:bg-purple-50 transition-colors">
-                       {opt}
-                     </button>
-                   ))}
-                 </div>
-               </div>
+
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-50/50" ref={scrollRef}>
+              <div className="space-y-4 max-w-3xl mx-auto">
+                {chatHistory.map((msg, idx) => (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    key={idx}
+                    className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
+                  >
+                    <Avatar className={`w-8 h-8 ${msg.role === 'assistant' ? 'bg-emerald-100 border-emerald-200' : 'bg-indigo-100 border-indigo-200'} border`}>
+                      {msg.role === 'assistant' ? (
+                        <AvatarImage src={NURSE_IMAGE} className="object-cover scale-150 pt-1" />
+                      ) : null}
+                      <AvatarFallback className={msg.role === 'assistant' ? 'text-emerald-700' : 'text-indigo-700'}>
+                        {msg.role === 'assistant' ? <Bot className="w-4 h-4" /> : <User className="w-4 h-4" />}
+                      </AvatarFallback>
+                    </Avatar>
+                    
+                    <div className={`flex flex-col gap-1 max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
+                      <span className="text-xs text-slate-400 px-1">
+                        {msg.role === 'assistant' ? 'Enfermeira' : 'Você'}
+                      </span>
+                      <div
+                        className={`p-3 rounded-2xl text-sm shadow-sm ${
+                          msg.role === 'user'
+                            ? 'bg-indigo-600 text-white rounded-tr-none'
+                            : 'bg-white text-slate-700 border border-slate-100 rounded-tl-none'
+                        }`}
+                      >
+                        {msg.content}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+                
+                {sendMessageMutation.isPending && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+                    <Avatar className="w-8 h-8 bg-emerald-100 border border-emerald-200">
+                      <AvatarImage src={NURSE_IMAGE} className="object-cover scale-150 pt-1" />
+                    </Avatar>
+                    <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm flex gap-1 items-center">
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
+                  </motion.div>
+                )}
+              </div>
             </div>
-          )}
 
-          {sendMessageMutation.isPending && (
-             <div className="flex justify-start"><div className="bg-white rounded-2xl p-4 shadow-sm border flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin text-emerald-600" /><span className="text-sm text-slate-400">Digitando...</span></div></div>
-          )}
-        </div>
+            {/* Interactive Suggestions */}
+            <AnimatePresence>
+               {step === 'ask_topic' && (
+                  <motion.div 
+                     initial={{ height: 0, opacity: 0 }}
+                     animate={{ height: 'auto', opacity: 1 }}
+                     exit={{ height: 0, opacity: 0 }}
+                     className="px-4 py-2 bg-slate-50 border-t border-slate-100 overflow-x-auto flex flex-col gap-2 no-scrollbar max-h-32"
+                  >
+                     <div className="flex gap-2 flex-wrap">
+                       {EXAM_OPTIONS.map((item) => (
+                          <Button 
+                             key={item} 
+                             variant="outline" 
+                             size="sm" 
+                             onClick={() => handleOptionClick(item, 'exam')}
+                             className="whitespace-nowrap border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:scale-105 transition-transform"
+                          >
+                             {item}
+                          </Button>
+                       ))}
+                     </div>
+                     <div className="flex gap-2 flex-wrap">
+                       {PROCEDURE_OPTIONS.map((item) => (
+                          <Button 
+                             key={item} 
+                             variant="outline" 
+                             size="sm" 
+                             onClick={() => handleOptionClick(item, 'procedure')}
+                             className="whitespace-nowrap border-purple-200 text-purple-700 hover:bg-purple-50 hover:scale-105 transition-transform"
+                          >
+                             {item}
+                          </Button>
+                       ))}
+                     </div>
+                  </motion.div>
+               )}
+            </AnimatePresence>
 
-        <div className="p-4 bg-white border-t border-slate-100">
-          <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-3">
-            <Input 
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder={step === 'ask_name' ? "Digite seu nome..." : "Digite sua dúvida..."}
-              className="flex-1 bg-slate-50 focus-visible:ring-emerald-500"
-            />
-            <Button type="submit" disabled={sendMessageMutation.isPending || !message.trim()} className="bg-emerald-600 hover:bg-emerald-700">
-              <Send className="w-4 h-4" />
-            </Button>
-          </form>
-        </div>
-      </Card>
+            {/* Input Area */}
+            <div className="p-4 bg-white border-t">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSend();
+                }}
+                className="flex gap-2 max-w-3xl mx-auto"
+              >
+                <Input
+                  placeholder={
+                     step === 'ask_name' ? "Digite seu nome..." :
+                     step === 'ask_topic' ? "Sobre o que gostaria de falar?" :
+                     "Digite sua mensagem..."
+                  }
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  disabled={sendMessageMutation.isPending}
+                  className="flex-1 border-slate-200 focus:ring-emerald-500"
+                />
+                <Button 
+                   type="submit" 
+                   disabled={!message.trim() || sendMessageMutation.isPending}
+                   className="bg-emerald-600 hover:bg-emerald-700 transition-all hover:scale-105"
+                >
+                  {sendMessageMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </Button>
+              </form>
+            </div>
+         </Card>
+      </div>
     </div>
   );
 }

@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Loader2, Upload, Sparkles, Image as ImageIcon, MonitorPlay } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Loader2, Upload, Sparkles, Image as ImageIcon, MonitorPlay, Trash2, Eye, MousePointer2, Edit, Clock } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 export default function BannerManager() {
   const queryClient = useQueryClient();
@@ -19,10 +23,22 @@ export default function BannerManager() {
     target_audience: 'all',
     media_url: '',
     media_type: 'image',
-    active: true
+    active: true,
+    contact_email: '',
+    contact_phone: ''
   });
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+
+  const { data: banners, isLoading } = useQuery({
+    queryKey: ['myBanners'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      if (!user) return [];
+      const res = await base44.entities.Banner.list({ query: { owner_email: user.email } });
+      return res.data;
+    }
+  });
 
   const createBannerMutation = useMutation({
     mutationFn: async () => {
@@ -30,14 +46,22 @@ export default function BannerManager() {
       await base44.entities.Banner.create({
         owner_email: user.email,
         ...formData,
-        active: true
+        active: true,
+        views: 0,
+        clicks: 0
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['banners']);
+      queryClient.invalidateQueries(['myBanners']);
       alert("Banner criado com sucesso!");
-      setFormData({ ...formData, title: '', link_url: '', media_url: '' });
+      setFormData({ title: '', link_url: '', position: 'center', target_audience: 'all', media_url: '', media_type: 'image', active: true, contact_email: '', contact_phone: '' });
+      setAiPrompt('');
     }
+  });
+
+  const deleteBannerMutation = useMutation({
+     mutationFn: async (id) => await base44.entities.Banner.delete(id),
+     onSuccess: () => queryClient.invalidateQueries(['myBanners'])
   });
 
   const handleFileUpload = async (e) => {
@@ -159,6 +183,17 @@ export default function BannerManager() {
             </Select>
           </div>
         </div>
+        
+        <div className="grid grid-cols-2 gap-4 mb-6">
+           <div className="space-y-2">
+              <Label>Email de Contato</Label>
+              <Input value={formData.contact_email} onChange={e => setFormData({...formData, contact_email: e.target.value})} placeholder="email@contato.com" />
+           </div>
+           <div className="space-y-2">
+              <Label>Telefone de Contato</Label>
+              <Input value={formData.contact_phone} onChange={e => setFormData({...formData, contact_phone: e.target.value})} placeholder="(00) 00000-0000" />
+           </div>
+        </div>
 
         <Button onClick={() => createBannerMutation.mutate()} className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={!formData.media_url || createBannerMutation.isPending}>
           {createBannerMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <MonitorPlay className="w-4 h-4 mr-2" />}
@@ -166,5 +201,94 @@ export default function BannerManager() {
         </Button>
       </CardContent>
     </Card>
+
+    {/* Banner List Table */}
+    <Card className="w-full">
+        <CardHeader>
+          <CardTitle>Meus Banners Ativos</CardTitle>
+          <CardDescription>Gerencie suas campanhas e acompanhe métricas.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Banner</TableHead>
+                <TableHead>Detalhes</TableHead>
+                <TableHead>Métricas</TableHead>
+                <TableHead>Exibido há</TableHead>
+                <TableHead>Contato</TableHead>
+                <TableHead>Ações</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {banners?.map(banner => (
+                <TableRow key={banner.id}>
+                  <TableCell>
+                    <div className="w-16 h-10 bg-slate-100 rounded overflow-hidden">
+                      {banner.media_type === 'video' ? (
+                        <video src={banner.media_url} className="w-full h-full object-cover" />
+                      ) : (
+                        <img src={banner.media_url} className="w-full h-full object-cover" alt={banner.title} />
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                     <div className="font-medium">{banner.title}</div>
+                     <div className="text-xs text-slate-500">{banner.position} • {banner.target_audience}</div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col gap-1 text-xs">
+                       <div className="flex items-center gap-1 text-slate-600"><Eye className="w-3 h-3" /> {banner.views || 0} views</div>
+                       <div className="flex items-center gap-1 text-slate-600"><MousePointer2 className="w-3 h-3" /> {banner.clicks || 0} clicks</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                     <div className="flex items-center gap-1 text-xs text-slate-500">
+                        <Clock className="w-3 h-3" />
+                        {banner.created_date ? formatDistanceToNow(new Date(banner.created_date), { locale: ptBR }) : '-'}
+                     </div>
+                  </TableCell>
+                  <TableCell>
+                     <div className="text-xs text-slate-500">
+                        <div>{banner.contact_email || '-'}</div>
+                        <div>{banner.contact_phone || '-'}</div>
+                     </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                       <Dialog>
+                          <DialogTrigger asChild>
+                             <Button variant="outline" size="icon" className="h-8 w-8"><Edit className="w-4 h-4" /></Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                             <DialogHeader><DialogTitle>Editar Banner</DialogTitle></DialogHeader>
+                             <div className="py-4">
+                                <Label>Link de Redirecionamento</Label>
+                                <Input defaultValue={banner.link_url} className="mb-4" />
+                                <Label>Email de Contato</Label>
+                                <Input defaultValue={banner.contact_email} className="mb-4" />
+                                <Button className="w-full" onClick={() => alert('Funcionalidade de edição rápida (simulada).')}>Salvar</Button>
+                             </div>
+                          </DialogContent>
+                       </Dialog>
+                       <Button variant="destructive" size="icon" className="h-8 w-8" onClick={() => deleteBannerMutation.mutate(banner.id)}>
+                          <Trash2 className="w-4 h-4" />
+                       </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+              {!isLoading && banners?.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8 text-slate-500">
+                    Nenhum banner ativo no momento.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+    </>
   );
 }

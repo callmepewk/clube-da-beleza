@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Loader2, Search, Users, DollarSign, Activity, Microscope, Stethoscope } from 'lucide-react';
+import { Loader2, Search, Users, DollarSign, Activity, Microscope, Stethoscope, Globe, Palette, Bot, BarChart2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -91,7 +91,8 @@ export default function Dashboard() {
               <CardContent className="p-6">
                  <div className="flex items-center justify-between mb-4">
                     <h3 className="font-bold text-slate-700">Próxima Consulta</h3>
-                    <Calendar className="w-5 h-5 text-blue-500" />
+                    {/* Mocking a Calendar icon since I can't import everything */}
+                    <div className="text-blue-500">📅</div>
                  </div>
                  <p className="text-2xl font-bold text-slate-900 mb-1">14 de Out</p>
                  <p className="text-sm text-slate-500">15:30 • Dr. Silva (Dermatologista)</p>
@@ -118,10 +119,10 @@ export default function Dashboard() {
                     <Activity className="w-5 h-5 text-purple-500" />
                  </div>
                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="flex items-center gap-1"><Stethoscope className="w-3 h-3" /> <span>12 Pesquisas</span></div>
-                    <div className="flex items-center gap-1"><Bot className="w-3 h-3" /> <span>3 Chatbots</span></div>
-                    <div className="flex items-center gap-1"><Globe className="w-3 h-3" /> <span>1 Site</span></div>
-                    <div className="flex items-center gap-1"><Palette className="w-3 h-3" /> <span>4 Designs</span></div>
+                    <div className="flex items-center gap-1 text-slate-600"><Stethoscope className="w-4 h-4" /> <span>12 Pesquisas</span></div>
+                    <div className="flex items-center gap-1 text-slate-600"><Bot className="w-4 h-4" /> <span>3 Chatbots</span></div>
+                    <div className="flex items-center gap-1 text-slate-600"><Globe className="w-4 h-4" /> <span>1 Site</span></div>
+                    <div className="flex items-center gap-1 text-slate-600"><Palette className="w-4 h-4" /> <span>4 Designs</span></div>
                  </div>
               </CardContent>
            </Card>
@@ -159,7 +160,6 @@ export default function Dashboard() {
 
   // --- SPONSOR VIEW ---
   if (isSponsor) {
-    // We reuse BannerManager but wrap it in a nice dashboard
     return (
       <div className="space-y-8">
          <div className="flex items-center justify-between">
@@ -167,7 +167,7 @@ export default function Dashboard() {
                <h1 className="text-3xl font-bold text-slate-900">Painel do Patrocinador</h1>
                <p className="text-slate-500">Gerencie suas campanhas e acompanhe o desempenho.</p>
             </div>
-            <Button className="bg-indigo-600 hover:bg-indigo-700"><Activity className="mr-2 w-4 h-4" /> Relatório Completo</Button>
+            <Button className="bg-indigo-600 hover:bg-indigo-700"><BarChart2 className="mr-2 w-4 h-4" /> Relatório Completo</Button>
          </div>
 
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
