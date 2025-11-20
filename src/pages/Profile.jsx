@@ -60,6 +60,34 @@ export default function ProfilePage() {
           {profile?.type === 'professional' && <TabsTrigger value="professional">Profissional</TabsTrigger>}
         </TabsList>
 
+        {profile && (
+          <Card className="mb-6 border-emerald-200 bg-emerald-50">
+            <CardContent className="flex items-center justify-between p-4">
+              <div>
+                <p className="text-sm font-medium text-emerald-800">Tipo de Conta Atual</p>
+                <h2 className="text-xl font-bold text-emerald-900 capitalize">{profile.type === 'professional' ? 'Profissional' : 'Paciente'}</h2>
+              </div>
+              <Button 
+                variant="outline" 
+                className="border-emerald-600 text-emerald-700 hover:bg-emerald-100"
+                onClick={() => {
+                  const type = profile.type === 'patient' ? 'Profissional' : 'Paciente';
+                  if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
+                     base44.integrations.Core.SendEmail({
+                       to: "pedro_hbfreitas@hotmail.com",
+                       subject: `Solicitação de Mudança de Tipo de Conta - ${profile.user_email}`,
+                       body: `O usuário ${profile.user_email} solicitou a mudança de sua conta de ${profile.type} para ${type.toLowerCase()}.`
+                     });
+                     alert("Solicitação enviada com sucesso! Aguarde o contato da administração.");
+                  }
+                }}
+              >
+                Solicitar Mudança de Tipo
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         <TabsContent value="personal">
           <Card>
             <CardHeader>
