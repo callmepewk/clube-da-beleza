@@ -120,31 +120,31 @@ export default function Layout({ children }) {
      navItems.push({ icon: LayoutDashboard, label: 'Painel de Controle', path: '/admin-control' });
   }
 
-  // Aesthetic Medicine Premium Theme (Clinical & High-Tech)
+  // Aesthetic Medicine Premium Theme (Refined & Elegant)
   const theme = {
-    bg: "bg-[#F4F7F7]", // Cinza gelo
-    sidebar: "bg-[#FFFFFF]", // Branco puro
-    card: "bg-[#FFFFFF] shadow-sm hover:shadow-md transition-shadow",
-    hover: "hover:bg-[#F0FDF9]", // Suave menta hover
-    textPrimary: "text-[#2D3748]", // Dark gray for contrast
-    textSecondary: "text-[#A7AFB4]", // Cinza sofisticado
-    accent: "text-[#3BAE9C]", // Verde clínica
-    accentBg: "bg-[#8EE2C8]", // Verde menta tecnológico
-    border: "border-[#E2E8F0]" // Light gray border
+    bg: "bg-[#F8FAFC]", // Very soft blue-gray (cleaner than ice gray)
+    sidebar: "bg-[#FFFFFF]", // Pure white
+    card: "bg-[#FFFFFF] shadow-sm hover:shadow-md transition-all duration-300",
+    hover: "hover:bg-[#F0FDF4]", // Very subtle green tint
+    textPrimary: "text-[#1E293B]", // Deep Slate (Softer than black, very professional)
+    textSecondary: "text-[#64748B]", // Slate 500 (Readable gray)
+    accent: "text-[#059669]", // Emerald 600 (More authoritative medical green)
+    accentBg: "bg-[#10B981]", // Emerald 500 (Vibrant but safe)
+    border: "border-[#E2E8F0]" // Slate 200
   };
 
   // Onboarding Layout
   if (location.pathname === '/onboarding') {
     return (
       <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#2D3748]`}>
-        <header className={`h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 lg:px-8 sticky top-0 z-50 bg-white/80 backdrop-blur-md`}>
+        <header className={`h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 lg:px-8 sticky top-0 z-50 bg-white/90 backdrop-blur-sm supports-[backdrop-filter]:bg-white/60`}>
            <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2 transition-opacity hover:opacity-80">
-              <div className="bg-gradient-to-tr from-[#3BAE9C] to-[#8EE2C8] p-1.5 rounded-lg shadow-lg shadow-[#3BAE9C]/20">
+              <div className="bg-gradient-to-tr from-[#059669] to-[#34D399] p-1.5 rounded-lg shadow-md shadow-emerald-200">
                   <Activity className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-xl tracking-tight text-[#2D3748]">HealthAI</span>
+              <span className="font-bold text-xl tracking-tight text-[#1E293B]">HealthAI</span>
            </Link>
-           <div className="text-sm font-medium text-[#A7AFB4]">
+           <div className="text-sm font-medium text-[#64748B]">
              Finalizando Cadastro
            </div>
         </header>

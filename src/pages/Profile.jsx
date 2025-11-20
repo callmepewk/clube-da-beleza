@@ -170,32 +170,32 @@ export default function ProfilePage() {
 
   if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin text-purple-500" /></div>;
 
-  // Aesthetic Premium Theme Classes
-  const cardClass = "bg-white border border-[#E2E8F0] text-[#2D3748] hover:shadow-lg transition-all hover:-translate-y-0.5 duration-300 shadow-sm rounded-xl";
-  const inputClass = "bg-[#F4F7F7] border border-[#E2E8F0] text-[#2D3748] focus:ring-2 focus:ring-[#3BAE9C]/20 focus:border-[#3BAE9C] h-12 rounded-lg placeholder:text-[#A7AFB4] transition-all";
-  const labelClass = "text-[#4A5568] text-sm font-bold mb-1.5 block";
+  // Refined Elegant Theme Classes
+  const cardClass = "bg-white border border-slate-100 text-[#1E293B] hover:shadow-lg transition-all hover:-translate-y-0.5 duration-300 shadow-sm rounded-2xl";
+  const inputClass = "bg-[#F8FAFC] border border-slate-200 text-[#1E293B] focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] h-12 rounded-xl placeholder:text-[#94A3B8] transition-all hover:bg-[#F1F5F9]";
+  const labelClass = "text-[#475569] text-sm font-bold mb-1.5 block";
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-10">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-[#2D3748]">Meu Perfil</h1>
-            <p className="text-[#A7AFB4]">Gerencie suas informações e preferências.</p>
+            <h1 className="text-3xl font-bold text-[#1E293B]">Meu Perfil</h1>
+            <p className="text-[#64748B]">Gerencie suas informações e preferências.</p>
           </div>
-          <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))} className="border-[#E2E8F0] bg-white text-[#2D3748] hover:bg-[#F4F7F7] hover:text-[#3BAE9C] shadow-sm">
-             <CreditCard className="w-4 h-4 mr-2 text-[#3BAE9C]" /> Ver Meu Plano
+          <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))} className="border-slate-200 bg-white text-[#1E293B] hover:bg-[#F8FAFC] hover:text-[#059669] shadow-sm rounded-xl">
+             <CreditCard className="w-4 h-4 mr-2 text-[#059669]" /> Ver Meu Plano
           </Button>
         </div>
 
         <Tabs defaultValue="personal" className="w-full">
-          <TabsList className="w-full bg-[#F4F7F7] border border-[#E2E8F0] p-1 rounded-xl">
-            <TabsTrigger value="personal" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#3BAE9C] data-[state=active]:shadow-sm text-[#A7AFB4] font-medium transition-all">Dados Pessoais</TabsTrigger>
-            {profile?.type === 'patient' && <TabsTrigger value="medical" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#3BAE9C] data-[state=active]:shadow-sm text-[#A7AFB4] font-medium transition-all">Ficha Médica</TabsTrigger>}
-            {profile?.type === 'professional' && <TabsTrigger value="professional" className="rounded-lg data-[state=active]:bg-white data-[state=active]:text-[#3BAE9C] data-[state=active]:shadow-sm text-[#A7AFB4] font-medium transition-all">Profissional</TabsTrigger>}
+          <TabsList className="w-full bg-[#F1F5F9] border border-slate-200 p-1.5 rounded-2xl">
+            <TabsTrigger value="personal" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#059669] data-[state=active]:shadow-sm text-[#64748B] font-semibold transition-all">Dados Pessoais</TabsTrigger>
+            {profile?.type === 'patient' && <TabsTrigger value="medical" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#059669] data-[state=active]:shadow-sm text-[#64748B] font-semibold transition-all">Ficha Médica</TabsTrigger>}
+            {profile?.type === 'professional' && <TabsTrigger value="professional" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#059669] data-[state=active]:shadow-sm text-[#64748B] font-semibold transition-all">Profissional</TabsTrigger>}
           </TabsList>
 
           {/* Profile Header Card */}
-          <Card className="mb-6 mt-6 border-0 bg-gradient-to-r from-[#3BAE9C] to-[#8EE2C8] shadow-lg text-white rounded-2xl overflow-hidden relative">
+          <Card className="mb-6 mt-6 border-0 bg-gradient-to-r from-[#059669] to-[#34D399] shadow-lg text-white rounded-2xl overflow-hidden relative">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
             <CardContent className="flex flex-col md:flex-row items-center gap-6 p-8 relative z-10">
               <div className="relative group">
@@ -206,17 +206,17 @@ export default function ProfilePage() {
                        <UserIcon className="w-12 h-12 text-white" />
                     )}
                  </div>
-                 <label className="absolute bottom-1 right-1 bg-white text-[#3BAE9C] p-2 rounded-full cursor-pointer hover:bg-[#F4F7F7] shadow-md transition-all hover:scale-110">
+                 <label className="absolute bottom-1 right-1 bg-white text-[#059669] p-2 rounded-full cursor-pointer hover:bg-[#F0FDF4] shadow-md transition-all hover:scale-110">
                     <Upload className="w-4 h-4" />
                     <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
                  </label>
               </div>
 
               <div className="flex-1 text-center md:text-left space-y-2">
-                <h2 className="text-2xl font-bold text-white">{personalData.full_name || profile?.user_email}</h2>
+                <h2 className="text-2xl font-bold text-white tracking-tight">{personalData.full_name || profile?.user_email}</h2>
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
                    <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm flex items-center gap-2">
-                      <div className="w-2 h-2 bg-[#D9C79F] rounded-full animate-pulse"></div>
+                      <div className="w-2 h-2 bg-emerald-200 rounded-full animate-pulse"></div>
                       {profile?.type === 'professional' ? 'Profissional Certificado' : 'Paciente Premium'}
                    </span>
                    <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">Plano: {profile?.plan || 'Free'}</span>
@@ -245,9 +245,9 @@ export default function ProfilePage() {
 
         <TabsContent value="personal">
           <Card className={cardClass}>
-            <CardHeader className="border-b border-[#E2E8F0] pb-4">
-              <CardTitle className="text-[#2D3748] flex items-center gap-2">
-                 <div className="bg-[#E6FFFA] p-2 rounded-lg"><UserIcon className="w-5 h-5 text-[#3BAE9C]" /></div>
+            <CardHeader className="border-b border-slate-100 pb-4">
+              <CardTitle className="text-[#1E293B] flex items-center gap-3">
+                 <div className="bg-[#ECFDF5] p-2 rounded-xl"><UserIcon className="w-5 h-5 text-[#059669]" /></div>
                  Informações Pessoais
               </CardTitle>
             </CardHeader>
@@ -260,12 +260,12 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div className="space-y-2">
                     <Label className={labelClass}>Email</Label>
-                    <Input value={profile?.user_email || ''} disabled className={`${inputClass} bg-[#F7FAFC] text-[#A0AEC0] cursor-not-allowed`} />
+                    <Input value={profile?.user_email || ''} disabled className={`${inputClass} bg-slate-50 text-slate-400 cursor-not-allowed`} />
                  </div>
                  <div className="space-y-2">
                     <Label className={labelClass}>Senha</Label>
-                    <Input type="password" value="********" disabled className={`${inputClass} bg-[#F7FAFC] text-[#A0AEC0] cursor-not-allowed`} />
-                    <p className="text-xs text-[#A0AEC0]">A senha pode ser alterada na tela de login.</p>
+                    <Input type="password" value="********" disabled className={`${inputClass} bg-slate-50 text-slate-400 cursor-not-allowed`} />
+                    <p className="text-xs text-slate-400">A senha pode ser alterada na tela de login.</p>
                  </div>
               </div>
 
@@ -280,10 +280,10 @@ export default function ProfilePage() {
                  </div>
               </div>
 
-              <div className="border-t border-[#E2E8F0] pt-6 mt-2">
+              <div className="border-t border-slate-100 pt-6 mt-2">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold flex items-center gap-2 text-[#2D3748]">
-                       <div className="bg-[#E6FFFA] p-1.5 rounded-full"><MapPin className="w-4 h-4 text-[#3BAE9C]" /></div> 
+                    <h3 className="font-bold flex items-center gap-3 text-[#1E293B]">
+                       <div className="bg-[#ECFDF5] p-2 rounded-xl"><MapPin className="w-4 h-4 text-[#059669]" /></div> 
                        Endereço
                     </h3>
                     <Button 
@@ -292,7 +292,7 @@ export default function ProfilePage() {
                       size="sm" 
                       onClick={handleLocationClick}
                       disabled={isLoadingLocation}
-                      className="text-xs h-8 bg-white text-[#3BAE9C] border-[#3BAE9C] hover:bg-[#E6FFFA]"
+                      className="text-xs h-8 bg-white text-[#059669] border-[#059669] hover:bg-[#ECFDF5]"
                     >
                       {isLoadingLocation ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <MapPin className="w-3 h-3 mr-1" />}
                       Usar minha localização
@@ -332,7 +332,7 @@ export default function ProfilePage() {
                   </div>
               </div>
 
-              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#3BAE9C] hover:bg-[#2A9D8F] text-white h-12 font-bold shadow-md hover:shadow-lg transition-all rounded-xl" disabled={saveMutation.isPending}>
+              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#059669] hover:bg-[#047857] text-white h-12 font-bold shadow-md hover:shadow-lg transition-all rounded-xl" disabled={saveMutation.isPending}>
                  {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
                  Salvar Alterações
               </Button>

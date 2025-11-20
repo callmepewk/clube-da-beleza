@@ -73,64 +73,64 @@ export default function Dashboard() {
   if (isPatient) {
     return (
       <div className="space-y-8 pb-10">
-        {/* Hero Section - Premium Aesthetic */}
-        <div className="relative h-80 rounded-3xl overflow-hidden shadow-xl group bg-white border border-[#E2E8F0]">
-          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1616391182219-e080b4d1043a?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-[#F4F7F7] via-white/50 to-transparent"></div>
+        {/* Hero Section - Refined Premium Aesthetic */}
+        <div className="relative h-80 rounded-3xl overflow-hidden shadow-lg group bg-white border border-slate-100">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1616391182219-e080b4d1043a?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.08]"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-transparent"></div>
           <div className="relative z-10 flex flex-col justify-center h-full p-10 max-w-2xl">
-             <h1 className="text-5xl font-bold tracking-tight text-[#2D3748] mb-4 drop-shadow-sm">Olá, <span className="text-[#3BAE9C]">{user.full_name.split(' ')[0]}</span></h1>
-             <p className="text-[#A7AFB4] text-xl font-light leading-relaxed">Sua jornada de estética avançada e bem-estar começa aqui. Tecnologia e cuidado em harmonia.</p>
+             <h1 className="text-5xl font-bold tracking-tight text-[#1E293B] mb-4 drop-shadow-sm">Olá, <span className="text-[#059669]">{user.full_name.split(' ')[0]}</span></h1>
+             <p className="text-[#64748B] text-lg font-normal leading-relaxed">Sua jornada de estética avançada e bem-estar começa aqui.</p>
           </div>
         </div>
 
-        {/* Action Cards - Glassmorphism & Soft Shadows */}
+        {/* Action Cards - Cleaner Look */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
            {/* Next Appointment */}
-           <div className="bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-[#E2E8F0] flex items-center gap-5 shadow-sm">
-               <div className="h-14 w-14 bg-[#E6FFFA] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Calendar className="text-[#3BAE9C] w-6 h-6" />
+           <div className="bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-slate-100 flex items-center gap-5">
+               <div className="h-14 w-14 bg-[#ECFDF5] rounded-xl flex items-center justify-center group-hover:bg-[#D1FAE5] transition-colors">
+                  <Calendar className="text-[#059669] w-6 h-6" />
                </div>
                <div>
-                  <h3 className="font-bold text-[#2D3748] text-lg group-hover:text-[#3BAE9C] transition-colors">Próxima Consulta</h3>
-                  <p className="text-[#A7AFB4] text-sm font-medium">14 Out • 15:30</p>
+                  <h3 className="font-bold text-[#1E293B] text-lg group-hover:text-[#059669] transition-colors">Próxima Consulta</h3>
+                  <p className="text-[#64748B] text-sm font-medium">14 Out • 15:30</p>
                </div>
            </div>
 
            {/* Investment */}
-           <div className="bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-[#E2E8F0] flex items-center gap-5 shadow-sm">
-               <div className="h-14 w-14 bg-[#F3E8FF] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <DollarSign className="text-[#CDB7FF] w-6 h-6" />
+           <div className="bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-slate-100 flex items-center gap-5">
+               <div className="h-14 w-14 bg-[#F5F3FF] rounded-xl flex items-center justify-center group-hover:bg-[#EDE9FE] transition-colors">
+                  <DollarSign className="text-[#8B5CF6] w-6 h-6" />
                </div>
                <div>
-                  <h3 className="font-bold text-[#2D3748] text-lg group-hover:text-[#CDB7FF] transition-colors">Investimento</h3>
-                  <p className="text-[#A7AFB4] text-sm font-medium">R$ {stats?.avgProcedure || 1250},00</p>
+                  <h3 className="font-bold text-[#1E293B] text-lg group-hover:text-[#8B5CF6] transition-colors">Investimento</h3>
+                  <p className="text-[#64748B] text-sm font-medium">R$ {stats?.avgProcedure || 1250},00</p>
                </div>
            </div>
 
            {/* Quick Stats */}
-           <div className="bg-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-[#E2E8F0] flex items-center gap-5 shadow-sm">
-               <div className="h-14 w-14 bg-[#FFFBEB] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Sparkles className="text-[#D9C79F] w-6 h-6" />
+           <div className="bg-white hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl p-6 cursor-pointer group border border-slate-100 flex items-center gap-5">
+               <div className="h-14 w-14 bg-[#FFFBEB] rounded-xl flex items-center justify-center group-hover:bg-[#FEF3C7] transition-colors">
+                  <Sparkles className="text-[#D97706] w-6 h-6" />
                </div>
                <div>
-                  <h3 className="font-bold text-[#2D3748] text-lg group-hover:text-[#D9C79F] transition-colors">Tratamentos</h3>
-                  <p className="text-[#A7AFB4] text-sm font-medium">3 Ativos • 1 Plano</p>
+                  <h3 className="font-bold text-[#1E293B] text-lg group-hover:text-[#D97706] transition-colors">Tratamentos</h3>
+                  <p className="text-[#64748B] text-sm font-medium">3 Ativos • 1 Plano</p>
                </div>
            </div>
         </div>
 
-        {/* Search Bar - Clean & Clinical */}
-        <div className="bg-white p-8 rounded-3xl shadow-lg border border-[#E2E8F0]">
-          <h2 className="text-2xl font-bold text-[#2D3748] mb-6">O que você deseja agendar hoje?</h2>
+        {/* Search Bar - Refined */}
+        <div className="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+          <h2 className="text-2xl font-bold text-[#1E293B] mb-6">O que você deseja agendar hoje?</h2>
           <form onSubmit={handleSearch} className="relative">
-             <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#A7AFB4]" />
+             <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#94A3B8]" />
              <Input 
                placeholder="Buscar dermatologistas, laser, harmonização..." 
-               className="pl-16 h-16 text-lg bg-[#F4F7F7] border-transparent text-[#2D3748] rounded-full focus:ring-2 focus:ring-[#3BAE9C]/50 focus:bg-white transition-all placeholder:text-[#A7AFB4]"
+               className="pl-16 h-16 text-lg bg-[#F8FAFC] border-transparent text-[#1E293B] rounded-2xl focus:ring-2 focus:ring-[#059669]/20 focus:bg-white transition-all placeholder:text-[#94A3B8] hover:bg-[#F1F5F9]"
                value={searchQuery}
                onChange={(e) => setSearchQuery(e.target.value)}
              />
-             <Button type="submit" className="absolute right-3 top-3 h-10 px-8 bg-[#3BAE9C] text-white hover:bg-[#2A9D8F] rounded-full font-bold text-sm transition-all shadow-md hover:shadow-lg">
+             <Button type="submit" className="absolute right-3 top-3 h-10 px-8 bg-[#059669] text-white hover:bg-[#047857] rounded-xl font-bold text-sm transition-all shadow-md hover:shadow-lg">
                Buscar
              </Button>
           </form>
@@ -138,8 +138,8 @@ export default function Dashboard() {
 
         {/* Categories / Inspiration - Aesthetic */}
         <div>
-            <h2 className="text-2xl font-bold text-[#2D3748] mb-6 flex items-center gap-2">
-              <div className="w-1 h-6 bg-[#3BAE9C] rounded-full"></div>
+            <h2 className="text-2xl font-bold text-[#1E293B] mb-6 flex items-center gap-3">
+              <div className="w-1.5 h-8 bg-[#059669] rounded-full"></div>
               Explorar Procedimentos
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
