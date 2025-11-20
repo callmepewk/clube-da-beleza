@@ -309,10 +309,70 @@ export default function Dashboard() {
   // --- PROFESSIONAL & ADMIN VIEW (Light Mode) ---
   return (
     <div className="space-y-8 text-[#0F172A]">
+      {/* Hero Section - Beauty Center Presentation */}
+      <div className="relative h-96 rounded-[2rem] overflow-hidden shadow-2xl border border-slate-100 bg-white">
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/80"></div>
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522338140262-f46f5913618a?q=80&w=2000')] bg-cover bg-center opacity-[0.08]"></div>
+
+        <div className="relative z-10 h-full flex flex-col justify-center p-12 max-w-4xl">
+          <div className="mb-6">
+            <img 
+              src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
+              alt="Beauty Center"
+              className="h-20 w-auto mb-6"
+            />
+          </div>
+
+          <h1 className="text-5xl font-black tracking-tight text-[#0F172A] mb-4 leading-tight">
+            Inovação em <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0D9488] to-[#2DD4BF]">Saúde Estética</span>
+          </h1>
+
+          <p className="text-xl text-[#475569] leading-relaxed max-w-2xl font-medium mb-8">
+            O Beauty Center é a plataforma mais avançada para profissionais da medicina estética. 
+            Transforme sua prática com ferramentas de IA, gestão inteligente de agendamentos, 
+            criação de sites profissionais, chatbots personalizados e muito mais.
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 shadow-sm">
+              <div className="bg-[#F0FDFA] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                <Calendar className="w-5 h-5 text-[#0D9488]" />
+              </div>
+              <div className="text-sm font-bold text-[#0F172A]">Agendamento</div>
+              <div className="text-xs text-[#64748B] mt-1">Gestão inteligente</div>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 shadow-sm">
+              <div className="bg-[#EFF6FF] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                <Bot className="w-5 h-5 text-[#3B82F6]" />
+              </div>
+              <div className="text-sm font-bold text-[#0F172A]">Chatbots</div>
+              <div className="text-xs text-[#64748B] mt-1">Atendimento 24/7</div>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 shadow-sm">
+              <div className="bg-[#F5F3FF] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                <Globe className="w-5 h-5 text-[#7C3AED]" />
+              </div>
+              <div className="text-sm font-bold text-[#0F172A]">Sites</div>
+              <div className="text-xs text-[#64748B] mt-1">Presença digital</div>
+            </div>
+
+            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-slate-100 shadow-sm">
+              <div className="bg-[#FFFBEB] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                <Palette className="w-5 h-5 text-[#D97706]" />
+              </div>
+              <div className="text-sm font-bold text-[#0F172A]">Design IA</div>
+              <div className="text-xs text-[#64748B] mt-1">Criação visual</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-[#0F172A] tracking-tight">Painel Profissional</h1>
-          <p className="text-[#64748B] mt-1">Gerencie sua prática e acompanhe resultados com precisão.</p>
+          <h2 className="text-3xl font-bold text-[#0F172A] tracking-tight">Painel de Controle</h2>
+          <p className="text-[#64748B] mt-1">Acompanhe o desempenho da sua prática em tempo real.</p>
         </div>
       </div>
 

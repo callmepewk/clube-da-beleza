@@ -309,8 +309,12 @@ export default function Layout({ children }) {
     { icon: ShoppingBag, label: 'Produtos', path: '/products' },
     { icon: CreditCard, label: 'Planos', path: '/plans' },
     { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
-    { icon: Shield, label: 'Controle', path: '/admin-control' },
   ];
+
+  // Add Controle page only for admins
+  if (profile?.is_admin) {
+    navItems.push({ icon: Shield, label: 'Controle', path: '/AdminControl' });
+  }
 
 
 
