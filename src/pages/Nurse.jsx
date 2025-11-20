@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Send, Bot, Activity, Calendar, MapPin, Loader2, Sparkles, User 
 } from 'lucide-react';
+import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
+import { getPlanLimits, canUseFeature, getCurrentMonth } from '@/components/usage/usageLimits';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -32,7 +34,9 @@ export default function NursePage() {
   const [name, setName] = useState('');
   const [step, setStep] = useState('ask_name'); // ask_name, ask_topic, chat
   const [chatHistory, setChatHistory] = useState([]);
+  const [conversationActive, setConversationActive] = useState(true);
   const scrollRef = useRef(null);
+  const queryClient = useQueryClient();
   
   // Context Data
   const { data: profile } = useQuery({
@@ -44,6 +48,11 @@ export default function NursePage() {
       return profiles?.data?.[0] || null;
     },
   });
+
+  const planLimits = getPlanLimits(profile?.plan);
+  const currentMonth = getCurrentMonth();
+  const currentUsage = profile?.monthly_usage?.month === currentMonth ? profile?.monthly_usage?.nurse_conversations || 0 : 0;
+  const canUseNurse = canUseFeature(currentUsage, planLimits.nurse_conversations_monthly);
 
   const { data: appointments } = useQuery({
     queryKey: ['myAppointmentsNurse'],
@@ -71,6 +80,69 @@ export default function NursePage() {
   const logInteractionMutation = useMutation({
     mutationFn: (data) => base44.entities.NurseInteraction.create(data)
   });
+
+  // Track conversation completion
+  useEffect(() => {
+    const handleBeforeUnload = async () => {
+      if (conversationActive && chatHistory.length > 2 && profile) {
+        await incrementNurseUsage();
+      }
+    };
+
+    const handleVisibilityChange = async () => {
+      if (document.hidden && conversationActive && chatHistory.length > 2 && profile) {
+        await incrementNurseUsage();
+        setConversationActive(false);
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [conversationActive, chatHistory, profile]);
+
+  const incrementNurseUsage = async () => {
+    if (!profile) return;
+    const month = getCurrentMonth();
+    const usage = profile.monthly_usage || {};
+    
+    if (usage.month !== month) {
+      await base44.entities.UserProfile.update(profile.id, {
+        monthly_usage: {
+          month,
+          nurse_conversations: 1,
+          chatbots_created: 0,
+          sites_created: 0,
+          designs_created: 0,
+          products_created: 0,
+          ai_packages_created: 0
+        }
+      });
+    } else {
+      await base44.entities.UserProfile.update(profile.id, {
+        monthly_usage: {
+          ...usage,
+          nurse_conversations: (usage.nurse_conversations || 0) + 1
+        }
+      });
+    }
+    queryClient.invalidateQueries(['userProfileNurse']);
+  };
+
+  const handleEndChat = async () => {
+    if (conversationActive && chatHistory.length > 2 && profile) {
+      await incrementNurseUsage();
+      setConversationActive(false);
+      alert("Conversa encerrada. Obrigado por usar nossa Enfermeira Virtual!");
+      setChatHistory([{ role: 'assistant', content: 'Olá! Sou sua enfermeira virtual. Para começarmos, qual é o seu nome?' }]);
+      setStep('ask_name');
+      setConversationActive(true);
+    }
+  };
 
   const sendMessageMutation = useMutation({
     mutationFn: async ({ userMsg, topic }) => {
@@ -145,8 +217,36 @@ export default function NursePage() {
     sendMessageMutation.mutate({ userMsg: text, topic: type });
   };
 
+  if (!canUseNurse) {
+    return (
+      <div className="max-w-4xl mx-auto space-y-6">
+        <UsageLimitBanner 
+          currentUsage={currentUsage}
+          limit={planLimits.nurse_conversations_monthly}
+          resourceName="Conversas com Enfermeira Virtual"
+          planName={planLimits.name}
+        />
+        <div className="text-center py-12 text-slate-500">
+          <Bot className="w-16 h-16 mx-auto mb-4 opacity-30" />
+          <p className="text-lg font-semibold">Limite mensal atingido</p>
+          <p className="text-sm mt-2">Faça upgrade para continuar usando a Enfermeira Virtual</p>
+        </div>
+        </div>
+        </div>
+        );
+        }
+
   return (
-    <div className="max-w-7xl mx-auto h-[calc(100vh-8rem)] flex gap-6 overflow-hidden">
+    <div className="max-w-7xl mx-auto space-y-4">
+      <UsageLimitBanner 
+        currentUsage={currentUsage}
+        limit={planLimits.nurse_conversations_monthly}
+        resourceName="Conversas com Enfermeira Virtual"
+        planName={planLimits.name}
+        isUnlimited={planLimits.nurse_conversations_monthly === -1}
+      />
+      
+      <div className="h-[calc(100vh-12rem)] flex gap-6 overflow-hidden">
       
       {/* Interactive Nurse Avatar Section */}
       <div className="w-1/3 hidden lg:flex flex-col items-center justify-center relative">
@@ -305,32 +405,40 @@ export default function NursePage() {
 
             {/* Input Area */}
             <div className="p-4 bg-white border-t">
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSend();
-                }}
-                className="flex gap-2 max-w-3xl mx-auto"
-              >
-                <Input
-                  placeholder={
-                     step === 'ask_name' ? "Digite seu nome..." :
-                     step === 'ask_topic' ? "Sobre o que gostaria de falar?" :
-                     "Digite sua mensagem..."
-                  }
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  disabled={sendMessageMutation.isPending}
-                  className="flex-1 border-slate-200 focus:ring-emerald-500"
-                />
-                <Button 
-                   type="submit" 
-                   disabled={!message.trim() || sendMessageMutation.isPending}
-                   className="bg-emerald-600 hover:bg-emerald-700 transition-all hover:scale-105"
-                >
-                  {sendMessageMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                </Button>
-              </form>
+             <form
+               onSubmit={(e) => {
+                 e.preventDefault();
+                 handleSend();
+               }}
+               className="flex gap-2 max-w-3xl mx-auto"
+             >
+               <Input
+                 placeholder={
+                    step === 'ask_name' ? "Digite seu nome..." :
+                    step === 'ask_topic' ? "Sobre o que gostaria de falar?" :
+                    "Digite sua mensagem..."
+                 }
+                 value={message}
+                 onChange={(e) => setMessage(e.target.value)}
+                 disabled={sendMessageMutation.isPending}
+                 className="flex-1 border-slate-200 focus:ring-emerald-500"
+               />
+               <Button 
+                  type="button"
+                  onClick={handleEndChat}
+                  variant="outline"
+                  className="text-red-600 hover:bg-red-50"
+               >
+                 Encerrar
+               </Button>
+               <Button 
+                  type="submit" 
+                  disabled={!message.trim() || sendMessageMutation.isPending}
+                  className="bg-emerald-600 hover:bg-emerald-700 transition-all hover:scale-105"
+               >
+                 {sendMessageMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+               </Button>
+             </form>
             </div>
          </Card>
       </div>
