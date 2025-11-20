@@ -790,133 +790,11 @@ export default function AdminControlPage() {
           </div>
         </TabsContent>
 
-        {/* User Details Modal */}
-        {editingUser && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setEditingUser(null)}>
-            <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-              <div className="sticky top-0 bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-6 rounded-t-2xl">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl font-bold shadow-lg">
-                      {editingUser.user_email?.[0]?.toUpperCase()}
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold">{editingUser.user_email}</h2>
-                      <p className="text-teal-100 capitalize">{editingUser.type} • {editingUser.plan || 'Free'}</p>
-                    </div>
-                  </div>
-                  <Button variant="ghost" size="icon" onClick={() => setEditingUser(null)} className="text-white hover:bg-white/20">
-                    <X className="w-6 h-6" />
-                  </Button>
-                </div>
-              </div>
-
-              <div className="p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h3 className="font-bold text-lg mb-4 text-slate-800">Informações Pessoais</h3>
-                    <div className="space-y-3 text-sm">
-                      <div><span className="font-medium text-slate-600">CPF:</span> <span className="text-slate-900">{editingUser.cpf || 'N/A'}</span></div>
-                      <div><span className="font-medium text-slate-600">Telefone:</span> <span className="text-slate-900">{editingUser.phone || 'N/A'}</span></div>
-                      <div><span className="font-medium text-slate-600">Endereço:</span> <span className="text-slate-900">{editingUser.address?.street ? `${editingUser.address.street}, ${editingUser.address.number} - ${editingUser.address.city}/${editingUser.address.state}` : 'N/A'}</span></div>
-                      <div><span className="font-medium text-slate-600">Beauty Coins:</span> <span className="text-amber-600 font-bold">{editingUser.beauty_coins || 0}</span></div>
-                      <div><span className="font-medium text-slate-600">Pontos Clube:</span> <span className="text-purple-600 font-bold">{editingUser.club_points || 0}</span></div>
-                    </div>
-                  </div>
-
-                  {editingUser.type === 'professional' && (
-                    <div>
-                      <h3 className="font-bold text-lg mb-4 text-slate-800">Informações Profissionais</h3>
-                      <div className="space-y-3 text-sm">
-                        <div><span className="font-medium text-slate-600">Registro:</span> <span className="text-slate-900">{editingUser.professional_registry || 'N/A'}</span></div>
-                        <div><span className="font-medium text-slate-600">Especialidades:</span> <span className="text-slate-900">{editingUser.specialties?.join(', ') || 'N/A'}</span></div>
-                        <div><span className="font-medium text-slate-600">Serviços:</span> <span className="text-slate-900">{editingUser.services_catalog?.length || 0} cadastrados</span></div>
-                      </div>
-                    </div>
-                  )}
-
-                  {editingUser.type === 'patient' && editingUser.medical_history && (
-                    <div>
-                      <h3 className="font-bold text-lg mb-4 text-slate-800">Ficha Médica</h3>
-                      <div className="space-y-3 text-sm">
-                        <div><span className="font-medium text-slate-600">Tipo Sanguíneo:</span> <span className="text-slate-900">{editingUser.medical_history.blood_type || 'N/A'}</span></div>
-                        <div><span className="font-medium text-slate-600">Tipo de Pele:</span> <span className="text-slate-900">{editingUser.medical_history.skin_type || 'N/A'}</span></div>
-                        <div><span className="font-medium text-slate-600">Alergias:</span> <span className="text-slate-900">{editingUser.medical_history.allergies?.join(', ') || 'Nenhuma'}</span></div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex gap-3 pt-4 border-t">
-                  <Button onClick={() => setEditingUser(null)} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
-                    Fechar
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-           <Card>
-             <CardHeader><CardTitle>Relatórios de Agendamento</CardTitle></CardHeader>
-             <CardContent>
-               <Table>
-                 <TableHeader>
-                   <TableRow><TableHead>Titulo</TableHead><TableHead>Tipo</TableHead><TableHead>Data</TableHead><TableHead>Profissional</TableHead></TableRow>
-                 </TableHeader>
-                 <TableBody>
-                   {analytics?.appointments?.slice(0, 50).map(a => (
-                     <TableRow key={a.id}>
-                       <TableCell>{a.title}</TableCell>
-                       <TableCell>{a.type}</TableCell>
-                       <TableCell>{format(new Date(a.start_time), 'dd/MM/yyyy HH:mm')}</TableCell>
-                       <TableCell>{a.professional_email}</TableCell>
-                     </TableRow>
-                   ))}
-                 </TableBody>
-               </Table>
-             </CardContent>
-           </Card>
-        </TabsContent>
-        
-        {/* Nurse Analytics Tab */}
-        <TabsContent value="nurse" className="space-y-6">
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                 <CardHeader><CardTitle>Tópicos Mais Buscados</CardTitle></CardHeader>
-                 <CardContent>
-                    {/* Mock aggregation display */}
-                    <div className="space-y-2">
-                       <div className="flex justify-between"><span className="font-medium">Exames</span><span>45%</span></div>
-                       <div className="w-full bg-slate-100 h-2 rounded"><div className="bg-emerald-500 h-2 rounded w-[45%]"></div></div>
-                       
-                       <div className="flex justify-between"><span className="font-medium">Procedimentos</span><span>30%</span></div>
-                       <div className="w-full bg-slate-100 h-2 rounded"><div className="bg-purple-500 h-2 rounded w-[30%]"></div></div>
-                       
-                       <div className="flex justify-between"><span className="font-medium">Medicamentos</span><span>25%</span></div>
-                       <div className="w-full bg-slate-100 h-2 rounded"><div className="bg-blue-500 h-2 rounded w-[25%]"></div></div>
-                    </div>
-                 </CardContent>
-              </Card>
-              <Card>
-                 <CardHeader><CardTitle>Interações Recentes</CardTitle></CardHeader>
-                 <CardContent className="max-h-[300px] overflow-y-auto">
-                    {analytics?.nurse?.map(n => (
-                       <div key={n.id} className="mb-3 pb-3 border-b last:border-0 text-sm">
-                          <div className="font-semibold">{n.user_name} ({n.topic})</div>
-                          <div className="text-slate-500 italic">"{n.query}"</div>
-                       </div>
-                    ))}
-                 </CardContent>
-              </Card>
-           </div>
-        </TabsContent>
-
         {/* Banners Tab */}
         <TabsContent value="banners" className="space-y-6">
             <Card>
                <CardHeader><CardTitle>Gestão de Anúncios</CardTitle></CardHeader>
                <CardContent>
-                  {/* Fetch banners inline for simplicity in admin view */}
                   <BannerAdminList />
                </CardContent>
             </Card>
@@ -934,47 +812,74 @@ export default function AdminControlPage() {
               </CardContent>
            </Card>
         </TabsContent>
-
-        {/* Creations Tab */}
-        <TabsContent value="creations" className="space-y-6">
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                 <CardHeader><CardTitle>Sites & Chatbots Criados</CardTitle></CardHeader>
-                 <CardContent>
-                    <Table>
-                       <TableHeader><TableRow><TableHead>Tipo</TableHead><TableHead>Título</TableHead><TableHead>Link</TableHead></TableRow></TableHeader>
-                       <TableBody>
-                          {analytics?.creations?.map(c => (
-                             <TableRow key={c.id}>
-                                <TableCell className="capitalize">{c.type}</TableCell>
-                                <TableCell>{c.title}</TableCell>
-                                <TableCell><a href="#" className="text-blue-600 hover:underline truncate block w-[150px]">Ver Link</a></TableCell>
-                             </TableRow>
-                          ))}
-                       </TableBody>
-                    </Table>
-                 </CardContent>
-              </Card>
-              <Card>
-                 <CardHeader><CardTitle>Produtos na Loja</CardTitle></CardHeader>
-                 <CardContent>
-                    <Table>
-                       <TableHeader><TableRow><TableHead>Tipo</TableHead><TableHead>Preço</TableHead><TableHead>Dono</TableHead></TableRow></TableHeader>
-                       <TableBody>
-                          {analytics?.products?.map(p => (
-                             <TableRow key={p.id}>
-                                <TableCell className="capitalize">{p.type}</TableCell>
-                                <TableCell>R$ {p.price}</TableCell>
-                                <TableCell className="truncate max-w-[100px]">{p.owner_email}</TableCell>
-                             </TableRow>
-                          ))}
-                       </TableBody>
-                    </Table>
-                 </CardContent>
-              </Card>
-           </div>
-        </TabsContent>
       </Tabs>
+
+      {/* User Details Modal */}
+      {editingUser && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setEditingUser(null)}>
+          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="sticky top-0 bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-6 rounded-t-2xl">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl font-bold shadow-lg">
+                    {editingUser.user_email?.[0]?.toUpperCase()}
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold">{editingUser.user_email}</h2>
+                    <p className="text-teal-100 capitalize">{editingUser.type} • {editingUser.plan || 'Free'}</p>
+                  </div>
+                </div>
+                <Button variant="ghost" size="icon" onClick={() => setEditingUser(null)} className="text-white hover:bg-white/20">
+                  <X className="w-6 h-6" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="font-bold text-lg mb-4 text-slate-800">Informações Pessoais</h3>
+                  <div className="space-y-3 text-sm">
+                    <div><span className="font-medium text-slate-600">CPF:</span> <span className="text-slate-900">{editingUser.cpf || 'N/A'}</span></div>
+                    <div><span className="font-medium text-slate-600">Telefone:</span> <span className="text-slate-900">{editingUser.phone || 'N/A'}</span></div>
+                    <div><span className="font-medium text-slate-600">Endereço:</span> <span className="text-slate-900">{editingUser.address?.street ? `${editingUser.address.street}, ${editingUser.address.number} - ${editingUser.address.city}/${editingUser.address.state}` : 'N/A'}</span></div>
+                    <div><span className="font-medium text-slate-600">Beauty Coins:</span> <span className="text-amber-600 font-bold">{editingUser.beauty_coins || 0}</span></div>
+                    <div><span className="font-medium text-slate-600">Pontos Clube:</span> <span className="text-purple-600 font-bold">{editingUser.club_points || 0}</span></div>
+                  </div>
+                </div>
+
+                {editingUser.type === 'professional' && (
+                  <div>
+                    <h3 className="font-bold text-lg mb-4 text-slate-800">Informações Profissionais</h3>
+                    <div className="space-y-3 text-sm">
+                      <div><span className="font-medium text-slate-600">Registro:</span> <span className="text-slate-900">{editingUser.professional_registry || 'N/A'}</span></div>
+                      <div><span className="font-medium text-slate-600">Especialidades:</span> <span className="text-slate-900">{editingUser.specialties?.join(', ') || 'N/A'}</span></div>
+                      <div><span className="font-medium text-slate-600">Serviços:</span> <span className="text-slate-900">{editingUser.services_catalog?.length || 0} cadastrados</span></div>
+                    </div>
+                  </div>
+                )}
+
+                {editingUser.type === 'patient' && editingUser.medical_history && (
+                  <div>
+                    <h3 className="font-bold text-lg mb-4 text-slate-800">Ficha Médica</h3>
+                    <div className="space-y-3 text-sm">
+                      <div><span className="font-medium text-slate-600">Tipo Sanguíneo:</span> <span className="text-slate-900">{editingUser.medical_history.blood_type || 'N/A'}</span></div>
+                      <div><span className="font-medium text-slate-600">Tipo de Pele:</span> <span className="text-slate-900">{editingUser.medical_history.skin_type || 'N/A'}</span></div>
+                      <div><span className="font-medium text-slate-600">Alergias:</span> <span className="text-slate-900">{editingUser.medical_history.allergies?.join(', ') || 'Nenhuma'}</span></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className="flex gap-3 pt-4 border-t">
+                <Button onClick={() => setEditingUser(null)} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
+                  Fechar
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
