@@ -6,6 +6,8 @@ import Chatbots from './pages/Chatbots';
 import Design from './pages/Design';
 import Products from './pages/Products';
 import Profile from './pages/Profile';
+import Plans from './pages/Plans';
+import Onboarding from './pages/Onboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -18,6 +20,8 @@ export const PAGES = {
     "Design": Design,
     "Products": Products,
     "Profile": Profile,
+    "Plans": Plans,
+    "Onboarding": Onboarding,
 }
 
 export const pagesConfig = {

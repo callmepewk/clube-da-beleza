@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
@@ -23,12 +23,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, ChevronLeft, ChevronRight, Video, MapPin } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function SchedulePage() {
-  const [isNewEventOpen, setIsNewEventOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const queryClient = useQueryClient();
+  const [userProfile, setUserProfile] = useState(null);
+
+  // Fetch Profile for Access Control
+  useEffect(() => {
+    const loadProfile = async () => {
+      const user = await base44.auth.me();
+      const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
+      setUserProfile(res.data[0]);
+    };
+    loadProfile();
+  }, []);
   
   // Utils
   const getWeekDays = (date) => {
@@ -37,7 +48,6 @@ export default function SchedulePage() {
   };
 
   const weekDays = getWeekDays(currentDate);
-
   const nextWeek = () => setCurrentDate(addDays(currentDate, 7));
   const prevWeek = () => setCurrentDate(addDays(currentDate, -7));
 
@@ -58,34 +68,58 @@ export default function SchedulePage() {
     mutationFn: (data) => base44.entities.Appointment.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries(['appointments']);
-      setIsNewEventOpen(false);
     }
   });
 
-  const handleCreate = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const dateStr = formData.get('date');
-    const timeStr = formData.get('time');
-    
-    if (!dateStr || !timeStr) return;
-
-    const start = new Date(`${dateStr}T${timeStr}`);
-    const end = addHours(start, 1);
-
-    createMutation.mutate({
-      title: formData.get('title'),
-      type: formData.get('type'),
-      modality: formData.get('modality'),
-      start_time: start.toISOString(),
-      end_time: end.toISOString(),
-      patient_email: formData.get('patient_email'),
-      professional_email: 'admin@healthai.com', // Fallback or current user
-      location_details: formData.get('location'),
-      notes: formData.get('notes'),
-      status: 'scheduled'
-    });
-  };
+  // Professional: AI Availability Setup
+  const [aiPrompt, setAiPrompt] = useState('');
+  const aiAvailabilityMutation = useMutation({
+    mutationFn: async () => {
+      // This simulates the "AI questions which days and hours"
+      const res = await base44.integrations.Core.InvokeLLM({
+        prompt: `O profissional médico informou sua disponibilidade: "${aiPrompt}". 
+        Data de referência: ${new Date().toISOString()}.
+        Gere uma lista JSON de objetos de disponibilidade para os próximos 7 dias.
+        Exemplo: [{"title": "Disponível - Consulta", "start": "ISO_DATE", "end": "ISO_DATE", "type": "consultation"}]`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            slots: { 
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: {type: "string"},
+                  start: {type: "string"},
+                  end: {type: "string"},
+                  type: {type: "string"}
+                }
+              }
+            }
+          }
+        }
+      });
+      return res.slots;
+    },
+    onSuccess: (slots) => {
+      // Bulk create slots (simplified)
+      slots.forEach(slot => {
+        createMutation.mutate({
+          title: slot.title,
+          type: slot.type,
+          modality: 'in_person', // default
+          start_time: slot.start,
+          end_time: slot.end,
+          patient_email: 'available_slot', // Flag as open
+          professional_email: userProfile?.user_email,
+          location_details: userProfile?.service_address?.street || 'Consultório',
+          status: 'scheduled'
+        });
+      });
+      setAiPrompt('');
+      alert('Agenda configurada com sucesso pela IA!');
+    }
+  });
 
   const getEventsForDay = (day) => {
     return events.filter(evt => isSameDay(evt.start, day));
@@ -101,11 +135,97 @@ export default function SchedulePage() {
     }
   };
 
+  // Render for Professional (Availability Manager)
+  if (userProfile?.type === 'professional') {
+    return (
+      <div className="h-[calc(100vh-8rem)] flex flex-col space-y-6">
+        <div className="flex justify-between items-start">
+           <div>
+             <h1 className="text-2xl font-bold text-slate-900">Gestão de Agenda</h1>
+             <p className="text-slate-500">Configure seus horários e disponibilidades.</p>
+           </div>
+           <div className="bg-blue-50 p-2 rounded border border-blue-100 text-sm text-blue-800 max-w-md">
+             <span className="font-bold">Local de Atendimento Atual:</span> {userProfile?.service_address?.street || 'Não definido'}
+           </div>
+        </div>
+
+        <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-100">
+          <CardContent className="p-6">
+            <div className="flex gap-4 items-start">
+              <div className="bg-white p-3 rounded-full shadow-sm text-indigo-600">
+                <Sparkles className="w-6 h-6" />
+              </div>
+              <div className="flex-1 space-y-3">
+                <h3 className="font-semibold text-lg text-indigo-900">Assistente de Agenda Inteligente</h3>
+                <p className="text-sm text-slate-600">
+                  Diga-me quais dias e horários você atende e para quais procedimentos. Eu organizarei sua grade automaticamente com as cores corretas.
+                </p>
+                <div className="flex gap-2">
+                  <Input 
+                    placeholder="Ex: Atendo consultas segunda e quarta das 08h às 12h, e cirurgias sexta à tarde..." 
+                    value={aiPrompt}
+                    onChange={(e) => setAiPrompt(e.target.value)}
+                    className="bg-white"
+                  />
+                  <Button 
+                    onClick={() => aiAvailabilityMutation.mutate()} 
+                    disabled={!aiPrompt || aiAvailabilityMutation.isPending}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                  >
+                    {aiAvailabilityMutation.isPending ? 'Configurando...' : 'Gerar Agenda'}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col">
+           <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold">Sua Grade Semanal</h3>
+              <div className="flex items-center bg-slate-50 border rounded-lg p-1">
+                <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
+                <span className="px-4 font-medium text-sm min-w-[120px] text-center capitalize">
+                  {format(currentDate, "MMMM yyyy", { locale: ptBR })}
+                </span>
+                <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
+              </div>
+           </div>
+           
+           <div className="flex-1 overflow-x-auto">
+              <div className="grid grid-cols-7 gap-4 min-w-[800px] h-full">
+                {weekDays.map((day, i) => {
+                  const dayEvents = getEventsForDay(day);
+                  return (
+                    <div key={i} className="flex flex-col h-full border-r border-slate-50 last:border-0 pr-2">
+                      <div className="text-center py-2 mb-2">
+                         <div className="text-xs font-bold text-slate-400 uppercase">{format(day, 'EEE', { locale: ptBR })}</div>
+                         <div className="text-lg font-bold text-slate-700">{format(day, 'dd')}</div>
+                      </div>
+                      <div className="space-y-2">
+                        {dayEvents.map(evt => (
+                          <div key={evt.id} className={`p-2 rounded text-xs border ${getTypeColor(evt.type)}`}>
+                            <div className="font-bold">{evt.title}</div>
+                            <div>{format(evt.start, 'HH:mm')} - {format(evt.end, 'HH:mm')}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+           </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Render for Patient (My Appointments)
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-slate-900">Agendamentos</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Meus Agendamentos</h1>
           <div className="flex items-center bg-white border rounded-lg p-1 shadow-sm">
             <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
             <span className="px-4 font-medium min-w-[140px] text-center capitalize">
@@ -114,84 +234,7 @@ export default function SchedulePage() {
             <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
           </div>
         </div>
-        <Dialog open={isNewEventOpen} onOpenChange={setIsNewEventOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-emerald-600 hover:bg-emerald-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Novo Agendamento
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Agendar Procedimento</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={handleCreate} className="space-y-4 mt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Tipo</Label>
-                  <Select name="type" required>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="consultation">Consulta</SelectItem>
-                      <SelectItem value="exam">Exame</SelectItem>
-                      <SelectItem value="procedure">Procedimento</SelectItem>
-                      <SelectItem value="surgery">Cirurgia</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Modalidade</Label>
-                  <Select name="modality" required defaultValue="in_person">
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="in_person">Presencial</SelectItem>
-                      <SelectItem value="teleconsultation">Teleconsulta</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Título</Label>
-                <Input name="title" placeholder="Ex: Consulta Dermatologia" required />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Email do Paciente</Label>
-                <Input name="patient_email" type="email" required />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Data</Label>
-                  <Input name="date" type="date" required />
-                </div>
-                <div className="space-y-2">
-                  <Label>Horário</Label>
-                  <Input name="time" type="time" required />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label>Localização / Link</Label>
-                <Input name="location" placeholder="Endereço ou Link da sala" />
-              </div>
-
-              <div className="space-y-2">
-                <Label>Notas</Label>
-                <Textarea name="notes" placeholder="Instruções especiais..." />
-              </div>
-
-              <div className="flex justify-end pt-4">
-                <Button type="submit" className="bg-emerald-600 w-full">Agendar</Button>
-              </div>
-            </form>
-          </DialogContent>
-        </Dialog>
+        {/* Patient specific: Maybe a button to "Find a Doctor" instead of creating raw appointment */}
       </div>
 
       <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4 overflow-x-auto">
@@ -213,6 +256,11 @@ export default function SchedulePage() {
                         <span>{format(evt.start, 'HH:mm')}</span>
                         {evt.modality === 'teleconsultation' && <Video className="w-3 h-3" />}
                       </div>
+                      {evt.location_details && (
+                        <div className="flex items-center gap-1 mt-1 opacity-70 truncate">
+                          <MapPin className="w-3 h-3" /> {evt.location_details}
+                        </div>
+                      )}
                     </div>
                   ))}
                   {dayEvents.length === 0 && isToday && (

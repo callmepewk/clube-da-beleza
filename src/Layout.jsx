@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
 import { 
   LayoutDashboard, 
   Stethoscope, 
@@ -13,9 +14,9 @@ import {
   LogOut,
   Menu,
   X,
-  Activity
+  Activity,
+  CreditCard
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { createPageUrl } from '@/utils';
 
 export default function Layout({ children }) {
@@ -30,27 +31,81 @@ export default function Layout({ children }) {
       if (isAuth) {
         const userData = await base44.auth.me();
         setUser(userData);
-      } else {
-        // Optional: Redirect to login if needed, but platform handles it usually
       }
     };
     checkAuth();
   }, []);
 
+  const { data: profile, isLoading } = useQuery({
+    queryKey: ['currentUserProfile'],
+    queryFn: async () => {
+      const u = await base44.auth.me();
+      if (!u) return null;
+      const res = await base44.entities.UserProfile.list({ query: { user_email: u.email } });
+      return res.data[0] || null;
+    },
+    enabled: !!user
+  });
+
+  // Redirect to onboarding if no profile (and not already there)
+  useEffect(() => {
+    if (user && !isLoading && !profile && location.pathname !== '/onboarding') {
+      navigate(createPageUrl('Onboarding'));
+    }
+  }, [user, profile, isLoading, location.pathname, navigate]);
+
   const handleLogout = async () => {
     await base44.auth.logout();
   };
 
-  const navItems = [
-    { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: Stethoscope, label: 'Enfermeira Virtual', path: '/nurse' },
-    { icon: Calendar, label: 'Agendamentos', path: '/schedule' },
-    { icon: Globe, label: 'Criador de Sites', path: '/sites' },
-    { icon: Bot, label: 'Meus Chatbots', path: '/chatbots' },
-    { icon: Palette, label: 'Estúdio Design', path: '/design' },
-    { icon: ShoppingBag, label: 'Produtos', path: '/products' },
-    { icon: UserCircle, label: 'Meu Perfil', path: '/profile' },
-  ];
+  // Define menus based on role
+  const getNavItems = () => {
+    const common = [
+      { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
+      { icon: UserCircle, label: 'Meu Perfil', path: '/profile' },
+      { icon: CreditCard, label: 'Planos', path: '/plans' },
+    ];
+
+    if (!profile) return []; // Empty menu if loading or onboarding
+
+    if (profile.type === 'patient') {
+      return [
+        ...common,
+        { icon: Stethoscope, label: 'Enfermeira Virtual', path: '/nurse' },
+        { icon: Calendar, label: 'Meus Agendamentos', path: '/schedule' },
+      ];
+    }
+
+    // Professional
+    return [
+      ...common,
+      { icon: Calendar, label: 'Gestão de Agenda', path: '/schedule' },
+      { icon: Stethoscope, label: 'Enfermeira Virtual', path: '/nurse' }, // Pros might want to see it or test it
+      { icon: Globe, label: 'Criador de Sites', path: '/sites' },
+      { icon: Bot, label: 'Meus Chatbots', path: '/chatbots' },
+      { icon: Palette, label: 'Estúdio Design', path: '/design' },
+      { icon: ShoppingBag, label: 'Produtos', path: '/products' },
+    ];
+  };
+
+  const navItems = getNavItems();
+
+  // If on onboarding page, show a simplified layout
+  if (location.pathname === '/onboarding') {
+    return (
+      <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900">
+        <header className="h-16 bg-white border-b border-slate-200 flex items-center px-8">
+           <div className="flex items-center gap-2 text-emerald-600">
+              <Activity className="w-6 h-6" />
+              <span className="font-bold text-xl tracking-tight">HealthAI</span>
+           </div>
+        </header>
+        <main className="flex-1 p-8">
+          {children}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 flex font-sans text-slate-900">
@@ -103,7 +158,6 @@ export default function Layout({ children }) {
                   <item.icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-emerald-600' : 'text-slate-400 group-hover:text-slate-600'}`} />
                   <span className={`lg:hidden xl:block whitespace-nowrap`}>{item.label}</span>
                   
-                  {/* Tooltip for collapsed state */}
                   <div className="hidden lg:block xl:hidden absolute left-full ml-2 px-2 py-1 bg-slate-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50">
                     {item.label}
                   </div>
@@ -113,6 +167,10 @@ export default function Layout({ children }) {
           </nav>
 
           <div className="p-4 border-t border-slate-100">
+            <div className="mb-4 px-2 lg:hidden xl:block">
+               <div className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-1">Perfil</div>
+               <div className="text-sm font-semibold capitalize">{profile?.type === 'professional' ? 'Profissional' : 'Paciente'}</div>
+            </div>
             <button
               onClick={handleLogout}
               className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors"
@@ -133,7 +191,7 @@ export default function Layout({ children }) {
           >
             <Menu className="w-6 h-6" />
           </button>
-          <div className="flex-1" /> {/* Spacer */}
+          <div className="flex-1" /> 
           <div className="flex items-center gap-4">
              {user && (
                <div className="flex items-center gap-3">

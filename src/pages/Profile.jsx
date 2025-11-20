@@ -45,9 +45,7 @@ export default function ProfilePage() {
 
   const saveMutation = useMutation({
     mutationFn: async (data) => {
-      const user = await base44.auth.me();
-      // Upsert logic would be better, but simple create/update for now
-      // Assuming edit not implemented fully for brevity, just showing UI
+      // Placeholder for update logic
     }
   });
 
@@ -58,8 +56,8 @@ export default function ProfilePage() {
       <Tabs defaultValue="personal">
         <TabsList className="w-full">
           <TabsTrigger value="personal">Dados Pessoais</TabsTrigger>
-          <TabsTrigger value="medical">Ficha Médica</TabsTrigger>
-          <TabsTrigger value="professional">Profissional</TabsTrigger>
+          {profile?.type === 'patient' && <TabsTrigger value="medical">Ficha Médica</TabsTrigger>}
+          {profile?.type === 'professional' && <TabsTrigger value="professional">Profissional</TabsTrigger>}
         </TabsList>
 
         <TabsContent value="personal">
