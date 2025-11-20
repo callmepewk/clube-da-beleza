@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Loader2, Globe, ExternalLink, Save, Plus, Image as ImageIcon, FileText, Link as LinkIcon, Share2, Wand2, MessageSquare, Send, Layers, Layout } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
+import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
 export default function SitesPage() {
   const [prompt, setPrompt] = useState('');
@@ -22,6 +24,22 @@ export default function SitesPage() {
   // Chat
   const [chatMessage, setChatMessage] = useState('');
   const [chatHistory, setChatHistory] = useState([]);
+  const queryClient = useQueryClient();
+
+  const { data: profile } = useQuery({
+    queryKey: ['userProfileSites'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      if (!user) return null;
+      const profiles = await base44.entities.UserProfile.list({ query: { user_email: user.email } });
+      return profiles?.data?.[0] || null;
+    },
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
 
   const { data: sites } = useQuery({
     queryKey: ['mySites'],
@@ -34,8 +52,21 @@ export default function SitesPage() {
     }
   });
 
+  const planLimits = getPlanLimits(profile?.plan);
+  const currentMonth = getCurrentMonth();
+  const currentUsage = profile?.monthly_usage?.month === currentMonth ? profile?.monthly_usage?.sites_created || 0 : 0;
+  const canCreate = canUseFeature(currentUsage, planLimits.sites);
+
   const generateSiteMutation = useMutation({
     mutationFn: async (userPrompt) => {
+      if (!canCreate) {
+        if (planLimits.sites >= 10) {
+          sendWhatsAppMessage(user?.full_name || 'Usuário', 'criação de mais sites');
+          throw new Error('Limite atingido. Mensagem enviada à secretaria.');
+        }
+        throw new Error('Limite atingido. Faça upgrade para criar mais sites.');
+      }
+
       const imageInstructions = siteImages.length > 0 
         ? `Inclua as seguintes imagens no layout (use as URLs fornecidas): ${JSON.stringify(siteImages)}. Respeite a posição solicitada (topo, centro, lateral, baixo).`
         : "Gere placeholders para imagens se necessário.";
@@ -65,8 +96,24 @@ export default function SitesPage() {
       });
       return response; // integration returns the object directly if schema provided
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setGeneratedContent(data);
+      
+      const month = getCurrentMonth();
+      const usage = profile.monthly_usage || {};
+      if (usage.month !== month) {
+        await base44.entities.UserProfile.update(profile.id, {
+          monthly_usage: { month, sites_created: 1, nurse_conversations: 0, chatbots_created: 0, designs_created: 0, products_created: 0, ai_packages_created: 0 }
+        });
+      } else {
+        await base44.entities.UserProfile.update(profile.id, {
+          monthly_usage: { ...usage, sites_created: (usage.sites_created || 0) + 1 }
+        });
+      }
+      queryClient.invalidateQueries(['userProfileSites']);
+    },
+    onError: (error) => {
+      alert(error.message);
     }
   });
 
@@ -93,6 +140,13 @@ export default function SitesPage() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-[#0F172A]">Gerador de Landing Pages</h1>
       </div>
+      
+      <UsageLimitBanner 
+        currentUsage={currentUsage}
+        limit={planLimits.sites}
+        resourceName="Sites Criados"
+        planName={planLimits.name}
+      />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-6">
@@ -255,13 +309,8 @@ export default function SitesPage() {
                 </div>
               </div>
               <Button 
-                onClick={() => {
-                   // Assuming access to profile via context or fetch, implementing basic check for now
-                   // Since this page is mostly for pros, and nav is hidden if not pro, 
-                   // this is a secondary safeguard if they force URL
-                   generateSiteMutation.mutate(prompt);
-                }}
-                disabled={generateSiteMutation.isPending || !prompt}
+                onClick={() => generateSiteMutation.mutate(prompt)}
+                disabled={generateSiteMutation.isPending || !prompt || !canCreate}
                 className="w-full bg-emerald-600 hover:bg-emerald-700"
               >
                 {generateSiteMutation.isPending ? (

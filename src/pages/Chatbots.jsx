@@ -4,7 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Bot, MessageCircle, Instagram, Settings, Loader2, Plus, Wand2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
+import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
 export default function ChatbotsPage() {
   const [activeTab, setActiveTab] = useState('config');
@@ -17,17 +19,73 @@ export default function ChatbotsPage() {
     instagram: '',
     avatar: ''
   });
+  const queryClient = useQueryClient();
+
+  const { data: profile } = useQuery({
+    queryKey: ['userProfileChatbots'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      if (!user) return null;
+      const profiles = await base44.entities.UserProfile.list({ query: { user_email: user.email } });
+      return profiles?.data?.[0] || null;
+    },
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const planLimits = getPlanLimits(profile?.plan);
+  const currentMonth = getCurrentMonth();
+  const currentUsage = profile?.monthly_usage?.month === currentMonth ? profile?.monthly_usage?.chatbots_created || 0 : 0;
+  const canCreate = canUseFeature(currentUsage, planLimits.chatbots);
 
   const deployMutation = useMutation({
     mutationFn: async () => {
-      await new Promise(r => setTimeout(r, 2000)); // Simulate deployment
+      if (!canCreate) {
+        if (planLimits.chatbots >= 5) {
+          sendWhatsAppMessage(user?.full_name || 'Usuário', 'criação de mais chatbots');
+          throw new Error('Limite atingido. Mensagem enviada à secretaria.');
+        }
+        throw new Error('Limite atingido. Faça upgrade para criar mais chatbots.');
+      }
+      
+      await new Promise(r => setTimeout(r, 2000));
+      
+      const month = getCurrentMonth();
+      const usage = profile.monthly_usage || {};
+      if (usage.month !== month) {
+        await base44.entities.UserProfile.update(profile.id, {
+          monthly_usage: { month, chatbots_created: 1, nurse_conversations: 0, sites_created: 0, designs_created: 0, products_created: 0, ai_packages_created: 0 }
+        });
+      } else {
+        await base44.entities.UserProfile.update(profile.id, {
+          monthly_usage: { ...usage, chatbots_created: (usage.chatbots_created || 0) + 1 }
+        });
+      }
+      
       return { success: true };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userProfileChatbots']);
+      alert('Chatbot criado com sucesso!');
+    },
+    onError: (error) => {
+      alert(error.message);
     }
   });
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-[#0F172A]">Meus Chatbots</h1>
+      
+      <UsageLimitBanner 
+        currentUsage={currentUsage}
+        limit={planLimits.chatbots}
+        resourceName="Chatbots Criados"
+        planName={planLimits.name}
+      />
       
       <Tabs defaultValue="create" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
