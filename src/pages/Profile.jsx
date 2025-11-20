@@ -250,7 +250,7 @@ export default function ProfilePage() {
 
   // DermaTech Vibrant Theme Classes
   const cardClass = "bg-white border border-slate-100 text-[#0F172A] hover:shadow-xl transition-all hover:-translate-y-1 duration-300 shadow-[0_2px_8px_rgba(0,0,0,0.04)] rounded-[1.5rem]";
-  const inputClass = "bg-[#F8FAFC] border border-slate-200 text-[#0F172A] focus:ring-2 focus:ring-[#0D9488]/20 focus:border-[#0D9488] h-14 rounded-xl placeholder:text-[#94A3B8] transition-all hover:bg-white hover:border-slate-300";
+  const inputClass = "w-full bg-[#F8FAFC] border border-slate-200 text-[#0F172A] focus:ring-2 focus:ring-[#0D9488]/20 focus:border-[#0D9488] h-14 rounded-xl placeholder:text-[#94A3B8] transition-all hover:bg-white hover:border-slate-300";
   const labelClass = "text-[#334155] text-sm font-bold mb-2 block";
 
   return (
@@ -302,8 +302,8 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Buttons Container with fix for overflow */}
-              <div className="flex flex-wrap gap-3 w-full md:w-auto justify-center md:justify-start mt-4 md:mt-0 max-w-full overflow-hidden">
+              {/* Buttons Container - Fixed Visibility */}
+              <div className="flex flex-wrap gap-2 w-full md:w-auto justify-center md:justify-end mt-4 md:mt-0">
                 <Button 
                   variant="outline" 
                   className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-4 text-xs md:text-sm rounded-full font-semibold transition-all shadow-sm whitespace-nowrap"

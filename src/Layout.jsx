@@ -308,7 +308,7 @@ export default function Layout({ children }) {
     { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
   ];
 
-  if (profile?.is_admin) {
+  if (profile?.is_admin || profile?.type === 'professional') {
      navItems.push({ icon: Shield, label: 'Painel de Controle', path: '/admin-control' });
   }
 
