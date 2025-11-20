@@ -309,12 +309,10 @@ export default function Layout({ children }) {
     { icon: ShoppingBag, label: 'Produtos', path: '/products' },
     { icon: CreditCard, label: 'Planos', path: '/plans' },
     { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
+    { icon: Shield, label: 'Controle', path: '/admin-control' },
   ];
 
-  // Admin Control Panel - for admin users
-  if (profile?.is_admin || user?.email === 'pedro_hbfreitas@hotmail.com') {
-     navItems.push({ icon: Shield, label: 'Painel de Controle', path: '/admin-control' });
-  }
+
 
   // DermaTech Premium Theme (Vibrant, Clean & High Contrast)
   const theme = {
