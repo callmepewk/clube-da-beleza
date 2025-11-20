@@ -10,6 +10,7 @@ import Onboarding from './pages/Onboarding';
 import AdminControl from './pages/AdminControl';
 import MyPlan from './pages/MyPlan';
 import Nurse from './pages/Nurse';
+import Support from './pages/Support';
 import __Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "AdminControl": AdminControl,
     "MyPlan": MyPlan,
     "Nurse": Nurse,
+    "Support": Support,
 }
 
 export const pagesConfig = {

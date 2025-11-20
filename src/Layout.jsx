@@ -18,7 +18,8 @@ import {
   CreditCard,
   LogIn,
   Trash2,
-  FileText
+  FileText,
+  HelpCircle
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -94,6 +95,7 @@ export default function Layout({ children }) {
     { icon: Palette, label: 'Design', path: '/design' },
     { icon: ShoppingBag, label: 'Produtos', path: '/products' },
     { icon: CreditCard, label: 'Planos', path: '/plans' },
+    { icon: HelpCircle, label: 'Suporte', path: '/support' },
   ];
 
   // If on onboarding page
