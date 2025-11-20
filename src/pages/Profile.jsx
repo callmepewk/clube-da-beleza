@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon, Calendar, Mail, Activity, BarChart3, DollarSign, Zap, Layout, MessageSquare, ShoppingBag, TrendingUp, Trash2 } from 'lucide-react';
+import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon, Calendar, Mail, Activity, BarChart3, DollarSign, Zap, Layout, MessageSquare, ShoppingBag, TrendingUp, Trash2, Crown } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   AlertDialog,
@@ -19,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { createPageUrl } from '@/utils';
+import { getPlanLimits } from '@/components/usage/usageLimits';
 import { useNavigate } from 'react-router-dom';
 
 export default function ProfilePage() {
@@ -43,6 +44,9 @@ export default function ProfilePage() {
      registry: '', specialties: ''
   });
   const [servicesCatalog, setServicesCatalog] = useState([]);
+  const [newService, setNewService] = useState({ category: 'consultation', name: '', price: '', is_free: false });
+  const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [isAiLoading, setIsAiLoading] = useState(false);
   
   // New Service Form State
   const [newService, setNewService] = useState({ category: 'consultation', name: '', price: '', is_free: false });
@@ -340,6 +344,47 @@ export default function ProfilePage() {
           </Card>
 
         <TabsContent value="stats">
+          <Card className="col-span-full bg-gradient-to-r from-[#0F766E] to-[#14B8A6] text-white border-0 shadow-2xl shadow-teal-900/20 rounded-[2rem] overflow-hidden relative mb-6">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+            <CardContent className="p-8 relative z-10">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <div className="flex items-center gap-3 mb-2">
+                    <Crown className="w-8 h-8 text-yellow-300" />
+                    <h3 className="text-2xl font-black">Plano Atual</h3>
+                  </div>
+                  <p className="text-white/80 text-lg capitalize font-bold">{profile?.plan || 'Free'}</p>
+                </div>
+                <Button 
+                  onClick={() => navigate(createPageUrl('Plans'))}
+                  variant="outline"
+                  className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white backdrop-blur-md rounded-xl font-bold h-12 px-6"
+                >
+                  Ver Planos
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                  <p className="text-white/70 text-xs mb-1">Conversas Enfermeira</p>
+                  <p className="text-2xl font-bold">{profile?.monthly_usage?.nurse_conversations || 0} / {getPlanLimits(profile?.plan).nurse_conversations_monthly === -1 ? '∞' : getPlanLimits(profile?.plan).nurse_conversations_monthly}</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                  <p className="text-white/70 text-xs mb-1">Chatbots</p>
+                  <p className="text-2xl font-bold">{profile?.monthly_usage?.chatbots_created || 0} / {getPlanLimits(profile?.plan).chatbots === -1 ? '∞' : getPlanLimits(profile?.plan).chatbots}</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                  <p className="text-white/70 text-xs mb-1">Sites</p>
+                  <p className="text-2xl font-bold">{profile?.monthly_usage?.sites_created || 0} / {getPlanLimits(profile?.plan).sites === -1 ? '∞' : getPlanLimits(profile?.plan).sites}</p>
+                </div>
+                <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                  <p className="text-white/70 text-xs mb-1">Designs</p>
+                  <p className="text-2xl font-bold">{profile?.monthly_usage?.designs_created || 0} / {getPlanLimits(profile?.plan).designs === -1 ? '∞' : getPlanLimits(profile?.plan).designs}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
              {/* Valuation & Conversion */}
              <Card className="col-span-1 md:col-span-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-0">
@@ -493,13 +538,189 @@ export default function ProfilePage() {
                   </div>
               </div>
 
+              {/* Professional Services & Pricing */}
+              {profile?.type === 'professional' && (
+                <div className="border-t-2 border-slate-50 pt-8 mt-2">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-bold flex items-center gap-3 text-[#0F172A] text-lg">
+                       <div className="bg-[#F0FDFA] p-3 rounded-2xl"><Activity className="w-5 h-5 text-[#0D9488]" /></div> 
+                       Catálogo de Serviços & Preços
+                    </h3>
+                  </div>
+                  <p className="text-sm text-[#64748B] mb-6">Configure todos os serviços que você oferece, incluindo consultas, exames e procedimentos estéticos.</p>
+
+                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
+                       <div className="space-y-2 md:col-span-1">
+                          <Label className={labelClass}>Categoria *</Label>
+                          <select 
+                             className={inputClass + " px-4"}
+                             value={newService.category}
+                             onChange={e => setNewService({...newService, category: e.target.value})}
+                          >
+                             <option value="consultation">Consulta</option>
+                             <option value="exam">Exame</option>
+                             <option value="procedure">Procedimento</option>
+                          </select>
+                       </div>
+                       <div className="space-y-2 md:col-span-2 relative">
+                          <Label className={labelClass}>Nome do Serviço *</Label>
+                          <div className="relative">
+                             <Input 
+                                className={inputClass} 
+                                value={newService.name} 
+                                onChange={async (e) => {
+                                   const val = e.target.value;
+                                   setNewService({...newService, name: val});
+                                   if (val.length > 2) {
+                                      setIsAiLoading(true);
+                                      try {
+                                         const categoryMap = {
+                                            consultation: 'consultas (presencial, online, teleconsulta)',
+                                            exam: 'exames estéticos (dermoscopia, bioimpedância, análise facial)',
+                                            procedure: 'procedimentos estéticos (botox, preenchimento, peeling, laser)'
+                                         };
+                                         const suggestions = await base44.integrations.Core.InvokeLLM({
+                                            prompt: `Liste 5 tipos comuns de ${categoryMap[newService.category]} na medicina estética que contenham ou sejam similares a "${val}". Retorne apenas os nomes em um array JSON.`,
+                                            response_json_schema: { type: "object", properties: { items: { type: "array", items: { type: "string" } } } }
+                                         });
+                                         setAiSuggestions(suggestions.items || []);
+                                      } catch(e) { 
+                                         console.error(e);
+                                      } finally { 
+                                         setIsAiLoading(false); 
+                                      }
+                                   } else {
+                                      setAiSuggestions([]);
+                                   }
+                                }}
+                                placeholder="Digite e veja sugestões..." 
+                             />
+                             {isAiLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-5 text-slate-400" />}
+                             {aiSuggestions.length > 0 && (
+                                <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 shadow-lg rounded-xl mt-1 z-50 max-h-48 overflow-y-auto">
+                                   {aiSuggestions.map((s, i) => (
+                                      <div 
+                                         key={i} 
+                                         className="p-3 hover:bg-slate-50 cursor-pointer text-sm text-slate-700 border-b last:border-0"
+                                         onClick={() => {
+                                            setNewService({...newService, name: s});
+                                            setAiSuggestions([]);
+                                         }}
+                                      >
+                                         {s}
+                                      </div>
+                                   ))}
+                                </div>
+                             )}
+                          </div>
+                       </div>
+                       <div className="space-y-2 md:col-span-1">
+                          <Label className={labelClass}>Preço (R$)</Label>
+                          <Input 
+                             type="number" 
+                             step="0.01"
+                             className={inputClass} 
+                             value={newService.price} 
+                             onChange={e => setNewService({...newService, price: e.target.value})} 
+                             placeholder="0.00"
+                             disabled={newService.is_free}
+                          />
+                       </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                       <div className="flex items-center gap-2">
+                          <input 
+                             type="checkbox" 
+                             id="is_free" 
+                             checked={newService.is_free} 
+                             onChange={e => setNewService({...newService, is_free: e.target.checked, price: e.target.checked ? '0' : newService.price})} 
+                             className="w-5 h-5 text-[#0D9488] rounded border-gray-300 focus:ring-[#0D9488]"
+                          />
+                          <label htmlFor="is_free" className="text-sm font-medium text-slate-700 cursor-pointer">Gratuito / Presente</label>
+                       </div>
+                       <Button 
+                          onClick={() => {
+                             if (!newService.name) return alert("Digite o nome do serviço");
+                             setServicesCatalog([...servicesCatalog, { ...newService, price: parseFloat(newService.price) || 0 }]);
+                             setNewService({ category: 'consultation', name: '', price: '', is_free: false });
+                             setAiSuggestions([]);
+                          }}
+                          className="bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl h-12 px-6"
+                       >
+                          + Adicionar Serviço
+                       </Button>
+                    </div>
+                 </div>
+
+                 {/* Revenue Summary */}
+                 {servicesCatalog.length > 0 && (
+                    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 mb-6">
+                       <div className="flex items-center justify-between">
+                          <div>
+                             <p className="text-sm text-emerald-700 font-bold uppercase tracking-wide mb-1">Receita Estimada (Mensal)</p>
+                             <p className="text-3xl font-black text-emerald-800">
+                                R$ {servicesCatalog.reduce((acc, s) => acc + (s.price || 0), 0).toFixed(2)}
+                             </p>
+                             <p className="text-xs text-emerald-600 mt-1">Baseado em {servicesCatalog.length} serviço(s) cadastrado(s)</p>
+                          </div>
+                          <DollarSign className="w-12 h-12 text-emerald-600" />
+                       </div>
+                    </div>
+                 )}
+
+                 {/* Services List */}
+                 <div className="space-y-3">
+                    {servicesCatalog.length === 0 && (
+                       <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300">
+                          <Activity className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+                          <p className="text-slate-500 italic">Nenhum serviço cadastrado ainda.</p>
+                          <p className="text-xs text-slate-400 mt-1">Adicione seus serviços para calcular a receita estimada.</p>
+                       </div>
+                    )}
+                    {servicesCatalog.map((item, idx) => (
+                       <div key={idx} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all">
+                          <div className="flex items-center gap-4">
+                             <div className={`p-3 rounded-lg ${item.category === 'consultation' ? 'bg-blue-50 text-blue-600' : item.category === 'exam' ? 'bg-purple-50 text-purple-600' : 'bg-pink-50 text-pink-600'}`}>
+                                {item.category === 'consultation' ? <UserIcon className="w-5 h-5" /> : item.category === 'exam' ? <Activity className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
+                             </div>
+                             <div>
+                                <p className="font-bold text-slate-800 text-base">{item.name}</p>
+                                <p className="text-xs text-slate-500 capitalize font-medium">
+                                   {item.category === 'consultation' ? 'Consulta' : item.category === 'exam' ? 'Exame' : 'Procedimento'}
+                                </p>
+                             </div>
+                          </div>
+                          <div className="flex items-center gap-4">
+                             <span className={`font-bold text-lg ${item.is_free ? 'text-green-600' : 'text-slate-700'}`}>
+                                {item.is_free ? 'Grátis' : `R$ ${item.price?.toFixed(2)}`}
+                             </span>
+                             <Button 
+                                size="icon" 
+                                variant="ghost" 
+                                className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                                onClick={() => {
+                                   const newCat = [...servicesCatalog];
+                                   newCat.splice(idx, 1);
+                                   setServicesCatalog(newCat);
+                                }}
+                             >
+                                <Trash2 className="w-4 h-4" />
+                             </Button>
+                          </div>
+                       </div>
+                    ))}
+                 </div>
+                </div>
+              )}
+
               <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white h-14 font-bold shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 transition-all rounded-xl text-lg mt-4" disabled={saveMutation.isPending}>
                  {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
                  Salvar Alterações
               </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+              </CardContent>
+              </Card>
+              </TabsContent>
 
         <TabsContent value="medical">
           <Card className={cardClass}>
