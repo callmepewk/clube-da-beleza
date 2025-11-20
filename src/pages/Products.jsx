@@ -608,6 +608,7 @@ export default function ProductsPage() {
            </DialogContent>
         </Dialog>
       </div>
+    </div>
 
       {/* Product Viewer Modal */}
       <Dialog open={!!viewingProduct} onOpenChange={(o) => !o && setViewingProduct(null)}>
