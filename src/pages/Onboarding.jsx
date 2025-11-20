@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Stethoscope, CheckCircle2, MapPin, Loader2, ScrollText, Building2 } from 'lucide-react';
+import { User, Stethoscope, CheckCircle2, MapPin, Loader2, ScrollText, Building2, LogIn } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 
@@ -17,6 +17,7 @@ export default function OnboardingPage() {
   const [role, setRole] = useState(null);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [user, setUser] = useState(null);
   
   const [formData, setFormData] = useState({
     cpf: '',
@@ -34,6 +35,26 @@ export default function OnboardingPage() {
   });
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const init = async () => {
+      const u = await base44.auth.me();
+      setUser(u);
+
+      // Check for saved onboarding data
+      const savedData = localStorage.getItem('onboarding_temp_data');
+      if (savedData) {
+         const parsed = JSON.parse(savedData);
+         setRole(parsed.role);
+         setFormData(parsed.formData);
+         setAcceptedTerms(parsed.acceptedTerms);
+         setStep(2); // Jump to step 2 if we have data
+         
+         // If user is now logged in, we can clear storage? No, wait until success.
+      }
+    };
+    init();
+  }, []);
 
   const handleLocationClick = () => {
     if (!navigator.geolocation) {
@@ -74,9 +95,11 @@ export default function OnboardingPage() {
 
   const createProfileMutation = useMutation({
     mutationFn: async () => {
-      const user = await base44.auth.me();
+      const currentUser = await base44.auth.me();
+      if (!currentUser) throw new Error("Usuário não autenticado");
+
       const commonData = {
-        user_email: user.email,
+        user_email: currentUser.email,
         type: role,
         terms_accepted: true,
         terms_accepted_date: new Date().toISOString(),
@@ -99,7 +122,7 @@ export default function OnboardingPage() {
           service_address: {
             is_same_as_personal: formData.same_address,
             street: formData.same_address ? (formData.street || '') : (formData.service_street || ''),
-            number: formData.same_address ? (formData.number || '') : '', // Simplified for demo
+            number: formData.same_address ? (formData.number || '') : '', 
             neighborhood: formData.same_address ? (formData.neighborhood || '') : '',
             city: formData.same_address ? (formData.city || '') : '',
             state: formData.same_address ? (formData.state || '') : '',
@@ -111,8 +134,8 @@ export default function OnboardingPage() {
       return base44.entities.UserProfile.create(commonData);
     },
     onSuccess: () => {
-      // Invalidate layout query to hide banner immediately
       base44.queryClient?.invalidateQueries(['currentUserProfile']);
+      localStorage.removeItem('onboarding_temp_data'); // Clear temp data
       window.location.href = createPageUrl('Dashboard');
     },
     onError: (error) => {
@@ -126,7 +149,21 @@ export default function OnboardingPage() {
       alert("Você deve aceitar os termos e condições.");
       return;
     }
-    createProfileMutation.mutate();
+
+    if (!user) {
+       // Save state and redirect to login/signup
+       const dataToSave = {
+          role,
+          formData,
+          acceptedTerms
+       };
+       localStorage.setItem('onboarding_temp_data', JSON.stringify(dataToSave));
+       
+       // Redirect to login, telling it to return here
+       base44.auth.redirectToLogin(window.location.href);
+    } else {
+       createProfileMutation.mutate();
+    }
   };
 
   return (
@@ -191,7 +228,11 @@ export default function OnboardingPage() {
         <Card className="animate-in fade-in slide-in-from-right-8 border-t-4 border-t-emerald-500 shadow-lg">
           <CardHeader>
             <CardTitle>Cadastro de {role === 'patient' ? 'Paciente' : 'Profissional'}</CardTitle>
-            <CardDescription>Preencha seus dados para acessar a plataforma. Campos de endereço são opcionais neste momento.</CardDescription>
+            <CardDescription>
+               {user 
+                  ? 'Confirme seus dados para finalizar o acesso à plataforma.' 
+                  : 'Preencha os dados abaixo. O login e senha serão criados na próxima etapa.'}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -202,18 +243,29 @@ export default function OnboardingPage() {
                   <User className="w-4 h-4" /> Dados Pessoais
                 </h4>
                 
-                {/* Auth Info (Read Only) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
-                   <div className="space-y-2">
-                      <Label>Email (Login)</Label>
-                      <Input value={base44.auth.me()?.email || ''} disabled className="bg-white" />
+                {/* Auth Info Handling */}
+                {user ? (
+                   <div className="grid grid-cols-1 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                      <div className="space-y-2">
+                         <Label>Conta Conectada</Label>
+                         <div className="flex items-center gap-2 font-medium text-slate-700">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            {user.email}
+                         </div>
+                         <p className="text-xs text-slate-500">Seus dados serão vinculados a esta conta.</p>
+                      </div>
                    </div>
-                   <div className="space-y-2">
-                      <Label>Senha</Label>
-                      <Input type="password" value="********" disabled className="bg-white" />
-                      <p className="text-xs text-slate-400">Definida no cadastro inicial</p>
+                ) : (
+                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 flex gap-3 items-start">
+                      <div className="bg-blue-100 p-2 rounded-full"><LogIn className="w-4 h-4 text-blue-600" /></div>
+                      <div>
+                         <h4 className="font-bold text-blue-900 text-sm">Login e Senha</h4>
+                         <p className="text-xs text-blue-700 mt-1">
+                            Não se preocupe! Após preencher o formulário e clicar em "Continuar", você será redirecionado para criar seu login e senha com segurança. Todos os dados preenchidos aqui serão salvos automaticamente.
+                         </p>
+                      </div>
                    </div>
-                </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -395,7 +447,7 @@ export default function OnboardingPage() {
                   {createProfileMutation.isPending ? (
                     <><Loader2 className="w-5 h-5 animate-spin mr-2" /> Criando seu perfil...</>
                   ) : (
-                    <><CheckCircle2 className="w-5 h-5 mr-2" /> Finalizar Cadastro</>
+                    user ? <><CheckCircle2 className="w-5 h-5 mr-2" /> Finalizar Cadastro</> : <><LogIn className="w-5 h-5 mr-2" /> Continuar para Criação de Login</>
                   )}
                 </Button>
               </div>
