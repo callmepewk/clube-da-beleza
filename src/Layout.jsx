@@ -57,6 +57,32 @@ export default function Layout({ children }) {
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
+  // Activity Tracking
+  const updateActivityMutation = useMutation({
+     mutationFn: async () => {
+        if (!profile) return;
+        await base44.entities.UserProfile.update(profile.id, { 
+           last_active_at: new Date().toISOString()
+        });
+     }
+  });
+
+  // Update activity every 5 minutes if user is active
+  useEffect(() => {
+     if (!user || !profile) return;
+     
+     // Initial update
+     updateActivityMutation.mutate();
+
+     const interval = setInterval(() => {
+        if (document.visibilityState === 'visible') {
+           updateActivityMutation.mutate();
+        }
+     }, 5 * 60 * 1000); // 5 minutes
+
+     return () => clearInterval(interval);
+  }, [user?.email, profile?.id]);
+
   // Sticky/Hideable Header Logic
   useEffect(() => {
     const handleScroll = () => {

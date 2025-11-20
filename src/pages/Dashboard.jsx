@@ -85,15 +85,30 @@ export default function Dashboard() {
       }
 
       // Professional/Admin View Stats
-      const appointments = await base44.entities.Appointment.list({ limit: 100 });
-      const patients = await base44.entities.UserProfile.list({ query: { type: 'patient' }, limit: 1 });
+      const appointments = await base44.entities.Appointment.list({ limit: 1000 });
       
+      // Real Active Patients Logic
+      // Fetch all patients
+      const allPatients = await base44.entities.UserProfile.list({ query: { type: 'patient' }, limit: 1000 });
+      
+      // Filter for active in last 30 minutes
+      const now = new Date();
+      const activeThreshold = new Date(now.getTime() - 30 * 60 * 1000); // 30 mins ago
+      
+      const activePatientsList = allPatients.data.filter(p => {
+         if (!p.last_active_at) return false;
+         return new Date(p.last_active_at) > activeThreshold;
+      });
+
       const scheduledCount = appointments.data.filter(a => a.status === 'scheduled').length;
-      const revenue = appointments.data.length * 250; 
+      
+      // Real Revenue Calculation (sum of costs)
+      const revenue = appointments.data.reduce((acc, curr) => acc + (curr.cost || 0), 0);
 
       return {
         appointments: scheduledCount,
-        patients: patients.data.length + 12,
+        patients: activePatientsList.length,
+        activePatientsDetails: activePatientsList,
         revenue: revenue
       };
     },
@@ -307,15 +322,29 @@ export default function Dashboard() {
           <p className="text-xs text-green-600 mt-2 font-medium">▲ 12% esta semana</p>
         </div>
         
-        <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition-all group">
+        <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition-all group relative overflow-hidden">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Pacientes Ativos</h3>
+              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Pacientes Ativos (30min)</h3>
               <Users className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
             </div>
             <p className="text-4xl font-bold text-[#0F172A] mt-2 flex items-center gap-2">
-            {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-blue-600" /> : stats?.patients || 142}
+            {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-blue-600" /> : stats?.patients || 0}
             </p>
-            <p className="text-xs text-green-600 mt-2 font-medium">▲ 5 novos hoje</p>
+            
+            {/* Active Users List Tooltip/Preview */}
+            {stats?.activePatientsDetails?.length > 0 && (
+               <div className="mt-4 space-y-2 border-t pt-2 max-h-32 overflow-y-auto">
+                  {stats.activePatientsDetails.map(p => (
+                     <div key={p.id} className="text-xs text-slate-600 flex justify-between items-center">
+                        <span>{p.user_email.split('@')[0]}</span>
+                        <span className="text-slate-400 flex items-center gap-1">
+                           <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
+                           {p.address?.city || 'Local desc.'}
+                        </span>
+                     </div>
+                  ))}
+               </div>
+            )}
         </div>
 
         <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition-all group">
@@ -324,9 +353,9 @@ export default function Dashboard() {
                <DollarSign className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" />
             </div>
             <p className="text-4xl font-bold text-[#0F172A] mt-2 flex items-center gap-2">
-              {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-emerald-600" /> : `R$ ${stats?.revenue?.toFixed(2) || '3.500,00'}`}
+              {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-emerald-600" /> : `R$ ${stats?.revenue?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || '0,00'}`}
             </p>
-             <p className="text-xs text-[#64748B] mt-2">Baseado nos agendamentos</p>
+             <p className="text-xs text-[#64748B] mt-2">Soma dos valores de agendamentos</p>
         </div>
       </div>
 

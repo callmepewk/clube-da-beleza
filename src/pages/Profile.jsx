@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon, Calendar, Mail, Activity, BarChart3, DollarSign, Zap, Layout, MessageSquare, ShoppingBag, TrendingUp } from 'lucide-react';
+import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon, Calendar, Mail, Activity, BarChart3, DollarSign, Zap, Layout, MessageSquare, ShoppingBag, TrendingUp, Trash2 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   AlertDialog,
@@ -42,6 +42,12 @@ export default function ProfilePage() {
   const [professionalData, setProfessionalData] = useState({
      registry: '', specialties: ''
   });
+  const [servicesCatalog, setServicesCatalog] = useState([]);
+  
+  // New Service Form State
+  const [newService, setNewService] = useState({ category: 'consultation', name: '', price: '', is_free: false });
+  const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['userProfileFull'],
@@ -123,6 +129,9 @@ export default function ProfilePage() {
               registry: profile.professional_registry || '',
               specialties: Array.isArray(profile.specialties) ? profile.specialties.join(', ') : ''
            });
+           if (profile.services_catalog) {
+              setServicesCatalog(profile.services_catalog);
+           }
         }
      }
   }, [profile]);
@@ -224,6 +233,7 @@ export default function ProfilePage() {
       if (profile.type === 'professional') {
          updateData.professional_registry = professionalData.registry;
          updateData.specialties = professionalData.specialties.split(',').map(s => s.trim()).filter(Boolean);
+         updateData.services_catalog = servicesCatalog;
       }
 
       await base44.entities.UserProfile.update(profile.id, updateData);
@@ -292,10 +302,11 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3 w-full md:w-auto justify-center md:justify-start mt-4 md:mt-0">
+              {/* Buttons Container with fix for overflow */}
+              <div className="flex flex-wrap gap-3 w-full md:w-auto justify-center md:justify-start mt-4 md:mt-0 max-w-full overflow-hidden">
                 <Button 
                   variant="outline" 
-                  className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-6 rounded-full font-semibold transition-all shadow-sm"
+                  className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-4 text-xs md:text-sm rounded-full font-semibold transition-all shadow-sm whitespace-nowrap"
                   onClick={() => {
                     const type = profile?.type === 'patient' ? 'Profissional' : 'Paciente';
                     if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
@@ -312,17 +323,17 @@ export default function ProfilePage() {
                 </Button>
                 <Button 
                   variant="outline"
-                  className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-6 rounded-full font-semibold transition-all shadow-sm"
+                  className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-4 text-xs md:text-sm rounded-full font-semibold transition-all shadow-sm"
                   onClick={() => setIsLogoutAlertOpen(true)}
                 >
                    Sair
                 </Button>
                 <Button 
                   variant="outline"
-                  className="border-red-400/50 text-red-100 hover:bg-red-500/20 hover:text-white hover:border-red-400 bg-black/10 backdrop-blur-md h-10 px-6 rounded-full font-semibold transition-all shadow-sm"
+                  className="border-red-400/50 text-red-100 hover:bg-red-500/20 hover:text-white hover:border-red-400 bg-black/10 backdrop-blur-md h-10 px-4 text-xs md:text-sm rounded-full font-semibold transition-all shadow-sm"
                   onClick={() => setIsDeleteAlertOpen(true)}
                 >
-                   Excluir Conta
+                   Excluir
                 </Button>
               </div>
             </CardContent>
