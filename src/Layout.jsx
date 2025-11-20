@@ -161,14 +161,14 @@ export default function Layout({ children }) {
       {/* Global Banner - Registration Reminder */}
       {/* Shows ONLY if user is logged in but profile is incomplete */}
       {user && !isLoading && !isProfileComplete && location.pathname !== '/onboarding' && (
-        <div className="bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-900 text-white px-4 py-3 text-sm flex flex-col sm:flex-row items-center justify-center gap-3 shadow-lg relative z-50 border-b border-purple-500/30">
+        <div className="bg-gradient-to-r from-[#059669] to-[#047857] text-white px-4 py-3 text-sm flex flex-col sm:flex-row items-center justify-center gap-3 shadow-md relative z-50">
           <div className="flex items-center gap-2">
-            <span className="bg-white/10 p-1.5 rounded-full animate-pulse"><UserCircle className="w-4 h-4" /></span>
+            <span className="bg-white/20 p-1.5 rounded-full animate-pulse"><UserCircle className="w-4 h-4" /></span>
             <span className="font-medium tracking-wide">Complete seu perfil para desbloquear o potencial máximo da HealthAI.</span>
           </div>
           <Link 
             to={createPageUrl('Onboarding')}
-            className="bg-white text-purple-900 px-5 py-1.5 rounded-full text-xs font-bold hover:bg-purple-50 transition-all shadow-md transform hover:scale-105 active:scale-95"
+            className="bg-white text-[#047857] px-5 py-1.5 rounded-full text-xs font-bold hover:bg-emerald-50 transition-all shadow-sm transform hover:scale-105 active:scale-95"
           >
             Terminar Cadastro
           </Link>
@@ -179,30 +179,31 @@ export default function Layout({ children }) {
       {user && <BannerDisplay userProfile={profile} />}
 
       <div className="flex flex-1 h-[calc(100vh-64px)]"> 
-        {/* Sidebar (Desktop) - Spotify Style */}
-        <aside className={`hidden lg:flex w-[240px] flex-col ${theme.sidebar} border-r ${theme.border} sticky top-0 h-screen`}>
-           <div className="p-6">
+        {/* Sidebar (Desktop) - Premium Clinic Style */}
+        <aside className={`hidden lg:flex w-[240px] flex-col ${theme.sidebar} border-r ${theme.border} sticky top-0 h-screen z-20`}>
+           <div className="p-6 pb-0">
               <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80 mb-8">
-                 <div className="bg-gradient-to-br from-purple-600 to-indigo-600 p-2 rounded-lg shadow-lg shadow-purple-900/50">
+                 <div className="bg-gradient-to-br from-[#059669] to-[#34D399] p-2 rounded-xl shadow-lg shadow-emerald-100">
                     <Activity className="w-6 h-6 text-white" />
                  </div>
-                 <span className="font-bold text-xl tracking-tight text-white">HealthAI</span>
+                 <span className="font-bold text-xl tracking-tight text-[#1E293B]">HealthAI</span>
               </Link>
 
-              <nav className="space-y-1">
+              <nav className="space-y-1.5">
                  {navItems.map((item) => {
                    const isActive = location.pathname === item.path;
                    return (
                      <Link
                        key={item.path}
                        to={createPageUrl(item.path.replace('/', ''))}
-                       className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-bold transition-all duration-200 group
+                       className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 group relative overflow-hidden
                          ${isActive 
-                           ? 'bg-[#282828] text-white' 
-                           : 'text-[#B3B3B3] hover:text-white hover:bg-[#121212]'
+                           ? 'bg-[#ECFDF5] text-[#059669] shadow-sm' 
+                           : 'text-[#64748B] hover:text-[#059669] hover:bg-[#F8FAFC]'
                          }`}
-                       >
-                       <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-purple-400' : 'text-[#B3B3B3] group-hover:text-white'}`} />
+                     >
+                       {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-[#059669] rounded-full"></div>}
+                       <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-[#059669]' : 'text-[#94A3B8] group-hover:text-[#059669]'}`} />
                        <span>{item.label}</span>
                      </Link>
                    );
@@ -210,29 +211,31 @@ export default function Layout({ children }) {
               </nav>
            </div>
            
-           <div className="mt-4 px-6 pt-4 border-t border-[#282828]">
+           <div className="mt-auto p-6 border-t border-[#E2E8F0]">
               {user ? (
-                 <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#282828] transition-colors cursor-pointer group" onClick={() => navigate(createPageUrl('Profile'))}>
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-md group-hover:scale-105 transition-transform">
+                 <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#F8FAFC] transition-all cursor-pointer group border border-transparent hover:border-[#E2E8F0]" onClick={() => navigate(createPageUrl('Profile'))}>
+                    <div 
+                      className="w-10 h-10 rounded-full bg-gradient-to-br from-[#A78BFA] to-[#34D399] flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white"
+                    >
                        {user.full_name?.[0]?.toUpperCase() || 'U'}
                     </div>
                     <div className="flex-1 min-w-0">
-                       <p className="text-sm font-bold text-white truncate">{user.full_name}</p>
-                       <p className="text-xs text-[#B3B3B3] truncate">Ver Perfil</p>
+                       <p className="text-sm font-bold text-[#1E293B] truncate group-hover:text-[#059669] transition-colors">{user.full_name}</p>
+                       <p className="text-xs text-[#64748B] truncate font-medium">Ver Perfil</p>
                     </div>
                  </div>
               ) : (
-                 <div className="space-y-2">
+                 <div className="space-y-3">
                     <Button 
                       onClick={() => navigate(createPageUrl('Onboarding'))}
-                      className="w-full bg-purple-600 text-white hover:bg-purple-700 font-bold rounded-full"
+                      className="w-full bg-[#059669] hover:bg-[#047857] text-white font-bold rounded-xl shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02]"
                     >
                       Criar Conta
                     </Button>
                     <Button 
                       onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
                       variant="ghost"
-                      className="w-full text-[#B3B3B3] hover:text-white hover:bg-transparent h-8 text-xs"
+                      className="w-full text-[#64748B] hover:text-[#059669] hover:bg-emerald-50/50 h-9 text-xs font-semibold"
                     >
                       Já tenho conta
                     </Button>
@@ -246,17 +249,17 @@ export default function Layout({ children }) {
            {/* Mobile Header */}
            <header className={`lg:hidden h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 sticky top-0 z-40`}>
               <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
-                 <Activity className="w-6 h-6 text-purple-500" />
-                 <span className="font-bold text-lg text-white">HealthAI</span>
+                 <Activity className="w-6 h-6 text-[#059669]" />
+                 <span className="font-bold text-lg text-[#1E293B]">HealthAI</span>
               </Link>
               
               <Sheet>
                  <SheetTrigger asChild>
-                   <button className="p-2 text-white hover:bg-[#282828] rounded-full">
+                   <button className="p-2 text-[#1E293B] hover:bg-slate-100 rounded-full">
                      <Menu className="w-6 h-6" />
                    </button>
                  </SheetTrigger>
-                 <SheetContent side="right" className={`${theme.sidebar} border-l ${theme.border} text-white w-[300px]`}>
+                 <SheetContent side="right" className={`${theme.sidebar} border-l ${theme.border} text-[#1E293B] w-[300px]`}>
                     <div className="flex flex-col h-full pt-6">
                        <nav className="space-y-2 flex-1">
                           {navItems.map((item) => {
@@ -265,21 +268,21 @@ export default function Layout({ children }) {
                               <Link
                                 key={item.path}
                                 to={createPageUrl(item.path.replace('/', ''))}
-                                className={`flex items-center gap-4 px-4 py-3 rounded-lg font-medium transition-colors
-                                  ${isActive ? 'bg-[#282828] text-white' : 'text-[#B3B3B3] hover:text-white'}`}
+                                className={`flex items-center gap-4 px-4 py-3 rounded-xl font-semibold transition-colors
+                                  ${isActive ? 'bg-[#ECFDF5] text-[#059669]' : 'text-[#64748B] hover:text-[#059669] hover:bg-slate-50'}`}
                               >
-                                <item.icon className={`w-5 h-5 ${isActive ? 'text-purple-400' : ''}`} />
+                                <item.icon className={`w-5 h-5 ${isActive ? 'text-[#059669]' : ''}`} />
                                 {item.label}
                               </Link>
                             );
                           })}
                        </nav>
                        {user && (
-                          <div className="pt-6 border-t border-[#282828] space-y-2">
-                             <Button variant="ghost" className="w-full justify-start text-[#B3B3B3] hover:text-white hover:bg-[#282828]" onClick={() => navigate(createPageUrl('Profile'))}>
+                          <div className="pt-6 border-t border-slate-100 space-y-2">
+                             <Button variant="ghost" className="w-full justify-start text-[#64748B] hover:text-[#059669] hover:bg-slate-50" onClick={() => navigate(createPageUrl('Profile'))}>
                                 <UserCircle className="w-5 h-5 mr-2" /> Perfil
                              </Button>
-                             <Button variant="ghost" className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-[#282828]" onClick={handleLogout}>
+                             <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50" onClick={handleLogout}>
                                 <LogOut className="w-5 h-5 mr-2" /> Sair
                              </Button>
                           </div>
