@@ -112,31 +112,44 @@ export default function DesignPage() {
   });
 
   const chatMutation = useMutation({
-     mutationFn: async () => {
-        const newHistory = [...chatHistory, { role: 'user', content: chatMessage }];
+     mutationFn: async (message) => {
+        const newHistory = [...chatHistory, { role: 'user', content: message }];
         setChatHistory(newHistory);
-        setChatMessage('');
         
-        // Simulate AI understanding and re-generating
-        // In a real app, this would update the prompt context and trigger regeneration
         const response = "Entendi. Vou aplicar essas alterações no design. Aguarde um momento...";
         setChatHistory([...newHistory, { role: 'assistant', content: response }]);
         
-        const newPrompt = `${prompt}. Alterações solicitadas: ${chatMessage}`;
+        const sizeInfo = DESIGN_SIZES[selectedPlatform]?.[selectedSize];
+        const dimensionText = sizeInfo ? `${sizeInfo.width}x${sizeInfo.height}px, formato ${sizeInfo.label}` : '';
+        
+        const newPrompt = `${prompt}. Alterações solicitadas: ${message}. Dimensões: ${dimensionText}. Estilo clean, medicina estética, otimizado para ${selectedPlatform}.`;
         const res = await base44.integrations.Core.GenerateImage({
            prompt: newPrompt
         });
         setResult(res.url);
+        setChatHistory(prev => [...prev, { role: 'assistant', content: 'Design atualizado! Como ficou?' }]);
         return res.url;
+     },
+     onError: (error) => {
+        setChatHistory(prev => [...prev, { role: 'assistant', content: 'Desculpe, houve um erro ao gerar a alteração. Tente novamente.' }]);
      }
   });
 
   const addTextMutation = useMutation({
      mutationFn: async () => {
-        const newPrompt = `${prompt}. Adicionar texto: "${textConfig.content}" na posição ${textConfig.position}, estilo ${textConfig.style}.`;
+        if (!textConfig.content) {
+          throw new Error('Digite o texto que deseja adicionar.');
+        }
+        const sizeInfo = DESIGN_SIZES[selectedPlatform]?.[selectedSize];
+        const dimensionText = sizeInfo ? `${sizeInfo.width}x${sizeInfo.height}px` : '';
+        const newPrompt = `${prompt}. Adicionar texto: "${textConfig.content}" na posição ${textConfig.position}, estilo ${textConfig.style}. Dimensões: ${dimensionText}.`;
         const res = await base44.integrations.Core.GenerateImage({ prompt: newPrompt });
         setResult(res.url);
         setShowTextTool(false);
+        setTextConfig({ content: '', position: 'center', style: 'modern' });
+     },
+     onError: (error) => {
+        alert(error.message || 'Erro ao adicionar texto. Tente novamente.');
      }
   });
 
@@ -329,16 +342,21 @@ export default function DesignPage() {
                    )}
                 </div>
                 <div className="flex gap-2">
-                   <input 
-                     className="flex-1 border rounded-md px-3 py-2 text-sm"
-                     placeholder="Peça alterações (ex: mude o fundo para azul, aumente o texto...)"
-                     value={chatMessage}
-                     onChange={e => setChatMessage(e.target.value)}
-                     onKeyDown={e => e.key === 'Enter' && chatMutation.mutate()}
-                   />
-                   <Button size="icon" onClick={() => chatMutation.mutate()} disabled={!chatMessage || chatMutation.isPending}>
-                      <Send className="w-4 h-4" />
-                   </Button>
+                  <input 
+                    className="flex-1 border rounded-md px-3 py-2 text-sm"
+                    placeholder="Peça alterações (ex: mude o fundo para azul, aumente o texto...)"
+                    value={chatMessage}
+                    onChange={e => setChatMessage(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' && chatMessage && !chatMutation.isPending) {
+                        chatMutation.mutate(chatMessage);
+                        setChatMessage('');
+                      }
+                    }}
+                  />
+                  <Button size="icon" onClick={() => { chatMutation.mutate(chatMessage); setChatMessage(''); }} disabled={!chatMessage || chatMutation.isPending}>
+                     <Send className="w-4 h-4" />
+                  </Button>
                 </div>
              </div>
           )}

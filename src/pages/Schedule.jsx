@@ -311,7 +311,7 @@ export default function SchedulePage() {
       setIsLoadingSuggestions(true);
       try {
         const res = await base44.integrations.Core.InvokeLLM({
-          prompt: `O usuário está buscando por: "${value}". Liste 5 tratamentos, consultas, procedimentos ou exames relacionados com a faixa de preço média em reais. Retorne JSON.`,
+          prompt: `O usuário está buscando por: "${value}". Liste 5 tratamentos, consultas, procedimentos ou exames médicos/estéticos relacionados com a faixa de preço média em reais (Brasil). Retorne JSON com nome e faixa de preço realista.`,
           response_json_schema: {
             type: "object",
             properties: {
@@ -330,7 +330,8 @@ export default function SchedulePage() {
         });
         setAiSuggestions(res.suggestions || []);
       } catch (e) {
-        console.error(e);
+        console.error('Erro ao buscar sugestões:', e);
+        setAiSuggestions([]);
       } finally {
         setIsLoadingSuggestions(false);
       }
@@ -495,10 +496,15 @@ export default function SchedulePage() {
                </div>
 
                <div className="space-y-2">
-                  <Label>Faixa de Preço (R$)</Label>
+                  <Label>Faixa de Preço (R$) - Opcional</Label>
                   <Input placeholder="Ex: até 300,00" type="number" />
                </div>
-               <Button className="w-full bg-indigo-600">Buscar & Agendar</Button>
+               <Button 
+                 className="w-full bg-indigo-600 hover:bg-indigo-700"
+                 onClick={() => alert('Funcionalidade em desenvolvimento. Em breve você poderá agendar diretamente com profissionais disponíveis!')}
+               >
+                 Buscar & Agendar
+               </Button>
             </div>
          </DialogContent>
       </Dialog>
