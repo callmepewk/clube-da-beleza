@@ -24,6 +24,60 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { format } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 
+function NotificationSender() {
+   const [form, setForm] = useState({ title: '', message: '', link: '', image_url: '' });
+   const queryClient = useQueryClient();
+
+   const sendMutation = useMutation({
+      mutationFn: async () => {
+         await base44.entities.Notification.create({
+            recipient_email: 'ALL',
+            title: form.title,
+            message: form.message,
+            link: form.link,
+            image_url: form.image_url,
+            created_at: new Date().toISOString(),
+            read_by: []
+         });
+      },
+      onSuccess: () => {
+         alert("Notificação enviada para todos os usuários!");
+         setForm({ title: '', message: '', link: '', image_url: '' });
+      }
+   });
+
+   return (
+      <div className="space-y-4">
+         <div className="space-y-2">
+            <Label>Título *</Label>
+            <Input value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="Ex: Nova atualização disponível" />
+         </div>
+         <div className="space-y-2">
+            <Label>Mensagem *</Label>
+            <Textarea value={form.message} onChange={e => setForm({...form, message: e.target.value})} placeholder="O corpo da notificação..." />
+         </div>
+         <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+               <Label>Link (Opcional)</Label>
+               <Input value={form.link} onChange={e => setForm({...form, link: e.target.value})} placeholder="https://..." />
+            </div>
+            <div className="space-y-2">
+               <Label>Imagem URL (Opcional)</Label>
+               <Input value={form.image_url} onChange={e => setForm({...form, image_url: e.target.value})} placeholder="https://..." />
+            </div>
+         </div>
+         <Button 
+            onClick={() => sendMutation.mutate()} 
+            disabled={!form.title || !form.message || sendMutation.isPending}
+            className="w-full bg-indigo-600 hover:bg-indigo-700"
+         >
+            {sendMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Send className="w-4 h-4 mr-2" />}
+            Enviar para Todos
+         </Button>
+      </div>
+   );
+}
+
 function BannerAdminList() {
   const queryClient = useQueryClient();
   const { data: banners } = useQuery({
@@ -413,6 +467,19 @@ export default function AdminControlPage() {
                   <BannerAdminList />
                </CardContent>
             </Card>
+        </TabsContent>
+
+        {/* Notifications Tab */}
+        <TabsContent value="notifications">
+           <Card>
+              <CardHeader>
+                 <CardTitle className="flex items-center gap-2"><Bell className="w-5 h-5" /> Enviar Notificação em Massa (Push)</CardTitle>
+                 <CardDescription>Envie uma mensagem para TODOS os usuários da plataforma.</CardDescription>
+              </CardHeader>
+              <CardContent className="max-w-2xl">
+                 <NotificationSender />
+              </CardContent>
+           </Card>
         </TabsContent>
 
         {/* Creations Tab */}

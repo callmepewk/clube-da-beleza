@@ -144,6 +144,21 @@ export default function ProfilePage() {
     }
   };
 
+  const handleDeleteAccount = async () => {
+     if (!profile) return;
+     try {
+        await base44.entities.UserProfile.delete(profile.id);
+        await base44.auth.logout();
+     } catch (error) {
+        console.error("Error deleting account", error);
+        alert("Erro ao excluir conta. Entre em contato com o suporte.");
+     }
+  };
+
+  const handleLogout = async () => {
+     await base44.auth.logout();
+  };
+
   const handleLocationClick = () => {
     if (!navigator.geolocation) {
       alert("Geolocalização não suportada pelo seu navegador.");
