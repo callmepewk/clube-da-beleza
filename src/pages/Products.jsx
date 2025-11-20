@@ -11,6 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye, Sparkles, RotateCcw, Save, MessageCircle, Send, BookOpen, Cuboid, Download } from 'lucide-react';
 import * as THREE from 'three';
+import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
+import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
 export default function ProductsPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -30,6 +32,21 @@ export default function ProductsPage() {
 
   const queryClient = useQueryClient();
 
+  const { data: profile } = useQuery({
+    queryKey: ['userProfileProducts'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      if (!user) return null;
+      const profiles = await base44.entities.UserProfile.list({ query: { user_email: user.email } });
+      return profiles?.data?.[0] || null;
+    },
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
   // Fetch Products
   const { data: products, isLoading } = useQuery({
     queryKey: ['myProducts'],
@@ -39,22 +56,51 @@ export default function ProductsPage() {
     }
   });
 
+  const planLimits = getPlanLimits(profile?.plan);
+  const currentMonth = getCurrentMonth();
+  const currentUsage = profile?.monthly_usage?.month === currentMonth ? profile?.monthly_usage?.products_created || 0 : 0;
+  const canCreateProduct = canUseFeature(currentUsage, planLimits.products);
+
   const createProductMutation = useMutation({
     mutationFn: async (dataToSave) => {
-       const user = await base44.auth.me();
+       if (!canCreateProduct) {
+         if (planLimits.products >= 20) {
+           sendWhatsAppMessage(user?.full_name || 'Usuário', 'criação de mais produtos');
+           throw new Error('Limite atingido. Mensagem enviada à secretaria.');
+         }
+         throw new Error('Limite atingido. Faça upgrade para criar mais produtos.');
+       }
+
+       const u = await base44.auth.me();
        await base44.entities.Product.create({
-         owner_email: user.email,
+         owner_email: u.email,
          type: newProductType,
          ...dataToSave,
          status: 'active'
        });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries(['myProducts']);
       setIsCreateOpen(false);
       setGeneratedProduct(null);
       setAiPrompt('');
       setAiDetails({ audience: '', tone: '', keywords: '' });
+      
+      const month = getCurrentMonth();
+      const usage = profile.monthly_usage || {};
+      if (usage.month !== month) {
+        await base44.entities.UserProfile.update(profile.id, {
+          monthly_usage: { month, products_created: 1, nurse_conversations: 0, chatbots_created: 0, sites_created: 0, designs_created: 0, ai_packages_created: 0 }
+        });
+      } else {
+        await base44.entities.UserProfile.update(profile.id, {
+          monthly_usage: { ...usage, products_created: (usage.products_created || 0) + 1 }
+        });
+      }
+      queryClient.invalidateQueries(['userProfileProducts']);
+    },
+    onError: (error) => {
+      alert(error.message);
     }
   });
 
@@ -139,7 +185,17 @@ export default function ProductsPage() {
 
   const generatePackageMutation = useMutation({
      mutationFn: async () => {
-        const user = await base44.auth.me();
+        const totalNeeded = 1;
+        const remaining = planLimits.ai_packages - (profile?.monthly_usage?.ai_packages_created || 0);
+        if (planLimits.ai_packages !== -1 && totalNeeded > remaining) {
+          if (planLimits.ai_packages >= 5) {
+            sendWhatsAppMessage(user?.full_name || 'Usuário', 'criação de mais pacotes de produtos via IA');
+            throw new Error('Limite de pacotes atingido. Mensagem enviada à secretaria.');
+          }
+          throw new Error('Limite mensal de pacotes atingido. Faça upgrade.');
+        }
+
+        const u = await base44.auth.me();
         
         // 1. Generate Product Ideas
         const ideasRes = await base44.integrations.Core.InvokeLLM({
@@ -188,7 +244,7 @@ export default function ProductsPage() {
            } catch(e) { console.error(e); }
 
            await base44.entities.Product.create({
-              owner_email: user.email,
+              owner_email: u.email,
               type: prod.type,
               title: prod.title,
               description: prod.description,
@@ -199,11 +255,28 @@ export default function ProductsPage() {
            });
         }
      },
-     onSuccess: () => {
+     onSuccess: async () => {
         queryClient.invalidateQueries(['myProducts']);
         setIsBulkOpen(false);
         setServiceDescription('');
+        
+        const month = getCurrentMonth();
+        const usage = profile.monthly_usage || {};
+        if (usage.month !== month) {
+          await base44.entities.UserProfile.update(profile.id, {
+            monthly_usage: { month, ai_packages_created: 1, nurse_conversations: 0, chatbots_created: 0, sites_created: 0, designs_created: 0, products_created: 0 }
+          });
+        } else {
+          await base44.entities.UserProfile.update(profile.id, {
+            monthly_usage: { ...usage, ai_packages_created: (usage.ai_packages_created || 0) + 1 }
+          });
+        }
+        queryClient.invalidateQueries(['userProfileProducts']);
+        
         alert("Pacote de 3 produtos gerado com sucesso!");
+     },
+     onError: (error) => {
+        alert(error.message);
      }
   });
 
@@ -274,9 +347,16 @@ export default function ProductsPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-start gap-4">
         <h1 className="text-2xl font-bold text-[#0F172A]">Gerenciar Produtos</h1>
-        <div className="flex gap-2">
+        <UsageLimitBanner 
+          currentUsage={currentUsage}
+          limit={planLimits.products}
+          resourceName="Produtos"
+          planName={planLimits.name}
+        />
+      </div>
+      <div className="flex justify-end items-center gap-2">
            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => setIsBulkOpen(true)}>
               <Sparkles className="w-4 h-4 mr-2" /> Gerar Pacote com IA
            </Button>
@@ -333,9 +413,9 @@ export default function ProductsPage() {
                        <Input placeholder="Ex: saúde, dieta..." value={aiDetails.keywords} onChange={e => setAiDetails({...aiDetails, keywords: e.target.value})} />
                     </div>
                     <Button 
-                       onClick={() => generateProductMutation.mutate()} 
-                       className="w-full bg-purple-600 hover:bg-purple-700" 
-                       disabled={generateProductMutation.isPending || !aiPrompt}
+                      onClick={() => generateProductMutation.mutate()} 
+                      className="w-full bg-purple-600 hover:bg-purple-700" 
+                      disabled={generateProductMutation.isPending || !aiPrompt || !canCreateProduct}
                     >
                        {generateProductMutation.isPending ? <><Loader2 className="animate-spin mr-2" /> Gerando Conteúdo e Imagem...</> : <><Sparkles className="mr-2 w-4 h-4" /> Gerar com IA</>}
                     </Button>
@@ -425,14 +505,14 @@ export default function ProductsPage() {
                        </Button>
                     </div>
                     <Button 
-                       className="w-full bg-green-600 hover:bg-green-700"
-                       onClick={() => createProductMutation.mutate({
-                          title: generatedProduct.title,
-                          description: generatedProduct.description,
-                          price: generatedProduct.price,
-                          content_url: generatedProduct.content_url
-                       })}
-                       disabled={createProductMutation.isPending}
+                      className="w-full bg-green-600 hover:bg-green-700"
+                      onClick={() => createProductMutation.mutate({
+                         title: generatedProduct.title,
+                         description: generatedProduct.description,
+                         price: generatedProduct.price,
+                         content_url: generatedProduct.content_url
+                      })}
+                      disabled={createProductMutation.isPending || !canCreateProduct}
                     >
                        {createProductMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <><Save className="w-4 h-4 mr-2" /> Salvar Produto</>}
                     </Button>

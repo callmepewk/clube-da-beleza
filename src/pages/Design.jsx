@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Loader2, Image as ImageIcon, Wand2, Download, MessageSquare, Type, Send } from 'lucide-react';
+import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
+import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
 export default function DesignPage() {
   const [mode, setMode] = useState('text_to_design'); // text_to_design or image_remix
@@ -14,19 +16,62 @@ export default function DesignPage() {
   const [chatHistory, setChatHistory] = useState([]);
   const [showTextTool, setShowTextTool] = useState(false);
   const [textConfig, setTextConfig] = useState({ content: '', position: 'center', style: 'modern' });
+  const queryClient = useQueryClient();
+
+  const { data: profile } = useQuery({
+    queryKey: ['userProfileDesign'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      if (!user) return null;
+      const profiles = await base44.entities.UserProfile.list({ query: { user_email: user.email } });
+      return profiles?.data?.[0] || null;
+    },
+  });
+
+  const { data: user } = useQuery({
+    queryKey: ['currentUser'],
+    queryFn: () => base44.auth.me()
+  });
+
+  const planLimits = getPlanLimits(profile?.plan);
+  const currentMonth = getCurrentMonth();
+  const currentUsage = profile?.monthly_usage?.month === currentMonth ? profile?.monthly_usage?.designs_created || 0 : 0;
+  const canCreate = canUseFeature(currentUsage, planLimits.designs);
 
   const generateDesignMutation = useMutation({
     mutationFn: async () => {
-      // Simulation of Design AI - usually would invoke Image Gen or custom layout engine
-      // Here we use GenerateImage for the "slide/post" look
+      if (!canCreate) {
+        if (planLimits.designs >= 20) {
+          sendWhatsAppMessage(user?.full_name || 'Usuário', 'criação de mais designs');
+          throw new Error('Limite atingido. Mensagem enviada à secretaria.');
+        }
+        throw new Error('Limite atingido. Faça upgrade para criar mais designs.');
+      }
+
       const res = await base44.integrations.Core.GenerateImage({
         prompt: `Design profissional de slide ou post instagram sobre: ${prompt}. Estilo clean, médico, tipografia moderna. Alta qualidade, 4k.`
       });
       return res.url;
     },
-    onSuccess: (url) => {
+    onSuccess: async (url) => {
       setResult(url);
       setChatHistory(prev => [...prev, { role: 'system', content: 'Design gerado com sucesso! O que achou?' }]);
+      
+      const month = getCurrentMonth();
+      const usage = profile.monthly_usage || {};
+      if (usage.month !== month) {
+        await base44.entities.UserProfile.update(profile.id, {
+          monthly_usage: { month, designs_created: 1, nurse_conversations: 0, chatbots_created: 0, sites_created: 0, products_created: 0, ai_packages_created: 0 }
+        });
+      } else {
+        await base44.entities.UserProfile.update(profile.id, {
+          monthly_usage: { ...usage, designs_created: (usage.designs_created || 0) + 1 }
+        });
+      }
+      queryClient.invalidateQueries(['userProfileDesign']);
+    },
+    onError: (error) => {
+      alert(error.message);
     }
   });
 
@@ -61,14 +106,15 @@ export default function DesignPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[#0F172A]">Estúdio de Design & Projetos</h1>
-      
-      <UsageLimitBanner 
-        currentUsage={currentUsage}
-        limit={planLimits.designs}
-        resourceName="Designs Criados"
-        planName={planLimits.name}
-      />
+      <div className="flex justify-between items-start gap-4">
+        <h1 className="text-2xl font-bold text-[#0F172A]">Estúdio de Design & Projetos</h1>
+        <UsageLimitBanner 
+          currentUsage={currentUsage}
+          limit={planLimits.designs}
+          resourceName="Designs"
+          planName={planLimits.name}
+        />
+      </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-6">
@@ -124,7 +170,7 @@ export default function DesignPage() {
 
               <Button 
                 onClick={() => generateDesignMutation.mutate()}
-                disabled={!prompt || generateDesignMutation.isPending}
+                disabled={!prompt || generateDesignMutation.isPending || !canCreate}
                 className="w-full bg-purple-600 hover:bg-purple-700"
               >
                 {generateDesignMutation.isPending ? (
