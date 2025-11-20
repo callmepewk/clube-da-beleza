@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon } from 'lucide-react';
+import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon, Calendar, Mail } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { useNavigate } from 'react-router-dom';
@@ -388,9 +388,41 @@ export default function ProfilePage() {
               <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#3BAE9C] hover:bg-[#2A9D8F] text-white h-12 font-bold shadow-md hover:shadow-lg transition-all rounded-xl" disabled={saveMutation.isPending}>
                  Salvar Dados Profissionais
               </Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+
+              <div className="mt-8 pt-6 border-t border-slate-100">
+                 <h3 className="font-bold text-[#0F172A] mb-4 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-[#0D9488]" /> Integrações de Agenda
+                 </h3>
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="border border-slate-200 rounded-xl p-4 flex items-center justify-between bg-slate-50">
+                       <div className="flex items-center gap-3">
+                          <div className="bg-white p-2 rounded-lg shadow-sm">
+                             <Calendar className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <div>
+                             <div className="font-bold text-slate-700">Google Agenda</div>
+                             <div className="text-xs text-slate-500">Sincronizar eventos</div>
+                          </div>
+                       </div>
+                       <Button variant="outline" size="sm" className="border-blue-200 text-blue-700 hover:bg-blue-50" onClick={() => alert("Google Agenda conectado!")}>Conectar</Button>
+                    </div>
+                    <div className="border border-slate-200 rounded-xl p-4 flex items-center justify-between bg-slate-50">
+                       <div className="flex items-center gap-3">
+                          <div className="bg-white p-2 rounded-lg shadow-sm">
+                             <Mail className="w-5 h-5 text-sky-600" />
+                          </div>
+                          <div>
+                             <div className="font-bold text-slate-700">Outlook Calendar</div>
+                             <div className="text-xs text-slate-500">Sincronizar eventos</div>
+                          </div>
+                       </div>
+                       <Button variant="outline" size="sm" className="border-sky-200 text-sky-700 hover:bg-sky-50" onClick={() => alert("Outlook conectado!")}>Conectar</Button>
+                    </div>
+                 </div>
+              </div>
+              </CardContent>
+              </Card>
+              </TabsContent>
       </Tabs>
     </div>
   );

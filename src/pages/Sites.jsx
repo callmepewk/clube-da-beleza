@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Loader2, Globe, ExternalLink, Save, Plus, Image as ImageIcon, FileText, Link as LinkIcon, Share2, Wand2 } from 'lucide-react';
+import { Loader2, Globe, ExternalLink, Save, Plus, Image as ImageIcon, FileText, Link as LinkIcon, Share2, Wand2, MessageSquare, Send, Layers, Layout } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 export default function SitesPage() {
@@ -13,6 +13,15 @@ export default function SitesPage() {
   const [generatedContent, setGeneratedContent] = useState(null);
   const [siteImages, setSiteImages] = useState([]);
   const [imageConfig, setImageConfig] = useState({ count: 1, prompt: '', position: 'center' });
+  
+  // New options
+  const [generateLink, setGenerateLink] = useState(true);
+  const [targetImageCount, setTargetImageCount] = useState(3);
+  const [imageUploadMode, setImageUploadMode] = useState('auto'); // auto (AI) or manual
+  
+  // Chat
+  const [chatMessage, setChatMessage] = useState('');
+  const [chatHistory, setChatHistory] = useState([]);
 
   const { data: sites } = useQuery({
     queryKey: ['mySites'],
@@ -92,16 +101,46 @@ export default function SitesPage() {
               <CardTitle>Nova Página com IA</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Configuration Section */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                 <div className="space-y-2">
+                    <label className="text-xs font-medium flex items-center gap-1"><LinkIcon className="w-3 h-3" /> Gerar Link de Acesso?</label>
+                    <div className="flex items-center h-10">
+                       <input type="checkbox" className="w-4 h-4 mr-2 accent-emerald-600" checked={generateLink} onChange={e => setGenerateLink(e.target.checked)} />
+                       <span className="text-sm">{generateLink ? 'Sim, gerar URL pública' : 'Não, apenas rascunho'}</span>
+                    </div>
+                 </div>
+                 <div className="space-y-2">
+                    <label className="text-xs font-medium flex items-center gap-1"><ImageIcon className="w-3 h-3" /> Quantidade de Imagens</label>
+                    <input 
+                      type="number" 
+                      min="0" 
+                      max="10" 
+                      className="w-full border rounded p-2 h-9 text-sm" 
+                      value={targetImageCount}
+                      onChange={e => setTargetImageCount(parseInt(e.target.value))}
+                    />
+                 </div>
+              </div>
+
               {/* Image Management Section */}
               <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-4">
                  <div className="flex justify-between items-center">
-                    <h4 className="font-bold text-sm text-slate-700 flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Imagens da Página ({siteImages.length}/10)</h4>
+                    <h4 className="font-bold text-sm text-slate-700 flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Gerenciamento de Imagens</h4>
+                    <select 
+                      className="text-xs border rounded p-1"
+                      value={imageUploadMode}
+                      onChange={e => setImageUploadMode(e.target.value)}
+                    >
+                       <option value="auto">Gerar com IA</option>
+                       <option value="manual">Fazer Upload Manual</option>
+                    </select>
                  </div>
                  
-                 <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                       <label className="text-xs font-medium">Upload Manual</label>
-                       <Button variant="outline" size="sm" className="w-full relative">
+                 {imageUploadMode === 'manual' ? (
+                 <div className="space-y-2 animate-in fade-in">
+                    <label className="text-xs font-medium">Upload Manual</label>
+                    <Button variant="outline" size="sm" className="w-full relative">
                           <input 
                              type="file" 
                              multiple
@@ -119,32 +158,43 @@ export default function SitesPage() {
                                 }
                              }}
                           />
-                          <Plus className="w-3 h-3 mr-1" /> Carregar Imagens
+                          <Plus className="w-3 h-3 mr-1" /> Carregar Imagens do Dispositivo
+                       </Button>
+                 </div>
+                 ) : (
+                 <div className="space-y-2 animate-in fade-in">
+                    <label className="text-xs font-medium">IA Geradora</label>
+                    <div className="flex gap-2">
+                       <input 
+                         className="flex-1 border rounded px-2 text-xs h-9" 
+                         placeholder="Descreva a imagem (ex: consultório moderno)"
+                         value={imageConfig.prompt}
+                         onChange={(e) => setImageConfig({...imageConfig, prompt: e.target.value})}
+                       />
+                       <select 
+                          className="border rounded px-2 text-xs h-9"
+                          value={imageConfig.position}
+                          onChange={e => setImageConfig({...imageConfig, position: e.target.value})}
+                       >
+                          <option value="center">Centro</option>
+                          <option value="header">Topo (Header)</option>
+                          <option value="background">Fundo</option>
+                          <option value="gallery">Galeria</option>
+                       </select>
+                       <Button 
+                          size="sm" 
+                          variant="secondary"
+                          onClick={async () => {
+                             if (siteImages.length >= 10) return;
+                             const res = await base44.integrations.Core.GenerateImage({ prompt: imageConfig.prompt || "Medical clinic abstract background" });
+                             setSiteImages(prev => [...prev, { url: res.url, position: imageConfig.position }]);
+                          }}
+                       >
+                          <Wand2 className="w-3 h-3" /> Gerar
                        </Button>
                     </div>
-                    <div className="space-y-2">
-                       <label className="text-xs font-medium">Gerar com IA</label>
-                       <div className="flex gap-2">
-                          <input 
-                            className="flex-1 border rounded px-2 text-xs" 
-                            placeholder="Prompt imagem..."
-                            value={imageConfig.prompt}
-                            onChange={(e) => setImageConfig({...imageConfig, prompt: e.target.value})}
-                          />
-                          <Button 
-                             size="sm" 
-                             variant="secondary"
-                             onClick={async () => {
-                                if (siteImages.length >= 10) return;
-                                const res = await base44.integrations.Core.GenerateImage({ prompt: imageConfig.prompt || "Medical clinic abstract background" });
-                                setSiteImages(prev => [...prev, { url: res.url, position: imageConfig.position }]);
-                             }}
-                          >
-                             <Wand2 className="w-3 h-3" />
-                          </Button>
-                       </div>
-                    </div>
                  </div>
+                 )}
 
                  {siteImages.length > 0 && (
                     <div className="flex gap-2 overflow-x-auto py-2">
@@ -265,24 +315,70 @@ export default function SitesPage() {
             </div>
           </div>
           
-          <div className="flex-1 overflow-auto bg-white relative">
-            {generatedContent ? (
-              <>
-                <div dangerouslySetInnerHTML={{ __html: generatedContent.html_content }} />
-                <div className="absolute bottom-4 right-4">
-                  <Button onClick={() => saveSiteMutation.mutate()} className="bg-emerald-600 shadow-lg">
-                    <Save className="w-4 h-4 mr-2" /> Salvar & Publicar
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full text-slate-400">
-                <Globe className="w-16 h-16 mb-4 opacity-20" />
-                <p>O preview do seu site aparecerá aqui</p>
-              </div>
-            )}
+          <div className="flex-1 overflow-auto bg-white relative border-b border-slate-200">
+           {generatedContent ? (
+             <>
+               <div dangerouslySetInnerHTML={{ __html: generatedContent.html_content }} />
+               <div className="absolute bottom-4 right-4 z-10">
+                 <Button onClick={() => saveSiteMutation.mutate()} className="bg-emerald-600 shadow-lg">
+                   <Save className="w-4 h-4 mr-2" /> Salvar & Publicar
+                 </Button>
+               </div>
+             </>
+           ) : (
+             <div className="flex flex-col items-center justify-center h-full text-slate-400">
+               <Globe className="w-16 h-16 mb-4 opacity-20" />
+               <p>O preview do seu site aparecerá aqui</p>
+             </div>
+           )}
           </div>
-        </div>
+
+          {/* Site Chat Assistant */}
+          {generatedContent && (
+           <div className="h-64 bg-white p-4 flex flex-col">
+              <div className="flex items-center gap-2 mb-2 text-sm font-bold text-slate-700">
+                 <MessageSquare className="w-4 h-4 text-emerald-600" /> Assistente de Edição
+              </div>
+              <div className="flex-1 overflow-y-auto space-y-3 mb-3 bg-slate-50 p-3 rounded-lg border border-slate-100">
+                 <div className="flex justify-start">
+                    <div className="bg-white border border-slate-200 p-2 rounded-lg text-xs text-slate-600 max-w-[80%] shadow-sm">
+                       Olá! O que você gostaria de alterar no site? Posso mudar cores, textos ou layout.
+                    </div>
+                 </div>
+                 {chatHistory.map((msg, i) => (
+                    <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                       <div className={`max-w-[80%] p-2 rounded-lg text-xs ${msg.role === 'user' ? 'bg-emerald-600 text-white' : 'bg-white border border-slate-200 text-slate-600'}`}>
+                          {msg.content}
+                       </div>
+                    </div>
+                 ))}
+              </div>
+              <div className="flex gap-2">
+                 <input 
+                   className="flex-1 border rounded px-3 py-2 text-sm"
+                   placeholder="Ex: Mude o fundo para azul marinho..."
+                   value={chatMessage}
+                   onChange={e => setChatMessage(e.target.value)}
+                   onKeyDown={e => e.key === 'Enter' && {
+                      /* Logic to call AI for HTML update would go here, simulating for UI */
+                      const newHist = [...chatHistory, { role: 'user', content: chatMessage }];
+                      setChatHistory(newHist);
+                      setChatMessage('');
+                      setTimeout(() => setChatHistory([...newHist, { role: 'assistant', content: 'Entendi, aplicando alterações...' }]), 1000);
+                   }}
+                 />
+                 <Button size="icon" className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
+                      const newHist = [...chatHistory, { role: 'user', content: chatMessage }];
+                      setChatHistory(newHist);
+                      setChatMessage('');
+                      setTimeout(() => setChatHistory([...newHist, { role: 'assistant', content: 'Entendi, aplicando alterações...' }]), 1000);
+                 }}>
+                    <Send className="w-4 h-4" />
+                 </Button>
+              </div>
+           </div>
+          )}
+          </div>
       </div>
     </div>
   );

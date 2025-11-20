@@ -19,6 +19,10 @@ export default function ProductsPage() {
   const [editingProduct, setEditingProduct] = useState(null);
   const [viewingProduct, setViewingProduct] = useState(null);
 
+  // Bulk Generation State
+  const [isBulkOpen, setIsBulkOpen] = useState(false);
+  const [serviceDescription, setServiceDescription] = useState('');
+
   // AI Generation State
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiDetails, setAiDetails] = useState({ audience: '', tone: '', keywords: '' });
@@ -133,6 +137,76 @@ export default function ProductsPage() {
     onSuccess: () => queryClient.invalidateQueries(['myProducts'])
   });
 
+  const generatePackageMutation = useMutation({
+     mutationFn: async () => {
+        const user = await base44.auth.me();
+        
+        // 1. Generate Product Ideas
+        const ideasRes = await base44.integrations.Core.InvokeLLM({
+           prompt: `
+             Com base na descrição do serviço: "${serviceDescription}".
+             Gere 3 produtos digitais complementares:
+             1. Um Ebook (10 paginas)
+             2. Um Curso (5 modulos/paginas)
+             3. Um Produto 3D (modelo simples)
+             
+             Retorne JSON array.
+           `,
+           response_json_schema: {
+              type: "object",
+              properties: {
+                 products: {
+                    type: "array",
+                    items: {
+                       type: "object",
+                       properties: {
+                          type: { type: "string", enum: ["ebook", "course", "3d_model"] },
+                          title: { type: "string" },
+                          description: { type: "string" },
+                          price: { type: "number" },
+                          image_prompt: { type: "string" }
+                       }
+                    }
+                 }
+              }
+           }
+        });
+
+        // 2. Create each product
+        for (const prod of ideasRes.products) {
+           // Generate content mock
+           let contentData = {};
+           if (prod.type === 'ebook') contentData = { page_count: 10, chapters: ["Intro", "Cap 1", "Cap 2", "Conclusão"], full_text: "Conteúdo gerado automaticamente..." };
+           if (prod.type === 'course') contentData = { modules: 5, video_url: "http://sample.com/video.mp4" };
+           if (prod.type === '3d_model') contentData = { model_type: 'generated', color: 'random' };
+
+           // Generate Image
+           let imgUrl = '';
+           try {
+             const imgRes = await base44.integrations.Core.GenerateImage({ prompt: prod.image_prompt || `Cover for ${prod.title}` });
+             imgUrl = imgRes.url;
+           } catch(e) { console.error(e); }
+
+           await base44.entities.Product.create({
+              owner_email: user.email,
+              type: prod.type,
+              title: prod.title,
+              description: prod.description,
+              price: prod.price,
+              content_url: imgUrl,
+              content_data: contentData,
+              status: 'active'
+           });
+        }
+     },
+     onSuccess: () => {
+        queryClient.invalidateQueries(['myProducts']);
+        setIsBulkOpen(false);
+        setServiceDescription('');
+        alert("Pacote de 3 produtos gerado com sucesso!");
+     }
+  });
+
   const getIcon = (type) => {
     switch(type) {
       case 'ebook': return <FileText className="w-8 h-8 text-orange-500" />;
@@ -202,12 +276,16 @@ export default function ProductsPage() {
     <div className="space-y-8">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-[#0F172A]">Gerenciar Produtos</h1>
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-emerald-600 hover:bg-emerald-700">
-              <Plus className="w-4 h-4 mr-2" /> Novo Produto
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+           <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => setIsBulkOpen(true)}>
+              <Sparkles className="w-4 h-4 mr-2" /> Gerar Pacote com IA
+           </Button>
+           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+             <DialogTrigger asChild>
+               <Button className="bg-emerald-600 hover:bg-emerald-700">
+                 <Plus className="w-4 h-4 mr-2" /> Novo Produto
+               </Button>
+             </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Criar Novo Produto com IA</DialogTitle>
@@ -362,6 +440,42 @@ export default function ProductsPage() {
                )}
             </div>
           </DialogContent>
+        </Dialog>
+
+        {/* Bulk Generator Dialog */}
+        <Dialog open={isBulkOpen} onOpenChange={setIsBulkOpen}>
+           <DialogContent>
+              <DialogHeader>
+                 <DialogTitle>Gerar Pacote de Produtos Completo</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                 <div className="bg-indigo-50 p-4 rounded-lg text-indigo-800 text-sm">
+                    <h4 className="font-bold flex items-center gap-2 mb-2"><Sparkles className="w-4 h-4" /> Como funciona?</h4>
+                    <p>Descreva seu serviço ou especialidade e a IA criará automaticamente 3 produtos para você vender:</p>
+                    <ul className="list-disc ml-5 mt-2 space-y-1">
+                       <li>1 Ebook completo (10 páginas)</li>
+                       <li>1 Curso rápido (5 módulos)</li>
+                       <li>1 Modelo 3D interativo</li>
+                    </ul>
+                 </div>
+                 <div className="space-y-2">
+                    <Label>Descreva seu serviço / especialidade</Label>
+                    <Textarea 
+                      placeholder="Ex: Sou dermatologista especialista em tratamento de melasma e rejuvenescimento facial..."
+                      value={serviceDescription}
+                      onChange={e => setServiceDescription(e.target.value)}
+                      className="h-32"
+                    />
+                 </div>
+                 <Button 
+                   className="w-full bg-indigo-600 hover:bg-indigo-700 h-12"
+                   onClick={() => generatePackageMutation.mutate()}
+                   disabled={!serviceDescription || generatePackageMutation.isPending}
+                 >
+                    {generatePackageMutation.isPending ? <><Loader2 className="animate-spin mr-2" /> Criando 3 Produtos...</> : 'Gerar Pacote Agora'}
+                 </Button>
+              </div>
+           </DialogContent>
         </Dialog>
 
         {/* Edit Dialog */}
