@@ -230,12 +230,15 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {user?.profile?.is_admin && (
-         <div className="mb-8 bg-slate-100 p-6 rounded-lg border border-slate-200">
-            <h3 className="font-bold mb-4 text-slate-700">Admin: Gerenciador de Banners Global</h3>
-            <BannerManager />
-         </div>
-      )}
+      {/* Banner Manager for Admins AND Professionals (Access granted) */}
+      <div className="mb-8 bg-slate-50 p-6 rounded-lg border border-slate-200 mt-8">
+         <h3 className="font-bold mb-4 text-slate-700 flex items-center gap-2">
+            <span className="bg-indigo-100 text-indigo-600 p-1 rounded text-xs uppercase">Novo</span> 
+            Gerenciador de Anúncios e Banners
+         </h3>
+         <p className="text-sm text-slate-500 mb-6">Crie campanhas para divulgar seus serviços ou produtos na plataforma.</p>
+         <BannerManager />
+      </div>
 
       <Card>
         <CardHeader>

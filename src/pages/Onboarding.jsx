@@ -134,8 +134,9 @@ export default function OnboardingPage() {
       return base44.entities.UserProfile.create(commonData);
     },
     onSuccess: () => {
-      base44.queryClient?.invalidateQueries(['currentUserProfile']);
-      localStorage.removeItem('onboarding_temp_data'); // Clear temp data
+      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+      queryClient.invalidateQueries({ queryKey: ['userProfileFull'] });
+      localStorage.removeItem('onboarding_temp_data');
       window.location.href = createPageUrl('Dashboard');
     },
     onError: (error) => {
