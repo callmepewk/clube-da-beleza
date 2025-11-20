@@ -156,7 +156,7 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#B3B3B3]`}>
+    <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#0F172A]`}>
       
       {/* Global Banner - Registration Reminder */}
       {/* Shows ONLY if user is logged in but profile is incomplete */}
@@ -293,9 +293,9 @@ export default function Layout({ children }) {
            </header>
 
            {/* Scrollable Page Content */}
-           <main className={`flex-1 overflow-y-auto bg-[#F4F7F7] p-4 lg:p-8 relative`}>
-              {/* Ambient Gradient Background */}
-              <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-[#E6FFFA] to-transparent pointer-events-none" />
+           <main className={`flex-1 overflow-y-auto bg-[#F8FAFC] p-4 lg:p-8 relative`}>
+           {/* Ambient Gradient Background Removed for clarity */}
+           {/* <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-[#E6FFFA] to-transparent pointer-events-none" /> */}
               
               {/* Top Bar (Desktop) */}
               <div className="hidden lg:flex items-center justify-between mb-8 relative z-10">

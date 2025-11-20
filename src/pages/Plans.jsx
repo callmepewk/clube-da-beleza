@@ -61,8 +61,8 @@ export default function PlansPage() {
         </div>
       ) : (
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-white">Escolha o plano ideal para você</h1>
-          <p className="text-lg text-white max-w-2xl mx-auto">
+          <h1 className="text-4xl font-bold text-[#0F172A]">Escolha o plano ideal para você</h1>
+          <p className="text-lg text-[#475569] max-w-2xl mx-auto">
             Desbloqueie todo o potencial da sua saúde ou da sua carreira médica com nossos planos exclusivos.
           </p>
         </div>
