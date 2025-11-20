@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Stethoscope, CheckCircle2, MapPin, Loader2, ScrollText, Building2, LogIn, ArrowLeft } from 'lucide-react';
+import { User, Stethoscope, CheckCircle2, MapPin, Loader2, ScrollText, Building2, LogIn, ArrowLeft, Globe } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 
@@ -272,19 +272,38 @@ export default function OnboardingPage() {
                       </div>
                    </div>
                 ) : (
-                   <div className="space-y-2">
-                     <Label className={labelClass}>Email *</Label>
-                     <Input 
-                       className={inputClass}
-                       required 
-                       type="email"
-                       value={formData.email} 
-                       onChange={e => setFormData({...formData, email: e.target.value})} 
-                       placeholder="seu@email.com"
-                     />
-                     <div className="text-xs text-[#B3B3B3] flex items-center gap-2 mt-1">
-                        <LogIn className="w-3 h-3" />
-                        <span>Você definirá sua senha na próxima etapa.</span>
+                   <div className="space-y-3">
+                     <div className="space-y-2">
+                       <Label className={labelClass}>Email *</Label>
+                       <Input 
+                         className={inputClass}
+                         required 
+                         type="email"
+                         value={formData.email} 
+                         onChange={e => setFormData({...formData, email: e.target.value})} 
+                         placeholder="seu@email.com"
+                       />
+                       <div className="text-xs text-[#B3B3B3] flex items-center gap-2 mt-1">
+                          <LogIn className="w-3 h-3" />
+                          <span>Você definirá sua senha na próxima etapa.</span>
+                       </div>
+                     </div>
+
+                     <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-200">
+                        <p className="text-xs text-purple-800 font-bold mb-2 flex items-center gap-2">
+                           <MapPin className="w-4 h-4" />
+                           Já tem cadastro no Mapa da Estética?
+                        </p>
+                        <p className="text-xs text-purple-600 mb-3">Use o mesmo email e senha para acessar o Beauty Center!</p>
+                        <Button 
+                           type="button"
+                           variant="outline"
+                           size="sm"
+                           className="w-full border-purple-300 text-purple-700 hover:bg-purple-100 text-xs font-bold"
+                           onClick={() => window.open('https://mapa-da-estetica.base44.app', '_blank')}
+                        >
+                           Ver Mapa da Estética
+                        </Button>
                      </div>
                    </div>
                 )}

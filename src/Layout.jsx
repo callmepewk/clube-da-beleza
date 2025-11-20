@@ -25,7 +25,8 @@ import {
   Newspaper,
   CheckCheck,
   Trash,
-  Shield
+  Shield,
+  MapPin
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -449,7 +450,7 @@ export default function Layout({ children }) {
                          onClick={() => navigate(createPageUrl('Onboarding'))}
                          className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 transition-all hover:scale-[1.02]"
                        >
-                         Criar
+                         Criar Conta
                        </Button>
                        <Button 
                          onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
@@ -458,6 +459,16 @@ export default function Layout({ children }) {
                        >
                          Login
                        </Button>
+                       <div className="pt-2 border-t border-slate-100">
+                          <p className="text-xs text-slate-500 text-center mb-2">Cadastro no Mapa da Estética?</p>
+                          <Button 
+                            onClick={() => window.open('https://mapa-da-estetica.base44.app', '_blank')}
+                            variant="outline"
+                            className="w-full border-purple-200 text-purple-700 hover:bg-purple-50 h-9 text-xs font-semibold"
+                          >
+                            <Globe className="w-3 h-3 mr-2" /> Acessar Mapa
+                          </Button>
+                       </div>
                     </div>
                  )
               )}

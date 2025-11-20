@@ -132,8 +132,15 @@ export default function Dashboard() {
               <div className="relative z-10 flex flex-col justify-center h-full p-12 max-w-2xl">
                  <h1 className="text-5xl font-extrabold tracking-tight text-[#0F172A] mb-6 leading-tight">Bem-vindo ao <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0D9488] to-[#2DD4BF]">Beauty Center</span></h1>
                  <p className="text-[#475569] text-xl font-medium leading-relaxed">Sua plataforma completa de saúde, estética e bem-estar.</p>
-                 <div className="mt-8 flex gap-4">
+                 <div className="mt-8 flex flex-col sm:flex-row gap-4">
                     <Button onClick={() => base44.auth.redirectToLogin()} className="bg-[#0D9488] hover:bg-[#0F766E] text-white px-8 py-6 rounded-xl text-lg font-bold shadow-lg">Entrar / Cadastrar</Button>
+                    <Button 
+                       onClick={() => window.open('https://mapa-da-estetica.base44.app', '_blank')}
+                       variant="outline"
+                       className="border-2 border-purple-300 text-purple-700 hover:bg-purple-50 px-8 py-6 rounded-xl text-lg font-bold"
+                    >
+                       Já uso o Mapa da Estética
+                    </Button>
                  </div>
               </div>
            </div>
