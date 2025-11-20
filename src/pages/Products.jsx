@@ -300,47 +300,128 @@ export default function ProductsPage() {
 
         {/* Edit Dialog */}
         <Dialog open={!!editingProduct} onOpenChange={(open) => !open && setEditingProduct(null)}>
-           <DialogContent>
+           <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                  <DialogTitle>Editar Produto</DialogTitle>
               </DialogHeader>
               {editingProduct && (
-                 <div className="space-y-4 py-4">
+                 <div className="space-y-6 py-4">
                     <div className="space-y-2">
                        <Label>Título</Label>
-                       <Input 
-                          value={editingProduct.title} 
-                          onChange={(e) => setEditingProduct({...editingProduct, title: e.target.value})} 
-                       />
+                       <div className="flex gap-2">
+                          <Input 
+                             value={editingProduct.title} 
+                             onChange={(e) => setEditingProduct({...editingProduct, title: e.target.value})} 
+                          />
+                          <Button 
+                             variant="outline"
+                             size="icon"
+                             title="Gerar novo título com IA"
+                             onClick={async () => {
+                                const res = await base44.integrations.Core.InvokeLLM({
+                                   prompt: `Gere um título curto e atraente para um produto chamado "${editingProduct.title}". Apenas o texto.`,
+                                });
+                                setEditingProduct({...editingProduct, title: res});
+                             }}
+                          >
+                             <Sparkles className="w-4 h-4 text-purple-600" />
+                          </Button>
+                       </div>
                     </div>
-                    <div className="space-y-2">
-                       <Label>Preço (R$)</Label>
-                       <Input 
-                          type="number" 
-                          value={editingProduct.price} 
-                          onChange={(e) => setEditingProduct({...editingProduct, price: parseFloat(e.target.value)})} 
-                       />
-                    </div>
+
                     <div className="space-y-2">
                        <Label>Descrição</Label>
                        <Textarea 
                           value={editingProduct.description} 
                           onChange={(e) => setEditingProduct({...editingProduct, description: e.target.value})} 
+                          className="min-h-[100px]"
                        />
+                       <div className="flex justify-end">
+                          <Button 
+                             variant="ghost"
+                             size="sm"
+                             className="text-xs text-purple-600"
+                             onClick={async () => {
+                                const res = await base44.integrations.Core.InvokeLLM({
+                                   prompt: `Reescreva esta descrição de produto para ser mais vendedora e persuasiva: "${editingProduct.description}". Max 300 caracteres.`,
+                                });
+                                setEditingProduct({...editingProduct, description: res});
+                             }}
+                          >
+                             <Sparkles className="w-3 h-3 mr-1" /> Reescrever com IA
+                          </Button>
+                       </div>
                     </div>
+
                     <div className="space-y-2">
-                       <Label>URL da Imagem</Label>
-                       <Input 
-                          value={editingProduct.content_url || ''} 
-                          onChange={(e) => setEditingProduct({...editingProduct, content_url: e.target.value})} 
-                       />
+                       <Label>Preço (R$)</Label>
+                       <div className="flex gap-2 items-center">
+                          <Input 
+                             type="number" 
+                             value={editingProduct.price} 
+                             onChange={(e) => setEditingProduct({...editingProduct, price: parseFloat(e.target.value)})} 
+                          />
+                          <Button 
+                             variant="outline"
+                             size="sm"
+                             onClick={async () => {
+                                const res = await base44.integrations.Core.InvokeLLM({
+                                   prompt: `Sugira um preço competitivo em BRL para um produto digital do tipo ${editingProduct.type} sobre "${editingProduct.title}". Retorne apenas o número.`,
+                                });
+                                const price = parseFloat(res.replace(/[^0-9.]/g, ''));
+                                if (!isNaN(price)) setEditingProduct({...editingProduct, price});
+                             }}
+                          >
+                             <Sparkles className="w-4 h-4 text-green-600 mr-1" /> Sugerir
+                          </Button>
+                       </div>
                     </div>
+
+                    <div className="space-y-2">
+                       <Label>Imagem de Capa</Label>
+                       {editingProduct.content_url && (
+                          <div className="relative w-full h-40 bg-slate-100 rounded-lg overflow-hidden mb-2">
+                             <img src={editingProduct.content_url} className="w-full h-full object-cover" />
+                          </div>
+                       )}
+                       <div className="grid grid-cols-2 gap-2">
+                          <div className="relative">
+                             <Button variant="outline" className="w-full relative">
+                                <input 
+                                   type="file" 
+                                   className="absolute inset-0 opacity-0 cursor-pointer" 
+                                   onChange={async (e) => {
+                                      const file = e.target.files[0];
+                                      if (file) {
+                                         const res = await base44.integrations.Core.UploadFile({ file });
+                                         setEditingProduct({...editingProduct, content_url: res.file_url});
+                                      }
+                                   }}
+                                />
+                                Upload
+                             </Button>
+                          </div>
+                          <Button 
+                             variant="outline" 
+                             onClick={async () => {
+                                const imgPrompt = await base44.integrations.Core.InvokeLLM({
+                                   prompt: `Create a image generation prompt for this product: ${editingProduct.title} - ${editingProduct.description}. English only.`
+                                });
+                                const res = await base44.integrations.Core.GenerateImage({ prompt: imgPrompt });
+                                setEditingProduct({...editingProduct, content_url: res.url});
+                             }}
+                          >
+                             <Sparkles className="w-4 h-4 mr-2 text-purple-600" /> Gerar Nova
+                          </Button>
+                       </div>
+                    </div>
+
                     <Button 
                        onClick={() => updateProductMutation.mutate({ id: editingProduct.id, data: editingProduct })} 
-                       className="w-full bg-blue-600 hover:bg-blue-700"
+                       className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
                        disabled={updateProductMutation.isPending}
                     >
-                       {updateProductMutation.isPending ? <Loader2 className="animate-spin" /> : 'Salvar Alterações'}
+                       {updateProductMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : 'Salvar Alterações'}
                     </Button>
                  </div>
               )}

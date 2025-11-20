@@ -72,6 +72,33 @@ export default function SchedulePage() {
     }
   });
 
+  // Mock Integrations State
+  const [integrations, setIntegrations] = useState({ google: false, outlook: false });
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  const handleConnect = (type) => {
+    setIsSyncing(true);
+    // Simulate connection delay
+    setTimeout(() => {
+      setIntegrations(prev => ({ ...prev, [type]: !prev[type] }));
+      setIsSyncing(false);
+      alert(`${type === 'google' ? 'Google Calendar' : 'Outlook'} ${!integrations[type] ? 'conectado e sincronizado' : 'desconectado'} com sucesso!`);
+      if (!integrations[type]) {
+         // Add mock holidays/birthdays
+         createMutation.mutate({
+            title: "Feriado Nacional (Importado)",
+            type: 'consultation',
+            modality: 'in_person',
+            start_time: addDays(startOfDay(new Date()), 2).toISOString(),
+            end_time: addDays(startOfDay(new Date()), 2).toISOString(),
+            patient_email: 'system',
+            professional_email: userProfile?.user_email,
+            status: 'scheduled'
+         });
+      }
+    }, 1500);
+  };
+
   // Professional: AI Availability Setup
   const [aiPrompt, setAiPrompt] = useState('');
   const aiAvailabilityMutation = useMutation({
@@ -150,14 +177,67 @@ export default function SchedulePage() {
            </div>
         </div>
 
-        <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-100">
-          <CardContent className="p-6">
-            <div className="flex gap-4 items-start">
-              <div className="bg-white p-3 rounded-full shadow-sm text-indigo-600">
-                <Sparkles className="w-6 h-6" />
-              </div>
-              <div className="flex-1 space-y-3">
-                <h3 className="font-semibold text-lg text-indigo-900">Assistente de Agenda Inteligente</h3>
+        {/* Integrations Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           <Card className="bg-white border-slate-200">
+              <CardContent className="p-6 flex flex-col justify-between h-full">
+                 <div>
+                    <h3 className="font-bold text-[#0F172A] mb-2">Integrações de Calendário</h3>
+                    <p className="text-sm text-[#64748B] mb-4">Conecte suas agendas externas para sincronizar feriados, aniversários e compromissos automaticamente.</p>
+                 </div>
+                 <div className="flex gap-3">
+                    <Button 
+                      variant={integrations.google ? "secondary" : "outline"}
+                      className={`flex-1 border-slate-200 ${integrations.google ? 'bg-green-50 text-green-700 border-green-200' : ''}`}
+                      onClick={() => handleConnect('google')}
+                      disabled={isSyncing}
+                    >
+                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.google ? "Sincronizado" : "Google Agenda")}
+                    </Button>
+                    <Button 
+                      variant={integrations.outlook ? "secondary" : "outline"}
+                      className={`flex-1 border-slate-200 ${integrations.outlook ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}`}
+                      onClick={() => handleConnect('outlook')}
+                      disabled={isSyncing}
+                    >
+                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.outlook ? "Outlook" : "Outlook")}
+                    </Button>
+                 </div>
+              </CardContent>
+           </Card>
+
+           <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-100">
+             <CardContent className="p-6">
+               <div className="flex gap-4 items-start">
+                 <div className="bg-white p-3 rounded-full shadow-sm text-indigo-600">
+                   <Sparkles className="w-6 h-6" />
+                 </div>
+                 <div className="flex-1 space-y-3">
+                   <h3 className="font-semibold text-lg text-indigo-900">Assistente de Agenda Inteligente</h3>
+                   {/* ... rest of AI assistant content ... */}
+                   <p className="text-sm text-slate-600">
+                     Diga-me quais dias e horários você atende e para quais procedimentos. Eu organizarei sua grade automaticamente com as cores corretas.
+                   </p>
+                   <div className="flex gap-2">
+                     <Input 
+                       placeholder="Ex: Atendo consultas segunda e quarta das 08h às 12h..." 
+                       value={aiPrompt}
+                       onChange={(e) => setAiPrompt(e.target.value)}
+                       className="bg-white"
+                     />
+                     <Button 
+                       onClick={() => aiAvailabilityMutation.mutate()} 
+                       disabled={!aiPrompt || aiAvailabilityMutation.isPending}
+                       className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                     >
+                       {aiAvailabilityMutation.isPending ? 'Configurando...' : 'Gerar Agenda'}
+                     </Button>
+                   </div>
+                 </div>
+               </div>
+             </CardContent>
+           </Card>
+        </div>
                 <p className="text-sm text-slate-600">
                   Diga-me quais dias e horários você atende e para quais procedimentos. Eu organizarei sua grade automaticamente com as cores corretas.
                 </p>

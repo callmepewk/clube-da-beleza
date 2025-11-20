@@ -44,6 +44,39 @@ export default function Layout({ children }) {
   const location = useLocation();
   const navigate = useNavigate();
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  
+  // Layout States
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // Sticky/Hideable Header Logic
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        setIsHeaderVisible(false); // Hide on scroll down
+      } else {
+        setIsHeaderVisible(true); // Show on scroll up
+      }
+      setLastScrollY(currentScrollY);
+    };
+    // Attaching to the main element if it's the scroller, or window if body is scroller
+    // In this layout, `main` has overflow-y-auto, so we attach to it.
+    const mainElement = document.getElementById('main-content');
+    if (mainElement) {
+       mainElement.addEventListener('scroll', () => {
+          const currentScrollY = mainElement.scrollTop;
+          if (currentScrollY > lastScrollY && currentScrollY > 50) {
+             setIsHeaderVisible(false);
+          } else {
+             setIsHeaderVisible(true);
+          }
+          setLastScrollY(currentScrollY);
+       });
+    }
+    return () => mainElement?.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -180,14 +213,21 @@ export default function Layout({ children }) {
 
       <div className="flex flex-1 h-[calc(100vh-64px)]"> 
         {/* Sidebar (Desktop) - Premium Clinic Style */}
-        <aside className={`hidden lg:flex w-[240px] flex-col ${theme.sidebar} border-r ${theme.border} sticky top-0 h-screen z-20`}>
-           <div className="p-6 pb-0">
-              <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80 mb-8">
-                 <div className="bg-gradient-to-br from-[#0F766E] to-[#2DD4BF] p-2.5 rounded-2xl shadow-lg shadow-teal-900/10">
-                    <Activity className="w-6 h-6 text-white" />
-                 </div>
-                 <span className="font-bold text-xl tracking-tight text-[#0F172A]">HealthAI</span>
-              </Link>
+        <aside className={`hidden lg:flex ${isSidebarCollapsed ? 'w-20' : 'w-[240px]'} flex-col ${theme.sidebar} border-r ${theme.border} sticky top-0 h-screen z-20 transition-all duration-300 ease-in-out`}>
+           <div className={`p-6 pb-0 ${isSidebarCollapsed ? 'px-2' : ''}`}>
+              <div className="flex items-center justify-between mb-8">
+                 {!isSidebarCollapsed && (
+                    <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80">
+                       <div className="bg-gradient-to-br from-[#0F766E] to-[#2DD4BF] p-2.5 rounded-2xl shadow-lg shadow-teal-900/10">
+                          <Activity className="w-6 h-6 text-white" />
+                       </div>
+                       <span className="font-bold text-xl tracking-tight text-[#0F172A]">HealthAI</span>
+                    </Link>
+                 )}
+                 <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className={`p-2 hover:bg-slate-50 rounded-full text-slate-400 ${isSidebarCollapsed ? 'mx-auto' : ''}`}>
+                    {isSidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                 </button>
+              </div>
 
               <nav className="space-y-1">
                  {navItems.map((item) => {
@@ -196,50 +236,55 @@ export default function Layout({ children }) {
                      <Link
                        key={item.path}
                        to={createPageUrl(item.path.replace('/', ''))}
-                       className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-200 group relative
+                       className={`flex items-center ${isSidebarCollapsed ? 'justify-center px-2' : 'gap-3 px-4'} py-3.5 rounded-2xl text-sm font-bold transition-all duration-200 group relative
                          ${isActive 
                            ? 'bg-[#F0FDFA] text-[#0D9488] shadow-sm' 
                            : 'text-[#64748B] hover:text-[#0D9488] hover:bg-[#FAFAFA]'
                          }`}
+                       title={isSidebarCollapsed ? item.label : ''}
                      >
-                       {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-[#0D9488] rounded-r-full"></div>}
+                       {isActive && !isSidebarCollapsed && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-[#0D9488] rounded-r-full"></div>}
                        <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-[#0D9488]' : 'text-[#94A3B8] group-hover:text-[#0D9488]'}`} />
-                       <span>{item.label}</span>
+                       {!isSidebarCollapsed && <span>{item.label}</span>}
                      </Link>
                    );
                  })}
               </nav>
            </div>
            
-           <div className="mt-auto p-6 border-t border-[#F1F5F9]">
+           <div className={`mt-auto p-6 border-t border-[#F1F5F9] ${isSidebarCollapsed ? 'px-2' : ''}`}>
               {user ? (
-                 <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-[#F0FDFA] transition-all cursor-pointer group border border-transparent hover:border-[#CCFBF1]" onClick={() => navigate(createPageUrl('Profile'))}>
+                 <div className={`flex items-center gap-3 p-2 rounded-2xl hover:bg-[#F0FDFA] transition-all cursor-pointer group border border-transparent hover:border-[#CCFBF1] ${isSidebarCollapsed ? 'justify-center' : ''}`} onClick={() => navigate(createPageUrl('Profile'))}>
                     <div 
-                      className="w-11 h-11 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg ring-4 ring-white"
+                      className="w-10 h-10 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg ring-4 ring-white min-w-[2.5rem]"
                     >
                        {user.full_name?.[0]?.toUpperCase() || 'U'}
                     </div>
-                    <div className="flex-1 min-w-0">
-                       <p className="text-sm font-bold text-[#0F172A] truncate group-hover:text-[#0D9488] transition-colors">{user.full_name}</p>
-                       <p className="text-xs text-[#64748B] truncate font-medium">Ver Perfil</p>
-                    </div>
+                    {!isSidebarCollapsed && (
+                       <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold text-[#0F172A] truncate group-hover:text-[#0D9488] transition-colors">{user.full_name}</p>
+                          <p className="text-xs text-[#64748B] truncate font-medium">Ver Perfil</p>
+                       </div>
+                    )}
                  </div>
               ) : (
-                 <div className="space-y-3">
-                    <Button 
-                      onClick={() => navigate(createPageUrl('Onboarding'))}
-                      className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 transition-all hover:scale-[1.02]"
-                    >
-                      Criar Conta
-                    </Button>
-                    <Button 
-                      onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
-                      variant="ghost"
-                      className="w-full text-[#64748B] hover:text-[#0D9488] hover:bg-[#F0FDFA] h-9 text-xs font-semibold"
-                    >
-                      Já tenho conta
-                    </Button>
-                 </div>
+                 !isSidebarCollapsed && (
+                    <div className="space-y-3">
+                       <Button 
+                         onClick={() => navigate(createPageUrl('Onboarding'))}
+                         className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 transition-all hover:scale-[1.02]"
+                       >
+                         Criar
+                       </Button>
+                       <Button 
+                         onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
+                         variant="ghost"
+                         className="w-full text-[#64748B] hover:text-[#0D9488] hover:bg-[#F0FDFA] h-9 text-xs font-semibold"
+                       >
+                         Login
+                       </Button>
+                    </div>
+                 )
               )}
            </div>
         </aside>
@@ -293,12 +338,16 @@ export default function Layout({ children }) {
            </header>
 
            {/* Scrollable Page Content */}
-           <main className={`flex-1 overflow-y-auto bg-[#F8FAFC] p-4 lg:p-8 relative`}>
-           {/* Ambient Gradient Background Removed for clarity */}
-           {/* <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-[#E6FFFA] to-transparent pointer-events-none" /> */}
-              
+           <main id="main-content" className={`flex-1 overflow-y-auto bg-[#F8FAFC] p-4 lg:p-8 relative`}>
               {/* Top Bar (Desktop) */}
-              <div className="hidden lg:flex items-center justify-between mb-8 relative z-10">
+              <div className={`hidden lg:flex items-center justify-between mb-8 sticky top-0 z-30 bg-[#F8FAFC]/90 backdrop-blur-sm py-2 transition-transform duration-300 ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full absolute top-[-100px]'}`}>
+                 <div className="flex gap-3">
+                    <button onClick={() => setIsHeaderVisible(false)} className="text-xs text-slate-400 hover:text-slate-600 mr-2">
+                       <div className="w-8 h-1 bg-slate-200 rounded-full mx-auto mb-1" />
+                    </button>
+                    <button onClick={() => navigate(-1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5 rotate-180" /></button>
+                    <button onClick={() => navigate(1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5" /></button>
+                 </div>
                  <div className="flex gap-3">
                     <button onClick={() => navigate(-1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5 rotate-180" /></button>
                     <button onClick={() => navigate(1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5" /></button>
@@ -328,6 +377,15 @@ export default function Layout({ children }) {
                     )}
                  </div>
               </div>
+
+              {/* Header Re-opener Handle */}
+              {!isHeaderVisible && (
+                 <div className="fixed top-0 left-1/2 -translate-x-1/2 z-40">
+                    <button onClick={() => setIsHeaderVisible(true)} className="bg-white border border-t-0 border-slate-200 rounded-b-xl px-4 py-1 shadow-sm hover:bg-slate-50 transition-all group">
+                       <div className="w-8 h-1 bg-slate-300 rounded-full group-hover:bg-[#0D9488]" />
+                    </button>
+                 </div>
+              )}
 
               {/* Actual Page Children */}
               <div className="fade-in-up">
