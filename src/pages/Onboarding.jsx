@@ -177,57 +177,57 @@ export default function OnboardingPage() {
     }
   };
 
-  // Dark Theme Classes
-  const cardClass = "bg-[#181818] border border-[#282828] text-white hover:bg-[#282828] transition-all hover:scale-[1.02] duration-300 shadow-lg";
-  const inputClass = "bg-[#282828] border-none text-white focus:ring-2 focus:ring-purple-500 h-12 rounded-md placeholder:text-[#555]";
-  const labelClass = "text-[#B3B3B3] text-sm font-bold mb-1 block";
+  // Aesthetic Premium Theme Classes
+  const cardClass = "bg-white border border-[#E2E8F0] text-[#2D3748] hover:shadow-xl transition-all hover:-translate-y-1 duration-300 shadow-md rounded-2xl";
+  const inputClass = "bg-[#F4F7F7] border border-[#E2E8F0] text-[#2D3748] focus:ring-2 focus:ring-[#3BAE9C]/20 focus:border-[#3BAE9C] h-12 rounded-xl placeholder:text-[#A7AFB4] transition-all";
+  const labelClass = "text-[#4A5568] text-sm font-bold mb-1.5 block";
 
   return (
-    <div className="max-w-3xl mx-auto pt-10 px-4 pb-20 text-white">
+    <div className="max-w-3xl mx-auto pt-10 px-4 pb-20 text-[#2D3748]">
       {step === 1 && (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
           <div className="text-center space-y-2">
-            <h1 className="text-4xl font-bold text-white tracking-tight">Bem-vindo ao HealthAI</h1>
-            <p className="text-[#B3B3B3]">Selecione como você deseja usar a plataforma</p>
+            <h1 className="text-4xl font-bold text-[#2D3748] tracking-tight drop-shadow-sm">Bem-vindo ao HealthAI</h1>
+            <p className="text-[#A7AFB4] text-lg">Selecione como você deseja usar a plataforma</p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div 
-              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 rounded-xl`}
+              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 group`}
               onClick={() => { setRole('patient'); setStep(2); }}
             >
-                <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 text-white rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#3BAE9C] to-[#2A9D8F] text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <User className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-white">Sou Paciente</h3>
-                  <p className="text-sm text-[#B3B3B3] mt-2 leading-relaxed">Busco atendimento, agendamento e acompanhamento.</p>
+                  <h3 className="font-bold text-xl text-[#2D3748]">Sou Paciente</h3>
+                  <p className="text-sm text-[#A7AFB4] mt-2 leading-relaxed">Busco atendimento, agendamento e acompanhamento.</p>
                 </div>
             </div>
 
             <div 
-              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 rounded-xl`}
+              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 group`}
               onClick={() => { setRole('professional'); setStep(2); }}
             >
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-purple-800 text-white rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#CDB7FF] to-[#9F7AEA] text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <Stethoscope className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-white">Sou Profissional</h3>
-                  <p className="text-sm text-[#B3B3B3] mt-2 leading-relaxed">Gerenciar agenda, pacientes e oferecer serviços.</p>
+                  <h3 className="font-bold text-xl text-[#2D3748]">Sou Profissional</h3>
+                  <p className="text-sm text-[#A7AFB4] mt-2 leading-relaxed">Gerenciar agenda, pacientes e oferecer serviços.</p>
                 </div>
             </div>
 
             <div 
-              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 rounded-xl md:col-span-2 lg:col-span-1`}
+              className={`${cardClass} cursor-pointer p-8 flex flex-col items-center text-center space-y-4 md:col-span-2 lg:col-span-1 group`}
               onClick={() => { setRole('sponsor'); setStep(2); }}
             >
-                <div className="w-20 h-20 bg-gradient-to-br from-amber-600 to-amber-800 text-white rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-20 h-20 bg-gradient-to-br from-[#D9C79F] to-[#B794F4] text-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <Building2 className="w-10 h-10" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl text-white">Sou Patrocinador</h3>
-                  <p className="text-sm text-[#B3B3B3] mt-2 leading-relaxed">Investir e promover produtos na plataforma.</p>
+                  <h3 className="font-bold text-xl text-[#2D3748]">Sou Patrocinador</h3>
+                  <p className="text-sm text-[#A7AFB4] mt-2 leading-relaxed">Investir e promover produtos na plataforma.</p>
                 </div>
             </div>
           </div>
@@ -235,16 +235,17 @@ export default function OnboardingPage() {
       )}
 
       {step === 2 && (
-        <Card className="bg-[#181818] border-[#282828] text-white shadow-2xl animate-in fade-in slide-in-from-right-8">
+        <Card className="bg-white border border-[#E2E8F0] text-[#2D3748] shadow-2xl animate-in fade-in slide-in-from-right-8 rounded-3xl overflow-hidden">
+          <div className="h-2 bg-gradient-to-r from-[#3BAE9C] to-[#8EE2C8]"></div>
           <CardHeader>
             <div className="flex items-center gap-2 mb-4">
-               <Button variant="ghost" size="icon" onClick={() => setStep(1)} className="h-8 w-8 -ml-2 text-[#B3B3B3] hover:text-white hover:bg-[#282828]">
+               <Button variant="ghost" size="icon" onClick={() => setStep(1)} className="h-8 w-8 -ml-2 text-[#A7AFB4] hover:text-[#3BAE9C] hover:bg-[#F4F7F7]">
                   <ArrowLeft className="w-4 h-4" />
                </Button>
-               <span className="text-sm text-[#B3B3B3] cursor-pointer hover:text-white transition-colors" onClick={() => setStep(1)}>Voltar para seleção</span>
+               <span className="text-sm text-[#A7AFB4] cursor-pointer hover:text-[#3BAE9C] transition-colors font-medium" onClick={() => setStep(1)}>Voltar para seleção</span>
             </div>
-            <CardTitle className="text-2xl font-bold">Cadastro de {role === 'patient' ? 'Paciente' : 'Profissional'}</CardTitle>
-            <CardDescription className="text-[#B3B3B3]">
+            <CardTitle className="text-3xl font-bold text-[#2D3748]">Cadastro de <span className="text-[#3BAE9C]">{role === 'patient' ? 'Paciente' : 'Profissional'}</span></CardTitle>
+            <CardDescription className="text-[#A7AFB4] text-lg">
                {user 
                   ? 'Confirme seus dados para finalizar o acesso.' 
                   : 'Preencha seus dados. Login e senha na próxima etapa.'}
@@ -255,17 +256,17 @@ export default function OnboardingPage() {
               
               {/* Dados Pessoais */}
               <div className="space-y-4">
-                <h4 className="font-medium text-sm text-slate-900 uppercase tracking-wider border-b pb-2 flex items-center gap-2">
-                  <User className="w-4 h-4" /> Dados Pessoais
+                <h4 className="font-bold text-sm text-[#2D3748] uppercase tracking-wider border-b border-[#E2E8F0] pb-2 flex items-center gap-2">
+                  <div className="bg-[#E6FFFA] p-1 rounded-md"><User className="w-4 h-4 text-[#3BAE9C]" /></div> Dados Pessoais
                 </h4>
                 
                 {/* Auth Info Handling */}
                 {user ? (
-                   <div className="grid grid-cols-1 gap-4 bg-[#282828] p-4 rounded-lg border border-[#3E3E3E]">
+                   <div className="grid grid-cols-1 gap-4 bg-[#F4F7F7] p-6 rounded-xl border border-[#E2E8F0]">
                       <div className="space-y-2">
                          <Label className={labelClass}>Conta Conectada</Label>
-                         <div className="flex items-center gap-2 font-medium text-white">
-                            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                         <div className="flex items-center gap-3 font-bold text-[#2D3748] text-lg">
+                            <div className="w-3 h-3 bg-[#3BAE9C] rounded-full animate-pulse shadow-[0_0_10px_#3BAE9C]"></div>
                             {user.email}
                          </div>
                       </div>
@@ -313,9 +314,9 @@ export default function OnboardingPage() {
 
               {/* Endereço */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between border-b border-[#282828] pb-2">
-                   <h4 className="font-bold text-sm text-white uppercase tracking-wider flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-purple-500" /> Endereço
+                <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-2">
+                   <h4 className="font-bold text-sm text-[#2D3748] uppercase tracking-wider flex items-center gap-2">
+                    <div className="bg-[#E6FFFA] p-1 rounded-md"><MapPin className="w-4 h-4 text-[#3BAE9C]" /></div> Endereço
                   </h4>
                   <Button 
                     type="button" 
@@ -323,7 +324,7 @@ export default function OnboardingPage() {
                     size="sm" 
                     onClick={handleLocationClick}
                     disabled={isLoadingLocation}
-                    className="text-xs h-8 bg-[#282828] text-[#B3B3B3] border-[#3E3E3E] hover:bg-[#3E3E3E] hover:text-white"
+                    className="text-xs h-8 bg-white text-[#3BAE9C] border-[#3BAE9C] hover:bg-[#E6FFFA]"
                   >
                     {isLoadingLocation ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <MapPin className="w-3 h-3 mr-1" />}
                     Usar minha localização
@@ -341,7 +342,7 @@ export default function OnboardingPage() {
                       <SelectTrigger className={inputClass}>
                         <SelectValue placeholder="Selecione o país" />
                       </SelectTrigger>
-                      <SelectContent className="bg-[#181818] text-white border-[#282828]">
+                      <SelectContent className="bg-white text-[#2D3748] border-[#E2E8F0]">
                         <SelectItem value="Brasil">Brasil</SelectItem>
                         <SelectItem value="Estados Unidos">Estados Unidos</SelectItem>
                         <SelectItem value="Portugal">Portugal</SelectItem>
@@ -415,31 +416,31 @@ export default function OnboardingPage() {
               )}
 
               {/* Termos e Submit */}
-              <div className="pt-6 mt-6 border-t space-y-6">
-                <div className="flex items-start space-x-3 bg-[#282828] p-4 rounded-lg border border-[#3E3E3E]">
+              <div className="pt-6 mt-6 border-t border-[#E2E8F0] space-y-6">
+                <div className="flex items-start space-x-3 bg-[#F4F7F7] p-4 rounded-xl border border-[#E2E8F0]">
                   <Checkbox 
                     id="terms" 
                     checked={acceptedTerms}
                     onCheckedChange={setAcceptedTerms}
                     required
-                    className="mt-1 border-white/20 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
+                    className="mt-1 border-[#A7AFB4] data-[state=checked]:bg-[#3BAE9C] data-[state=checked]:border-[#3BAE9C]"
                   />
                   <div className="grid gap-1.5 leading-none">
-                    <Label htmlFor="terms" className="text-sm font-medium leading-snug cursor-pointer text-[#B3B3B3]">
+                    <Label htmlFor="terms" className="text-sm font-medium leading-snug cursor-pointer text-[#4A5568]">
                       Li e aceito os Termos e Condições e a Política de Privacidade
                     </Label>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button variant="link" className="p-0 h-auto text-xs text-purple-400 w-fit flex items-center gap-1">
+                        <Button variant="link" className="p-0 h-auto text-xs text-[#3BAE9C] w-fit flex items-center gap-1 font-bold hover:text-[#2A9D8F]">
                           <ScrollText className="w-3 h-3" /> Ler termos completos
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-[#181818] border-[#282828] text-white">
+                      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto bg-white border-[#E2E8F0] text-[#2D3748]">
                         <DialogHeader>
-                          <DialogTitle className="text-white">Termos de Uso e Privacidade - HealthAI</DialogTitle>
-                          <DialogDescription className="text-[#B3B3B3]">Última atualização: {new Date().toLocaleDateString()}</DialogDescription>
+                          <DialogTitle className="text-[#2D3748]">Termos de Uso e Privacidade - HealthAI</DialogTitle>
+                          <DialogDescription className="text-[#A7AFB4]">Última atualização: {new Date().toLocaleDateString()}</DialogDescription>
                         </DialogHeader>
-                        <div className="space-y-4 text-sm text-[#B3B3B3]">
+                        <div className="space-y-4 text-sm text-[#4A5568]">
                           <div className="space-y-4 text-justify">
                             <p><strong>1. ACEITAÇÃO DOS TERMOS</strong><br/>
                             Ao acessar e utilizar a plataforma HealthAI ("Plataforma"), você concorda, sem restrições, com estes Termos e Condições de Uso ("Termos"). Se você não concorda com qualquer parte destes Termos, não deve utilizar nossos serviços. Estes Termos aplicam-se a todos os visitantes, usuários e outras pessoas que acessam ou usam o Serviço.</p>
@@ -473,7 +474,7 @@ export default function OnboardingPage() {
 
                 <Button 
                   type="submit" 
-                  className="w-full bg-purple-600 hover:bg-purple-700 h-12 text-lg shadow-md hover:shadow-lg transition-all font-bold" 
+                  className="w-full bg-[#3BAE9C] hover:bg-[#2A9D8F] h-14 text-lg shadow-lg hover:shadow-xl transition-all font-bold rounded-xl" 
                   disabled={!acceptedTerms || createProfileMutation.isPending}
                 >
                   {createProfileMutation.isPending ? (
