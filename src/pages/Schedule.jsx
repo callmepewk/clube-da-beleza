@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Calendar as BigCalendar, dateFnsLocalizer } from 'react-big-calendar';
-import format from 'date-fns/format';
-import parse from 'date-fns/parse';
-import startOfWeek from 'date-fns/startOfWeek';
-import getDay from 'date-fns/getDay';
-import ptBR from 'date-fns/locale/pt-BR';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { format, startOfWeek, addDays, startOfDay, isSameDay, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { 
   Dialog,
   DialogContent,
@@ -22,22 +18,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Plus, Calendar as CalendarIcon, MapPin, Video } from 'lucide-react';
 
-const locales = {
-  'pt-BR': ptBR,
+// Calendar Utils
+const getWeekDays = (date) => {
+  const start = startOfWeek(date, { weekStartsOn: 0 });
+  return Array.from({ length: 7 }).map((_, i) => addDays(start, i));
 };
-
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
-});
 
 export default function SchedulePage() {
   const [isNewEventOpen, setIsNewEventOpen] = useState(false);
   const queryClient = useQueryClient();
   
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const weekDays = getWeekDays(currentDate);
+
   // Fetch Appointments
   const { data: events = [] } = useQuery({
     queryKey: ['appointments'],
@@ -50,6 +43,10 @@ export default function SchedulePage() {
       }));
     }
   });
+
+  const getEventsForDay = (day) => {
+    return events.filter(evt => isSameDay(evt.start, day));
+  };
 
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Appointment.create(data),
@@ -79,22 +76,30 @@ export default function SchedulePage() {
     });
   };
 
-  const eventStyleGetter = (event) => {
-    let backgroundColor = '#3174ad';
-    switch (event.type) {
-      case 'surgery': backgroundColor = '#ef4444'; break;
-      case 'exam': backgroundColor = '#f59e0b'; break;
-      case 'procedure': backgroundColor = '#8b5cf6'; break;
-      case 'consultation': backgroundColor = '#10b981'; break;
-      default: break;
+  const getTypeColor = (type) => {
+    switch (type) {
+      case 'surgery': return 'bg-red-100 text-red-800 border-red-200';
+      case 'exam': return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'procedure': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'consultation': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      default: return 'bg-slate-100 text-slate-800 border-slate-200';
     }
-    return { style: { backgroundColor } };
   };
+
+  const nextWeek = () => setCurrentDate(addDays(currentDate, 7));
+  const prevWeek = () => setCurrentDate(addDays(currentDate, -7));
 
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900">Agendamentos</h1>
+        <div className="flex items-center gap-4">
+          <h1 className="text-2xl font-bold text-slate-900">Agendamentos</h1>
+          <div className="flex items-center bg-white border rounded-lg p-1 shadow-sm">
+            <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
+            <span className="px-4 font-medium">{format(currentDate, "MMMM yyyy", { locale: ptBR })}</span>
+            <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
+          </div>
+        </div>
         <Dialog open={isNewEventOpen} onOpenChange={setIsNewEventOpen}>
           <DialogTrigger asChild>
             <Button className="bg-emerald-600 hover:bg-emerald-700">
@@ -175,24 +180,35 @@ export default function SchedulePage() {
         </Dialog>
       </div>
 
-      <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4">
-        <BigCalendar
-          localizer={localizer}
-          events={events}
-          startAccessor="start"
-          endAccessor="end"
-          style={{ height: '100%' }}
-          eventPropGetter={eventStyleGetter}
-          messages={{
-            next: "Próximo",
-            previous: "Anterior",
-            today: "Hoje",
-            month: "Mês",
-            week: "Semana",
-            day: "Dia"
-          }}
-          culture="pt-BR"
-        />
+      <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4 overflow-x-auto">
+        <div className="grid grid-cols-7 gap-4 min-w-[800px] h-full">
+          {weekDays.map((day, i) => {
+            const dayEvents = getEventsForDay(day);
+            const isToday = isSameDay(day, new Date());
+            return (
+              <div key={i} className={`flex flex-col h-full ${isToday ? 'bg-emerald-50/30 rounded-lg' : ''}`}>
+                <div className="text-center py-2 border-b border-slate-100 mb-2">
+                  <div className="text-sm font-medium text-slate-500 uppercase">{format(day, 'EEE', { locale: ptBR })}</div>
+                  <div className={`text-lg font-bold ${isToday ? 'text-emerald-600' : 'text-slate-900'}`}>{format(day, 'dd')}</div>
+                </div>
+                <div className="flex-1 space-y-2 p-1 overflow-y-auto">
+                  {dayEvents.map(evt => (
+                    <div key={evt.id} className={`p-2 rounded-md text-xs border ${getTypeColor(evt.type)} cursor-pointer hover:opacity-80 transition-opacity`}>
+                      <div className="font-bold truncate">{evt.title}</div>
+                      <div className="opacity-80">{format(evt.start, 'HH:mm')}</div>
+                      {evt.modality === 'teleconsultation' && (
+                        <div className="flex items-center gap-1 mt-1 opacity-70"><Video className="w-3 h-3" /> Online</div>
+                      )}
+                    </div>
+                  ))}
+                  {dayEvents.length === 0 && isToday && (
+                    <div className="text-center text-xs text-slate-300 mt-4">Livre</div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
