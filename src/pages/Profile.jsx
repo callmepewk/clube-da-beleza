@@ -35,32 +35,40 @@ export default function ProfilePage() {
        const user = await base44.auth.me();
        if (!user) return null;
        const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
-       const p = res?.data?.[0];
-       if (p) {
-          // Populate state
-          setPersonalData({ 
-              full_name: user.full_name || '',
-              phone: p.phone || '', 
-              cpf: p.cpf || '', 
-              profile_picture: p.profile_picture || '' 
-          });
-          if (p.address) setAddress({ ...address, ...p.address });
-          if (p.medical_history) setMedicalData({ 
-             blood_type: p.medical_history.blood_type || '',
-             allergies: p.medical_history.allergies?.join(', ') || '',
-             diseases: p.medical_history.diseases?.join(', ') || '',
-             skin_type: p.medical_history.skin_type || ''
-          });
-          if (p.type === 'professional') {
-             setProfessionalData({
-                registry: p.professional_registry || '',
-                specialties: p.specialties?.join(', ') || ''
-             });
-          }
-       }
-       return p || {};
+       return res?.data?.[0] || {};
     }
   });
+
+  useEffect(() => {
+     if (profile && profile.id) {
+        base44.auth.me().then(user => {
+            setPersonalData({ 
+                full_name: user.full_name || '',
+                phone: profile.phone || '', 
+                cpf: profile.cpf || '', 
+                profile_picture: profile.profile_picture || '' 
+            });
+        });
+
+        if (profile.address) setAddress(prev => ({ ...prev, ...profile.address }));
+        
+        if (profile.medical_history) {
+            setMedicalData({ 
+               blood_type: profile.medical_history.blood_type || '',
+               allergies: Array.isArray(profile.medical_history.allergies) ? profile.medical_history.allergies.join(', ') : '',
+               diseases: Array.isArray(profile.medical_history.diseases) ? profile.medical_history.diseases.join(', ') : '',
+               skin_type: profile.medical_history.skin_type || ''
+            });
+        }
+        
+        if (profile.type === 'professional') {
+           setProfessionalData({
+              registry: profile.professional_registry || '',
+              specialties: Array.isArray(profile.specialties) ? profile.specialties.join(', ') : ''
+           });
+        }
+     }
+  }, [profile]);
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
