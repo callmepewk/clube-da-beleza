@@ -11,7 +11,10 @@ export default function ChatbotsPage() {
   const [config, setConfig] = useState({
     name: '',
     personality: 'friendly',
-    platform: 'whatsapp'
+    platform: 'whatsapp',
+    phone: '',
+    instagram: '',
+    avatar: ''
   });
 
   const deployMutation = useMutation({
@@ -48,6 +51,35 @@ export default function ChatbotsPage() {
                     onChange={(e) => setConfig({...config, name: e.target.value})}
                   />
                 </div>
+
+                <div className="space-y-2">
+                   <label className="text-sm font-medium">Foto de Perfil (Avatar)</label>
+                   <div className="flex items-center gap-4">
+                      <div className="w-16 h-16 rounded-full bg-slate-100 border flex items-center justify-center overflow-hidden relative">
+                        {config.avatar ? (
+                          <img src={config.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <Bot className="w-8 h-8 text-slate-300" />
+                        )}
+                      </div>
+                      <div className="relative">
+                         <Button variant="outline" size="sm" className="relative cursor-pointer">
+                            <input 
+                              type="file" 
+                              className="absolute inset-0 opacity-0 cursor-pointer" 
+                              onChange={async (e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                  const res = await base44.integrations.Core.UploadFile({ file });
+                                  setConfig({...config, avatar: res.file_url});
+                                }
+                              }}
+                            />
+                            <Plus className="w-4 h-4 mr-2" /> Upload Foto
+                         </Button>
+                      </div>
+                   </div>
+                </div>
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Personalidade / Tom de Voz</label>
@@ -82,6 +114,33 @@ export default function ChatbotsPage() {
                   </div>
                 </div>
 
+                {config.platform === 'whatsapp' && (
+                   <div className="space-y-2 animate-in fade-in">
+                      <label className="text-sm font-medium">Número do WhatsApp Business</label>
+                      <input 
+                        className="w-full p-2 border rounded-md"
+                        placeholder="+55 (11) 99999-9999"
+                        value={config.phone}
+                        onChange={(e) => setConfig({...config, phone: e.target.value})}
+                      />
+                   </div>
+                )}
+
+                {config.platform === 'instagram' && (
+                   <div className="space-y-2 animate-in fade-in">
+                      <label className="text-sm font-medium">Usuário do Instagram</label>
+                      <div className="flex items-center border rounded-md overflow-hidden">
+                         <div className="bg-slate-100 p-2 text-slate-500">@</div>
+                         <input 
+                           className="w-full p-2 outline-none"
+                           placeholder="seu.perfil"
+                           value={config.instagram}
+                           onChange={(e) => setConfig({...config, instagram: e.target.value})}
+                         />
+                      </div>
+                   </div>
+                )}
+
                 <Button 
                   className="w-full bg-indigo-600 hover:bg-indigo-700 mt-4"
                   onClick={() => deployMutation.mutate()}
@@ -107,10 +166,18 @@ export default function ChatbotsPage() {
                     {/* Chat Header */}
                     <div className={`p-4 ${config.platform === 'whatsapp' ? 'bg-[#075E54]' : 'bg-gradient-to-r from-purple-500 to-orange-500'} text-white`}>
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                          <Bot className="w-5 h-5" />
+                        <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
+                          {config.avatar ? (
+                            <img src={config.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                          ) : (
+                            <Bot className="w-5 h-5" />
+                          )}
                         </div>
-                        <div className="text-sm font-medium">{config.name || 'Nome do Bot'}</div>
+                        <div>
+                           <div className="text-sm font-medium">{config.name || 'Nome do Bot'}</div>
+                           {config.platform === 'whatsapp' && config.phone && <div className="text-[10px] opacity-80">{config.phone}</div>}
+                           {config.platform === 'instagram' && config.instagram && <div className="text-[10px] opacity-80">@{config.instagram}</div>}
+                        </div>
                       </div>
                     </div>
                     {/* Chat Body */}
