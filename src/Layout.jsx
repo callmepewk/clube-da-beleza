@@ -97,7 +97,6 @@ export default function Layout({ children }) {
   };
 
   // Define all available pages with requested order
-  // inicio, agendamentos, enfermeira virtual, chatbots, sites, desgin , produtos, planos
   const navItems = [
     { icon: LayoutDashboard, label: 'Início', path: '/' },
     { icon: Calendar, label: 'Agendamentos', path: '/schedule' },
@@ -107,8 +106,12 @@ export default function Layout({ children }) {
     { icon: Palette, label: 'Design', path: '/design' },
     { icon: ShoppingBag, label: 'Produtos', path: '/products' },
     { icon: CreditCard, label: 'Planos', path: '/plans' },
-    { icon: HelpCircle, label: 'Suporte', path: '/support' },
+    { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
   ];
+
+  if (profile?.is_admin) {
+     navItems.push({ icon: LayoutDashboard, label: 'Painel de Controle', path: '/admin-control' });
+  }
 
   // Premium Dark Spotify-inspired Theme Classes
   const theme = {
@@ -179,20 +182,20 @@ export default function Layout({ children }) {
                  <span className="font-bold text-xl tracking-tight text-white">HealthAI</span>
               </Link>
 
-              <nav className="space-y-2">
+              <nav className="space-y-1">
                  {navItems.map((item) => {
                    const isActive = location.pathname === item.path;
                    return (
                      <Link
                        key={item.path}
                        to={createPageUrl(item.path.replace('/', ''))}
-                       className={`flex items-center gap-4 px-4 py-3 rounded-lg text-sm font-bold transition-all duration-200 group
+                       className={`flex items-center gap-3 px-3 py-2 rounded-md text-xs font-bold transition-all duration-200 group
                          ${isActive 
                            ? 'bg-[#282828] text-white' 
                            : 'text-[#B3B3B3] hover:text-white hover:bg-[#121212]'
                          }`}
                      >
-                       <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-purple-400' : 'text-[#B3B3B3] group-hover:text-white'}`} />
+                       <item.icon className={`w-4 h-4 transition-colors ${isActive ? 'text-purple-400' : 'text-[#B3B3B3] group-hover:text-white'}`} />
                        <span>{item.label}</span>
                      </Link>
                    );
