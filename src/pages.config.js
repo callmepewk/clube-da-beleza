@@ -8,6 +8,7 @@ import Products from './pages/Products';
 import Profile from './pages/Profile';
 import Plans from './pages/Plans';
 import Onboarding from './pages/Onboarding';
+import AdminControl from './pages/AdminControl';
 import __Layout from './Layout.jsx';
 
 
@@ -22,6 +23,7 @@ export const PAGES = {
     "Profile": Profile,
     "Plans": Plans,
     "Onboarding": Onboarding,
+    "AdminControl": AdminControl,
 }
 
 export const pagesConfig = {

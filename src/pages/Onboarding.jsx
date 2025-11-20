@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Stethoscope, CheckCircle2, MapPin, Loader2, ScrollText } from 'lucide-react';
+import { User, Stethoscope, CheckCircle2, MapPin, Loader2, ScrollText, Building2 } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 
@@ -164,6 +164,21 @@ export default function OnboardingPage() {
                 <div>
                   <h3 className="font-bold text-xl text-slate-900">Sou Profissional</h3>
                   <p className="text-sm text-slate-500 mt-2">Desejo gerenciar minha agenda, pacientes e oferecer serviços.</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card 
+              className="cursor-pointer hover:border-emerald-500 hover:bg-emerald-50 transition-all group md:col-span-2 lg:col-span-1"
+              onClick={() => { setRole('sponsor'); setStep(2); }}
+            >
+              <CardContent className="p-8 flex flex-col items-center text-center space-y-4">
+                <div className="w-20 h-20 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Building2 className="w-10 h-10" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-xl text-slate-900">Sou Patrocinador</h3>
+                  <p className="text-sm text-slate-500 mt-2">Desejo investir e promover produtos/serviços na plataforma.</p>
                 </div>
               </CardContent>
             </Card>

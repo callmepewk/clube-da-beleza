@@ -193,6 +193,11 @@ export default function Layout({ children }) {
                       </div>
                     )}
                     
+                    {profile?.is_admin && (
+                      <Link to={createPageUrl('AdminControl')} className="flex items-center gap-2 px-4 py-2 text-sm text-indigo-700 font-semibold hover:bg-indigo-50 bg-indigo-50/30">
+                        <Activity className="w-4 h-4" /> Painel de Controle
+                      </Link>
+                    )}
                     <Link to={createPageUrl('Profile')} className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
                       <UserCircle className="w-4 h-4" /> Meu Perfil
                     </Link>
