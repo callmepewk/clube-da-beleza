@@ -86,7 +86,7 @@ export default function ToolsPage() {
       url: 'https://laser-code-pro.base44.app',
       color: 'from-[#B8935C] to-[#A68350]',
       badge: 'Disponível Agora',
-      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/4d503af00_image.png'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/452ad56c8_image.png'
     },
     {
       icon: Heart,

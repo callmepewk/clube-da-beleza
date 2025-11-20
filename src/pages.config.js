@@ -6,7 +6,6 @@ import Design from './pages/Design';
 import Products from './pages/Products';
 import Profile from './pages/Profile';
 import Plans from './pages/Plans';
-import Onboarding from './pages/Onboarding';
 import AdminControl from './pages/AdminControl';
 import MyPlan from './pages/MyPlan';
 import Nurse from './pages/Nurse';
@@ -26,7 +25,6 @@ export const PAGES = {
     "Products": Products,
     "Profile": Profile,
     "Plans": Plans,
-    "Onboarding": Onboarding,
     "AdminControl": AdminControl,
     "MyPlan": MyPlan,
     "Nurse": Nurse,
