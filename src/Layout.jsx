@@ -399,13 +399,13 @@ export default function Layout({ children }) {
         {/* Horizontal Navigation Header (Desktop) */}
         <header className="hidden lg:block bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
            <div className="max-w-[1600px] mx-auto px-6">
-              <div className="flex items-center justify-between h-20">
+              <div className="flex items-center justify-between h-28">
                  {/* Logo */}
                  <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80">
                     <img 
                        src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
                        alt="Beauty Center"
-                       className="h-12 w-auto"
+                       className="h-16 w-auto"
                     />
                  </Link>
 
@@ -432,20 +432,78 @@ export default function Layout({ children }) {
 
                  {/* Right Side Actions */}
                  <div className="flex items-center gap-4">
-                    <NotificationsPopover user={user} />
                     {user ? (
-                       <div 
-                          onClick={() => navigate(createPageUrl('Profile'))}
-                          className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F0FDFA] transition-all cursor-pointer border border-transparent hover:border-[#CCFBF1]"
-                       >
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg">
-                             {user.full_name?.[0]?.toUpperCase() || 'U'}
-                          </div>
-                          <div className="text-left">
-                             <p className="text-sm font-bold text-[#0F172A] leading-tight">{user.full_name?.split(' ')[0]}</p>
-                             <p className="text-xs text-[#64748B]">Perfil</p>
-                          </div>
-                       </div>
+                       <Popover>
+                          <PopoverTrigger asChild>
+                             <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F0FDFA] transition-all cursor-pointer border border-transparent hover:border-[#CCFBF1]">
+                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg">
+                                   {user.full_name?.[0]?.toUpperCase() || 'U'}
+                                </div>
+                                <div className="text-left">
+                                   <p className="text-sm font-bold text-[#0F172A] leading-tight">{user.full_name?.split(' ')[0]}</p>
+                                   <p className="text-xs text-[#64748B]">
+                                      {profile?.plan ? profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1) : 'Free'}
+                                   </p>
+                                </div>
+                             </div>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-64 p-0" align="end">
+                             <div className="p-4 border-b bg-gradient-to-br from-[#F0FDFA] to-white">
+                                <div className="flex items-center gap-3 mb-2">
+                                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg">
+                                      {user.full_name?.[0]?.toUpperCase() || 'U'}
+                                   </div>
+                                   <div>
+                                      <p className="font-bold text-[#0F172A]">{user.full_name}</p>
+                                      <p className="text-xs text-[#64748B]">{user.email}</p>
+                                   </div>
+                                </div>
+                             </div>
+
+                             <div className="py-2">
+                                <button 
+                                   onClick={() => navigate(createPageUrl('Profile'))}
+                                   className="w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-center gap-3 text-sm font-medium text-[#0F172A]"
+                                >
+                                   <UserCircle className="w-4 h-4 text-[#64748B]" />
+                                   Meu Perfil
+                                </button>
+
+                                <button 
+                                   onClick={() => navigate(createPageUrl('Plans'))}
+                                   className="w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-center gap-3 text-sm font-medium text-[#0F172A]"
+                                >
+                                   <CreditCard className="w-4 h-4 text-[#64748B]" />
+                                   <div className="flex-1 flex items-center justify-between">
+                                      <span>Plano Atual</span>
+                                      <span className="text-xs font-bold text-[#0D9488] uppercase">
+                                         {profile?.plan || 'Free'}
+                                      </span>
+                                   </div>
+                                </button>
+
+                                {profile?.is_admin && (
+                                   <button 
+                                      onClick={() => navigate(createPageUrl('AdminControl'))}
+                                      className="w-full text-left px-4 py-3 hover:bg-purple-50 transition-colors flex items-center gap-3 text-sm font-medium text-purple-700"
+                                   >
+                                      <Shield className="w-4 h-4" />
+                                      Painel de Controle
+                                   </button>
+                                )}
+                             </div>
+
+                             <div className="border-t py-2">
+                                <button 
+                                   onClick={handleLogout}
+                                   className="w-full text-left px-4 py-3 hover:bg-red-50 transition-colors flex items-center gap-3 text-sm font-medium text-red-600"
+                                >
+                                   <LogOut className="w-4 h-4" />
+                                   Sair da Conta
+                                </button>
+                             </div>
+                          </PopoverContent>
+                       </Popover>
                     ) : (
                        <div className="flex gap-2">
                           <Button 
