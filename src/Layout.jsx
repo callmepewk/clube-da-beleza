@@ -369,7 +369,7 @@ export default function Layout({ children }) {
       {user && <BannerDisplay userProfile={profile} />}
 
       {/* Left Sidebar Navigation (Desktop) */}
-      <aside className={`hidden lg:flex flex-col ${theme.sidebar} border-r ${theme.border} w-72 fixed left-0 top-0 bottom-0 z-50`}>
+      <aside className={`hidden lg:flex flex-col ${theme.sidebar} border-r ${theme.border} w-72 fixed left-0 top-0 bottom-0 z-50 overflow-y-auto`}>
         {/* Logo */}
         <Link to={createPageUrl('Dashboard')} className="p-8 border-b border-[#D4A574]/20">
           <div className={`text-2xl font-light tracking-[0.2em] ${theme.textPrimary} text-center`}>
@@ -379,7 +379,7 @@ export default function Layout({ children }) {
         </Link>
 
         {/* Navigation */}
-        <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
+        <nav className="flex-1 p-6 space-y-2 overflow-y-auto min-h-0 pb-32">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (

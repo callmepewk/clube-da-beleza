@@ -247,33 +247,33 @@ export default function ProfilePage() {
 
   if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin text-purple-500" /></div>;
 
-  // DermaTech Vibrant Theme Classes
-  const cardClass = "bg-white border border-slate-100 text-[#0F172A] hover:shadow-xl transition-all hover:-translate-y-1 duration-300 shadow-[0_2px_8px_rgba(0,0,0,0.04)] rounded-[1.5rem]";
-  const inputClass = "w-full bg-[#F8FAFC] border border-slate-200 text-[#0F172A] focus:ring-2 focus:ring-[#0D9488]/20 focus:border-[#0D9488] h-14 rounded-xl placeholder:text-[#94A3B8] transition-all hover:bg-white hover:border-slate-300";
-  const labelClass = "text-[#334155] text-sm font-bold mb-2 block";
+  // Clube da Beleza Theme Classes
+  const cardClass = "bg-[#FEFBF7] border border-[#D4A574]/20 text-[#2D2416] hover:shadow-xl transition-all hover:-translate-y-1 duration-300 shadow-[0_2px_8px_rgba(212,165,116,0.04)] rounded-[1.5rem]";
+  const inputClass = "w-full bg-[#FFF9F0] border border-[#D4A574]/30 text-[#2D2416] focus:ring-2 focus:ring-[#D4A574]/20 focus:border-[#D4A574] h-14 rounded-xl placeholder:text-[#B8935C]/50 transition-all hover:bg-white hover:border-[#D4A574]/40";
+  const labelClass = "text-[#6B5D4F] text-sm font-bold mb-2 block";
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-10">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-extrabold text-[#0F172A] tracking-tight">Meu Perfil</h1>
-            <p className="text-[#64748B] font-medium">Gerencie suas informações e preferências.</p>
+            <h1 className="text-3xl font-light text-[#2D2416] tracking-tight">Meu Perfil</h1>
+            <p className="text-[#6B5D4F] font-light">Gerencie suas informações e preferências.</p>
           </div>
-          <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))} className="border-slate-200 bg-white text-[#0F172A] hover:bg-[#F0FDFA] hover:text-[#0D9488] shadow-sm rounded-xl font-bold">
-             <CreditCard className="w-4 h-4 mr-2 text-[#0D9488]" /> Ver Meu Plano
+          <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))} className="border-[#D4A574]/30 bg-[#FEFBF7] text-[#6B5D4F] hover:bg-[#FFF9F0] hover:text-[#D4A574] shadow-sm rounded-xl font-light">
+             <CreditCard className="w-4 h-4 mr-2 text-[#D4A574]" /> Ver Meu Plano
           </Button>
         </div>
 
         <Tabs defaultValue="personal" className="w-full">
-          <TabsList className="w-full bg-[#F1F5F9] border border-slate-200 p-1.5 rounded-2xl">
-            <TabsTrigger value="personal" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Dados Pessoais</TabsTrigger>
-            <TabsTrigger value="stats" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Minhas Estatísticas</TabsTrigger>
-            {profile?.type === 'patient' && <TabsTrigger value="medical" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Ficha Médica</TabsTrigger>}
-            {profile?.type === 'professional' && <TabsTrigger value="professional" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Profissional</TabsTrigger>}
+          <TabsList className="w-full bg-[#FEFBF7] border border-[#D4A574]/20 p-1.5 rounded-2xl">
+            <TabsTrigger value="personal" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">Dados Pessoais</TabsTrigger>
+            <TabsTrigger value="stats" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">Minhas Estatísticas</TabsTrigger>
+            {profile?.type === 'patient' && <TabsTrigger value="medical" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">Ficha Médica</TabsTrigger>}
+            {profile?.type === 'professional' && <TabsTrigger value="professional" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">Profissional</TabsTrigger>}
           </TabsList>
 
           {/* Profile Header Card */}
-          <Card className="mb-8 mt-8 border-0 bg-gradient-to-br from-[#0F766E] to-[#14B8A6] shadow-2xl shadow-teal-900/20 text-white rounded-[2rem] overflow-hidden relative">
+          <Card className="mb-8 mt-8 border-0 bg-gradient-to-br from-[#D4A574] to-[#C9A868] shadow-2xl shadow-[#D4A574]/30 text-white rounded-[2rem] overflow-hidden relative">
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
             <CardContent className="flex flex-col md:flex-row items-center gap-8 p-10 relative z-10">
               <div className="relative group">
@@ -284,7 +284,7 @@ export default function ProfilePage() {
                        <UserIcon className="w-14 h-14 text-white" />
                     )}
                  </div>
-                 <label className="absolute bottom-1 right-1 bg-white text-[#0D9488] p-3 rounded-full cursor-pointer hover:bg-[#CCFBF1] shadow-lg transition-all hover:scale-110 hover:rotate-3">
+                 <label className="absolute bottom-1 right-1 bg-white text-[#D4A574] p-3 rounded-full cursor-pointer hover:bg-[#FFF9F0] shadow-lg transition-all hover:scale-110 hover:rotate-3">
                     <Upload className="w-5 h-5" />
                     <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
                  </label>
@@ -301,45 +301,12 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              {/* Buttons Container - Fixed Visibility */}
-              <div className="flex flex-wrap gap-2 w-full md:w-auto justify-center md:justify-end mt-4 md:mt-0">
-                <Button 
-                  variant="outline" 
-                  className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-4 text-xs md:text-sm rounded-full font-semibold transition-all shadow-sm whitespace-nowrap"
-                  onClick={() => {
-                    const type = profile?.type === 'patient' ? 'Profissional' : 'Paciente';
-                    if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
-                       base44.integrations.Core.SendEmail({
-                         to: "pedro_hbfreitas@hotmail.com",
-                         subject: `Solicitação de Mudança de Tipo de Conta - ${profile?.user_email}`,
-                         body: `O usuário ${profile?.user_email} solicitou a mudança de sua conta de ${profile?.type} para ${type.toLowerCase()}.`
-                       });
-                       alert("Solicitação enviada com sucesso! Aguarde o contato da administração.");
-                    }
-                  }}
-                >
-                  Mudar Tipo de Conta
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="border-white/40 text-white hover:bg-white/20 hover:text-white bg-black/10 backdrop-blur-md hover:border-white h-10 px-4 text-xs md:text-sm rounded-full font-semibold transition-all shadow-sm"
-                  onClick={() => setIsLogoutAlertOpen(true)}
-                >
-                   Sair
-                </Button>
-                <Button 
-                  variant="outline"
-                  className="border-red-400/50 text-red-100 hover:bg-red-500/20 hover:text-white hover:border-red-400 bg-black/10 backdrop-blur-md h-10 px-4 text-xs md:text-sm rounded-full font-semibold transition-all shadow-sm"
-                  onClick={() => setIsDeleteAlertOpen(true)}
-                >
-                   Excluir
-                </Button>
-              </div>
+
             </CardContent>
           </Card>
 
         <TabsContent value="stats">
-          <Card className="col-span-full bg-gradient-to-r from-[#0F766E] to-[#14B8A6] text-white border-0 shadow-2xl shadow-teal-900/20 rounded-[2rem] overflow-hidden relative mb-6">
+          <Card className="col-span-full bg-gradient-to-r from-[#D4A574] to-[#C9A868] text-white border-0 shadow-2xl shadow-[#D4A574]/30 rounded-[2rem] overflow-hidden relative mb-6">
             <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
             <CardContent className="p-8 relative z-10">
               <div className="flex items-center justify-between mb-6">
@@ -353,7 +320,7 @@ export default function ProfilePage() {
                 <Button 
                   onClick={() => navigate(createPageUrl('Plans'))}
                   variant="outline"
-                  className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white backdrop-blur-md rounded-xl font-bold h-12 px-6"
+                  className="bg-white/20 border-white/40 text-white hover:bg-white/30 hover:text-white backdrop-blur-md rounded-xl font-light h-12 px-6"
                 >
                   Ver Planos
                 </Button>
@@ -413,33 +380,33 @@ export default function ProfilePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
-                <div className="bg-blue-50 w-10 h-10 rounded-xl flex items-center justify-center mb-3">
-                   <Calendar className="w-5 h-5 text-blue-600" />
+             <div className="bg-[#FEFBF7] p-4 rounded-2xl border border-[#D4A574]/20 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-[#FFF9F0] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                   <Calendar className="w-5 h-5 text-[#D4A574]" />
                 </div>
-                <div className="text-2xl font-bold text-slate-800">{stats?.appointments || 0}</div>
-                <div className="text-xs text-slate-500 font-medium">Agendamentos</div>
+                <div className="text-2xl font-light text-[#2D2416]">{stats?.appointments || 0}</div>
+                <div className="text-xs text-[#6B5D4F] font-light">Agendamentos</div>
              </div>
-             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
-                <div className="bg-pink-50 w-10 h-10 rounded-xl flex items-center justify-center mb-3">
-                   <Activity className="w-5 h-5 text-pink-600" />
+             <div className="bg-[#FEFBF7] p-4 rounded-2xl border border-[#D4A574]/20 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-[#FFF9F0] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                   <Activity className="w-5 h-5 text-[#B8935C]" />
                 </div>
-                <div className="text-2xl font-bold text-slate-800">{stats?.nurse || 0}</div>
-                <div className="text-xs text-slate-500 font-medium">Uso Enfermeira</div>
+                <div className="text-2xl font-light text-[#2D2416]">{stats?.nurse || 0}</div>
+                <div className="text-xs text-[#6B5D4F] font-light">Uso Enfermeira</div>
              </div>
-             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
-                <div className="bg-green-50 w-10 h-10 rounded-xl flex items-center justify-center mb-3">
-                   <MessageSquare className="w-5 h-5 text-green-600" />
+             <div className="bg-[#FEFBF7] p-4 rounded-2xl border border-[#D4A574]/20 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-[#FFF9F0] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                   <MessageSquare className="w-5 h-5 text-[#C9A868]" />
                 </div>
-                <div className="text-2xl font-bold text-slate-800">{stats?.chatbots || 0}</div>
-                <div className="text-xs text-slate-500 font-medium">Chatbots Ativos</div>
+                <div className="text-2xl font-light text-[#2D2416]">{stats?.chatbots || 0}</div>
+                <div className="text-xs text-[#6B5D4F] font-light">Chatbots Ativos</div>
              </div>
-             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
-                <div className="bg-orange-50 w-10 h-10 rounded-xl flex items-center justify-center mb-3">
-                   <Layout className="w-5 h-5 text-orange-600" />
+             <div className="bg-[#FEFBF7] p-4 rounded-2xl border border-[#D4A574]/20 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-[#FFF9F0] w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                   <Layout className="w-5 h-5 text-[#D4A574]" />
                 </div>
-                <div className="text-2xl font-bold text-slate-800">{stats?.sites || 0}</div>
-                <div className="text-xs text-slate-500 font-medium">Sites Criados</div>
+                <div className="text-2xl font-light text-[#2D2416]">{stats?.sites || 0}</div>
+                <div className="text-xs text-[#6B5D4F] font-light">Sites Criados</div>
              </div>
           </div>
         </TabsContent>
@@ -709,12 +676,47 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white h-14 font-bold shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 transition-all rounded-xl text-lg mt-4" disabled={saveMutation.isPending}>
+              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#D4A574] hover:bg-[#C49565] text-white h-14 font-light shadow-lg shadow-[#D4A574]/20 hover:shadow-[#D4A574]/30 transition-all rounded-xl text-lg mt-4" disabled={saveMutation.isPending}>
                  {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
                  Salvar Alterações
               </Button>
               </CardContent>
               </Card>
+
+              {/* Action Buttons Outside Card */}
+              <div className="flex flex-col gap-3 mt-6">
+                <Button 
+                  variant="outline" 
+                  className="w-full border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0] hover:text-[#D4A574] h-12 rounded-xl font-light"
+                  onClick={() => {
+                    const type = profile?.type === 'patient' ? 'Profissional' : 'Paciente';
+                    if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
+                       base44.integrations.Core.SendEmail({
+                         to: "pedro_hbfreitas@hotmail.com",
+                         subject: `Solicitação de Mudança de Tipo de Conta - ${profile?.user_email}`,
+                         body: `O usuário ${profile?.user_email} solicitou a mudança de sua conta de ${profile?.type} para ${type.toLowerCase()}.`
+                       });
+                       alert("Solicitação enviada com sucesso! Aguarde o contato da administração.");
+                    }
+                  }}
+                >
+                  Mudar Tipo de Conta
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="w-full border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0] hover:text-[#D4A574] h-12 rounded-xl font-light"
+                  onClick={() => setIsLogoutAlertOpen(true)}
+                >
+                   Sair da Conta
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="w-full border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 h-12 rounded-xl font-light"
+                  onClick={() => setIsDeleteAlertOpen(true)}
+                >
+                   Excluir Conta
+                </Button>
+              </div>
               </TabsContent>
 
         <TabsContent value="medical">
@@ -977,15 +979,15 @@ export default function ProfilePage() {
       </Tabs>
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
-        <AlertDialogContent className="bg-white border-slate-200 text-[#0F172A]">
+        <AlertDialogContent className="bg-[#FEFBF7] border-[#D4A574]/30 text-[#2D2416]">
           <AlertDialogHeader>
             <AlertDialogTitle>Tem certeza absoluta?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500">
+            <AlertDialogDescription className="text-[#6B5D4F]">
               Esta ação não pode ser desfeita. Isso excluirá permanentemente seu perfil e removerá seus dados de nossos servidores.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-0">Cancelar</AlertDialogCancel>
+            <AlertDialogCancel className="bg-white border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0]">Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700 text-white border-0">
               Sim, excluir minha conta
             </AlertDialogAction>
@@ -994,16 +996,16 @@ export default function ProfilePage() {
       </AlertDialog>
 
       <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
-        <AlertDialogContent className="bg-white border-slate-200 text-[#0F172A]">
+        <AlertDialogContent className="bg-[#FEFBF7] border-[#D4A574]/30 text-[#2D2416]">
           <AlertDialogHeader>
             <AlertDialogTitle>Deseja sair?</AlertDialogTitle>
-            <AlertDialogDescription className="text-slate-500">
+            <AlertDialogDescription className="text-[#6B5D4F]">
               Você precisará fazer login novamente para acessar sua conta.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-0">Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleLogout} className="bg-[#0D9488] hover:bg-[#0F766E] text-white border-0">
+            <AlertDialogCancel className="bg-white border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0]">Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLogout} className="bg-[#D4A574] hover:bg-[#C49565] text-white border-0">
               Sair
             </AlertDialogAction>
           </AlertDialogFooter>
