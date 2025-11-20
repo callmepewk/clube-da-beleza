@@ -31,7 +31,8 @@ export default function OnboardingPage() {
     zip: '',
     crm: '',
     service_street: '',
-    same_address: true
+    same_address: true,
+    full_name: ''
   });
 
   const navigate = useNavigate();
@@ -48,9 +49,10 @@ export default function OnboardingPage() {
          setRole(parsed.role);
          setFormData(parsed.formData);
          setAcceptedTerms(parsed.acceptedTerms);
-         setStep(2); // Jump to step 2 if we have data
-         
-         // If user is now logged in, we can clear storage? No, wait until success.
+         setStep(2); 
+      } else if (u && u.full_name) {
+          // Pre-fill name if available
+          setFormData(prev => ({ ...prev, full_name: u.full_name }));
       }
     };
     init();
@@ -98,8 +100,14 @@ export default function OnboardingPage() {
       const currentUser = await base44.auth.me();
       if (!currentUser) throw new Error("Usuário não autenticado");
 
+      // 1. Update Auth User Name if provided
+      if (formData.full_name) {
+         await base44.auth.updateMe({ full_name: formData.full_name });
+      }
+
+      // 2. Create User Profile Entity
       const commonData = {
-        user_email: currentUser.email,
+        user_email: currentUser.email, // Ensuring exact email match
         type: role,
         terms_accepted: true,
         terms_accepted_date: new Date().toISOString(),
@@ -273,6 +281,16 @@ export default function OnboardingPage() {
                       </div>
                    </div>
                 )}
+
+                <div className="space-y-2">
+                   <Label>Nome Completo *</Label>
+                   <Input 
+                     required 
+                     value={formData.full_name} 
+                     onChange={e => setFormData({...formData, full_name: e.target.value})} 
+                     placeholder="Seu nome completo"
+                   />
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">

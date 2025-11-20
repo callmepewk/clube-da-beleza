@@ -33,12 +33,24 @@ export default function MyPlanPage() {
   if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-indigo-600" /></div>;
   
   if (!userProfile) {
+     // Try to reload once or guide to onboarding, but nicer
      return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center space-y-4">
-           <h2 className="text-2xl font-bold">Perfil não encontrado</h2>
-           <p className="text-slate-500">Você precisa completar seu cadastro para ver seu plano.</p>
-           <Button onClick={() => navigate(createPageUrl('Onboarding'))} className="bg-indigo-600">Ir para Cadastro</Button>
-           <Button variant="ghost" onClick={() => navigate(createPageUrl('Dashboard'))}>Voltar ao Início</Button>
+        <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center space-y-6 animate-in fade-in">
+           <div className="p-4 bg-indigo-50 rounded-full">
+              <CreditCard className="w-12 h-12 text-indigo-600" />
+           </div>
+           <div className="space-y-2">
+              <h2 className="text-2xl font-bold text-slate-900">Nenhum plano ativo encontrado</h2>
+              <p className="text-slate-500 max-w-md mx-auto">Parece que seu cadastro ainda não foi concluído ou processado. Complete seu perfil para liberar o acesso.</p>
+           </div>
+           <div className="flex gap-4">
+              <Button onClick={() => navigate(createPageUrl('Onboarding'))} className="bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200">
+                 Completar Cadastro
+              </Button>
+              <Button variant="outline" onClick={() => window.location.reload()}>
+                 Tentar Novamente
+              </Button>
+           </div>
         </div>
      );
   }
