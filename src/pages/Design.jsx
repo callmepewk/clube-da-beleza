@@ -31,6 +31,19 @@ export default function DesignPage() {
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1 space-y-6">
+          {/* Legend / Explanation */}
+          <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 text-sm text-blue-800">
+            <h3 className="font-bold mb-2">Como funcionam as opções:</h3>
+            <div className="space-y-2">
+              <div>
+                <span className="font-semibold">1. Texto para Design:</span> Crie imagens do zero descrevendo o que você quer. A IA gera uma imagem única baseada na sua descrição.
+              </div>
+              <div>
+                <span className="font-semibold">2. Remix de Imagem:</span> Faça upload de uma imagem existente e peça alterações. A IA manterá a estrutura base e aplicará o estilo ou modificações solicitadas.
+              </div>
+            </div>
+          </div>
+
           <Card>
             <CardContent className="p-6 space-y-4">
               <h2 className="font-semibold text-lg">Criar Novo Design</h2>
