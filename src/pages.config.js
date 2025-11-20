@@ -1,5 +1,4 @@
 import Dashboard from './pages/Dashboard';
-import Nurse from './pages/Nurse';
 import Schedule from './pages/Schedule';
 import Sites from './pages/Sites';
 import Chatbots from './pages/Chatbots';
@@ -10,12 +9,12 @@ import Plans from './pages/Plans';
 import Onboarding from './pages/Onboarding';
 import AdminControl from './pages/AdminControl';
 import MyPlan from './pages/MyPlan';
+import Nurse from './pages/Nurse';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "Dashboard": Dashboard,
-    "Nurse": Nurse,
     "Schedule": Schedule,
     "Sites": Sites,
     "Chatbots": Chatbots,
@@ -26,6 +25,7 @@ export const PAGES = {
     "Onboarding": Onboarding,
     "AdminControl": AdminControl,
     "MyPlan": MyPlan,
+    "Nurse": Nurse,
 }
 
 export const pagesConfig = {

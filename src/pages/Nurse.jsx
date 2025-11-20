@@ -2,17 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { 
-  Send, Bot, Activity, Calendar, MapPin, Loader2, Sparkles 
+  Send, Bot, Activity, Calendar, MapPin, Loader2, Sparkles, User 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area'; // Ensure ScrollArea is imported or use div
+import { ScrollArea } from '@/components/ui/scroll-area'; 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format, differenceInDays, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
-// import { motion, AnimatePresence } from 'framer-motion';
 
 const NURSE_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/6ad7fd07e_nurse.png";
 
@@ -169,7 +168,7 @@ export default function NursePage() {
                     <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-white border-b-2 border-l-2 border-emerald-100 transform rotate-45" />
                  </div>
              )}
-          </motion.div>
+          </div>
         </div>
         
         {/* Background Elements */}
