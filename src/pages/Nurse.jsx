@@ -231,10 +231,9 @@ export default function NursePage() {
           <p className="text-lg font-semibold">Limite mensal atingido</p>
           <p className="text-sm mt-2">Faça upgrade para continuar usando a Enfermeira Virtual</p>
         </div>
-        </div>
-        </div>
-        );
-        }
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto space-y-4">
