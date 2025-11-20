@@ -546,9 +546,6 @@ export default function ProfilePage() {
                 <Label className={labelClass}>Especialidades</Label>
                 <Input className={inputClass} value={professionalData.specialties} onChange={e => setProfessionalData({...professionalData, specialties: e.target.value})} placeholder="Ex: Dermatologia, Cirurgia Plástica" />
               </div>
-              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#3BAE9C] hover:bg-[#2A9D8F] text-white h-12 font-bold shadow-md hover:shadow-lg transition-all rounded-xl" disabled={saveMutation.isPending}>
-                 Salvar Dados Profissionais
-              </Button>
 
               <div className="mt-8 pt-6 border-t border-slate-100">
                  <h3 className="font-bold text-[#0F172A] mb-4 flex items-center gap-2">
@@ -751,10 +748,16 @@ export default function ProfilePage() {
                        </div>
                     ))}
                  </div>
-               </div>
-              </CardContent>
-              </Card>
-              </TabsContent>
+                 </div>
+
+                 {/* Save Button at the End */}
+                 <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white h-14 font-bold shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 transition-all rounded-xl text-lg mt-8" disabled={saveMutation.isPending}>
+                 {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
+                 Salvar Alterações
+                 </Button>
+                 </CardContent>
+                 </Card>
+                 </TabsContent>
       </Tabs>
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
