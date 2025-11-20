@@ -349,6 +349,9 @@ export default function Layout({ children }) {
                     <button onClick={() => navigate(1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5" /></button>
                  </div>
                  <div className="flex gap-3">
+                    <button onClick={() => setIsHeaderVisible(false)} className="text-xs text-slate-400 hover:text-slate-600 mr-2 flex items-center" title="Ocultar menu">
+                       <div className="w-8 h-1 bg-slate-300 rounded-full" />
+                    </button>
                     <button onClick={() => navigate(-1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5 rotate-180" /></button>
                     <button onClick={() => navigate(1)} className="bg-white/80 backdrop-blur-sm shadow-sm border border-white/50 rounded-full p-2 text-[#2D3748] hover:scale-105 hover:shadow-md transition-all"><ChevronRight className="w-5 h-5" /></button>
                  </div>
@@ -377,6 +380,15 @@ export default function Layout({ children }) {
                     )}
                  </div>
               </div>
+
+              {/* Header Re-opener Handle */}
+              {!isHeaderVisible && (
+                 <div className="fixed top-0 left-1/2 -translate-x-1/2 z-40">
+                    <button onClick={() => setIsHeaderVisible(true)} className="bg-white border border-t-0 border-slate-200 rounded-b-xl px-4 py-1 shadow-sm hover:bg-slate-50 transition-all group">
+                       <div className="w-8 h-1 bg-slate-300 rounded-full group-hover:bg-[#0D9488]" />
+                    </button>
+                 </div>
+              )}
 
               {/* Header Re-opener Handle */}
               {!isHeaderVisible && (
