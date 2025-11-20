@@ -336,7 +336,7 @@ export default function Layout({ children }) {
               <img 
                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
                  alt="Beauty Center"
-                 className="h-10 w-auto"
+                 className="h-12 w-auto"
               />
            </Link>
            <div className="text-sm font-medium text-[#475569]">
@@ -398,7 +398,7 @@ export default function Layout({ children }) {
                        <img 
                           src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
                           alt="Beauty Center"
-                          className="h-10 w-auto"
+                          className="h-14 w-auto"
                        />
                        </Link>
                  )}
@@ -485,7 +485,7 @@ export default function Layout({ children }) {
                  <img 
                     src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
                     alt="Beauty Center"
-                    className="h-8 w-auto"
+                    className="h-10 w-auto"
                  />
               </Link>
               
