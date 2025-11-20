@@ -189,13 +189,13 @@ export default function Layout({ children }) {
                      <Link
                        key={item.path}
                        to={createPageUrl(item.path.replace('/', ''))}
-                       className={`flex items-center gap-3 px-3 py-2 rounded-md text-xs font-bold transition-all duration-200 group
+                       className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-bold transition-all duration-200 group
                          ${isActive 
                            ? 'bg-[#282828] text-white' 
                            : 'text-[#B3B3B3] hover:text-white hover:bg-[#121212]'
                          }`}
-                     >
-                       <item.icon className={`w-4 h-4 transition-colors ${isActive ? 'text-purple-400' : 'text-[#B3B3B3] group-hover:text-white'}`} />
+                       >
+                       <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-purple-400' : 'text-[#B3B3B3] group-hover:text-white'}`} />
                        <span>{item.label}</span>
                      </Link>
                    );
@@ -203,7 +203,7 @@ export default function Layout({ children }) {
               </nav>
            </div>
            
-           <div className="mt-auto p-6 border-t border-[#282828]">
+           <div className="mt-4 px-6 pt-4 border-t border-[#282828]">
               {user ? (
                  <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#282828] transition-colors cursor-pointer group" onClick={() => navigate(createPageUrl('Profile'))}>
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold shadow-md group-hover:scale-105 transition-transform">
