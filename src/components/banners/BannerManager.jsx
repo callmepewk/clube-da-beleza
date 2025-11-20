@@ -100,6 +100,7 @@ export default function BannerManager() {
   };
 
   return (
+    <div className="space-y-8">
     <Card className="w-full">
       <CardHeader>
         <CardTitle>Gerenciador de Anúncios</CardTitle>
@@ -289,6 +290,6 @@ export default function BannerManager() {
           </Table>
         </CardContent>
       </Card>
-    </>
+    </div>
   );
 }
