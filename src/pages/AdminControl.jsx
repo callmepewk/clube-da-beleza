@@ -3,7 +3,8 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Users, LayoutDashboard, DollarSign, Activity, Shield, Trash2, 
-  BarChart3, UserCheck, Building2, Loader2, Search, Bell, Send
+  BarChart3, UserCheck, Building2, Loader2, Search, Bell, Send,
+  User, Stethoscope
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -25,54 +26,152 @@ import { format } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 
 function NotificationSender() {
-   const [form, setForm] = useState({ title: '', message: '', link: '', image_url: '' });
+   const [form, setForm] = useState({ title: '', message: '', link: '', image_url: '', target_type: 'all' });
    const queryClient = useQueryClient();
+
+   const { data: allProfiles } = useQuery({
+      queryKey: ['allUserProfiles'],
+      queryFn: async () => {
+         const res = await base44.entities.UserProfile.list({ limit: 1000 });
+         return res.data;
+      }
+   });
 
    const sendMutation = useMutation({
       mutationFn: async () => {
-         await base44.entities.Notification.create({
-            recipient_email: 'ALL',
-            title: form.title,
-            message: form.message,
-            link: form.link,
-            image_url: form.image_url,
-            created_at: new Date().toISOString(),
-            read_by: []
-         });
+         // If target is ALL, send one broadcast notification
+         if (form.target_type === 'all') {
+            return base44.entities.Notification.create({
+               recipient_email: 'ALL',
+               title: form.title,
+               message: form.message,
+               link: form.link || '',
+               image_url: form.image_url || '',
+               created_at: new Date().toISOString(),
+               read_by: []
+            });
+         }
+         
+         // Otherwise, send individual notifications to filtered users
+         const filtered = allProfiles.filter(p => p.type === form.target_type);
+         for (const profile of filtered) {
+            await base44.entities.Notification.create({
+               recipient_email: profile.user_email,
+               title: form.title,
+               message: form.message,
+               link: form.link || '',
+               image_url: form.image_url || '',
+               created_at: new Date().toISOString(),
+               is_read: false
+            });
+         }
+         
+         return { count: filtered.length };
       },
-      onSuccess: () => {
-         alert("Notificação enviada para todos os usuários!");
-         setForm({ title: '', message: '', link: '', image_url: '' });
+      onSuccess: (result) => {
+         queryClient.invalidateQueries(['notifications']);
+         const targetLabel = form.target_type === 'all' ? 'todos os usuários' : 
+                           form.target_type === 'patient' ? 'todos os pacientes' :
+                           form.target_type === 'professional' ? 'todos os profissionais' : 'todos os patrocinadores';
+         alert(`Notificação enviada para ${targetLabel}!${result.count ? ` (${result.count} usuários)` : ''}`);
+         setForm({ title: '', message: '', link: '', image_url: '', target_type: 'all' });
       }
    });
+
+   const getTargetCount = () => {
+      if (!allProfiles) return 0;
+      if (form.target_type === 'all') return allProfiles.length;
+      return allProfiles.filter(p => p.type === form.target_type).length;
+   };
 
    return (
       <div className="space-y-4">
          <div className="space-y-2">
-            <Label>Título *</Label>
-            <Input value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="Ex: Nova atualização disponível" />
+            <Label className="font-bold">Público Alvo *</Label>
+            <Select value={form.target_type} onValueChange={(val) => setForm({...form, target_type: val})}>
+               <SelectTrigger className="bg-slate-50 border-slate-200">
+                  <SelectValue />
+               </SelectTrigger>
+               <SelectContent>
+                  <SelectItem value="all">
+                     <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4" />
+                        <span>Todos os Usuários</span>
+                     </div>
+                  </SelectItem>
+                  <SelectItem value="patient">
+                     <div className="flex items-center gap-2">
+                        <User className="w-4 h-4" />
+                        <span>Apenas Pacientes</span>
+                     </div>
+                  </SelectItem>
+                  <SelectItem value="professional">
+                     <div className="flex items-center gap-2">
+                        <Stethoscope className="w-4 h-4" />
+                        <span>Apenas Profissionais</span>
+                     </div>
+                  </SelectItem>
+                  <SelectItem value="sponsor">
+                     <div className="flex items-center gap-2">
+                        <Building2 className="w-4 h-4" />
+                        <span>Apenas Patrocinadores</span>
+                     </div>
+                  </SelectItem>
+               </SelectContent>
+            </Select>
+            <p className="text-xs text-slate-500">
+               Será enviado para: <span className="font-bold text-[#0D9488]">{getTargetCount()} usuário(s)</span>
+            </p>
          </div>
+
          <div className="space-y-2">
-            <Label>Mensagem *</Label>
-            <Textarea value={form.message} onChange={e => setForm({...form, message: e.target.value})} placeholder="O corpo da notificação..." />
+            <Label className="font-bold">Título *</Label>
+            <Input value={form.title} onChange={e => setForm({...form, title: e.target.value})} placeholder="Ex: Nova funcionalidade disponível!" className="bg-slate-50" />
          </div>
+         
+         <div className="space-y-2">
+            <Label className="font-bold">Mensagem *</Label>
+            <Textarea value={form.message} onChange={e => setForm({...form, message: e.target.value})} placeholder="Digite a mensagem..." rows={4} className="bg-slate-50" />
+         </div>
+         
          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
                <Label>Link (Opcional)</Label>
-               <Input value={form.link} onChange={e => setForm({...form, link: e.target.value})} placeholder="https://..." />
+               <Input value={form.link} onChange={e => setForm({...form, link: e.target.value})} placeholder="https://..." className="bg-slate-50" />
             </div>
             <div className="space-y-2">
                <Label>Imagem URL (Opcional)</Label>
-               <Input value={form.image_url} onChange={e => setForm({...form, image_url: e.target.value})} placeholder="https://..." />
+               <Input value={form.image_url} onChange={e => setForm({...form, image_url: e.target.value})} placeholder="https://..." className="bg-slate-50" />
             </div>
          </div>
+
+         {form.title && form.message && (
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+               <p className="text-xs text-blue-700 font-bold mb-2">PREVIEW:</p>
+               <div className="bg-white rounded-lg p-3 border border-blue-100">
+                  <p className="font-bold text-sm text-slate-800">{form.title}</p>
+                  <p className="text-xs text-slate-600 mt-1">{form.message}</p>
+                  {form.image_url && <img src={form.image_url} className="w-full h-20 object-cover rounded mt-2" alt="Preview" />}
+               </div>
+            </div>
+         )}
+
          <Button 
             onClick={() => sendMutation.mutate()} 
             disabled={!form.title || !form.message || sendMutation.isPending}
-            className="w-full bg-indigo-600 hover:bg-indigo-700"
+            className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white h-12 font-bold shadow-lg"
          >
-            {sendMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Send className="w-4 h-4 mr-2" />}
-            Enviar para Todos
+            {sendMutation.isPending ? (
+               <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Enviando...
+               </>
+            ) : (
+               <>
+                  <Send className="w-4 h-4 mr-2" />
+                  Enviar Notificação
+               </>
+            )}
          </Button>
       </div>
    );
@@ -473,8 +572,8 @@ export default function AdminControlPage() {
         <TabsContent value="notifications">
            <Card>
               <CardHeader>
-                 <CardTitle className="flex items-center gap-2"><Bell className="w-5 h-5" /> Enviar Notificação em Massa (Push)</CardTitle>
-                 <CardDescription>Envie uma mensagem para TODOS os usuários da plataforma.</CardDescription>
+                 <CardTitle className="flex items-center gap-2"><Bell className="w-5 h-5 text-[#0D9488]" /> Criar Notificação para Usuários</CardTitle>
+                 <CardDescription>Envie notificações segmentadas por tipo de usuário ou para todos.</CardDescription>
               </CardHeader>
               <CardContent className="max-w-2xl">
                  <NotificationSender />
