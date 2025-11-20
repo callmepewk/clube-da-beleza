@@ -18,7 +18,8 @@ export default function BannerManager() {
     position: 'center',
     target_audience: 'all',
     media_url: '',
-    media_type: 'image'
+    media_type: 'image',
+    active: true
   });
   const [aiPrompt, setAiPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);

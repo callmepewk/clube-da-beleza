@@ -136,10 +136,18 @@ export default function Dashboard() {
       </div>
 
       {/* Sponsor/Admin Banner Manager */}
+      {/* Showing for everyone temporarily for demo if profile type check fails, or checking properly */}
       {(user?.profile?.type === 'sponsor' || user?.profile?.is_admin) && (
          <div className="mb-8">
             <BannerManager />
          </div>
+      )}
+      
+      {/* Fallback for user who wants to see banner manager but isn't sponsor yet - helpful link */}
+      {user?.profile?.type === 'patient' && (
+        <div className="mb-4 text-right">
+           <p className="text-xs text-slate-400 italic">Quer criar anúncios? Mude para Patrocinador no seu perfil.</p>
+        </div>
       )}
 
       {/* Search Section for Everyone */}

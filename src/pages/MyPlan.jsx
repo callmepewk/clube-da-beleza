@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Crown, ShieldCheck, Star, Check, CreditCard } from 'lucide-react';
+import { Crown, ShieldCheck, Star, Check, CreditCard, ArrowLeft, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,27 +10,50 @@ import { createPageUrl } from '@/utils';
 
 export default function MyPlanPage() {
   const [userProfile, setUserProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     const load = async () => {
-       const user = await base44.auth.me();
-       if (user) {
-          const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
-          setUserProfile(res?.data?.[0]);
+       try {
+         const user = await base44.auth.me();
+         if (user) {
+            const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
+            setUserProfile(res?.data?.[0]);
+         }
+       } catch (e) {
+         console.error(e);
+       } finally {
+         setLoading(false);
        }
     };
     load();
   }, []);
 
-  if (!userProfile) return <div className="p-8">Carregando...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-8 h-8 animate-spin text-indigo-600" /></div>;
+  
+  if (!userProfile) {
+     return (
+        <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center space-y-4">
+           <h2 className="text-2xl font-bold">Perfil não encontrado</h2>
+           <p className="text-slate-500">Você precisa completar seu cadastro para ver seu plano.</p>
+           <Button onClick={() => navigate(createPageUrl('Onboarding'))} className="bg-indigo-600">Ir para Cadastro</Button>
+           <Button variant="ghost" onClick={() => navigate(createPageUrl('Dashboard'))}>Voltar ao Início</Button>
+        </div>
+     );
+  }
 
   const planName = userProfile.plan || 'free';
   const isFree = planName === 'free';
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-10 pt-6">
-      <h1 className="text-3xl font-bold text-slate-900">Meu Plano Atual</h1>
+    <div className="max-w-4xl mx-auto space-y-8 pb-10 pt-6 px-4">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={() => navigate(createPageUrl('Dashboard'))}>
+           <ArrowLeft className="w-6 h-6" />
+        </Button>
+        <h1 className="text-3xl font-bold text-slate-900">Meu Plano Atual</h1>
+      </div>
       
       <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-8 text-white shadow-xl">
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
