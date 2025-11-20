@@ -23,7 +23,7 @@ export default function ChatbotsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-white">Meus Chatbots</h1>
+      <h1 className="text-2xl font-bold text-[#0F172A]">Meus Chatbots</h1>
       
       <Tabs defaultValue="create" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-[400px]">

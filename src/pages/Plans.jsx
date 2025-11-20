@@ -69,67 +69,67 @@ export default function PlansPage() {
       )}
 
       <Tabs defaultValue="patient" className="w-full flex flex-col items-center">
-        <TabsList className="grid w-full max-w-[600px] grid-cols-3 bg-[#181818] text-slate-400">
-          <TabsTrigger value="patient" className="data-[state=active]:bg-[#282828] data-[state=active]:text-white">Pacientes</TabsTrigger>
-          <TabsTrigger value="professional" className="data-[state=active]:bg-[#282828] data-[state=active]:text-white">Profissionais</TabsTrigger>
-          <TabsTrigger value="sponsor" className="data-[state=active]:bg-[#282828] data-[state=active]:text-white">Patrocinadores</TabsTrigger>
+        <TabsList className="grid w-full max-w-[600px] grid-cols-3 bg-slate-100 text-slate-500">
+          <TabsTrigger value="patient" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm">Pacientes</TabsTrigger>
+          <TabsTrigger value="professional" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm">Profissionais</TabsTrigger>
+          <TabsTrigger value="sponsor" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm">Patrocinadores</TabsTrigger>
         </TabsList>
 
         <TabsContent value="patient" className="w-full mt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Basic */}
-            <Card className={`bg-[#181818] border-[#282828] ${planName === 'free' ? 'ring-2 ring-emerald-500' : ''}`}>
+            <Card className={`bg-white border-slate-200 shadow-sm hover:shadow-md transition-all ${planName === 'free' ? 'ring-2 ring-emerald-500' : ''}`}>
               <CardHeader>
-                <CardTitle className="text-white">Básico</CardTitle>
-                <div className="text-3xl font-bold mt-2 text-white">Grátis</div>
-                <CardDescription className="text-[#B3B3B3]">Para começar a cuidar da saúde</CardDescription>
+                <CardTitle className="text-[#0F172A]">Básico</CardTitle>
+                <div className="text-3xl font-bold mt-2 text-[#0F172A]">Grátis</div>
+                <CardDescription className="text-[#64748B]">Para começar a cuidar da saúde</CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3 text-[#B3B3B3]">
-                  {features.basic.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-green-500" /> {f}</li>)}
+                <ul className="space-y-3 text-[#64748B]">
+                  {features.basic.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> {f}</li>)}
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full border-white/20 text-white hover:bg-[#282828]" variant={planName === 'free' ? "secondary" : "outline"} disabled={planName === 'free'}>
+                <Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant={planName === 'free' ? "secondary" : "outline"} disabled={planName === 'free'}>
                   {planName === 'free' ? 'Plano Atual' : 'Escolher'}
                 </Button>
               </CardFooter>
             </Card>
 
             {/* Premium Patient */}
-            <Card className={`bg-[#181818] border-emerald-500 shadow-lg relative overflow-hidden ${planName === 'premium' ? 'ring-4 ring-emerald-300' : ''}`}>
+            <Card className={`bg-white border-emerald-500 shadow-lg relative overflow-hidden ${planName === 'premium' ? 'ring-4 ring-emerald-50' : ''}`}>
               <div className="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">POPULAR</div>
               <CardHeader>
-                <CardTitle className="text-emerald-500">Premium</CardTitle>
-                <div className="text-3xl font-bold mt-2 text-white">R$ 29,90<span className="text-sm font-normal text-[#B3B3B3]">/mês</span></div>
-                <CardDescription className="text-[#B3B3B3]">Acompanhamento completo</CardDescription>
+                <CardTitle className="text-emerald-600">Premium</CardTitle>
+                <div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 29,90<span className="text-sm font-normal text-[#64748B]">/mês</span></div>
+                <CardDescription className="text-[#64748B]">Acompanhamento completo</CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3 text-[#B3B3B3]">
-                  {features.pro.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-green-500" /> {f}</li>)}
+                <ul className="space-y-3 text-[#64748B]">
+                  {features.pro.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> {f}</li>)}
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-emerald-600 hover:bg-emerald-700" disabled={planName === 'premium'}>
+                <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" disabled={planName === 'premium'}>
                    {planName === 'premium' ? 'Plano Atual' : 'Assinar Agora'}
                 </Button>
               </CardFooter>
             </Card>
             
              {/* Family Patient */}
-             <Card className="bg-[#181818] border-[#282828]">
+             <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-all">
               <CardHeader>
-                <CardTitle className="text-white">Família</CardTitle>
-                <div className="text-3xl font-bold mt-2 text-white">R$ 79,90<span className="text-sm font-normal text-[#B3B3B3]">/mês</span></div>
-                <CardDescription className="text-[#B3B3B3]">Até 5 dependentes</CardDescription>
+                <CardTitle className="text-[#0F172A]">Família</CardTitle>
+                <div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 79,90<span className="text-sm font-normal text-[#64748B]">/mês</span></div>
+                <CardDescription className="text-[#64748B]">Até 5 dependentes</CardDescription>
               </CardHeader>
               <CardContent>
-                <ul className="space-y-3 text-[#B3B3B3]">
-                  {features.premium.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-green-500" /> {f}</li>)}
+                <ul className="space-y-3 text-[#64748B]">
+                  {features.premium.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> {f}</li>)}
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-white text-black hover:bg-gray-200">Assinar Família</Button>
+                <Button className="w-full bg-[#0F172A] text-white hover:bg-slate-800">Assinar Família</Button>
               </CardFooter>
             </Card>
           </div>
@@ -137,40 +137,40 @@ export default function PlansPage() {
 
         <TabsContent value="professional" className="w-full mt-8">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-             <Card className="bg-[#181818] border-[#282828]">
-                <CardHeader><CardTitle className="text-white">Start</CardTitle><div className="text-3xl font-bold mt-2 text-white">R$ 99,00</div></CardHeader>
-                <CardContent><p className="text-sm text-[#B3B3B3]">Agenda básica e perfil público.</p></CardContent>
-                <CardFooter><Button className="w-full border-white/20 text-white hover:bg-[#282828]" variant="outline">Escolher</Button></CardFooter>
+             <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md">
+                <CardHeader><CardTitle className="text-[#0F172A]">Start</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 99,00</div></CardHeader>
+                <CardContent><p className="text-sm text-[#64748B]">Agenda básica e perfil público.</p></CardContent>
+                <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline">Escolher</Button></CardFooter>
              </Card>
-             <Card className="bg-[#181818] border-purple-500 shadow-lg">
-                <CardHeader><CardTitle className="text-purple-500">Growth</CardTitle><div className="text-3xl font-bold mt-2 text-white">R$ 199,00</div></CardHeader>
-                <CardContent><p className="text-sm text-[#B3B3B3]">IA de atendimento, Chatbots e Sites ilimitados.</p></CardContent>
-                <CardFooter><Button className="w-full bg-purple-600 hover:bg-purple-700">Escolher</Button></CardFooter>
+             <Card className="bg-white border-purple-500 shadow-lg">
+                <CardHeader><CardTitle className="text-purple-600">Growth</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 199,00</div></CardHeader>
+                <CardContent><p className="text-sm text-[#64748B]">IA de atendimento, Chatbots e Sites ilimitados.</p></CardContent>
+                <CardFooter><Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">Escolher</Button></CardFooter>
              </Card>
-             <Card className="bg-[#181818] border-[#282828]">
-                <CardHeader><CardTitle className="text-white">Clinic</CardTitle><div className="text-3xl font-bold mt-2 text-white">R$ 499,00</div></CardHeader>
-                <CardContent><p className="text-sm text-[#B3B3B3]">Gestão multi-profissional e relatórios avançados.</p></CardContent>
-                <CardFooter><Button className="w-full border-white/20 text-white hover:bg-[#282828]" variant="outline">Escolher</Button></CardFooter>
+             <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md">
+                <CardHeader><CardTitle className="text-[#0F172A]">Clinic</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 499,00</div></CardHeader>
+                <CardContent><p className="text-sm text-[#64748B]">Gestão multi-profissional e relatórios avançados.</p></CardContent>
+                <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline">Escolher</Button></CardFooter>
              </Card>
            </div>
         </TabsContent>
 
         <TabsContent value="sponsor" className="w-full mt-8">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-             <Card className="bg-[#181818] border-amber-600/30">
-                <CardHeader><CardTitle className="text-amber-500">Partner</CardTitle><div className="text-3xl font-bold mt-2 text-white">R$ 1.000</div></CardHeader>
-                <CardContent><p className="text-sm text-[#B3B3B3]">Visibilidade em buscas locais.</p></CardContent>
+             <Card className="bg-white border-amber-200 shadow-sm hover:shadow-md">
+                <CardHeader><CardTitle className="text-amber-600">Partner</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 1.000</div></CardHeader>
+                <CardContent><p className="text-sm text-[#64748B]">Visibilidade em buscas locais.</p></CardContent>
                 <CardFooter><Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">Contatar Vendas</Button></CardFooter>
              </Card>
-             <Card className="bg-[#181818] border-amber-500 shadow-md">
-                <CardHeader><CardTitle className="text-amber-400">Gold</CardTitle><div className="text-3xl font-bold mt-2 text-white">R$ 5.000</div></CardHeader>
-                <CardContent><p className="text-sm text-[#B3B3B3]">Banners na home e destaque em categorias.</p></CardContent>
+             <Card className="bg-white border-amber-500 shadow-lg">
+                <CardHeader><CardTitle className="text-amber-600">Gold</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 5.000</div></CardHeader>
+                <CardContent><p className="text-sm text-[#64748B]">Banners na home e destaque em categorias.</p></CardContent>
                 <CardFooter><Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">Contatar Vendas</Button></CardFooter>
              </Card>
-             <Card className="bg-gradient-to-b from-[#2a2a2a] to-[#1a1a1a] border-[#333]">
+             <Card className="bg-gradient-to-b from-slate-900 to-slate-800 border-slate-800 text-white">
                 <CardHeader><CardTitle className="text-white">Diamond</CardTitle><div className="text-3xl font-bold mt-2 text-white">Sob Consulta</div></CardHeader>
-                <CardContent><p className="text-sm text-[#B3B3B3]">Parceria estratégica e dados de inteligência.</p></CardContent>
-                <CardFooter><Button className="w-full bg-white text-black hover:bg-gray-200">Agendar Reunião</Button></CardFooter>
+                <CardContent><p className="text-sm text-slate-300">Parceria estratégica e dados de inteligência.</p></CardContent>
+                <CardFooter><Button className="w-full bg-white text-black hover:bg-gray-100">Agendar Reunião</Button></CardFooter>
              </Card>
            </div>
         </TabsContent>

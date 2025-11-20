@@ -205,76 +205,76 @@ export default function Dashboard() {
     );
   }
 
-  // --- PROFESSIONAL & ADMIN VIEW (Dark Mode) ---
+  // --- PROFESSIONAL & ADMIN VIEW (Light Mode) ---
   return (
-    <div className="space-y-8 text-white">
+    <div className="space-y-8 text-[#0F172A]">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-white tracking-tight">Painel Profissional</h1>
-          <p className="text-[#B3B3B3] mt-1">Gerencie sua prática e acompanhe resultados com precisão.</p>
+          <h1 className="text-4xl font-bold text-[#0F172A] tracking-tight">Painel Profissional</h1>
+          <p className="text-[#64748B] mt-1">Gerencie sua prática e acompanhe resultados com precisão.</p>
         </div>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-[#181818] p-6 rounded-xl shadow-lg border border-[#282828] hover:bg-[#282828] transition-colors group">
+        <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition-all group">
           <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xs font-bold text-[#B3B3B3] uppercase tracking-wider">Próximas Consultas</h3>
-              <Calendar className="w-5 h-5 text-purple-500 group-hover:scale-110 transition-transform" />
+              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Próximas Consultas</h3>
+              <Calendar className="w-5 h-5 text-[#0D9488] group-hover:scale-110 transition-transform" />
           </div>
-          <p className="text-4xl font-bold text-white mt-2 flex items-center gap-2">
-            {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-purple-500" /> : stats?.appointments || 14}
+          <p className="text-4xl font-bold text-[#0F172A] mt-2 flex items-center gap-2">
+            {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-[#0D9488]" /> : stats?.appointments || 14}
           </p>
-          <p className="text-xs text-green-500 mt-2 font-medium">▲ 12% esta semana</p>
+          <p className="text-xs text-green-600 mt-2 font-medium">▲ 12% esta semana</p>
         </div>
         
-        <div className="bg-[#181818] p-6 rounded-xl shadow-lg border border-[#282828] hover:bg-[#282828] transition-colors group">
+        <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition-all group">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xs font-bold text-[#B3B3B3] uppercase tracking-wider">Pacientes Ativos</h3>
-              <Users className="w-5 h-5 text-blue-500 group-hover:scale-110 transition-transform" />
+              <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Pacientes Ativos</h3>
+              <Users className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
             </div>
-            <p className="text-4xl font-bold text-white mt-2 flex items-center gap-2">
-            {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-blue-500" /> : stats?.patients || 142}
+            <p className="text-4xl font-bold text-[#0F172A] mt-2 flex items-center gap-2">
+            {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-blue-600" /> : stats?.patients || 142}
             </p>
-            <p className="text-xs text-green-500 mt-2 font-medium">▲ 5 novos hoje</p>
+            <p className="text-xs text-green-600 mt-2 font-medium">▲ 5 novos hoje</p>
         </div>
 
-        <div className="bg-[#181818] p-6 rounded-xl shadow-lg border border-[#282828] hover:bg-[#282828] transition-colors group">
+        <div className="bg-white p-6 rounded-xl shadow-md border border-slate-200 hover:shadow-lg transition-all group">
             <div className="flex items-center justify-between mb-4">
-               <h3 className="text-xs font-bold text-[#B3B3B3] uppercase tracking-wider">Receita Estimada</h3>
-               <DollarSign className="w-5 h-5 text-emerald-500 group-hover:scale-110 transition-transform" />
+               <h3 className="text-xs font-bold text-[#64748B] uppercase tracking-wider">Receita Estimada</h3>
+               <DollarSign className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" />
             </div>
-            <p className="text-4xl font-bold text-white mt-2 flex items-center gap-2">
-              {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-emerald-500" /> : `R$ ${stats?.revenue?.toFixed(2) || '3.500,00'}`}
+            <p className="text-4xl font-bold text-[#0F172A] mt-2 flex items-center gap-2">
+              {isLoading ? <Loader2 className="w-6 h-6 animate-spin text-emerald-600" /> : `R$ ${stats?.revenue?.toFixed(2) || '3.500,00'}`}
             </p>
-             <p className="text-xs text-[#B3B3B3] mt-2">Baseado nos agendamentos</p>
+             <p className="text-xs text-[#64748B] mt-2">Baseado nos agendamentos</p>
         </div>
       </div>
 
       {/* Banner Manager Section */}
-      <div className="mb-8 bg-gradient-to-r from-[#181818] to-[#121212] p-8 rounded-xl border border-[#282828] mt-8 shadow-2xl">
+      <div className="mb-8 bg-white p-8 rounded-xl border border-slate-200 mt-8 shadow-md">
          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-purple-600 p-2 rounded-lg"><Palette className="w-5 h-5 text-white" /></div>
+            <div className="bg-indigo-50 p-2 rounded-lg"><Palette className="w-5 h-5 text-indigo-600" /></div>
             <div>
-               <h3 className="font-bold text-xl text-white">Gerenciador de Anúncios</h3>
-               <p className="text-sm text-[#B3B3B3]">Crie campanhas visuais de alto impacto.</p>
+               <h3 className="font-bold text-xl text-[#0F172A]">Gerenciador de Anúncios</h3>
+               <p className="text-sm text-[#64748B]">Crie campanhas visuais de alto impacto.</p>
             </div>
          </div>
          <BannerManager />
       </div>
 
       {/* Search Section */}
-      <div className="bg-[#181818] rounded-xl border border-[#282828] p-6">
+      <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">Busca Rápida</h2>
+          <h2 className="text-xl font-bold text-[#0F172A]">Busca Rápida</h2>
         </div>
         <div className="w-full">
           <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
             <Select value={searchCategory} onValueChange={setSearchCategory}>
-              <SelectTrigger className="w-full md:w-[200px] bg-[#282828] border-none text-white h-12">
+              <SelectTrigger className="w-full md:w-[200px] bg-slate-50 border-slate-200 text-[#0F172A] h-12">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
-              <SelectContent className="bg-[#282828] border-[#3E3E3E] text-white">
+              <SelectContent className="bg-white border-slate-200 text-[#0F172A]">
                 <SelectItem value="all">Todas as Categorias</SelectItem>
                 <SelectItem value="procedures">Procedimentos</SelectItem>
                 <SelectItem value="exams">Exames</SelectItem>
@@ -284,7 +284,7 @@ export default function Dashboard() {
             <div className="flex-1 relative">
                <Input 
                  placeholder="Pesquise por nome, CPF ou procedimento..." 
-                 className="w-full bg-[#282828] border-none text-white h-12 pl-4 rounded-lg focus:ring-2 focus:ring-white/20"
+                 className="w-full bg-slate-50 border-slate-200 text-[#0F172A] h-12 pl-4 rounded-lg focus:ring-2 focus:ring-slate-200"
                  value={searchQuery}
                  onChange={(e) => setSearchQuery(e.target.value)}
                />
