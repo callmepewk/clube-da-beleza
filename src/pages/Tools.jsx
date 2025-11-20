@@ -70,7 +70,7 @@ export default function ToolsPage() {
       url: 'https://mapa-da-estetica.base44.app',
       color: 'from-[#D4A574] to-[#C9A868]',
       badge: 'Disponível Agora',
-      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/4d503af00_image.png'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/9b6f558a9_image.png'
     },
     {
       icon: Zap,
@@ -86,7 +86,7 @@ export default function ToolsPage() {
       url: 'https://laser-code-pro.base44.app',
       color: 'from-[#B8935C] to-[#A68350]',
       badge: 'Disponível Agora',
-      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/f9fbdc650_image.png'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/4d503af00_image.png'
     },
     {
       icon: Heart,
@@ -102,7 +102,7 @@ export default function ToolsPage() {
       url: 'https://dr-spok-pd.base44.app',
       color: 'from-[#C9A868] to-[#B59758]',
       badge: 'Disponível Agora',
-      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/9b6f558a9_image.png'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/f9fbdc650_image.png'
     },
     {
       icon: Sparkles,
@@ -204,7 +204,7 @@ export default function ToolsPage() {
                 <img 
                   src={tool.image}
                   alt={tool.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain object-center bg-white"
                 />
                 <div className={`absolute inset-0 bg-gradient-to-${idx % 2 === 1 ? 'l' : 'r'} from-[#FEFBF7] to-transparent opacity-50`}></div>
                 
