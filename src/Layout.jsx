@@ -390,15 +390,6 @@ export default function Layout({ children }) {
                  </div>
               )}
 
-              {/* Header Re-opener Handle */}
-              {!isHeaderVisible && (
-                 <div className="fixed top-0 left-1/2 -translate-x-1/2 z-40">
-                    <button onClick={() => setIsHeaderVisible(true)} className="bg-white border border-t-0 border-slate-200 rounded-b-xl px-4 py-1 shadow-sm hover:bg-slate-50 transition-all group">
-                       <div className="w-8 h-1 bg-slate-300 rounded-full group-hover:bg-[#0D9488]" />
-                    </button>
-                 </div>
-              )}
-
               {/* Actual Page Children */}
               <div className="fade-in-up">
                  {children}
