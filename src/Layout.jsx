@@ -298,23 +298,27 @@ export default function Layout({ children }) {
   };
 
   // Define all available pages with requested order
-  const navItems = [
-    { icon: LayoutDashboard, label: 'Início', path: '/' },
-    { icon: Newspaper, label: 'Notícias', path: '/news' },
-    { icon: Calendar, label: 'Agendamentos', path: '/schedule' },
-    { icon: Stethoscope, label: 'Enfermeira Virtual', path: '/nurse' },
-    { icon: Bot, label: 'Chatbots', path: '/chatbots' },
-    { icon: Globe, label: 'Sites', path: '/sites' },
-    { icon: Palette, label: 'Design', path: '/design' },
-    { icon: ShoppingBag, label: 'Produtos', path: '/products' },
-    { icon: CreditCard, label: 'Planos', path: '/plans' },
-    { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
-  ];
+  const navItems = React.useMemo(() => {
+    const items = [
+      { icon: LayoutDashboard, label: 'Início', path: '/' },
+      { icon: Newspaper, label: 'Notícias', path: '/news' },
+      { icon: Calendar, label: 'Agendamentos', path: '/schedule' },
+      { icon: Stethoscope, label: 'Enfermeira Virtual', path: '/nurse' },
+      { icon: Bot, label: 'Chatbots', path: '/chatbots' },
+      { icon: Globe, label: 'Sites', path: '/sites' },
+      { icon: Palette, label: 'Design', path: '/design' },
+      { icon: ShoppingBag, label: 'Produtos', path: '/products' },
+      { icon: CreditCard, label: 'Planos', path: '/plans' },
+      { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
+    ];
 
-  // Add Controle page only for admins
-  if (profile?.is_admin) {
-    navItems.push({ icon: Shield, label: 'Controle', path: '/AdminControl' });
-  }
+    // Add Controle page only for admins
+    if (profile?.is_admin) {
+      items.push({ icon: Shield, label: 'Controle', path: '/AdminControl' });
+    }
+
+    return items;
+  }, [profile?.is_admin]);
 
 
 
