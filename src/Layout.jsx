@@ -193,7 +193,7 @@ export default function Layout({ children }) {
                       </div>
                     )}
                     
-                    {profile?.is_admin && (
+                    {(profile?.is_admin || user?.email === 'pedroowkaotaku@gmail.com' || user?.email === 'pedro_hbfreitas@hotmail.com') && (
                       <Link to={createPageUrl('AdminControl')} className="flex items-center gap-2 px-4 py-2 text-sm text-indigo-700 font-semibold hover:bg-indigo-50 bg-indigo-50/30">
                         <Activity className="w-4 h-4" /> Painel de Controle
                       </Link>
