@@ -14,6 +14,7 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [uploading, setUploading] = useState(false);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   
   // Form States
   const [personalData, setPersonalData] = useState({
@@ -85,6 +86,43 @@ export default function ProfilePage() {
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleLocationClick = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocalização não suportada pelo seu navegador.");
+      return;
+    }
+
+    setIsLoadingLocation(true);
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      try {
+        const { latitude, longitude } = position.coords;
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+        const data = await response.json();
+        
+        if (data && data.address) {
+          setAddress(prev => ({
+            ...prev,
+            street: data.address.road || prev.street,
+            neighborhood: data.address.suburb || data.address.neighbourhood || prev.neighborhood,
+            city: data.address.city || data.address.town || data.address.village || prev.city,
+            state: data.address.state || prev.state,
+            country: data.address.country || prev.country,
+            zip: data.address.postcode || prev.zip,
+            number: '' 
+          }));
+        }
+      } catch (error) {
+        console.error("Erro ao buscar endereço:", error);
+      } finally {
+        setIsLoadingLocation(false);
+      }
+    }, (error) => {
+      console.error("Erro de geolocalização:", error);
+      setIsLoadingLocation(false);
+      alert("Não foi possível obter sua localização.");
+    });
   };
 
   const saveMutation = useMutation({
@@ -230,7 +268,20 @@ export default function ProfilePage() {
               </div>
               
               <div className="border-t border-[#282828] pt-4 mt-2">
-                  <h3 className="font-medium mb-4 flex items-center gap-2 text-white"><MapPin className="w-4 h-4 text-purple-500" /> Endereço</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-medium flex items-center gap-2 text-white"><MapPin className="w-4 h-4 text-purple-500" /> Endereço</h3>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleLocationClick}
+                      disabled={isLoadingLocation}
+                      className="text-xs h-8 bg-[#282828] text-[#B3B3B3] border-[#3E3E3E] hover:bg-[#3E3E3E] hover:text-white"
+                    >
+                      {isLoadingLocation ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <MapPin className="w-3 h-3 mr-1" />}
+                      Usar minha localização
+                    </Button>
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr_1fr] gap-4 mb-4">
                      <div className="space-y-2">
                         <Label className={labelClass}>CEP</Label>
