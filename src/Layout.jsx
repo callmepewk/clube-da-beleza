@@ -24,7 +24,8 @@ import {
   Bell,
   Newspaper,
   CheckCheck,
-  Trash
+  Trash,
+  Shield
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
@@ -274,7 +275,8 @@ export default function Layout({ children }) {
   }
 
   if (profile?.is_admin) {
-     navItems.push({ icon: LayoutDashboard, label: 'Painel de Controle', path: '/admin-control' });
+     // Insert Admin Control specifically after About Us (which is last, so push is fine, but let's be explicit)
+     navItems.push({ icon: Shield, label: 'Painel de Controle', path: '/admin-control' });
   }
 
   // DermaTech Premium Theme (Vibrant, Clean & High Contrast)

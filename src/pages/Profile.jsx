@@ -7,6 +7,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon, Calendar, Mail, Activity, BarChart3, DollarSign, Zap, Layout, MessageSquare, ShoppingBag, TrendingUp } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { createPageUrl } from '@/utils';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,6 +26,8 @@ export default function ProfilePage() {
   const queryClient = useQueryClient();
   const [uploading, setUploading] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = useState(false);
+  const [isLogoutAlertOpen, setIsLogoutAlertOpen] = useState(false);
   
   // Form States
   const [personalData, setPersonalData] = useState({
@@ -264,10 +277,10 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="w-full md:w-auto">
+              <div className="flex flex-wrap gap-2 w-full md:w-auto justify-center md:justify-start">
                 <Button 
                   variant="outline" 
-                  className="w-full md:w-auto border-white/30 text-white hover:bg-white/10 hover:text-white bg-white/5 backdrop-blur-sm hover:border-white whitespace-normal h-auto py-2 px-4"
+                  className="border-white/30 text-white hover:bg-white/10 hover:text-white bg-white/5 backdrop-blur-sm hover:border-white h-auto py-2 px-4"
                   onClick={() => {
                     const type = profile?.type === 'patient' ? 'Profissional' : 'Paciente';
                     if (confirm(`Deseja solicitar a alteração da sua conta para ${type}?`)) {
@@ -281,6 +294,20 @@ export default function ProfilePage() {
                   }}
                 >
                   Mudar Tipo de Conta
+                </Button>
+                <Button 
+                  variant="ghost"
+                  className="text-white/70 hover:text-white hover:bg-white/10"
+                  onClick={() => setIsLogoutAlertOpen(true)}
+                >
+                   Sair
+                </Button>
+                <Button 
+                  variant="ghost"
+                  className="text-red-300 hover:text-red-100 hover:bg-red-500/20"
+                  onClick={() => setIsDeleteAlertOpen(true)}
+                >
+                   Excluir Conta
                 </Button>
               </div>
             </CardContent>
@@ -532,6 +559,40 @@ export default function ProfilePage() {
               </Card>
               </TabsContent>
       </Tabs>
+
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent className="bg-white border-slate-200 text-[#0F172A]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Tem certeza absoluta?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500">
+              Esta ação não pode ser desfeita. Isso excluirá permanentemente seu perfil e removerá seus dados de nossos servidores.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-0">Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700 text-white border-0">
+              Sim, excluir minha conta
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={isLogoutAlertOpen} onOpenChange={setIsLogoutAlertOpen}>
+        <AlertDialogContent className="bg-white border-slate-200 text-[#0F172A]">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Deseja sair?</AlertDialogTitle>
+            <AlertDialogDescription className="text-slate-500">
+              Você precisará fazer login novamente para acessar sua conta.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-slate-100 text-slate-700 hover:bg-slate-200 border-0">Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={handleLogout} className="bg-[#0D9488] hover:bg-[#0F766E] text-white border-0">
+              Sair
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
