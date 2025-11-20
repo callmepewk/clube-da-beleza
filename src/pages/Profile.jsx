@@ -47,11 +47,6 @@ export default function ProfilePage() {
   const [newService, setNewService] = useState({ category: 'consultation', name: '', price: '', is_free: false });
   const [aiSuggestions, setAiSuggestions] = useState([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
-  
-  // New Service Form State
-  const [newService, setNewService] = useState({ category: 'consultation', name: '', price: '', is_free: false });
-  const [aiSuggestions, setAiSuggestions] = useState([]);
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['userProfileFull'],
