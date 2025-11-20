@@ -184,7 +184,7 @@ export default function ProductsPage() {
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900">Gerenciar Produtos</h1>
+        <h1 className="text-2xl font-bold text-white">Gerenciar Produtos</h1>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button className="bg-emerald-600 hover:bg-emerald-700">

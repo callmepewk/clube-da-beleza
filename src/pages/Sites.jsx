@@ -75,7 +75,7 @@ export default function SitesPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900">Gerador de Landing Pages</h1>
+        <h1 className="text-2xl font-bold text-white">Gerador de Landing Pages</h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

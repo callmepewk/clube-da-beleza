@@ -142,8 +142,8 @@ export default function SchedulePage() {
       <div className="h-[calc(100vh-8rem)] flex flex-col space-y-6">
         <div className="flex justify-between items-start">
            <div>
-             <h1 className="text-2xl font-bold text-slate-900">Gestão de Agenda</h1>
-             <p className="text-slate-500">Configure seus horários e disponibilidades.</p>
+             <h1 className="text-2xl font-bold text-white">Gestão de Agenda</h1>
+             <p className="text-white">Configure seus horários e disponibilidades.</p>
            </div>
            <div className="bg-blue-50 p-2 rounded border border-blue-100 text-sm text-blue-800 max-w-md">
              <span className="font-bold">Local de Atendimento Atual:</span> {userProfile?.service_address?.street || 'Não definido'}
@@ -273,7 +273,7 @@ export default function SchedulePage() {
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-slate-900">Meus Agendamentos</h1>
+          <h1 className="text-2xl font-bold text-white">Meus Agendamentos</h1>
           <div className="flex items-center bg-white border rounded-lg p-1 shadow-sm">
             <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
             <span className="px-4 font-medium min-w-[140px] text-center capitalize">
