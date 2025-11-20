@@ -23,6 +23,7 @@ import {
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import BannerDisplay from '@/components/banners/BannerDisplay';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,6 +58,8 @@ export default function Layout({ children }) {
     queryFn: async () => {
       const u = await base44.auth.me();
       if (!u) return null;
+      // Case-insensitive email matching often requires manual filter on client if backend is strict
+      // but usually Base44 handles it. We'll fetch by exact match first.
       const res = await base44.entities.UserProfile.list({ query: { user_email: u.email } });
       return res?.data?.[0] || null;
     },
@@ -131,6 +134,9 @@ export default function Layout({ children }) {
           </Link>
         </div>
       )}
+
+      {/* Global Banner Display */}
+      {user && <BannerDisplay userProfile={profile} />}
 
       {/* Horizontal Header Navigation */}
       <header className="h-16 bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">

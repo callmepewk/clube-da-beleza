@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import BannerManager from "@/components/banners/BannerManager";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -133,6 +134,13 @@ export default function Dashboard() {
           </>
         )}
       </div>
+
+      {/* Sponsor/Admin Banner Manager */}
+      {(user?.profile?.type === 'sponsor' || user?.profile?.is_admin) && (
+         <div className="mb-8">
+            <BannerManager />
+         </div>
+      )}
 
       {/* Search Section for Everyone */}
       <Card>

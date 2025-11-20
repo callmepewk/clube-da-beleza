@@ -202,6 +202,19 @@ export default function OnboardingPage() {
                   <User className="w-4 h-4" /> Dados Pessoais
                 </h4>
                 
+                {/* Auth Info (Read Only) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                   <div className="space-y-2">
+                      <Label>Email (Login)</Label>
+                      <Input value={base44.auth.me()?.email || ''} disabled className="bg-white" />
+                   </div>
+                   <div className="space-y-2">
+                      <Label>Senha</Label>
+                      <Input type="password" value="********" disabled className="bg-white" />
+                      <p className="text-xs text-slate-400">Definida no cadastro inicial</p>
+                   </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label>CPF *</Label>

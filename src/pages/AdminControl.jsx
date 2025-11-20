@@ -21,6 +21,49 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { base44 } from '@/api/base44Client';
+
+function BannerAdminList() {
+  const queryClient = useQueryClient();
+  const { data: banners } = useQuery({
+    queryKey: ['adminBanners'],
+    queryFn: async () => (await base44.entities.Banner.list({ limit: 100 })).data
+  });
+
+  const deleteBannerMutation = useMutation({
+    mutationFn: (id) => base44.entities.Banner.delete(id),
+    onSuccess: () => {
+       queryClient.invalidateQueries(['adminBanners']);
+       alert("Banner excluído.");
+    }
+  });
+
+  return (
+     <Table>
+        <TableHeader><TableRow><TableHead>Título</TableHead><TableHead>Dono</TableHead><TableHead>Posição</TableHead><TableHead>Público</TableHead><TableHead>Ações</TableHead></TableRow></TableHeader>
+        <TableBody>
+           {banners?.map(b => (
+              <TableRow key={b.id}>
+                 <TableCell>
+                    <div className="flex items-center gap-2">
+                       <img src={b.media_url} className="w-8 h-8 rounded object-cover" />
+                       {b.title}
+                    </div>
+                 </TableCell>
+                 <TableCell>{b.owner_email}</TableCell>
+                 <TableCell>{b.position}</TableCell>
+                 <TableCell>{b.target_audience}</TableCell>
+                 <TableCell>
+                    <Button variant="ghost" size="icon" className="text-red-500" onClick={() => { if(confirm('Excluir anúncio?')) deleteBannerMutation.mutate(b.id); }}>
+                       <Trash2 className="w-4 h-4" />
+                    </Button>
+                 </TableCell>
+              </TableRow>
+           ))}
+        </TableBody>
+     </Table>
+  );
+}
 
 export default function AdminControlPage() {
   const [activeTab, setActiveTab] = useState('overview');
@@ -126,6 +169,7 @@ export default function AdminControlPage() {
           <TabsTrigger value="appointments">Agendamentos</TabsTrigger>
           <TabsTrigger value="nurse">Enfermeira</TabsTrigger>
           <TabsTrigger value="creations">IA & Produtos</TabsTrigger>
+          <TabsTrigger value="banners">Anúncios</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -317,6 +361,17 @@ export default function AdminControlPage() {
                  </CardContent>
               </Card>
            </div>
+        </TabsContent>
+
+        {/* Banners Tab */}
+        <TabsContent value="banners" className="space-y-6">
+            <Card>
+               <CardHeader><CardTitle>Gestão de Anúncios</CardTitle></CardHeader>
+               <CardContent>
+                  {/* Fetch banners inline for simplicity in admin view */}
+                  <BannerAdminList />
+               </CardContent>
+            </Card>
         </TabsContent>
 
         {/* Creations Tab */}
