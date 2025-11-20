@@ -24,7 +24,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, Loader2, Globe, ExternalLink } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, Loader2, Globe, ExternalLink, Navigation } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import ClubRegistration from '@/components/ClubRegistration';
 
@@ -296,6 +296,81 @@ export default function SchedulePage() {
     );
   }
 
+  // Patient Scheduling States
+  const [aiSearchQuery, setAiSearchQuery] = useState('');
+  const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const [locationInput, setLocationInput] = useState({
+    street: '', number: '', neighborhood: '', city: '', state: '', complement: ''
+  });
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+
+  const handleSearchChange = async (value) => {
+    setAiSearchQuery(value);
+    if (value.length > 2) {
+      setIsLoadingSuggestions(true);
+      try {
+        const res = await base44.integrations.Core.InvokeLLM({
+          prompt: `O usuário está buscando por: "${value}". Liste 5 tratamentos, consultas, procedimentos ou exames relacionados com a faixa de preço média em reais. Retorne JSON.`,
+          response_json_schema: {
+            type: "object",
+            properties: {
+              suggestions: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    name: { type: "string" },
+                    price_range: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        });
+        setAiSuggestions(res.suggestions || []);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoadingSuggestions(false);
+      }
+    } else {
+      setAiSuggestions([]);
+    }
+  };
+
+  const handleUseMyLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocalização não suportada.");
+      return;
+    }
+    setIsLoadingLocation(true);
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      try {
+        const { latitude, longitude } = position.coords;
+        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+        const data = await response.json();
+        if (data && data.address) {
+          setLocationInput({
+            street: data.address.road || '',
+            number: '',
+            neighborhood: data.address.suburb || data.address.neighbourhood || '',
+            city: data.address.city || data.address.town || '',
+            state: data.address.state || '',
+            complement: ''
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsLoadingLocation(false);
+      }
+    }, () => {
+      setIsLoadingLocation(false);
+      alert("Não foi possível obter sua localização.");
+    });
+  };
+
   // Render for Patient (My Appointments)
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4">
@@ -306,7 +381,7 @@ export default function SchedulePage() {
               <Sparkles className="w-4 h-4 mr-2 text-[#D4AF37]" /> Agendar com IA
             </Button>
          </DialogTrigger>
-         <DialogContent className="sm:max-w-[500px]">
+         <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Agendamento Inteligente</DialogTitle>
               <DialogDescription>Preencha os detalhes e deixe a IA encontrar o melhor profissional para você.</DialogDescription>
@@ -314,8 +389,35 @@ export default function SchedulePage() {
             <div className="space-y-4 py-4">
                <div className="space-y-2">
                   <Label>O que você precisa?</Label>
-                  <Input placeholder="Ex: Consulta Dermatologista, Botox, Exame de Sangue..." />
+                  <div className="relative">
+                    <Input 
+                      placeholder="Ex: Consulta Dermatologista, Botox, Exame de Sangue..." 
+                      value={aiSearchQuery}
+                      onChange={(e) => handleSearchChange(e.target.value)}
+                    />
+                    {isLoadingSuggestions && (
+                      <Loader2 className="absolute right-3 top-3 w-4 h-4 animate-spin text-slate-400" />
+                    )}
+                    {aiSuggestions.length > 0 && (
+                      <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 rounded-lg shadow-lg mt-1 z-50 max-h-48 overflow-y-auto">
+                        {aiSuggestions.map((sug, i) => (
+                          <div 
+                            key={i}
+                            className="p-3 hover:bg-slate-50 cursor-pointer border-b last:border-0"
+                            onClick={() => {
+                              setAiSearchQuery(sug.name);
+                              setAiSuggestions([]);
+                            }}
+                          >
+                            <div className="font-medium text-sm text-slate-900">{sug.name}</div>
+                            <div className="text-xs text-slate-500">Faixa de preço: {sug.price_range}</div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                </div>
+
                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                      <Label>Quando?</Label>
@@ -324,19 +426,74 @@ export default function SchedulePage() {
                   <div className="space-y-2">
                      <Label>Horário Preferido</Label>
                      <Select>
-                        <SelectTrigger><SelectValue placeholder="Qualquer horário" /></SelectTrigger>
+                        <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
                         <SelectContent>
-                           <SelectItem value="morning">Manhã</SelectItem>
-                           <SelectItem value="afternoon">Tarde</SelectItem>
-                           <SelectItem value="night">Noite</SelectItem>
+                           {Array.from({ length: 24 }).map((_, i) => (
+                             <SelectItem key={i} value={`${i}:00`}>
+                               {`${String(i).padStart(2, '0')}:00`}
+                             </SelectItem>
+                           ))}
                         </SelectContent>
                      </Select>
                   </div>
                </div>
+
                <div className="space-y-2">
-                  <Label>Onde?</Label>
-                  <Input placeholder="Bairro, Cidade ou Online" defaultValue={userProfile?.address?.city || ''} />
+                  <div className="flex items-center justify-between">
+                    <Label>Onde?</Label>
+                    <Button 
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleUseMyLocation}
+                      disabled={isLoadingLocation}
+                      className="text-xs"
+                    >
+                      {isLoadingLocation ? (
+                        <Loader2 className="w-3 h-3 animate-spin mr-2" />
+                      ) : (
+                        <Navigation className="w-3 h-3 mr-2" />
+                      )}
+                      Usar minha localização
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <Input 
+                      placeholder="Cidade" 
+                      value={locationInput.city}
+                      onChange={(e) => setLocationInput({...locationInput, city: e.target.value})}
+                    />
+                    <Input 
+                      placeholder="Estado" 
+                      value={locationInput.state}
+                      onChange={(e) => setLocationInput({...locationInput, state: e.target.value})}
+                    />
+                  </div>
+                  <Input 
+                    placeholder="Rua" 
+                    value={locationInput.street}
+                    onChange={(e) => setLocationInput({...locationInput, street: e.target.value})}
+                  />
+                  <div className="grid grid-cols-3 gap-3">
+                    <Input 
+                      placeholder="Número" 
+                      value={locationInput.number}
+                      onChange={(e) => setLocationInput({...locationInput, number: e.target.value})}
+                    />
+                    <Input 
+                      placeholder="Bairro" 
+                      value={locationInput.neighborhood}
+                      onChange={(e) => setLocationInput({...locationInput, neighborhood: e.target.value})}
+                      className="col-span-2"
+                    />
+                  </div>
+                  <Input 
+                    placeholder="Complemento (opcional)" 
+                    value={locationInput.complement}
+                    onChange={(e) => setLocationInput({...locationInput, complement: e.target.value})}
+                  />
                </div>
+
                <div className="space-y-2">
                   <Label>Faixa de Preço (R$)</Label>
                   <Input placeholder="Ex: até 300,00" type="number" />
