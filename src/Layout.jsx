@@ -287,7 +287,7 @@ export default function Layout({ children }) {
 
     // Add Controle page only for admins
     if (profile?.is_admin) {
-      items.push({ icon: Shield, label: 'Controle', path: '/AdminControl' });
+      items.splice(1, 0, { icon: Shield, label: 'Controle', path: '/admincontrol' });
     }
 
     return items;
@@ -453,7 +453,7 @@ export default function Layout({ children }) {
 
                   {profile?.is_admin && (
                     <button 
-                      onClick={() => navigate(createPageUrl('AdminControl'))}
+                      onClick={() => navigate(createPageUrl('admincontrol'))}
                       className={`w-full text-left px-4 py-3 hover:bg-[#FFF9F0] transition-colors flex items-center gap-3 text-sm font-light ${theme.textPrimary}`}
                     >
                       <Shield className={`w-4 h-4 ${theme.accent}`} />

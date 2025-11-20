@@ -228,6 +228,96 @@ export default function Dashboard() {
           </form>
         </div>
 
+        {/* Features Section */}
+        <div className="space-y-12 mb-16">
+          {/* Tecnologia Humanizada */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+            <div className="p-12">
+              <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+                Tecnologia Humanizada
+              </div>
+              <h3 className="text-3xl font-light text-[#2D2416] mb-4">A Rede Credenciada</h3>
+              <p className="text-[#6B5D4F] font-light leading-relaxed">
+                Clubdabeleza.com usa o melhor da transformação digital para o benefício das boas práticas na estética brasileira. O Clubdabeleza.com por essa razão tem uma plataforma digital que irá impulsionar seu consultório, clínica ou negócio sem você se distanciar de cada paciente.
+              </p>
+            </div>
+            <div className="relative h-96 lg:h-full">
+              <img 
+                src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop" 
+                alt="Tecnologia em Estética"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FEFBF7] to-transparent"></div>
+            </div>
+          </div>
+
+          {/* Compromisso */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+            <div className="relative h-96 lg:h-full order-2 lg:order-1">
+              <img 
+                src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" 
+                alt="Profissionais Premium"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-l from-[#FEFBF7] to-transparent"></div>
+            </div>
+            <div className="p-12 order-1 lg:order-2">
+              <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+                + Compromisso
+              </div>
+              <h3 className="text-3xl font-light text-[#2D2416] mb-4">O Selo PREMIUM</h3>
+              <p className="text-[#6B5D4F] font-light leading-relaxed mb-4">
+                O SELO PREMIUM do Clubdabeleza.com tem como missão destacar os especialistas quem melhor atendem. Somente especialista talentosos verificados e aplicados a submissão do SELO PREMIUM podem fazer parte.
+              </p>
+              <p className="text-[#6B5D4F] font-light leading-relaxed">
+                Aqui segurança e eficácia é básico. Solicite mais informações de como ter o SELO PREMIUM Clubdabeleza.com na sua Clínica ou consultório.
+              </p>
+            </div>
+          </div>
+
+          {/* Mais Pacientes */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+            <div className="p-12">
+              <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+                + Pacientes
+              </div>
+              <h3 className="text-3xl font-light text-[#2D2416] mb-4">Gerador de Ordem de Serviços</h3>
+              <p className="text-[#6B5D4F] font-light leading-relaxed">
+                Gostaria de ter mais pacientes? Está procurando aumentar o número de procedimentos que realiza? O SELO EXCELÊNCIA do Clubdabeleza.com oferece para seu consultório o gerador de ordem de serviços. Uma ferramenta que aproxima pacientes qualificados. Destaque seus serviços e leva até você mais pedidos.
+              </p>
+            </div>
+            <div className="relative h-96 lg:h-full">
+              <img 
+                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop" 
+                alt="Mais Pacientes"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#FEFBF7] to-transparent"></div>
+            </div>
+          </div>
+
+          {/* Fidelize */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+            <div className="relative h-96 lg:h-full order-2 lg:order-1">
+              <img 
+                src="https://images.unsplash.com/photo-1551836022-4c4c79ecde51?q=80&w=800&auto=format&fit=crop" 
+                alt="Fidelização"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-l from-[#FEFBF7] to-transparent"></div>
+            </div>
+            <div className="p-12 order-1 lg:order-2">
+              <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+                Fidelize +
+              </div>
+              <h3 className="text-3xl font-light text-[#2D2416] mb-4">O Selo Clube+</h3>
+              <p className="text-[#6B5D4F] font-light leading-relaxed">
+                Mantenha seus pacientes mais perto de você. O Selo Clube+ Clubdabeleza.com facilita em tudo o controle de seus pacientes mais fiéis e aproxima os pacientes novos em 98%.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Patient News Feed */}
         <div className="space-y-6">
            <h2 className="text-2xl font-light text-[#2D2416] flex items-center gap-4">
