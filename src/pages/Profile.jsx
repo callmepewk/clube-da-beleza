@@ -17,7 +17,7 @@ export default function ProfilePage() {
   
   // Form States
   const [personalData, setPersonalData] = useState({
-     phone: '', cpf: '', profile_picture: ''
+     full_name: '', phone: '', cpf: '', profile_picture: ''
   });
   const [address, setAddress] = useState({
     street: '', number: '', neighborhood: '', city: '', state: '', zip: '', country: ''
@@ -39,6 +39,7 @@ export default function ProfilePage() {
        if (p) {
           // Populate state
           setPersonalData({ 
+              full_name: user.full_name || '',
               phone: p.phone || '', 
               cpf: p.cpf || '', 
               profile_picture: p.profile_picture || '' 
@@ -82,6 +83,11 @@ export default function ProfilePage() {
     mutationFn: async () => {
       if (!profile?.id) return;
       
+      // Update Auth User Name
+      if (personalData.full_name) {
+         await base44.auth.updateMe({ full_name: personalData.full_name });
+      }
+
       const updateData = {
          phone: personalData.phone,
          cpf: personalData.cpf,
@@ -119,7 +125,7 @@ export default function ProfilePage() {
     <div className="max-w-3xl mx-auto space-y-6 pb-10">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-slate-900">Meu Perfil</h1>
-        <Button variant="outline" onClick={() => navigate(createPageUrl('Plans'))}>
+        <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))}>
            <CreditCard className="w-4 h-4 mr-2" /> Ver Meu Plano
         </Button>
       </div>
@@ -182,6 +188,23 @@ export default function ProfilePage() {
               <CardTitle>Informações Pessoais</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="space-y-2">
+                 <Label>Nome Completo</Label>
+                 <Input value={personalData.full_name} onChange={e => setPersonalData({...personalData, full_name: e.target.value})} />
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                 <div className="space-y-2">
+                    <Label>Email</Label>
+                    <Input value={profile?.user_email || ''} disabled className="bg-slate-100" />
+                 </div>
+                 <div className="space-y-2">
+                    <Label>Senha</Label>
+                    <Input type="password" value="********" disabled className="bg-slate-100" />
+                    <p className="text-xs text-slate-500">A senha pode ser alterada na tela de login (Esqueci minha senha).</p>
+                 </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                  <div className="space-y-2">
                     <Label>CPF</Label>

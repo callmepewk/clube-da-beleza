@@ -201,7 +201,7 @@ export default function Layout({ children }) {
                     <Link to={createPageUrl('Profile')} className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
                       <UserCircle className="w-4 h-4" /> Meu Perfil
                     </Link>
-                    <Link to={createPageUrl('Plans')} className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
+                    <Link to={createPageUrl('MyPlan')} className="flex items-center gap-2 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50">
                       <CreditCard className="w-4 h-4" /> Meu Plano
                     </Link>
                     

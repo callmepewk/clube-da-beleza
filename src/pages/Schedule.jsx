@@ -223,17 +223,53 @@ export default function SchedulePage() {
   // Render for Patient (My Appointments)
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4">
-      {!userProfile && (
-        <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-4">
-          <div className="flex">
-            <div className="ml-3">
-              <p className="text-sm text-indigo-700">
-                Você está visualizando como visitante. <a href="/onboarding" className="font-medium underline">Cadastre-se</a> para agendar consultas.
-              </p>
+      {/* AI Scheduling Modal */}
+      <Dialog>
+         <DialogTrigger asChild>
+            <Button className="w-full sm:w-auto bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-md border-0">
+              <Sparkles className="w-4 h-4 mr-2" /> Agendar com IA
+            </Button>
+         </DialogTrigger>
+         <DialogContent className="sm:max-w-[500px]">
+            <DialogHeader>
+              <DialogTitle>Agendamento Inteligente</DialogTitle>
+              <DialogDescription>Preencha os detalhes e deixe a IA encontrar o melhor profissional para você.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+               <div className="space-y-2">
+                  <Label>O que você precisa?</Label>
+                  <Input placeholder="Ex: Consulta Dermatologista, Botox, Exame de Sangue..." />
+               </div>
+               <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                     <Label>Quando?</Label>
+                     <Input type="date" />
+                  </div>
+                  <div className="space-y-2">
+                     <Label>Horário Preferido</Label>
+                     <Select>
+                        <SelectTrigger><SelectValue placeholder="Qualquer horário" /></SelectTrigger>
+                        <SelectContent>
+                           <SelectItem value="morning">Manhã</SelectItem>
+                           <SelectItem value="afternoon">Tarde</SelectItem>
+                           <SelectItem value="night">Noite</SelectItem>
+                        </SelectContent>
+                     </Select>
+                  </div>
+               </div>
+               <div className="space-y-2">
+                  <Label>Onde?</Label>
+                  <Input placeholder="Bairro, Cidade ou Online" defaultValue={userProfile?.address?.city || ''} />
+               </div>
+               <div className="space-y-2">
+                  <Label>Faixa de Preço (R$)</Label>
+                  <Input placeholder="Ex: até 300,00" type="number" />
+               </div>
+               <Button className="w-full bg-indigo-600">Buscar & Agendar</Button>
             </div>
-          </div>
-        </div>
-      )}
+         </DialogContent>
+      </Dialog>
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold text-slate-900">Meus Agendamentos</h1>
@@ -245,8 +281,7 @@ export default function SchedulePage() {
             <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
           </div>
         </div>
-        {/* Patient specific: Maybe a button to "Find a Doctor" instead of creating raw appointment */}
-      </div>
+        </div>
 
       <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4 overflow-x-auto">
         <div className="grid grid-cols-7 gap-4 min-w-[800px] h-full">

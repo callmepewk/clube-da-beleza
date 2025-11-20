@@ -9,6 +9,7 @@ import Profile from './pages/Profile';
 import Plans from './pages/Plans';
 import Onboarding from './pages/Onboarding';
 import AdminControl from './pages/AdminControl';
+import MyPlan from './pages/MyPlan';
 import __Layout from './Layout.jsx';
 
 
@@ -24,6 +25,7 @@ export const PAGES = {
     "Plans": Plans,
     "Onboarding": Onboarding,
     "AdminControl": AdminControl,
+    "MyPlan": MyPlan,
 }
 
 export const pagesConfig = {
