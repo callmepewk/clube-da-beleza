@@ -686,12 +686,11 @@ export default function ProductsPage() {
                  </div>
               )}
            </DialogContent>
-        </Dialog>
-      </div>
-    </div>
+           </Dialog>
+           </div>
 
-      {/* Product Viewer Modal */}
-      <Dialog open={!!viewingProduct} onOpenChange={(o) => !o && setViewingProduct(null)}>
+           {/* Product Viewer Modal */}
+           <Dialog open={!!viewingProduct} onOpenChange={(o) => !o && setViewingProduct(null)}>
          <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
                <DialogTitle className="flex items-center gap-2">
