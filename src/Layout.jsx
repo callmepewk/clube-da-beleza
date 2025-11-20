@@ -120,17 +120,17 @@ export default function Layout({ children }) {
      navItems.push({ icon: LayoutDashboard, label: 'Painel de Controle', path: '/admin-control' });
   }
 
-  // Aesthetic Medicine Premium Theme (Refined & Elegant)
+  // DermaTech Premium Theme (Vibrant, Clean & High Contrast)
   const theme = {
-    bg: "bg-[#F8FAFC]", // Very soft blue-gray (cleaner than ice gray)
+    bg: "bg-[#FAFAFA]", // Neutral crisp white/gray
     sidebar: "bg-[#FFFFFF]", // Pure white
-    card: "bg-[#FFFFFF] shadow-sm hover:shadow-md transition-all duration-300",
-    hover: "hover:bg-[#F0FDF4]", // Very subtle green tint
-    textPrimary: "text-[#1E293B]", // Deep Slate (Softer than black, very professional)
-    textSecondary: "text-[#64748B]", // Slate 500 (Readable gray)
-    accent: "text-[#059669]", // Emerald 600 (More authoritative medical green)
-    accentBg: "bg-[#10B981]", // Emerald 500 (Vibrant but safe)
-    border: "border-[#E2E8F0]" // Slate 200
+    card: "bg-[#FFFFFF] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] transition-all duration-300",
+    hover: "hover:bg-[#F0FDFA]", // Teal tint
+    textPrimary: "text-[#0F172A]", // Slate 900 (Sharper contrast)
+    textSecondary: "text-[#475569]", // Slate 600 (Readable but softer)
+    accent: "text-[#0D9488]", // Teal 600 (Modern Clinical)
+    accentBg: "bg-[#0D9488]",
+    border: "border-[#E5E7EB]" // Gray 200
   };
 
   // Onboarding Layout
@@ -139,12 +139,12 @@ export default function Layout({ children }) {
       <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#2D3748]`}>
         <header className={`h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 lg:px-8 sticky top-0 z-50 bg-white/90 backdrop-blur-sm supports-[backdrop-filter]:bg-white/60`}>
            <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2 transition-opacity hover:opacity-80">
-              <div className="bg-gradient-to-tr from-[#059669] to-[#34D399] p-1.5 rounded-lg shadow-md shadow-emerald-200">
+              <div className="bg-gradient-to-tr from-[#0F766E] to-[#2DD4BF] p-1.5 rounded-xl shadow-lg shadow-teal-200/50">
                   <Activity className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-xl tracking-tight text-[#1E293B]">HealthAI</span>
+              <span className="font-bold text-xl tracking-tight text-[#0F172A]">HealthAI</span>
            </Link>
-           <div className="text-sm font-medium text-[#64748B]">
+           <div className="text-sm font-medium text-[#475569]">
              Finalizando Cadastro
            </div>
         </header>
@@ -161,14 +161,14 @@ export default function Layout({ children }) {
       {/* Global Banner - Registration Reminder */}
       {/* Shows ONLY if user is logged in but profile is incomplete */}
       {user && !isLoading && !isProfileComplete && location.pathname !== '/onboarding' && (
-        <div className="bg-gradient-to-r from-[#059669] to-[#047857] text-white px-4 py-3 text-sm flex flex-col sm:flex-row items-center justify-center gap-3 shadow-md relative z-50">
+        <div className="bg-gradient-to-r from-[#0F766E] to-[#0D9488] text-white px-4 py-3 text-sm flex flex-col sm:flex-row items-center justify-center gap-3 shadow-lg relative z-50">
           <div className="flex items-center gap-2">
             <span className="bg-white/20 p-1.5 rounded-full animate-pulse"><UserCircle className="w-4 h-4" /></span>
             <span className="font-medium tracking-wide">Complete seu perfil para desbloquear o potencial máximo da HealthAI.</span>
           </div>
           <Link 
             to={createPageUrl('Onboarding')}
-            className="bg-white text-[#047857] px-5 py-1.5 rounded-full text-xs font-bold hover:bg-emerald-50 transition-all shadow-sm transform hover:scale-105 active:scale-95"
+            className="bg-white text-[#0F766E] px-6 py-2 rounded-full text-xs font-bold hover:bg-teal-50 transition-all shadow-md transform hover:scale-105 active:scale-95"
           >
             Terminar Cadastro
           </Link>
@@ -183,27 +183,27 @@ export default function Layout({ children }) {
         <aside className={`hidden lg:flex w-[240px] flex-col ${theme.sidebar} border-r ${theme.border} sticky top-0 h-screen z-20`}>
            <div className="p-6 pb-0">
               <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80 mb-8">
-                 <div className="bg-gradient-to-br from-[#059669] to-[#34D399] p-2 rounded-xl shadow-lg shadow-emerald-100">
+                 <div className="bg-gradient-to-br from-[#0F766E] to-[#2DD4BF] p-2.5 rounded-2xl shadow-lg shadow-teal-900/10">
                     <Activity className="w-6 h-6 text-white" />
                  </div>
-                 <span className="font-bold text-xl tracking-tight text-[#1E293B]">HealthAI</span>
+                 <span className="font-bold text-xl tracking-tight text-[#0F172A]">HealthAI</span>
               </Link>
 
-              <nav className="space-y-1.5">
+              <nav className="space-y-1">
                  {navItems.map((item) => {
                    const isActive = location.pathname === item.path;
                    return (
                      <Link
                        key={item.path}
                        to={createPageUrl(item.path.replace('/', ''))}
-                       className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-300 group relative overflow-hidden
+                       className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all duration-200 group relative
                          ${isActive 
-                           ? 'bg-[#ECFDF5] text-[#059669] shadow-sm' 
-                           : 'text-[#64748B] hover:text-[#059669] hover:bg-[#F8FAFC]'
+                           ? 'bg-[#F0FDFA] text-[#0D9488] shadow-sm' 
+                           : 'text-[#64748B] hover:text-[#0D9488] hover:bg-[#FAFAFA]'
                          }`}
                      >
-                       {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 bg-[#059669] rounded-full"></div>}
-                       <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-[#059669]' : 'text-[#94A3B8] group-hover:text-[#059669]'}`} />
+                       {isActive && <div className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-[#0D9488] rounded-r-full"></div>}
+                       <item.icon className={`w-5 h-5 transition-colors ${isActive ? 'text-[#0D9488]' : 'text-[#94A3B8] group-hover:text-[#0D9488]'}`} />
                        <span>{item.label}</span>
                      </Link>
                    );
@@ -211,16 +211,16 @@ export default function Layout({ children }) {
               </nav>
            </div>
            
-           <div className="mt-auto p-6 border-t border-[#E2E8F0]">
+           <div className="mt-auto p-6 border-t border-[#F1F5F9]">
               {user ? (
-                 <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#F8FAFC] transition-all cursor-pointer group border border-transparent hover:border-[#E2E8F0]" onClick={() => navigate(createPageUrl('Profile'))}>
+                 <div className="flex items-center gap-3 p-3 rounded-2xl hover:bg-[#F0FDFA] transition-all cursor-pointer group border border-transparent hover:border-[#CCFBF1]" onClick={() => navigate(createPageUrl('Profile'))}>
                     <div 
-                      className="w-10 h-10 rounded-full bg-gradient-to-br from-[#A78BFA] to-[#34D399] flex items-center justify-center text-white font-bold shadow-md ring-2 ring-white"
+                      className="w-11 h-11 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg ring-4 ring-white"
                     >
                        {user.full_name?.[0]?.toUpperCase() || 'U'}
                     </div>
                     <div className="flex-1 min-w-0">
-                       <p className="text-sm font-bold text-[#1E293B] truncate group-hover:text-[#059669] transition-colors">{user.full_name}</p>
+                       <p className="text-sm font-bold text-[#0F172A] truncate group-hover:text-[#0D9488] transition-colors">{user.full_name}</p>
                        <p className="text-xs text-[#64748B] truncate font-medium">Ver Perfil</p>
                     </div>
                  </div>
@@ -228,14 +228,14 @@ export default function Layout({ children }) {
                  <div className="space-y-3">
                     <Button 
                       onClick={() => navigate(createPageUrl('Onboarding'))}
-                      className="w-full bg-[#059669] hover:bg-[#047857] text-white font-bold rounded-xl shadow-lg shadow-emerald-100 transition-all hover:scale-[1.02]"
+                      className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl shadow-lg shadow-teal-500/20 transition-all hover:scale-[1.02]"
                     >
                       Criar Conta
                     </Button>
                     <Button 
                       onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
                       variant="ghost"
-                      className="w-full text-[#64748B] hover:text-[#059669] hover:bg-emerald-50/50 h-9 text-xs font-semibold"
+                      className="w-full text-[#64748B] hover:text-[#0D9488] hover:bg-[#F0FDFA] h-9 text-xs font-semibold"
                     >
                       Já tenho conta
                     </Button>

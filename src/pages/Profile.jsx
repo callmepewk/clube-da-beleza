@@ -170,56 +170,56 @@ export default function ProfilePage() {
 
   if (isLoading) return <div className="p-8 flex justify-center"><Loader2 className="animate-spin text-purple-500" /></div>;
 
-  // Refined Elegant Theme Classes
-  const cardClass = "bg-white border border-slate-100 text-[#1E293B] hover:shadow-lg transition-all hover:-translate-y-0.5 duration-300 shadow-sm rounded-2xl";
-  const inputClass = "bg-[#F8FAFC] border border-slate-200 text-[#1E293B] focus:ring-2 focus:ring-[#059669]/20 focus:border-[#059669] h-12 rounded-xl placeholder:text-[#94A3B8] transition-all hover:bg-[#F1F5F9]";
-  const labelClass = "text-[#475569] text-sm font-bold mb-1.5 block";
+  // DermaTech Vibrant Theme Classes
+  const cardClass = "bg-white border border-slate-100 text-[#0F172A] hover:shadow-xl transition-all hover:-translate-y-1 duration-300 shadow-[0_2px_8px_rgba(0,0,0,0.04)] rounded-[1.5rem]";
+  const inputClass = "bg-[#F8FAFC] border border-slate-200 text-[#0F172A] focus:ring-2 focus:ring-[#0D9488]/20 focus:border-[#0D9488] h-14 rounded-xl placeholder:text-[#94A3B8] transition-all hover:bg-white hover:border-slate-300";
+  const labelClass = "text-[#334155] text-sm font-bold mb-2 block";
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-10">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-[#1E293B]">Meu Perfil</h1>
-            <p className="text-[#64748B]">Gerencie suas informações e preferências.</p>
+            <h1 className="text-3xl font-extrabold text-[#0F172A] tracking-tight">Meu Perfil</h1>
+            <p className="text-[#64748B] font-medium">Gerencie suas informações e preferências.</p>
           </div>
-          <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))} className="border-slate-200 bg-white text-[#1E293B] hover:bg-[#F8FAFC] hover:text-[#059669] shadow-sm rounded-xl">
-             <CreditCard className="w-4 h-4 mr-2 text-[#059669]" /> Ver Meu Plano
+          <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))} className="border-slate-200 bg-white text-[#0F172A] hover:bg-[#F0FDFA] hover:text-[#0D9488] shadow-sm rounded-xl font-bold">
+             <CreditCard className="w-4 h-4 mr-2 text-[#0D9488]" /> Ver Meu Plano
           </Button>
         </div>
 
         <Tabs defaultValue="personal" className="w-full">
           <TabsList className="w-full bg-[#F1F5F9] border border-slate-200 p-1.5 rounded-2xl">
-            <TabsTrigger value="personal" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#059669] data-[state=active]:shadow-sm text-[#64748B] font-semibold transition-all">Dados Pessoais</TabsTrigger>
-            {profile?.type === 'patient' && <TabsTrigger value="medical" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#059669] data-[state=active]:shadow-sm text-[#64748B] font-semibold transition-all">Ficha Médica</TabsTrigger>}
-            {profile?.type === 'professional' && <TabsTrigger value="professional" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#059669] data-[state=active]:shadow-sm text-[#64748B] font-semibold transition-all">Profissional</TabsTrigger>}
+            <TabsTrigger value="personal" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Dados Pessoais</TabsTrigger>
+            {profile?.type === 'patient' && <TabsTrigger value="medical" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Ficha Médica</TabsTrigger>}
+            {profile?.type === 'professional' && <TabsTrigger value="professional" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Profissional</TabsTrigger>}
           </TabsList>
 
           {/* Profile Header Card */}
-          <Card className="mb-6 mt-6 border-0 bg-gradient-to-r from-[#059669] to-[#34D399] shadow-lg text-white rounded-2xl overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-            <CardContent className="flex flex-col md:flex-row items-center gap-6 p-8 relative z-10">
+          <Card className="mb-8 mt-8 border-0 bg-gradient-to-br from-[#0F766E] to-[#14B8A6] shadow-2xl shadow-teal-900/20 text-white rounded-[2rem] overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+            <CardContent className="flex flex-col md:flex-row items-center gap-8 p-10 relative z-10">
               <div className="relative group">
-                 <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 shadow-lg overflow-hidden flex items-center justify-center">
+                 <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 shadow-xl overflow-hidden flex items-center justify-center">
                     {personalData.profile_picture ? (
                        <img src={personalData.profile_picture} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
-                       <UserIcon className="w-12 h-12 text-white" />
+                       <UserIcon className="w-14 h-14 text-white" />
                     )}
                  </div>
-                 <label className="absolute bottom-1 right-1 bg-white text-[#059669] p-2 rounded-full cursor-pointer hover:bg-[#F0FDF4] shadow-md transition-all hover:scale-110">
-                    <Upload className="w-4 h-4" />
+                 <label className="absolute bottom-1 right-1 bg-white text-[#0D9488] p-3 rounded-full cursor-pointer hover:bg-[#CCFBF1] shadow-lg transition-all hover:scale-110 hover:rotate-3">
+                    <Upload className="w-5 h-5" />
                     <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} disabled={uploading} />
                  </label>
               </div>
 
-              <div className="flex-1 text-center md:text-left space-y-2">
-                <h2 className="text-2xl font-bold text-white tracking-tight">{personalData.full_name || profile?.user_email}</h2>
-                <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                   <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm flex items-center gap-2">
-                      <div className="w-2 h-2 bg-emerald-200 rounded-full animate-pulse"></div>
+              <div className="flex-1 text-center md:text-left space-y-3">
+                <h2 className="text-3xl font-black text-white tracking-tight">{personalData.full_name || profile?.user_email}</h2>
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
+                   <span className="bg-white/20 px-4 py-1.5 rounded-full text-sm font-bold backdrop-blur-md flex items-center gap-2 shadow-inner border border-white/10">
+                      <div className="w-2.5 h-2.5 bg-[#34D399] rounded-full animate-pulse shadow-[0_0_8px_#34D399]"></div>
                       {profile?.type === 'professional' ? 'Profissional Certificado' : 'Paciente Premium'}
                    </span>
-                   <span className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium backdrop-blur-sm">Plano: {profile?.plan || 'Free'}</span>
+                   <span className="bg-white/20 px-4 py-1.5 rounded-full text-sm font-bold backdrop-blur-md shadow-inner border border-white/10">Plano: {profile?.plan || 'Free'}</span>
                 </div>
               </div>
 
@@ -245,27 +245,27 @@ export default function ProfilePage() {
 
         <TabsContent value="personal">
           <Card className={cardClass}>
-            <CardHeader className="border-b border-slate-100 pb-4">
-              <CardTitle className="text-[#1E293B] flex items-center gap-3">
-                 <div className="bg-[#ECFDF5] p-2 rounded-xl"><UserIcon className="w-5 h-5 text-[#059669]" /></div>
+            <CardHeader className="border-b border-slate-100 pb-6 pt-6 px-8">
+              <CardTitle className="text-[#0F172A] flex items-center gap-4 text-xl">
+                 <div className="bg-[#F0FDFA] p-3 rounded-2xl"><UserIcon className="w-6 h-6 text-[#0D9488]" /></div>
                  Informações Pessoais
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-6 pt-6">
+            <CardContent className="space-y-8 pt-8 px-8 pb-8">
               <div className="space-y-2">
                  <Label className={labelClass}>Nome Completo</Label>
                  <Input className={inputClass} value={personalData.full_name} onChange={e => setPersonalData({...personalData, full_name: e.target.value})} />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <div className="space-y-2">
                     <Label className={labelClass}>Email</Label>
-                    <Input value={profile?.user_email || ''} disabled className={`${inputClass} bg-slate-50 text-slate-400 cursor-not-allowed`} />
+                    <Input value={profile?.user_email || ''} disabled className={`${inputClass} bg-[#F1F5F9] text-[#94A3B8] cursor-not-allowed border-slate-100`} />
                  </div>
                  <div className="space-y-2">
                     <Label className={labelClass}>Senha</Label>
-                    <Input type="password" value="********" disabled className={`${inputClass} bg-slate-50 text-slate-400 cursor-not-allowed`} />
-                    <p className="text-xs text-slate-400">A senha pode ser alterada na tela de login.</p>
+                    <Input type="password" value="********" disabled className={`${inputClass} bg-[#F1F5F9] text-[#94A3B8] cursor-not-allowed border-slate-100`} />
+                    <p className="text-xs text-[#94A3B8] font-medium">A senha pode ser alterada na tela de login.</p>
                  </div>
               </div>
 
@@ -280,10 +280,10 @@ export default function ProfilePage() {
                  </div>
               </div>
 
-              <div className="border-t border-slate-100 pt-6 mt-2">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold flex items-center gap-3 text-[#1E293B]">
-                       <div className="bg-[#ECFDF5] p-2 rounded-xl"><MapPin className="w-4 h-4 text-[#059669]" /></div> 
+              <div className="border-t border-slate-100 pt-8 mt-2">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-bold flex items-center gap-3 text-[#0F172A] text-lg">
+                       <div className="bg-[#F0FDFA] p-3 rounded-2xl"><MapPin className="w-5 h-5 text-[#0D9488]" /></div> 
                        Endereço
                     </h3>
                     <Button 
@@ -292,9 +292,9 @@ export default function ProfilePage() {
                       size="sm" 
                       onClick={handleLocationClick}
                       disabled={isLoadingLocation}
-                      className="text-xs h-8 bg-white text-[#059669] border-[#059669] hover:bg-[#ECFDF5]"
+                      className="text-xs h-10 px-4 bg-white text-[#0D9488] border-[#0D9488] hover:bg-[#F0FDFA] font-bold rounded-lg"
                     >
-                      {isLoadingLocation ? <Loader2 className="w-3 h-3 animate-spin mr-1" /> : <MapPin className="w-3 h-3 mr-1" />}
+                      {isLoadingLocation ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <MapPin className="w-4 h-4 mr-2" />}
                       Usar minha localização
                     </Button>
                   </div>
@@ -332,8 +332,8 @@ export default function ProfilePage() {
                   </div>
               </div>
 
-              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#059669] hover:bg-[#047857] text-white h-12 font-bold shadow-md hover:shadow-lg transition-all rounded-xl" disabled={saveMutation.isPending}>
-                 {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
+              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white h-14 font-bold shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 transition-all rounded-xl text-lg mt-4" disabled={saveMutation.isPending}>
+                 {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
                  Salvar Alterações
               </Button>
             </CardContent>
