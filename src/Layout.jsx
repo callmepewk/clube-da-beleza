@@ -47,6 +47,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import ClubRegistration from '@/components/ClubRegistration';
+import Footer from '@/components/Footer';
 
 export default function Layout({ children }) {
   const [user, setUser] = useState(null);
@@ -540,10 +541,11 @@ export default function Layout({ children }) {
         </header>
 
         {/* Scrollable Page Content */}
-        <main id="main-content" className={`flex-1 overflow-y-auto ${theme.bg} p-4 lg:p-12`}>
-          <div className="max-w-7xl mx-auto">
+        <main id="main-content" className={`flex-1 overflow-y-auto ${theme.bg}`}>
+          <div className="p-4 lg:p-12 max-w-7xl mx-auto">
             {children}
           </div>
+          <Footer />
         </main>
       </div>
 

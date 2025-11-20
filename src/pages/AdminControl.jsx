@@ -361,61 +361,80 @@ export default function AdminControlPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-10">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-2">
-          <Shield className="w-8 h-8 text-indigo-600" /> Painel de Controle
-        </h1>
+        <div>
+          <h1 className="text-3xl font-light text-[#2D2416] flex items-center gap-3">
+            <Shield className="w-8 h-8 text-[#D4A574]" /> Painel de Controle
+          </h1>
+          <p className="text-[#6B5D4F] mt-1 font-light">Gestão completa da plataforma</p>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => window.print()}>
+          <Button variant="outline" onClick={() => window.print()} className="border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0] font-light">
              <BarChart3 className="w-4 h-4 mr-2" /> Gerar Relatório PDF
           </Button>
         </div>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 h-auto gap-2">
-          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="users">Usuários</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          <TabsTrigger value="tools">Ferramentas</TabsTrigger>
-          <TabsTrigger value="seo">SEO & Tráfego</TabsTrigger>
-          <TabsTrigger value="banners">Anúncios</TabsTrigger>
-          <TabsTrigger value="notifications">Notificações</TabsTrigger>
+        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 h-auto gap-2 bg-[#FEFBF7] border border-[#D4A574]/20 p-2">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Visão Geral</TabsTrigger>
+          <TabsTrigger value="users" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Usuários</TabsTrigger>
+          <TabsTrigger value="analytics" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Analytics</TabsTrigger>
+          <TabsTrigger value="tools" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Ferramentas</TabsTrigger>
+          <TabsTrigger value="seo" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">SEO & Tráfego</TabsTrigger>
+          <TabsTrigger value="banners" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Anúncios</TabsTrigger>
+          <TabsTrigger value="notifications" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Notificações</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Total de Usuários</CardTitle></CardHeader>
-              <CardContent><div className="text-2xl font-bold">{allUsers?.length || 0}</div></CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <Card className="bg-[#FEFBF7] border-[#D4A574]/20 shadow-sm">
+              <CardHeader className="pb-2"><CardTitle className="text-xs font-light text-[#6B5D4F] uppercase tracking-wider">Total de Usuários</CardTitle></CardHeader>
+              <CardContent><div className="text-3xl font-light text-[#2D2416]">{allUsers?.length || 0}</div></CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Agendamentos</CardTitle></CardHeader>
-              <CardContent><div className="text-2xl font-bold">{analytics?.appointments?.length || 0}</div></CardContent>
+            <Card className="bg-[#FEFBF7] border-[#D4A574]/20 shadow-sm">
+              <CardHeader className="pb-2"><CardTitle className="text-xs font-light text-[#6B5D4F] uppercase tracking-wider">Agendamentos</CardTitle></CardHeader>
+              <CardContent><div className="text-3xl font-light text-[#2D2416]">{analytics?.appointments?.length || 0}</div></CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Interações IA</CardTitle></CardHeader>
-              <CardContent><div className="text-2xl font-bold">{analytics?.nurse?.length || 0}</div></CardContent>
+            <Card className="bg-[#FEFBF7] border-[#D4A574]/20 shadow-sm">
+              <CardHeader className="pb-2"><CardTitle className="text-xs font-light text-[#6B5D4F] uppercase tracking-wider">Interações IA</CardTitle></CardHeader>
+              <CardContent><div className="text-3xl font-light text-[#2D2416]">{analytics?.nurse?.length || 0}</div></CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Faturamento Total (Est.)</CardTitle></CardHeader>
-              <CardContent><div className="text-2xl font-bold text-emerald-600">R$ {(analytics?.appointments?.length || 0) * 250},00</div></CardContent>
+            <Card className="bg-[#FEFBF7] border-[#D4A574]/20 shadow-sm">
+              <CardHeader className="pb-2"><CardTitle className="text-xs font-light text-[#6B5D4F] uppercase tracking-wider">Faturamento Total (Est.)</CardTitle></CardHeader>
+              <CardContent><div className="text-3xl font-light text-[#C9A868]">R$ {(analytics?.appointments?.length || 0) * 250},00</div></CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Preço Médio Produtos</CardTitle></CardHeader>
+            <Card className="bg-[#FEFBF7] border-[#D4A574]/20 shadow-sm">
+              <CardHeader className="pb-2"><CardTitle className="text-xs font-light text-[#6B5D4F] uppercase tracking-wider">Preço Médio Produtos</CardTitle></CardHeader>
               <CardContent>
-                 <div className="text-2xl font-bold text-blue-600">
+                 <div className="text-3xl font-light text-[#B8935C]">
                     R$ {analytics?.avgProductPrice?.toFixed(2) || '0.00'}
                  </div>
               </CardContent>
             </Card>
-            <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Valuation Médio</CardTitle></CardHeader>
+            <Card className="bg-[#FEFBF7] border-[#D4A574]/20 shadow-sm">
+              <CardHeader className="pb-2"><CardTitle className="text-xs font-light text-[#6B5D4F] uppercase tracking-wider">Valuation Médio</CardTitle></CardHeader>
               <CardContent>
-                 <div className="text-2xl font-bold text-purple-600">
+                 <div className="text-3xl font-light text-[#D4A574]">
                     R$ {analytics?.avgValuation?.toFixed(2) || '0.00'}
+                 </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-[#FEFBF7] border-[#D4A574]/20 shadow-sm">
+              <CardHeader className="pb-2"><CardTitle className="text-xs font-light text-[#6B5D4F] uppercase tracking-wider flex items-center gap-2"><Eye className="w-4 h-4" /> Total de Visualizações</CardTitle></CardHeader>
+              <CardContent>
+                 <div className="text-3xl font-light text-[#2D2416]">
+                    {analytics?.banners?.reduce((acc, b) => acc + (b.views || 0), 0) || 0}
+                 </div>
+              </CardContent>
+            </Card>
+            <Card className="bg-[#FEFBF7] border-[#D4A574]/20 shadow-sm">
+              <CardHeader className="pb-2"><CardTitle className="text-xs font-light text-[#6B5D4F] uppercase tracking-wider flex items-center gap-2"><MousePointer className="w-4 h-4" /> Total de Cliques</CardTitle></CardHeader>
+              <CardContent>
+                 <div className="text-3xl font-light text-[#2D2416]">
+                    {analytics?.banners?.reduce((acc, b) => acc + (b.clicks || 0), 0) || 0}
                  </div>
               </CardContent>
             </Card>
