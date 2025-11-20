@@ -56,39 +56,11 @@ export default function Layout({ children }) {
   
   // Layout States
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [clubDialogOpen, setClubDialogOpen] = useState(false);
 
 
 
-  // Sticky/Hideable Header Logic
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 100) {
-        setIsHeaderVisible(false); // Hide on scroll down
-      } else {
-        setIsHeaderVisible(true); // Show on scroll up
-      }
-      setLastScrollY(currentScrollY);
-    };
-    // Attaching to the main element if it's the scroller, or window if body is scroller
-    // In this layout, `main` has overflow-y-auto, so we attach to it.
-    const mainElement = document.getElementById('main-content');
-    if (mainElement) {
-       mainElement.addEventListener('scroll', () => {
-          const currentScrollY = mainElement.scrollTop;
-          if (currentScrollY > lastScrollY && currentScrollY > 50) {
-             setIsHeaderVisible(false);
-          } else {
-             setIsHeaderVisible(true);
-          }
-          setLastScrollY(currentScrollY);
-       });
-    }
-    return () => mainElement?.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -322,32 +294,28 @@ export default function Layout({ children }) {
 
 
 
-  // DermaTech Premium Theme (Vibrant, Clean & High Contrast)
+  // Clube da Beleza Luxury Theme (Gold & Nude)
   const theme = {
-    bg: "bg-[#FAFAFA]", // Neutral crisp white/gray
-    sidebar: "bg-[#FFFFFF]", // Pure white
-    card: "bg-[#FFFFFF] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_25px_-5px_rgba(0,0,0,0.1),0_10px_10px_-5px_rgba(0,0,0,0.04)] transition-all duration-300",
-    hover: "hover:bg-[#F0FDFA]", // Teal tint
-    textPrimary: "text-[#0F172A]", // Slate 900 (Sharper contrast)
-    textSecondary: "text-[#475569]", // Slate 600 (Readable but softer)
-    accent: "text-[#0D9488]", // Teal 600 (Modern Clinical)
-    accentBg: "bg-[#0D9488]",
-    border: "border-[#E5E7EB]" // Gray 200
+    bg: "bg-[#F5F1E8]", // Nude/beige background
+    sidebar: "bg-[#FEFBF7]", // Lighter nude for sidebar
+    card: "bg-[#FEFBF7] shadow-[0_2px_15px_-3px_rgba(212,165,116,0.15)] hover:shadow-[0_8px_25px_-5px_rgba(212,165,116,0.25)] transition-all duration-300 border border-[#D4A574]/20",
+    hover: "hover:bg-[#FFF9F0]", // Light gold tint
+    textPrimary: "text-[#2D2416]", // Dark brown/black
+    textSecondary: "text-[#6B5D4F]", // Muted brown
+    accent: "text-[#D4A574]", // Gold
+    accentBg: "bg-[#D4A574]",
+    border: "border-[#E8DCC8]" // Soft beige border
   };
 
   // Onboarding Layout
   if (location.pathname === '/onboarding') {
     return (
-      <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#2D3748]`}>
-        <header className={`h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 lg:px-8 sticky top-0 z-50 bg-white/90 backdrop-blur-sm supports-[backdrop-filter]:bg-white/60`}>
-           <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2 transition-opacity hover:opacity-80">
-              <img 
-                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
-                 alt="Beauty Center"
-                 className="h-12 w-auto"
-              />
+      <div className={`min-h-screen ${theme.bg} flex flex-col font-serif ${theme.textPrimary}`}>
+        <header className={`h-20 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 lg:px-8 sticky top-0 z-50 backdrop-blur-sm`}>
+           <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80">
+              <div className="text-2xl font-light tracking-wider ${theme.textPrimary}">CLUBE DA BELEZA</div>
            </Link>
-           <div className="text-sm font-medium text-[#475569]">
+           <div className="text-sm font-light ${theme.textSecondary} tracking-wide">
              Finalizando Cadastro
            </div>
         </header>
@@ -359,36 +327,36 @@ export default function Layout({ children }) {
   }
 
   return (
-    <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#0F172A]`}>
+    <div className={`min-h-screen ${theme.bg} flex font-serif ${theme.textPrimary}`}>
 
       {/* Club Registration Modal */}
       <ClubRegistration open={clubDialogOpen} onOpenChange={setClubDialogOpen} />
 
       {/* Profile Completion Modal */}
       <AlertDialog open={showProfileModal} onOpenChange={setShowProfileModal}>
-        <AlertDialogContent className="bg-white border-0 rounded-[2rem] text-[#0F172A] shadow-2xl max-w-lg">
+        <AlertDialogContent className={`${theme.sidebar} border ${theme.border} rounded-3xl ${theme.textPrimary} shadow-2xl max-w-lg`}>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-2xl font-bold text-center text-[#0F766E]">Complete seu Perfil</AlertDialogTitle>
-            <AlertDialogDescription className="text-center text-[#64748B] text-base">
-               Para aproveitar todas as ferramentas exclusivas do <span className="font-bold text-[#0F172A]">Beauty Center</span>, precisamos de algumas informações adicionais. É rapidinho!
+            <AlertDialogTitle className={`text-2xl font-light text-center ${theme.accent} tracking-wide`}>Complete seu Perfil</AlertDialogTitle>
+            <AlertDialogDescription className={`text-center ${theme.textSecondary} text-base font-light`}>
+               Para aproveitar todas as ferramentas exclusivas do <span className={`font-medium ${theme.textPrimary}`}>Clube da Beleza</span>, precisamos de algumas informações adicionais. É rapidinho!
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex justify-center py-4">
-             <div className="bg-[#F0FDFA] p-4 rounded-full">
-                <UserCircle className="w-12 h-12 text-[#0D9488]" />
+             <div className="bg-[#FFF9F0] p-4 rounded-full border border-[#D4A574]/30">
+                <UserCircle className={`w-12 h-12 ${theme.accent}`} />
              </div>
           </div>
           <AlertDialogFooter className="flex-col gap-2 sm:gap-0">
             <Button 
                onClick={() => navigate(createPageUrl('Onboarding'))} 
-               className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold h-12 rounded-xl shadow-lg shadow-teal-900/20"
+               className={`w-full ${theme.accentBg} hover:bg-[#C49565] text-white font-light h-12 rounded-2xl shadow-lg tracking-wide`}
             >
                Completar Agora
             </Button>
             <Button 
                variant="ghost" 
                onClick={() => setShowProfileModal(false)}
-               className="w-full text-[#64748B] hover:text-[#0F172A]"
+               className={`w-full ${theme.textSecondary} hover:${theme.textPrimary} font-light`}
             >
                Fazer isso depois
             </Button>
@@ -399,236 +367,197 @@ export default function Layout({ children }) {
       {/* Global Banner Display (Ads) */}
       {user && <BannerDisplay userProfile={profile} />}
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Horizontal Navigation Header (Desktop) */}
-        <header className="hidden lg:block bg-white border-b border-slate-100 sticky top-0 z-50 shadow-sm">
-           <div className="max-w-[1600px] mx-auto px-6">
-              <div className="flex items-center justify-between h-28">
-                 {/* Logo */}
-                 <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80">
-                    <img 
-                       src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
-                       alt="Beauty Center"
-                       className="h-16 w-auto"
-                    />
-                 </Link>
+      {/* Left Sidebar Navigation (Desktop) */}
+      <aside className={`hidden lg:flex flex-col ${theme.sidebar} border-r ${theme.border} w-72 fixed left-0 top-0 bottom-0 z-50`}>
+        {/* Logo */}
+        <Link to={createPageUrl('Dashboard')} className="p-8 border-b border-[#D4A574]/20">
+          <div className={`text-2xl font-light tracking-[0.2em] ${theme.textPrimary} text-center`}>
+            CLUBE DA<br/>BELEZA
+          </div>
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D4A574] to-transparent mt-4"></div>
+        </Link>
 
-                 {/* Navigation Items */}
-                 <nav className="flex items-center gap-1">
-                    {navItems.map((item) => {
-                      const isActive = location.pathname === item.path;
-                      return (
-                        <Link
-                          key={item.path}
-                          to={createPageUrl(item.path.replace('/', ''))}
-                          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all duration-200
-                            ${isActive 
-                              ? 'bg-[#F0FDFA] text-[#0D9488]' 
-                              : 'text-[#64748B] hover:text-[#0D9488] hover:bg-[#FAFAFA]'
-                            }`}
-                        >
-                          <item.icon className={`w-4 h-4 ${isActive ? 'text-[#0D9488]' : 'text-[#94A3B8]'}`} />
-                          <span>{item.label}</span>
-                        </Link>
-                      );
-                    })}
-                 </nav>
+        {/* Navigation */}
+        <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <Link
+                key={item.path}
+                to={createPageUrl(item.path.replace('/', ''))}
+                className={`flex items-center gap-4 px-4 py-4 rounded-xl font-light text-sm tracking-wide transition-all duration-300
+                  ${isActive 
+                    ? `${theme.accentBg} text-white shadow-lg` 
+                    : `${theme.textSecondary} ${theme.hover} hover:${theme.accent}`
+                  }`}
+              >
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : theme.accent}`} />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
 
-                 {/* Right Side Actions */}
-                 <div className="flex items-center gap-4">
-                    {user ? (
-                       <Popover>
-                          <PopoverTrigger asChild>
-                             <div className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#F0FDFA] transition-all cursor-pointer border border-transparent hover:border-[#CCFBF1]">
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg">
-                                   {user.full_name?.[0]?.toUpperCase() || 'U'}
-                                </div>
-                                <div className="text-left">
-                                   <p className="text-sm font-bold text-[#0F172A] leading-tight">{user.full_name?.split(' ')[0]}</p>
-                                   <p className="text-xs text-[#64748B]">
-                                      {profile?.plan ? profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1) : 'Free'}
-                                   </p>
-                                </div>
-                             </div>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-64 p-0" align="end">
-                             <div className="p-4 border-b bg-gradient-to-br from-[#F0FDFA] to-white">
-                                <div className="flex items-center gap-3 mb-2">
-                                   <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#14B8A6] to-[#0F766E] flex items-center justify-center text-white font-bold shadow-lg">
-                                      {user.full_name?.[0]?.toUpperCase() || 'U'}
-                                   </div>
-                                   <div>
-                                      <p className="font-bold text-[#0F172A]">{user.full_name}</p>
-                                      <p className="text-xs text-[#64748B]">{user.email}</p>
-                                   </div>
-                                </div>
-                             </div>
+        {/* User Profile Section */}
+        {user ? (
+          <div className="p-6 border-t border-[#D4A574]/20">
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-[#FFF9F0] transition-all">
+                  <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-[#D4A574] to-[#B8935C] flex items-center justify-center text-white font-light shadow-lg`}>
+                    {user.full_name?.[0]?.toUpperCase() || 'U'}
+                  </div>
+                  <div className="text-left flex-1">
+                    <p className={`text-sm font-medium ${theme.textPrimary}`}>{user.full_name?.split(' ')[0]}</p>
+                    <p className={`text-xs ${theme.textSecondary} font-light`}>
+                      {profile?.plan ? profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1) : 'Free'}
+                    </p>
+                  </div>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className={`w-64 p-0 ${theme.sidebar} border ${theme.border}`} align="end" side="top">
+                <div className="p-4 border-b border-[#D4A574]/20">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className={`w-12 h-12 rounded-full bg-gradient-to-br from-[#D4A574] to-[#B8935C] flex items-center justify-center text-white font-light shadow-lg`}>
+                      {user.full_name?.[0]?.toUpperCase() || 'U'}
+                    </div>
+                    <div>
+                      <p className={`font-medium ${theme.textPrimary}`}>{user.full_name}</p>
+                      <p className={`text-xs ${theme.textSecondary} font-light`}>{user.email}</p>
+                    </div>
+                  </div>
+                </div>
 
-                             <div className="py-2">
-                                <button 
-                                   onClick={() => navigate(createPageUrl('Profile'))}
-                                   className="w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-center gap-3 text-sm font-medium text-[#0F172A]"
-                                >
-                                   <UserCircle className="w-4 h-4 text-[#64748B]" />
-                                   Meu Perfil
-                                </button>
+                <div className="py-2">
+                  <button 
+                    onClick={() => navigate(createPageUrl('Profile'))}
+                    className={`w-full text-left px-4 py-3 hover:bg-[#FFF9F0] transition-colors flex items-center gap-3 text-sm font-light ${theme.textPrimary}`}
+                  >
+                    <UserCircle className={`w-4 h-4 ${theme.accent}`} />
+                    Meu Perfil
+                  </button>
 
-                                <button 
-                                   onClick={() => navigate(createPageUrl('Plans'))}
-                                   className="w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-center gap-3 text-sm font-medium text-[#0F172A]"
-                                >
-                                   <CreditCard className="w-4 h-4 text-[#64748B]" />
-                                   <div className="flex-1 flex items-center justify-between">
-                                      <span>Plano Atual</span>
-                                      <span className="text-xs font-bold text-[#0D9488] uppercase">
-                                         {profile?.plan || 'Free'}
-                                      </span>
-                                   </div>
-                                </button>
+                  <button 
+                    onClick={() => navigate(createPageUrl('Plans'))}
+                    className={`w-full text-left px-4 py-3 hover:bg-[#FFF9F0] transition-colors flex items-center gap-3 text-sm font-light ${theme.textPrimary}`}
+                  >
+                    <CreditCard className={`w-4 h-4 ${theme.accent}`} />
+                    <div className="flex-1 flex items-center justify-between">
+                      <span>Plano Atual</span>
+                      <span className={`text-xs font-medium ${theme.accent} uppercase`}>
+                        {profile?.plan || 'Free'}
+                      </span>
+                    </div>
+                  </button>
 
-                                {profile?.is_admin && (
-                                   <button 
-                                      onClick={() => navigate(createPageUrl('AdminControl'))}
-                                      className="w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-center gap-3 text-sm font-medium text-[#0F172A]"
-                                   >
-                                      <Shield className="w-4 h-4 text-[#64748B]" />
-                                      Controle
-                                   </button>
-                                )}
-                             </div>
+                  {profile?.is_admin && (
+                    <button 
+                      onClick={() => navigate(createPageUrl('AdminControl'))}
+                      className={`w-full text-left px-4 py-3 hover:bg-[#FFF9F0] transition-colors flex items-center gap-3 text-sm font-light ${theme.textPrimary}`}
+                    >
+                      <Shield className={`w-4 h-4 ${theme.accent}`} />
+                      Controle
+                    </button>
+                  )}
+                </div>
 
-                             <div className="border-t py-2">
-                                <button 
-                                   onClick={handleLogout}
-                                   className="w-full text-left px-4 py-3 hover:bg-red-50 transition-colors flex items-center gap-3 text-sm font-medium text-red-600"
-                                >
-                                   <LogOut className="w-4 h-4" />
-                                   Sair da Conta
-                                </button>
-                             </div>
-                          </PopoverContent>
-                       </Popover>
-                    ) : (
-                       <div className="flex gap-2">
-                          <Button 
-                            onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
-                            variant="ghost"
-                            className="text-[#64748B] hover:text-[#0D9488] hover:bg-[#F0FDFA] font-bold"
-                          >
-                            Login
-                          </Button>
-                          <Button 
-                            onClick={() => navigate(createPageUrl('Onboarding'))}
-                            className="bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl shadow-lg"
-                          >
-                            Criar Conta
-                          </Button>
-                       </div>
-                    )}
-                 </div>
+                <div className="border-t border-[#D4A574]/20 py-2">
+                  <button 
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-3 hover:bg-red-50 transition-colors flex items-center gap-3 text-sm font-light text-red-600"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sair da Conta
+                  </button>
+                </div>
+              </PopoverContent>
+            </Popover>
+          </div>
+        ) : (
+          <div className="p-6 border-t border-[#D4A574]/20 space-y-2">
+            <Button 
+              onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
+              variant="outline"
+              className={`w-full border ${theme.border} ${theme.textSecondary} hover:${theme.accentBg} hover:text-white font-light rounded-2xl`}
+            >
+              Login
+            </Button>
+            <Button 
+              onClick={() => navigate(createPageUrl('Onboarding'))}
+              className={`w-full ${theme.accentBg} hover:bg-[#C49565] text-white font-light rounded-2xl shadow-lg`}
+            >
+              Criar Conta
+            </Button>
+          </div>
+        )}
+      </aside>
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col lg:ml-72">
+        {/* Mobile Header */}
+        <header className={`lg:hidden h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 sticky top-0 z-40`}>
+          <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
+            <div className={`text-lg font-light tracking-wider ${theme.textPrimary}`}>CLUBE DA BELEZA</div>
+          </Link>
+          
+          <Sheet>
+            <SheetTrigger asChild>
+              <button className={`p-2 ${theme.textPrimary} hover:bg-[#FFF9F0] rounded-full`}>
+                <Menu className="w-6 h-6" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="right" className={`${theme.sidebar} border-l ${theme.border} ${theme.textPrimary} w-[300px]`}>
+              <div className="flex flex-col h-full pt-6">
+                <nav className="space-y-2 flex-1">
+                  {navItems.map((item) => {
+                    const isActive = location.pathname === item.path;
+                    return (
+                      <Link
+                        key={item.path}
+                        to={createPageUrl(item.path.replace('/', ''))}
+                        className={`flex items-center gap-4 px-4 py-3 rounded-xl font-light transition-colors
+                          ${isActive ? `${theme.accentBg} text-white` : `${theme.textSecondary} hover:bg-[#FFF9F0]`}`}
+                      >
+                        <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : theme.accent}`} />
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </nav>
+                {user && (
+                  <div className="pt-6 border-t border-[#D4A574]/20 space-y-2">
+                    <Button variant="ghost" className={`w-full justify-start ${theme.textSecondary} hover:bg-[#FFF9F0] font-light`} onClick={() => navigate(createPageUrl('Profile'))}>
+                      <UserCircle className="w-5 h-5 mr-2" /> Perfil
+                    </Button>
+                    <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 font-light" onClick={handleLogout}>
+                      <LogOut className="w-5 h-5 mr-2" /> Sair
+                    </Button>
+                  </div>
+                )}
               </div>
-           </div>
+            </SheetContent>
+          </Sheet>
         </header>
 
-        {/* Main Content Area */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-           {/* Mobile Header */}
-           <header className={`lg:hidden h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 sticky top-0 z-40`}>
-              <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
-                 <img 
-                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/83b5034e1_beautycenter.png" 
-                    alt="Beauty Center"
-                    className="h-10 w-auto"
-                 />
-              </Link>
-              
-              <Sheet>
-                 <SheetTrigger asChild>
-                   <button className="p-2 text-[#1E293B] hover:bg-slate-100 rounded-full">
-                     <Menu className="w-6 h-6" />
-                   </button>
-                 </SheetTrigger>
-                 <SheetContent side="right" className={`${theme.sidebar} border-l ${theme.border} text-[#1E293B] w-[300px]`}>
-                    <div className="flex flex-col h-full pt-6">
-                       <nav className="space-y-2 flex-1">
-                          {navItems.map((item) => {
-                            const isActive = location.pathname === item.path;
-                            return (
-                              <Link
-                                key={item.path}
-                                to={createPageUrl(item.path.replace('/', ''))}
-                                className={`flex items-center gap-4 px-4 py-3 rounded-xl font-semibold transition-colors
-                                  ${isActive ? 'bg-[#ECFDF5] text-[#059669]' : 'text-[#64748B] hover:text-[#059669] hover:bg-slate-50'}`}
-                              >
-                                <item.icon className={`w-5 h-5 ${isActive ? 'text-[#059669]' : ''}`} />
-                                {item.label}
-                              </Link>
-                            );
-                          })}
-                       </nav>
-                       {user && (
-                          <div className="pt-6 border-t border-slate-100 space-y-2">
-                             <Button variant="ghost" className="w-full justify-start text-[#64748B] hover:text-[#059669] hover:bg-slate-50" onClick={() => navigate(createPageUrl('Profile'))}>
-                                <UserCircle className="w-5 h-5 mr-2" /> Perfil
-                             </Button>
-                             <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50" onClick={handleLogout}>
-                                <LogOut className="w-5 h-5 mr-2" /> Sair
-                             </Button>
-                          </div>
-                       )}
-                    </div>
-                 </SheetContent>
-              </Sheet>
-           </header>
-
-           {/* Scrollable Page Content */}
-           <main id="main-content" className={`flex-1 overflow-y-auto bg-[#F8FAFC] p-4 lg:p-8 relative`}>
-              {/* Top Bar (Desktop) */}
-              <div className={`hidden lg:flex items-center justify-between mb-8 sticky top-0 z-30 bg-[#F8FAFC]/90 backdrop-blur-sm py-2 transition-transform duration-300 ${isHeaderVisible ? 'translate-y-0' : '-translate-y-full absolute top-[-100px]'}`}>
-                 <div className="flex gap-3">
-                    <button onClick={() => setIsHeaderVisible(false)} className="text-xs text-slate-400 hover:text-slate-600 mr-2" title="Ocultar menu">
-                       <div className="w-8 h-1 bg-slate-300 rounded-full" />
-                    </button>
-                 </div>
-
-                 <div className="flex items-center gap-4">
-                    {profile?.is_admin && (
-                       <Link to={createPageUrl('AdminControl')} className="text-xs font-bold bg-gradient-to-r from-[#2D3748] to-[#1A202C] text-white px-6 py-3 rounded-2xl hover:scale-105 transition-transform shadow-lg flex items-center gap-2">
-                          <Shield className="w-4 h-4" />
-                          Painel Admin
-                       </Link>
-                    )}
-                 </div>
-              </div>
-
-              {/* Header Re-opener Handle */}
-              {!isHeaderVisible && (
-                 <div className="fixed top-0 left-1/2 -translate-x-1/2 z-40">
-                    <button onClick={() => setIsHeaderVisible(true)} className="bg-white border border-t-0 border-slate-200 rounded-b-xl px-4 py-1 shadow-sm hover:bg-slate-50 transition-all group">
-                       <div className="w-8 h-1 bg-slate-300 rounded-full group-hover:bg-[#0D9488]" />
-                    </button>
-                 </div>
-              )}
-
-              {/* Actual Page Children */}
-              <div className="fade-in-up">
-                 {children}
-              </div>
-           </main>
-        </div>
+        {/* Scrollable Page Content */}
+        <main id="main-content" className={`flex-1 overflow-y-auto ${theme.bg} p-4 lg:p-12`}>
+          <div className="max-w-7xl mx-auto">
+            {children}
+          </div>
+        </main>
       </div>
 
       {/* Delete Account Alert */}
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
-        <AlertDialogContent className="bg-[#282828] border-[#181818] text-white">
+        <AlertDialogContent className={`${theme.sidebar} border ${theme.border} ${theme.textPrimary} rounded-3xl`}>
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-white">Tem certeza absoluta?</AlertDialogTitle>
-            <AlertDialogDescription className="text-[#B3B3B3]">
+            <AlertDialogTitle className={theme.textPrimary}>Tem certeza absoluta?</AlertDialogTitle>
+            <AlertDialogDescription className={theme.textSecondary}>
               Esta ação não pode ser desfeita. Isso excluirá permanentemente seu perfil e removerá seus dados de nossos servidores.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="bg-[#3E3E3E] text-white border-transparent hover:bg-[#505050]">Cancelar</AlertDialogCancel>
+            <AlertDialogCancel className={`${theme.border} ${theme.textSecondary} hover:bg-[#FFF9F0]`}>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700 text-white border-0">
               Sim, excluir minha conta
             </AlertDialogAction>
