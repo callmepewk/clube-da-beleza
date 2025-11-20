@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Stethoscope, CheckCircle2, MapPin, Loader2, ScrollText, Building2, LogIn } from 'lucide-react';
+import { User, Stethoscope, CheckCircle2, MapPin, Loader2, ScrollText, Building2, LogIn, ArrowLeft } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 
@@ -227,6 +227,12 @@ export default function OnboardingPage() {
       {step === 2 && (
         <Card className="animate-in fade-in slide-in-from-right-8 border-t-4 border-t-emerald-500 shadow-lg">
           <CardHeader>
+            <div className="flex items-center gap-2 mb-2">
+               <Button variant="ghost" size="icon" onClick={() => setStep(1)} className="h-8 w-8 -ml-2">
+                  <ArrowLeft className="w-4 h-4" />
+               </Button>
+               <span className="text-sm text-slate-500">Voltar para seleção</span>
+            </div>
             <CardTitle>Cadastro de {role === 'patient' ? 'Paciente' : 'Profissional'}</CardTitle>
             <CardDescription>
                {user 
