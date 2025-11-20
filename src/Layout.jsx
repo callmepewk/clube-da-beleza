@@ -594,22 +594,6 @@ export default function Layout({ children }) {
                           Painel Admin
                        </Link>
                     )}
-                    <NotificationsPopover user={user} />
-                    {user && (
-                       <div className="relative group">
-                          <div 
-                            onClick={() => navigate(createPageUrl('Profile'))}
-                            className="w-9 h-9 rounded-full bg-gradient-to-br from-[#CDB7FF] to-[#3BAE9C] flex items-center justify-center text-white font-bold cursor-pointer shadow-sm ring-2 ring-white group-hover:ring-[#8EE2C8] transition-all"
-                          >
-                             {user.full_name?.[0]?.toUpperCase()}
-                          </div>
-                          <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-[#E2E8F0] py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 transform origin-top-right">
-                             <button onClick={handleLogout} className="w-full text-left px-4 py-2 text-sm text-[#2D3748] hover:bg-[#F4F7F7] font-medium flex items-center gap-2">
-                                <LogOut className="w-4 h-4 text-red-400" /> Sair da conta
-                             </button>
-                          </div>
-                       </div>
-                    )}
                  </div>
               </div>
 
