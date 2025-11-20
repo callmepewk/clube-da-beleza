@@ -457,40 +457,126 @@ export default function Dashboard() {
   // --- SPONSOR VIEW ---
   if (isSponsor) {
     return (
-      <div className="space-y-8">
+      <div className="space-y-8 pb-10">
          <div className="flex items-center justify-between">
             <div>
-               <h1 className="text-3xl font-bold text-slate-900">Painel do Patrocinador</h1>
-               <p className="text-slate-500">Gerencie suas campanhas e acompanhe o desempenho.</p>
+               <h1 className="text-3xl font-light text-[#2D2416]">Painel do Patrocinador</h1>
+               <p className="text-[#6B5D4F] font-light">Gerencie suas campanhas e acompanhe o desempenho.</p>
             </div>
-            <Button className="bg-indigo-600 hover:bg-indigo-700"><BarChart2 className="mr-2 w-4 h-4" /> Relatório Completo</Button>
+            <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white font-light"><BarChart2 className="mr-2 w-4 h-4" /> Relatório Completo</Button>
          </div>
 
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-white shadow-sm border-slate-200">
+            <Card className="bg-[#FEFBF7] shadow-sm border-[#D4A574]/20">
                <CardContent className="p-6">
-                  <p className="text-sm text-slate-500 font-medium uppercase">Visualizações Totais</p>
-                  <p className="text-3xl font-bold text-indigo-600 mt-2">12,450</p>
-                  <p className="text-xs text-green-600 mt-1 flex items-center gap-1">▲ 12% este mês</p>
+                  <p className="text-sm text-[#6B5D4F] font-light uppercase">Visualizações Totais</p>
+                  <p className="text-3xl font-light text-[#2D2416] mt-2">12,450</p>
+                  <p className="text-xs text-[#C9A868] mt-1 flex items-center gap-1">▲ 12% este mês</p>
                </CardContent>
             </Card>
-            <Card className="bg-white shadow-sm border-slate-200">
+            <Card className="bg-[#FEFBF7] shadow-sm border-[#D4A574]/20">
                <CardContent className="p-6">
-                  <p className="text-sm text-slate-500 font-medium uppercase">Cliques Totais</p>
-                  <p className="text-3xl font-bold text-indigo-600 mt-2">843</p>
-                  <p className="text-xs text-green-600 mt-1 flex items-center gap-1">▲ 5% este mês</p>
+                  <p className="text-sm text-[#6B5D4F] font-light uppercase">Cliques Totais</p>
+                  <p className="text-3xl font-light text-[#2D2416] mt-2">843</p>
+                  <p className="text-xs text-[#C9A868] mt-1 flex items-center gap-1">▲ 5% este mês</p>
                </CardContent>
             </Card>
-            <Card className="bg-white shadow-sm border-slate-200">
+            <Card className="bg-[#FEFBF7] shadow-sm border-[#D4A574]/20">
                <CardContent className="p-6">
-                  <p className="text-sm text-slate-500 font-medium uppercase">Banners Ativos</p>
-                  <p className="text-3xl font-bold text-emerald-600 mt-2">3</p>
-                  <p className="text-xs text-slate-400 mt-1">De 5 permitidos no plano</p>
+                  <p className="text-sm text-[#6B5D4F] font-light uppercase">Banners Ativos</p>
+                  <p className="text-3xl font-light text-[#2D2416] mt-2">3</p>
+                  <p className="text-xs text-[#B8935C] mt-1">De 5 permitidos no plano</p>
                </CardContent>
             </Card>
          </div>
 
          <BannerManager />
+
+         {/* Features Section - Same for all users */}
+         <div className="space-y-12 mt-16">
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+             <div className="p-12">
+               <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+                 Tecnologia Humanizada
+               </div>
+               <h3 className="text-3xl font-light text-[#2D2416] mb-4">A Rede Credenciada</h3>
+               <p className="text-[#6B5D4F] font-light leading-relaxed">
+                 Clubdabeleza.com usa o melhor da transformação digital para o benefício das boas práticas na estética brasileira. O Clubdabeleza.com por essa razão tem uma plataforma digital que irá impulsionar seu consultório, clínica ou negócio sem você se distanciar de cada paciente.
+               </p>
+             </div>
+             <div className="relative h-96 lg:h-full">
+               <img 
+                 src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop" 
+                 alt="Tecnologia em Estética"
+                 className="w-full h-full object-cover"
+               />
+               <div className="absolute inset-0 bg-gradient-to-r from-[#FEFBF7] to-transparent"></div>
+             </div>
+           </div>
+
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+             <div className="relative h-96 lg:h-full order-2 lg:order-1">
+               <img 
+                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" 
+                 alt="Profissionais Premium"
+                 className="w-full h-full object-cover"
+               />
+               <div className="absolute inset-0 bg-gradient-to-l from-[#FEFBF7] to-transparent"></div>
+             </div>
+             <div className="p-12 order-1 lg:order-2">
+               <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+                 + Compromisso
+               </div>
+               <h3 className="text-3xl font-light text-[#2D2416] mb-4">O Selo PREMIUM</h3>
+               <p className="text-[#6B5D4F] font-light leading-relaxed mb-4">
+                 O SELO PREMIUM do Clubdabeleza.com tem como missão destacar os especialistas quem melhor atendem. Somente especialista talentosos verificados e aplicados a submissão do SELO PREMIUM podem fazer parte.
+               </p>
+               <p className="text-[#6B5D4F] font-light leading-relaxed">
+                 Aqui segurança e eficácia é básico. Solicite mais informações de como ter o SELO PREMIUM Clubdabeleza.com na sua Clínica ou consultório.
+               </p>
+             </div>
+           </div>
+
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+             <div className="p-12">
+               <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+                 + Pacientes
+               </div>
+               <h3 className="text-3xl font-light text-[#2D2416] mb-4">Gerador de Ordem de Serviços</h3>
+               <p className="text-[#6B5D4F] font-light leading-relaxed">
+                 Gostaria de ter mais pacientes? Está procurando aumentar o número de procedimentos que realiza? O SELO EXCELÊNCIA do Clubdabeleza.com oferece para seu consultório o gerador de ordem de serviços. Uma ferramenta que aproxima pacientes qualificados. Destaque seus serviços e leva até você mais pedidos.
+               </p>
+             </div>
+             <div className="relative h-96 lg:h-full">
+               <img 
+                 src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop" 
+                 alt="Mais Pacientes"
+                 className="w-full h-full object-cover"
+               />
+               <div className="absolute inset-0 bg-gradient-to-r from-[#FEFBF7] to-transparent"></div>
+             </div>
+           </div>
+
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+             <div className="relative h-96 lg:h-full order-2 lg:order-1">
+               <img 
+                 src="https://images.unsplash.com/photo-1551836022-4c4c79ecde51?q=80&w=800&auto=format&fit=crop" 
+                 alt="Fidelização"
+                 className="w-full h-full object-cover"
+               />
+               <div className="absolute inset-0 bg-gradient-to-l from-[#FEFBF7] to-transparent"></div>
+             </div>
+             <div className="p-12 order-1 lg:order-2">
+               <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+                 Fidelize +
+               </div>
+               <h3 className="text-3xl font-light text-[#2D2416] mb-4">O Selo Clube+</h3>
+               <p className="text-[#6B5D4F] font-light leading-relaxed">
+                 Mantenha seus pacientes mais perto de você. O Selo Clube+ Clubdabeleza.com facilita em tudo o controle de seus pacientes mais fiéis e aproxima os pacientes novos em 98%.
+               </p>
+             </div>
+           </div>
+         </div>
       </div>
     );
   }
