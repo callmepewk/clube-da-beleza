@@ -46,6 +46,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import ClubRegistration from '@/components/ClubRegistration';
 
 export default function Layout({ children }) {
   const [user, setUser] = useState(null);
@@ -57,6 +58,7 @@ export default function Layout({ children }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [clubDialogOpen, setClubDialogOpen] = useState(false);
 
 
 
@@ -352,7 +354,10 @@ export default function Layout({ children }) {
 
   return (
     <div className={`min-h-screen ${theme.bg} flex flex-col font-sans text-[#0F172A]`}>
-      
+
+      {/* Club Registration Modal */}
+      <ClubRegistration open={clubDialogOpen} onOpenChange={setClubDialogOpen} />
+
       {/* Profile Completion Modal */}
       <AlertDialog open={showProfileModal} onOpenChange={setShowProfileModal}>
         <AlertDialogContent className="bg-white border-0 rounded-[2rem] text-[#0F172A] shadow-2xl max-w-lg">
@@ -540,7 +545,8 @@ export default function Layout({ children }) {
 
                  <div className="flex items-center gap-4">
                     {profile?.is_admin && (
-                       <Link to={createPageUrl('AdminControl')} className="text-xs font-bold bg-[#2D3748] text-white px-4 py-2 rounded-full hover:scale-105 transition-transform shadow-md">
+                       <Link to={createPageUrl('AdminControl')} className="text-xs font-bold bg-gradient-to-r from-[#2D3748] to-[#1A202C] text-white px-6 py-3 rounded-2xl hover:scale-105 transition-transform shadow-lg flex items-center gap-2">
+                          <Shield className="w-4 h-4" />
                           Painel Admin
                        </Link>
                     )}

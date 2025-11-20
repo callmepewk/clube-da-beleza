@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -25,13 +24,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, Loader2 } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, Loader2, Globe, ExternalLink } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import ClubRegistration from '@/components/ClubRegistration';
 
 export default function SchedulePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const queryClient = useQueryClient();
   const [userProfile, setUserProfile] = useState(null);
+  const [clubDialogOpen, setClubDialogOpen] = useState(false);
 
   // Fetch Profile for Access Control
   useEffect(() => {
@@ -168,13 +169,25 @@ export default function SchedulePage() {
   if (userProfile?.type === 'professional') {
     return (
       <div className="h-[calc(100vh-8rem)] flex flex-col space-y-6">
+        <ClubRegistration open={clubDialogOpen} onOpenChange={setClubDialogOpen} />
+        
         <div className="flex justify-between items-start">
            <div>
              <h1 className="text-2xl font-bold text-[#0F172A]">Gestão de Agenda</h1>
              <p className="text-[#64748B]">Configure seus horários e disponibilidades.</p>
            </div>
-           <div className="bg-blue-50 p-2 rounded border border-blue-100 text-sm text-blue-800 max-w-md">
-             <span className="font-bold">Local de Atendimento Atual:</span> {userProfile?.service_address?.street || 'Não definido'}
+           <div className="flex gap-3">
+              <Button 
+                onClick={() => setClubDialogOpen(true)}
+                variant="outline"
+                className="bg-gradient-to-r from-[#D4A574] to-[#8B6F47] text-white border-0 hover:opacity-90 font-bold shadow-lg"
+              >
+                <Globe className="w-4 h-4 mr-2" />
+                Club da Beleza
+              </Button>
+              <div className="bg-blue-50 p-2 rounded border border-blue-100 text-sm text-blue-800 max-w-md">
+                <span className="font-bold">Local:</span> {userProfile?.service_address?.street || 'Não definido'}
+              </div>
            </div>
         </div>
 
@@ -183,25 +196,29 @@ export default function SchedulePage() {
            <Card className="bg-white border-slate-200">
               <CardContent className="p-6 flex flex-col justify-between h-full">
                  <div>
-                    <h3 className="font-bold text-[#0F172A] mb-2">Integrações de Calendário</h3>
+                    <h3 className="font-bold text-[#0F172A] mb-2 flex items-center gap-2">
+                       <CalendarIcon className="w-5 h-5 text-[#0D9488]" /> Integrações de Calendário
+                    </h3>
                     <p className="text-sm text-[#64748B] mb-4">Conecte suas agendas externas para sincronizar feriados, aniversários e compromissos automaticamente.</p>
                  </div>
                  <div className="flex gap-3">
                     <Button 
-                      variant={integrations.google ? "secondary" : "outline"}
-                      className={`flex-1 border-slate-200 ${integrations.google ? 'bg-green-50 text-green-700 border-green-200' : ''}`}
+                      variant="outline"
+                      className={`flex-1 border-blue-200 text-blue-600 hover:bg-blue-50 ${integrations.google ? 'bg-green-50 text-green-700 border-green-200' : ''}`}
                       onClick={() => handleConnect('google')}
                       disabled={isSyncing}
                     >
-                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.google ? "Sincronizado" : "Google Agenda")}
+                       <ExternalLink className="w-4 h-4 mr-2" />
+                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.google ? "✓ Conectado" : "Conectar Google Agenda")}
                     </Button>
                     <Button 
-                      variant={integrations.outlook ? "secondary" : "outline"}
-                      className={`flex-1 border-slate-200 ${integrations.outlook ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}`}
+                      variant="outline"
+                      className={`flex-1 border-sky-200 text-sky-600 hover:bg-sky-50 ${integrations.outlook ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}`}
                       onClick={() => handleConnect('outlook')}
                       disabled={isSyncing}
                     >
-                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.outlook ? "Outlook" : "Outlook")}
+                       <ExternalLink className="w-4 h-4 mr-2" />
+                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.outlook ? "✓ Conectado" : "Conectar Outlook")}
                     </Button>
                  </div>
               </CardContent>
