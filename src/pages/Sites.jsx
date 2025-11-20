@@ -93,6 +93,34 @@ export default function SitesPage() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                 />
+                
+                {/* Suggestions Chips */}
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <button 
+                    onClick={() => setPrompt("Página inicial moderna para Cardiologista, tons de vermelho e branco, com seção de agendamento e depoimentos.")}
+                    className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full transition-colors"
+                  >
+                    Cardiologista
+                  </button>
+                  <button 
+                    onClick={() => setPrompt("Landing page elegante para Dermatologista, foco em estética, tons pastéis, galeria de antes e depois.")}
+                    className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full transition-colors"
+                  >
+                    Dermatologista (Estética)
+                  </button>
+                  <button 
+                    onClick={() => setPrompt("Site institucional para Clínica de Fisioterapia, verde e cinza, lista de serviços e equipe.")}
+                    className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full transition-colors"
+                  >
+                    Clínica de Fisioterapia
+                  </button>
+                  <button 
+                    onClick={() => setPrompt("Página de captura para Nutricionista, foco em emagrecimento, cores vibrantes, ebook grátis.")}
+                    className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-full transition-colors"
+                  >
+                    Nutricionista
+                  </button>
+                </div>
               </div>
               <Button 
                 onClick={() => {
