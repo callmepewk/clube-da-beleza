@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { X } from 'lucide-react';
-import { AnimatePresence, motion } from 'framer-motion';
+// import { AnimatePresence, motion } from 'framer-motion';
 
 export default function BannerDisplay({ userProfile }) {
   const [closedBanners, setClosedBanners] = useState([]);
@@ -78,21 +78,16 @@ export default function BannerDisplay({ userProfile }) {
   return (
     <>
       {/* Center Modal */}
-      <AnimatePresence>
         {activeModalBanner && (
           <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onClick={() => handleClose(activeModalBanner.id)}>
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
+            <div 
               className="relative bg-black rounded-xl overflow-hidden max-w-3xl w-full aspect-video shadow-2xl"
               onClick={e => e.stopPropagation()}
             >
               <BannerContent banner={activeModalBanner} className="w-full h-full" />
-            </motion.div>
+            </div>
           </div>
         )}
-      </AnimatePresence>
 
       {/* Layout Slots - Rendered via Portal or simply returned to be placed by Layout */}
       {/* We'll use fixed positioning for sidebars/bottom to simplify integration without massive layout refactor */}
