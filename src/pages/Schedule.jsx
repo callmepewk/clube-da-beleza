@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { format, startOfWeek, addDays, startOfDay, isSameDay, parseISO } from 'date-fns';
+import { 
+  format, 
+  startOfWeek, 
+  addDays, 
+  startOfDay, 
+  isSameDay, 
+  parseISO,
+  addHours 
+} from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { 
   Dialog,
   DialogContent,
@@ -16,20 +23,23 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Calendar as CalendarIcon, MapPin, Video } from 'lucide-react';
-
-// Calendar Utils
-const getWeekDays = (date) => {
-  const start = startOfWeek(date, { weekStartsOn: 0 });
-  return Array.from({ length: 7 }).map((_, i) => addDays(start, i));
-};
+import { Plus, ChevronLeft, ChevronRight, Video, MapPin } from 'lucide-react';
 
 export default function SchedulePage() {
   const [isNewEventOpen, setIsNewEventOpen] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
   const queryClient = useQueryClient();
   
-  const [currentDate, setCurrentDate] = useState(new Date());
+  // Utils
+  const getWeekDays = (date) => {
+    const start = startOfWeek(date, { weekStartsOn: 0 });
+    return Array.from({ length: 7 }).map((_, i) => addDays(start, i));
+  };
+
   const weekDays = getWeekDays(currentDate);
+
+  const nextWeek = () => setCurrentDate(addDays(currentDate, 7));
+  const prevWeek = () => setCurrentDate(addDays(currentDate, -7));
 
   // Fetch Appointments
   const { data: events = [] } = useQuery({
@@ -44,10 +54,6 @@ export default function SchedulePage() {
     }
   });
 
-  const getEventsForDay = (day) => {
-    return events.filter(evt => isSameDay(evt.start, day));
-  };
-
   const createMutation = useMutation({
     mutationFn: (data) => base44.entities.Appointment.create(data),
     onSuccess: () => {
@@ -59,8 +65,13 @@ export default function SchedulePage() {
   const handleCreate = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    const start = new Date(formData.get('date') + 'T' + formData.get('time'));
-    const end = new Date(start.getTime() + 60 * 60 * 1000); // 1 hour default duration
+    const dateStr = formData.get('date');
+    const timeStr = formData.get('time');
+    
+    if (!dateStr || !timeStr) return;
+
+    const start = new Date(`${dateStr}T${timeStr}`);
+    const end = addHours(start, 1);
 
     createMutation.mutate({
       title: formData.get('title'),
@@ -69,11 +80,15 @@ export default function SchedulePage() {
       start_time: start.toISOString(),
       end_time: end.toISOString(),
       patient_email: formData.get('patient_email'),
-      professional_email: 'current_user_email_placeholder', // Should be from auth
+      professional_email: 'admin@healthai.com', // Fallback or current user
       location_details: formData.get('location'),
       notes: formData.get('notes'),
       status: 'scheduled'
     });
+  };
+
+  const getEventsForDay = (day) => {
+    return events.filter(evt => isSameDay(evt.start, day));
   };
 
   const getTypeColor = (type) => {
@@ -86,17 +101,16 @@ export default function SchedulePage() {
     }
   };
 
-  const nextWeek = () => setCurrentDate(addDays(currentDate, 7));
-  const prevWeek = () => setCurrentDate(addDays(currentDate, -7));
-
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold text-slate-900">Agendamentos</h1>
           <div className="flex items-center bg-white border rounded-lg p-1 shadow-sm">
             <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
-            <span className="px-4 font-medium">{format(currentDate, "MMMM yyyy", { locale: ptBR })}</span>
+            <span className="px-4 font-medium min-w-[140px] text-center capitalize">
+              {format(currentDate, "MMMM yyyy", { locale: ptBR })}
+            </span>
             <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
           </div>
         </div>
@@ -142,7 +156,7 @@ export default function SchedulePage() {
               </div>
 
               <div className="space-y-2">
-                <Label>Título / Procedimento</Label>
+                <Label>Título</Label>
                 <Input name="title" placeholder="Ex: Consulta Dermatologia" required />
               </div>
 
@@ -186,23 +200,25 @@ export default function SchedulePage() {
             const dayEvents = getEventsForDay(day);
             const isToday = isSameDay(day, new Date());
             return (
-              <div key={i} className={`flex flex-col h-full ${isToday ? 'bg-emerald-50/30 rounded-lg' : ''}`}>
-                <div className="text-center py-2 border-b border-slate-100 mb-2">
-                  <div className="text-sm font-medium text-slate-500 uppercase">{format(day, 'EEE', { locale: ptBR })}</div>
-                  <div className={`text-lg font-bold ${isToday ? 'text-emerald-600' : 'text-slate-900'}`}>{format(day, 'dd')}</div>
+              <div key={i} className={`flex flex-col h-full ${isToday ? 'bg-emerald-50/30 rounded-lg border border-emerald-100' : ''}`}>
+                <div className="text-center py-3 border-b border-slate-100 mb-2">
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{format(day, 'EEE', { locale: ptBR })}</div>
+                  <div className={`text-xl font-bold mt-1 ${isToday ? 'text-emerald-600' : 'text-slate-700'}`}>{format(day, 'dd')}</div>
                 </div>
-                <div className="flex-1 space-y-2 p-1 overflow-y-auto">
+                <div className="flex-1 space-y-2 p-2 overflow-y-auto">
                   {dayEvents.map(evt => (
-                    <div key={evt.id} className={`p-2 rounded-md text-xs border ${getTypeColor(evt.type)} cursor-pointer hover:opacity-80 transition-opacity`}>
-                      <div className="font-bold truncate">{evt.title}</div>
-                      <div className="opacity-80">{format(evt.start, 'HH:mm')}</div>
-                      {evt.modality === 'teleconsultation' && (
-                        <div className="flex items-center gap-1 mt-1 opacity-70"><Video className="w-3 h-3" /> Online</div>
-                      )}
+                    <div key={evt.id} className={`p-2 rounded-lg text-xs border shadow-sm ${getTypeColor(evt.type)} hover:brightness-95 transition-all cursor-pointer`}>
+                      <div className="font-bold truncate mb-1" title={evt.title}>{evt.title}</div>
+                      <div className="flex items-center justify-between opacity-80">
+                        <span>{format(evt.start, 'HH:mm')}</span>
+                        {evt.modality === 'teleconsultation' && <Video className="w-3 h-3" />}
+                      </div>
                     </div>
                   ))}
                   {dayEvents.length === 0 && isToday && (
-                    <div className="text-center text-xs text-slate-300 mt-4">Livre</div>
+                    <div className="flex flex-col items-center justify-center h-20 text-slate-300 text-xs">
+                      <span className="block">Livre</span>
+                    </div>
                   )}
                 </div>
               </div>
