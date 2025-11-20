@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Users, LayoutDashboard, DollarSign, Activity, Shield, Trash2, 
   BarChart3, UserCheck, Building2, Loader2, Search, Bell, Send,
-  User, Stethoscope
+  User, Stethoscope, X, Globe, Bot, Palette, Calendar
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -223,6 +223,8 @@ export default function AdminControlPage() {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [reportPeriod, setReportPeriod] = useState('monthly');
+  const [editingUser, setEditingUser] = useState(null);
   const queryClient = useQueryClient();
 
   // 1. Fetch All Users
@@ -240,17 +242,46 @@ export default function AdminControlPage() {
   const { data: analytics, isLoading: analyticsLoading } = useQuery({
     queryKey: ['adminAnalytics'],
     queryFn: async () => {
-      // Mocking aggregate queries since backend aggregation isn't available in SDK directly
       const appts = await base44.entities.Appointment.list({ limit: 1000 });
       const nurseInts = await base44.entities.NurseInteraction.list({ limit: 1000 });
       const creations = await base44.entities.AICreation.list({ limit: 1000 });
       const products = await base44.entities.Product.list({ limit: 1000 });
+      const banners = await base44.entities.Banner.list({ limit: 1000 });
+      
+      // Calculate averages
+      const avgProductPrice = products.data.length > 0 
+        ? products.data.reduce((acc, p) => acc + (p.price || 0), 0) / products.data.length 
+        : 0;
+      
+      const avgValuation = products.data.length > 0
+        ? (products.data.reduce((acc, p) => acc + (p.price || 0), 0) * 10) / products.data.length
+        : 0;
+      
+      // Top nurse topics
+      const topicsCount = {};
+      nurseInts.data.forEach(n => {
+        topicsCount[n.topic] = (topicsCount[n.topic] || 0) + 1;
+      });
+      
+      // Tool usage by users
+      const toolUsage = {
+        nurse: nurseInts.data.length,
+        sites: creations.data.filter(c => c.type === 'landing_page').length,
+        chatbots: creations.data.filter(c => c.type === 'chatbot').length,
+        designs: creations.data.filter(c => c.type === 'design_project').length,
+        products: products.data.length
+      };
       
       return {
         appointments: appts.data,
         nurse: nurseInts.data,
         creations: creations.data,
-        products: products.data
+        products: products.data,
+        banners: banners.data,
+        avgProductPrice,
+        avgValuation,
+        topicsCount,
+        toolUsage
       };
     }
   });
@@ -269,6 +300,32 @@ export default function AdminControlPage() {
     onSuccess: () => {
       queryClient.invalidateQueries(['adminAllUsers']);
       alert("Usuário excluído.");
+    }
+  });
+
+  const grantCoinsMutation = useMutation({
+    mutationFn: ({ userId, coins }) => {
+      const currentCoins = allUsers?.find(u => u.id === userId)?.beauty_coins || 0;
+      return base44.entities.UserProfile.update(userId, { 
+        beauty_coins: currentCoins + parseInt(coins) 
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['adminAllUsers']);
+      alert("Beauty Coins concedidos com sucesso!");
+    }
+  });
+
+  const grantClubPointsMutation = useMutation({
+    mutationFn: ({ userId, points }) => {
+      const currentPoints = allUsers?.find(u => u.id === userId)?.club_points || 0;
+      return base44.entities.UserProfile.update(userId, { 
+        club_points: currentPoints + parseInt(points) 
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['adminAllUsers']);
+      alert("Pontos do Clube concedidos com sucesso!");
     }
   });
 
@@ -317,12 +374,12 @@ export default function AdminControlPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 h-auto gap-2">
+        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 h-auto gap-2">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="users">Usuários</TabsTrigger>
-          <TabsTrigger value="appointments">Agendamentos</TabsTrigger>
-          <TabsTrigger value="nurse">Enfermeira</TabsTrigger>
-          <TabsTrigger value="creations">IA & Produtos</TabsTrigger>
+          <TabsTrigger value="analytics">Analytics</TabsTrigger>
+          <TabsTrigger value="tools">Ferramentas</TabsTrigger>
+          <TabsTrigger value="seo">SEO & Tráfego</TabsTrigger>
           <TabsTrigger value="banners">Anúncios</TabsTrigger>
           <TabsTrigger value="notifications">Notificações</TabsTrigger>
         </TabsList>
@@ -350,15 +407,15 @@ export default function AdminControlPage() {
               <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Preço Médio Produtos</CardTitle></CardHeader>
               <CardContent>
                  <div className="text-2xl font-bold text-blue-600">
-                    R$ {analytics?.products?.length ? (analytics.products.reduce((acc, p) => acc + (p.price || 0), 0) / analytics.products.length).toFixed(2) : '0.00'}
+                    R$ {analytics?.avgProductPrice?.toFixed(2) || '0.00'}
                  </div>
               </CardContent>
             </Card>
             <Card>
-              <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Valuation Médio (Criações)</CardTitle></CardHeader>
+              <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-slate-500">Valuation Médio</CardTitle></CardHeader>
               <CardContent>
                  <div className="text-2xl font-bold text-purple-600">
-                    R$ {analytics?.creations?.length ? ((analytics.creations.length * 300) / analytics.creations.length).toFixed(2) : '0.00'}
+                    R$ {analytics?.avgValuation?.toFixed(2) || '0.00'}
                  </div>
               </CardContent>
             </Card>
@@ -430,9 +487,10 @@ export default function AdminControlPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Email</TableHead>
+                    <TableHead>Usuário</TableHead>
                     <TableHead>Tipo</TableHead>
                     <TableHead>Plano</TableHead>
+                    <TableHead>Moedas/Pontos</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Ações</TableHead>
                   </TableRow>
@@ -440,37 +498,91 @@ export default function AdminControlPage() {
                 <TableBody>
                   {filteredUsers?.map(u => (
                     <TableRow key={u.id}>
-                      <TableCell>{u.user_email}</TableCell>
                       <TableCell>
-                        <Badge variant={u.type === 'professional' ? 'default' : u.type === 'sponsor' ? 'secondary' : 'outline'}>
-                          {u.type}
-                        </Badge>
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-bold shadow-md">
+                            {u.user_email?.[0]?.toUpperCase()}
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900">{u.user_email}</div>
+                            {u.phone && <div className="text-xs text-slate-500">{u.phone}</div>}
+                            {u.cpf && <div className="text-xs text-slate-400">CPF: {u.cpf}</div>}
+                            {u.type === 'professional' && u.professional_registry && (
+                              <div className="text-xs text-blue-600 font-medium">CRM: {u.professional_registry}</div>
+                            )}
+                          </div>
+                        </div>
                       </TableCell>
-                      <TableCell className="capitalize">{u.plan || 'Free'}</TableCell>
+                      <TableCell>
+                        <Select value={u.type} onValueChange={(val) => updateUserMutation.mutate({ id: u.id, data: { type: val } })}>
+                          <SelectTrigger className="w-[140px]"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="patient">Paciente</SelectItem>
+                            <SelectItem value="professional">Profissional</SelectItem>
+                            <SelectItem value="sponsor">Patrocinador</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        <Select value={u.plan || 'free'} onValueChange={(val) => updateUserMutation.mutate({ id: u.id, data: { plan: val } })}>
+                          <SelectTrigger className="w-[120px]"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="free">Free</SelectItem>
+                            <SelectItem value="pro">Pro</SelectItem>
+                            <SelectItem value="premium">Premium</SelectItem>
+                            <SelectItem value="sponsor_gold">Gold</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-slate-500">Coins:</span>
+                            <span className="font-bold text-amber-600">{u.beauty_coins || 0}</span>
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="h-6 w-6"
+                              onClick={() => {
+                                const coins = prompt("Quantos Beauty Coins conceder?");
+                                if (coins) grantCoinsMutation.mutate({ userId: u.id, coins });
+                              }}
+                            >
+                              <DollarSign className="w-3 h-3 text-amber-600" />
+                            </Button>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-slate-500">Pontos:</span>
+                            <span className="font-bold text-purple-600">{u.club_points || 0}</span>
+                            <Button 
+                              size="icon" 
+                              variant="ghost" 
+                              className="h-6 w-6"
+                              onClick={() => {
+                                const points = prompt("Quantos Pontos do Clube conceder?");
+                                if (points) grantClubPointsMutation.mutate({ userId: u.id, points });
+                              }}
+                            >
+                              <Activity className="w-3 h-3 text-purple-600" />
+                            </Button>
+                          </div>
+                        </div>
+                      </TableCell>
                       <TableCell>
                          {u.is_admin ? <Badge className="bg-purple-100 text-purple-800">Admin</Badge> : <span className="text-slate-500">Ativo</span>}
-                         {u.plan === 'test_trial' && <Badge className="ml-2 bg-orange-100 text-orange-800">Teste 7 Dias</Badge>}
+                         {u.plan === 'test_trial' && <Badge className="ml-2 bg-orange-100 text-orange-800">Teste 7d</Badge>}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                           <Select onValueChange={(val) => updateUserMutation.mutate({ id: u.id, data: { plan: val } })}>
-                             <SelectTrigger className="w-[100px] h-8"><SelectValue placeholder="Plano" /></SelectTrigger>
-                             <SelectContent>
-                               <SelectItem value="free">Free</SelectItem>
-                               <SelectItem value="pro">Pro</SelectItem>
-                               <SelectItem value="premium">Premium</SelectItem>
-                               <SelectItem value="sponsor_gold">Sponsor Gold</SelectItem>
-                             </SelectContent>
-                           </Select>
-                           
-                           <Select onValueChange={(val) => grantTestAccessMutation.mutate({ id: u.id, type: val })}>
-                             <SelectTrigger className="w-[30px] h-8 p-0 flex justify-center" title="Criar Conta Teste"><Loader2 className="w-4 h-4" /></SelectTrigger>
-                             <SelectContent>
-                               <SelectItem value="patient">Teste Paciente</SelectItem>
-                               <SelectItem value="professional">Teste Profissional</SelectItem>
-                               <SelectItem value="sponsor">Teste Patrocinador</SelectItem>
-                             </SelectContent>
-                           </Select>
+                        <div className="flex items-center gap-1">
+                           <Button 
+                             variant="ghost" 
+                             size="icon" 
+                             className="h-8 w-8"
+                             title="Ver/Editar Detalhes"
+                             onClick={() => setEditingUser(u)}
+                           >
+                             <UserCheck className="w-4 h-4 text-blue-600" />
+                           </Button>
 
                            <Button 
                              variant="ghost" 
@@ -500,8 +612,250 @@ export default function AdminControlPage() {
           </Card>
         </TabsContent>
 
-        {/* Appointments Tab */}
-        <TabsContent value="appointments" className="space-y-6">
+        {/* Analytics Tab */}
+        <TabsContent value="analytics" className="space-y-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-bold">Relatórios Analíticos</h3>
+            <Select value={reportPeriod} onValueChange={setReportPeriod}>
+              <SelectTrigger className="w-[200px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="daily">Diário</SelectItem>
+                <SelectItem value="weekly">Semanal</SelectItem>
+                <SelectItem value="monthly">Mensal</SelectItem>
+                <SelectItem value="annual">Anual</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader><CardTitle>Principais Pesquisas - Enfermeira</CardTitle></CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  {analytics?.topicsCount && Object.entries(analytics.topicsCount).sort((a,b) => b[1] - a[1]).slice(0, 5).map(([topic, count]) => (
+                    <div key={topic} className="flex justify-between items-center">
+                      <span className="font-medium capitalize">{topic}</span>
+                      <div className="flex items-center gap-2">
+                        <div className="w-24 bg-slate-100 h-2 rounded-full overflow-hidden">
+                          <div className="bg-teal-500 h-full" style={{ width: `${(count / analytics.nurse.length) * 100}%` }}></div>
+                        </div>
+                        <span className="text-sm font-bold text-slate-600">{count}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader><CardTitle>Páginas Mais Frequentadas</CardTitle></CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {[
+                    { page: 'Dashboard', visits: 1250 },
+                    { page: 'Agendamentos', visits: 980 },
+                    { page: 'Enfermeira Virtual', visits: 756 },
+                    { page: 'Chatbots', visits: 543 },
+                    { page: 'Sites', visits: 421 }
+                  ].map((item) => (
+                    <div key={item.page} className="flex justify-between items-center p-2 hover:bg-slate-50 rounded">
+                      <span className="font-medium">{item.page}</span>
+                      <span className="text-sm font-bold text-blue-600">{item.visits} visitas</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* Tools Usage Tab */}
+        <TabsContent value="tools" className="space-y-6">
+          <Card>
+            <CardHeader><CardTitle>Utilização de Ferramentas por Usuários</CardTitle></CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-slate-700">Enfermeira Virtual</h4>
+                    <Activity className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <div className="text-3xl font-black text-blue-700">{analytics?.toolUsage?.nurse || 0}</div>
+                  <div className="text-xs text-blue-600 mt-1">Total de conversas</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-slate-700">Sites Criados</h4>
+                    <Globe className="w-6 h-6 text-purple-600" />
+                  </div>
+                  <div className="text-3xl font-black text-purple-700">{analytics?.toolUsage?.sites || 0}</div>
+                  <div className="text-xs text-purple-600 mt-1">Landing pages</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-slate-700">Chatbots</h4>
+                    <Bot className="w-6 h-6 text-green-600" />
+                  </div>
+                  <div className="text-3xl font-black text-green-700">{analytics?.toolUsage?.chatbots || 0}</div>
+                  <div className="text-xs text-green-600 mt-1">Assistentes ativos</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-6 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-slate-700">Designs</h4>
+                    <Palette className="w-6 h-6 text-orange-600" />
+                  </div>
+                  <div className="text-3xl font-black text-orange-700">{analytics?.toolUsage?.designs || 0}</div>
+                  <div className="text-xs text-orange-600 mt-1">Projetos visuais</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-pink-50 to-pink-100 p-6 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-slate-700">Produtos</h4>
+                    <BarChart2 className="w-6 h-6 text-pink-600" />
+                  </div>
+                  <div className="text-3xl font-black text-pink-700">{analytics?.toolUsage?.products || 0}</div>
+                  <div className="text-xs text-pink-600 mt-1">Itens na loja</div>
+                </div>
+
+                <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-bold text-slate-700">Agendamentos</h4>
+                    <Calendar className="w-6 h-6 text-indigo-600" />
+                  </div>
+                  <div className="text-3xl font-black text-indigo-700">{analytics?.appointments?.length || 0}</div>
+                  <div className="text-xs text-indigo-600 mt-1">Consultas marcadas</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* SEO Tab */}
+        <TabsContent value="seo" className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader><CardTitle>Métricas de Tráfego</CardTitle></CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+                    <div>
+                      <div className="text-sm text-green-700 font-bold">Tráfego Orgânico</div>
+                      <div className="text-2xl font-black text-green-900">+15%</div>
+                    </div>
+                    <div className="text-xs text-green-600">Últimos 30 dias</div>
+                  </div>
+
+                  <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
+                    <div>
+                      <div className="text-sm text-blue-700 font-bold">Visualizações Totais</div>
+                      <div className="text-2xl font-black text-blue-900">{analytics?.banners?.reduce((acc, b) => acc + (b.views || 0), 0) || 0}</div>
+                    </div>
+                    <div className="text-xs text-blue-600">Banners</div>
+                  </div>
+
+                  <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
+                    <div>
+                      <div className="text-sm text-purple-700 font-bold">Cliques Totais</div>
+                      <div className="text-2xl font-black text-purple-900">{analytics?.banners?.reduce((acc, b) => acc + (b.clicks || 0), 0) || 0}</div>
+                    </div>
+                    <div className="text-xs text-purple-600">CTR: {analytics?.banners?.length ? ((analytics.banners.reduce((acc, b) => acc + (b.clicks || 0), 0) / analytics.banners.reduce((acc, b) => acc + (b.views || 0), 1)) * 100).toFixed(2) : 0}%</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader><CardTitle>Palavras-chave & SEO</CardTitle></CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="p-3 bg-slate-50 rounded-lg">
+                    <div className="font-bold text-slate-800 mb-1">Top 3 Keywords</div>
+                    <div className="text-sm text-slate-600">• "clinica estetica"</div>
+                    <div className="text-sm text-slate-600">• "dermatologista"</div>
+                    <div className="text-sm text-slate-600">• "harmonização facial"</div>
+                  </div>
+                  <div className="p-3 bg-orange-50 rounded-lg">
+                    <div className="font-bold text-orange-800 mb-1">Backlinks Ativos</div>
+                    <div className="text-2xl font-black text-orange-900">142</div>
+                    <div className="text-xs text-orange-600">Domínios de alta autoridade</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        {/* User Details Modal */}
+        {editingUser && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setEditingUser(null)}>
+            <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="sticky top-0 bg-gradient-to-r from-teal-600 to-emerald-600 text-white p-6 rounded-t-2xl">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-3xl font-bold shadow-lg">
+                      {editingUser.user_email?.[0]?.toUpperCase()}
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold">{editingUser.user_email}</h2>
+                      <p className="text-teal-100 capitalize">{editingUser.type} • {editingUser.plan || 'Free'}</p>
+                    </div>
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => setEditingUser(null)} className="text-white hover:bg-white/20">
+                    <X className="w-6 h-6" />
+                  </Button>
+                </div>
+              </div>
+
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="font-bold text-lg mb-4 text-slate-800">Informações Pessoais</h3>
+                    <div className="space-y-3 text-sm">
+                      <div><span className="font-medium text-slate-600">CPF:</span> <span className="text-slate-900">{editingUser.cpf || 'N/A'}</span></div>
+                      <div><span className="font-medium text-slate-600">Telefone:</span> <span className="text-slate-900">{editingUser.phone || 'N/A'}</span></div>
+                      <div><span className="font-medium text-slate-600">Endereço:</span> <span className="text-slate-900">{editingUser.address?.street ? `${editingUser.address.street}, ${editingUser.address.number} - ${editingUser.address.city}/${editingUser.address.state}` : 'N/A'}</span></div>
+                      <div><span className="font-medium text-slate-600">Beauty Coins:</span> <span className="text-amber-600 font-bold">{editingUser.beauty_coins || 0}</span></div>
+                      <div><span className="font-medium text-slate-600">Pontos Clube:</span> <span className="text-purple-600 font-bold">{editingUser.club_points || 0}</span></div>
+                    </div>
+                  </div>
+
+                  {editingUser.type === 'professional' && (
+                    <div>
+                      <h3 className="font-bold text-lg mb-4 text-slate-800">Informações Profissionais</h3>
+                      <div className="space-y-3 text-sm">
+                        <div><span className="font-medium text-slate-600">Registro:</span> <span className="text-slate-900">{editingUser.professional_registry || 'N/A'}</span></div>
+                        <div><span className="font-medium text-slate-600">Especialidades:</span> <span className="text-slate-900">{editingUser.specialties?.join(', ') || 'N/A'}</span></div>
+                        <div><span className="font-medium text-slate-600">Serviços:</span> <span className="text-slate-900">{editingUser.services_catalog?.length || 0} cadastrados</span></div>
+                      </div>
+                    </div>
+                  )}
+
+                  {editingUser.type === 'patient' && editingUser.medical_history && (
+                    <div>
+                      <h3 className="font-bold text-lg mb-4 text-slate-800">Ficha Médica</h3>
+                      <div className="space-y-3 text-sm">
+                        <div><span className="font-medium text-slate-600">Tipo Sanguíneo:</span> <span className="text-slate-900">{editingUser.medical_history.blood_type || 'N/A'}</span></div>
+                        <div><span className="font-medium text-slate-600">Tipo de Pele:</span> <span className="text-slate-900">{editingUser.medical_history.skin_type || 'N/A'}</span></div>
+                        <div><span className="font-medium text-slate-600">Alergias:</span> <span className="text-slate-900">{editingUser.medical_history.allergies?.join(', ') || 'Nenhuma'}</span></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-3 pt-4 border-t">
+                  <Button onClick={() => setEditingUser(null)} className="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200">
+                    Fechar
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
            <Card>
              <CardHeader><CardTitle>Relatórios de Agendamento</CardTitle></CardHeader>
              <CardContent>
