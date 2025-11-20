@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -24,7 +25,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon } from 'lucide-react';
+import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 
 export default function SchedulePage() {
@@ -214,7 +215,6 @@ export default function SchedulePage() {
                  </div>
                  <div className="flex-1 space-y-3">
                    <h3 className="font-semibold text-lg text-indigo-900">Assistente de Agenda Inteligente</h3>
-                   {/* ... rest of AI assistant content ... */}
                    <p className="text-sm text-slate-600">
                      Diga-me quais dias e horários você atende e para quais procedimentos. Eu organizarei sua grade automaticamente com as cores corretas.
                    </p>
@@ -238,28 +238,6 @@ export default function SchedulePage() {
              </CardContent>
            </Card>
         </div>
-                <p className="text-sm text-slate-600">
-                  Diga-me quais dias e horários você atende e para quais procedimentos. Eu organizarei sua grade automaticamente com as cores corretas.
-                </p>
-                <div className="flex gap-2">
-                  <Input 
-                    placeholder="Ex: Atendo consultas segunda e quarta das 08h às 12h, e cirurgias sexta à tarde..." 
-                    value={aiPrompt}
-                    onChange={(e) => setAiPrompt(e.target.value)}
-                    className="bg-white"
-                  />
-                  <Button 
-                    onClick={() => aiAvailabilityMutation.mutate()} 
-                    disabled={!aiPrompt || aiAvailabilityMutation.isPending}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white"
-                  >
-                    {aiAvailabilityMutation.isPending ? 'Configurando...' : 'Gerar Agenda'}
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col">
            <div className="flex items-center justify-between mb-4">

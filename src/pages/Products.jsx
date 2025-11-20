@@ -246,24 +246,73 @@ export default function ProductsPage() {
                     </Button>
                  </div>
                ) : (
-                 <div className="space-y-4 animate-in zoom-in-95">
-                    <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm">
-                       {generatedProduct.content_url && (
-                          <div className="h-48 w-full bg-slate-100 relative">
-                             <img src={generatedProduct.content_url} alt="Cover" className="w-full h-full object-cover" />
-                          </div>
-                       )}
-                       <div className="p-4 space-y-3">
-                          <h3 className="font-bold text-slate-900 text-xl">{generatedProduct.title}</h3>
-                          <p className="text-slate-600 text-sm">{generatedProduct.description}</p>
-                          <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                             <span className="text-slate-500 text-sm">Sugestão de Preço:</span>
-                             <span className="text-emerald-600 font-bold text-lg">R$ {generatedProduct.price}</span>
-                          </div>
-                       </div>
-                    </div>
-                    
-                    <div className="flex gap-2">
+               <div className="space-y-4 animate-in zoom-in-95">
+                  <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm p-4 space-y-4">
+                     <div className="space-y-2">
+                        <Label>Imagem de Capa</Label>
+                        {generatedProduct.content_url && (
+                           <div className="h-40 w-full bg-slate-100 rounded-md overflow-hidden relative mb-2">
+                              <img src={generatedProduct.content_url} alt="Cover" className="w-full h-full object-cover" />
+                           </div>
+                        )}
+                        <div className="flex gap-2">
+                           <Button variant="outline" size="sm" className="flex-1 relative">
+                              <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={async (e) => {
+                                 const file = e.target.files[0];
+                                 if (file) {
+                                    const res = await base44.integrations.Core.UploadFile({ file });
+                                    setGeneratedProduct({...generatedProduct, content_url: res.file_url});
+                                 }
+                              }} />
+                              <Plus className="w-3 h-3 mr-1" /> Upload
+                           </Button>
+                           <Button variant="outline" size="sm" className="flex-1" onClick={async () => {
+                              const imgRes = await base44.integrations.Core.GenerateImage({
+                                 prompt: `Cover for ${generatedProduct.title}, ${newProductType}, high quality`
+                              });
+                              setGeneratedProduct({...generatedProduct, content_url: imgRes.url});
+                           }}>
+                              <Sparkles className="w-3 h-3 mr-1" /> Nova Imagem
+                           </Button>
+                        </div>
+                     </div>
+
+                     <div className="space-y-2">
+                        <Label>Título</Label>
+                        <div className="flex gap-2">
+                           <Input value={generatedProduct.title} onChange={(e) => setGeneratedProduct({...generatedProduct, title: e.target.value})} />
+                           <Button size="icon" variant="outline" onClick={async () => {
+                              const res = await base44.integrations.Core.InvokeLLM({ prompt: `Novo título para produto sobre ${aiPrompt}` });
+                              setGeneratedProduct({...generatedProduct, title: res.replace(/"/g, '')});
+                           }}><RotateCcw className="w-4 h-4" /></Button>
+                        </div>
+                     </div>
+
+                     <div className="space-y-2">
+                        <Label>Descrição</Label>
+                        <div className="relative">
+                           <Textarea value={generatedProduct.description} onChange={(e) => setGeneratedProduct({...generatedProduct, description: e.target.value})} className="pr-10" />
+                           <Button size="icon" variant="ghost" className="absolute top-2 right-2" onClick={async () => {
+                              const res = await base44.integrations.Core.InvokeLLM({ prompt: `Nova descrição curta para produto: ${generatedProduct.title}` });
+                              setGeneratedProduct({...generatedProduct, description: res});
+                           }}><RotateCcw className="w-4 h-4 text-slate-400" /></Button>
+                        </div>
+                     </div>
+
+                     <div className="space-y-2">
+                        <Label>Preço (R$)</Label>
+                        <div className="flex gap-2">
+                           <Input type="number" value={generatedProduct.price} onChange={(e) => setGeneratedProduct({...generatedProduct, price: parseFloat(e.target.value)})} />
+                           <Button size="icon" variant="outline" onClick={async () => {
+                              const res = await base44.integrations.Core.InvokeLLM({ prompt: `Sugira outro preço em BRL para um ebook sobre ${generatedProduct.title}. Apenas numeros.` });
+                              const price = parseFloat(res.replace(/[^0-9.]/g, '')) || 97.00;
+                              setGeneratedProduct({...generatedProduct, price});
+                           }}><RotateCcw className="w-4 h-4" /></Button>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="flex gap-2">
                        <Button 
                           variant="outline" 
                           className="flex-1" 
