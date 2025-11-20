@@ -17,7 +17,7 @@ export default function AboutPage() {
            </p>
            <div className="mt-6">
               <Button 
-                onClick={() => window.location.href = 'https://clube-da-beleza.base44.app'}
+                onClick={() => window.open('https://clube-da-beleza.base44.app', '_blank')}
                 className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-6 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all"
               >
                 Conheça mais o nosso trabalho
