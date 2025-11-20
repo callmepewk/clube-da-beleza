@@ -289,7 +289,7 @@ export default function Layout({ children }) {
                  </div>
                  
                  <div className="flex items-center gap-4">
-                    {user?.profile?.is_admin && (
+                    {profile?.is_admin && (
                        <Link to={createPageUrl('AdminControl')} className="text-xs font-bold bg-white text-black px-3 py-1.5 rounded-full hover:scale-105 transition-transform">
                           Painel Admin
                        </Link>
@@ -297,7 +297,10 @@ export default function Layout({ children }) {
                     <button className="text-[#B3B3B3] hover:text-white transition-colors"><Bell className="w-5 h-5" /></button>
                     {user && (
                        <div className="relative group">
-                          <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold cursor-pointer ring-2 ring-transparent group-hover:ring-white transition-all">
+                          <div 
+                            onClick={() => navigate(createPageUrl('Profile'))}
+                            className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold cursor-pointer ring-2 ring-transparent group-hover:ring-white transition-all"
+                          >
                              {user.full_name?.[0]?.toUpperCase()}
                           </div>
                           <div className="absolute right-0 mt-2 w-48 bg-[#282828] rounded-lg shadow-xl border border-[#181818] py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
