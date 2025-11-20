@@ -9,14 +9,16 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye, Sparkles, RotateCcw, Save } from 'lucide-react';
+import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye, Sparkles, RotateCcw, Save, MessageCircle, Send, BookOpen, Cuboid } from 'lucide-react';
+import * as THREE from 'three';
 
 export default function ProductsPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newProductType, setNewProductType] = useState('ebook');
   const [activeTab, setActiveTab] = useState('all');
   const [editingProduct, setEditingProduct] = useState(null);
-  
+  const [viewingProduct, setViewingProduct] = useState(null);
+
   // AI Generation State
   const [aiPrompt, setAiPrompt] = useState('');
   const [aiDetails, setAiDetails] = useState({ audience: '', tone: '', keywords: '' });
@@ -74,7 +76,9 @@ export default function ProductsPage() {
 
          Gere um título atraente, uma descrição detalhada de venda (max 300 caracteres) e uma sugestão de preço em BRL.
          Também sugira um prompt em inglês para gerar uma imagem de capa para este produto.
-         
+
+         Se for ebook, gere também um array "chapters" com 5 titulos de capitulos.
+
          Retorne APENAS JSON.
        `;
 
@@ -86,10 +90,23 @@ export default function ProductsPage() {
                 title: { type: "string" },
                 description: { type: "string" },
                 price: { type: "number" },
-                image_prompt: { type: "string" }
+                image_prompt: { type: "string" },
+                chapters: { type: "array", items: { type: "string" } }
              }
           }
        });
+
+       let contentData = {};
+       if (newProductType === 'ebook') {
+          // Generate full content for chapters
+          const fullContentPrompt = `Escreva o conteúdo completo para um ebook com os capítulos: ${textRes.chapters.join(', ')}. Cerca de 200 palavras por capitulo.`;
+          const contentRes = await base44.integrations.Core.InvokeLLM({
+             prompt: fullContentPrompt
+          });
+          contentData = { chapters: textRes.chapters, full_text: contentRes, page_count: 20 }; // Simulating 20 pages
+       } else if (newProductType === '3d_model') {
+          contentData = { model_type: 'cube', color: 'blue' }; // Mock 3d data
+       }
 
        // 2. Generate Image
        let imageUrl = '';
@@ -104,7 +121,7 @@ export default function ProductsPage() {
           }
        }
 
-       return { ...textRes, content_url: imageUrl };
+       return { ...textRes, content_url: imageUrl, content_data: contentData };
     },
     onSuccess: (data) => {
        setGeneratedProduct(data);
@@ -477,6 +494,92 @@ export default function ProductsPage() {
            </DialogContent>
         </Dialog>
       </div>
+
+      {/* Product Viewer Modal */}
+      <Dialog open={!!viewingProduct} onOpenChange={(o) => !o && setViewingProduct(null)}>
+         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+               <DialogTitle className="flex items-center gap-2">
+                  {viewingProduct?.title}
+                  <span className="text-xs font-normal bg-slate-100 px-2 py-1 rounded uppercase">{viewingProduct?.type}</span>
+               </DialogTitle>
+            </DialogHeader>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+               <div className="md:col-span-2 space-y-4">
+                  {viewingProduct?.type === 'ebook' && (
+                     <div className="bg-white border border-slate-200 rounded-lg p-8 min-h-[400px] shadow-inner">
+                        <h3 className="text-2xl font-bold text-center mb-8 text-slate-800">{viewingProduct.title}</h3>
+                        <div className="prose max-w-none text-slate-600 whitespace-pre-wrap">
+                           {viewingProduct.content_data?.full_text || "Conteúdo simulado do ebook..."}
+                        </div>
+                        <div className="mt-8 text-center text-xs text-slate-400 border-t pt-4">
+                           Página 1 de {viewingProduct.content_data?.page_count || 20}
+                        </div>
+                     </div>
+                  )}
+
+                  {viewingProduct?.type === '3d_model' && (
+                     <div className="bg-slate-900 rounded-lg h-[400px] flex items-center justify-center relative overflow-hidden" ref={(node) => {
+                        if (node && !node.hasChildNodes()) {
+                           // Basic Three.js Scene setup
+                           const scene = new THREE.Scene();
+                           const camera = new THREE.PerspectiveCamera(75, node.clientWidth / node.clientHeight, 0.1, 1000);
+                           const renderer = new THREE.WebGLRenderer({ alpha: true });
+                           renderer.setSize(node.clientWidth, node.clientHeight);
+                           node.appendChild(renderer.domElement);
+                           
+                           const geometry = new THREE.BoxGeometry( 2, 2, 2 );
+                           const material = new THREE.MeshBasicMaterial( { color: 0x00ff00, wireframe: true } );
+                           const cube = new THREE.Mesh( geometry, material );
+                           scene.add( cube );
+                           camera.position.z = 5;
+                           
+                           const animate = function () {
+                             requestAnimationFrame( animate );
+                             cube.rotation.x += 0.01;
+                             cube.rotation.y += 0.01;
+                             renderer.render( scene, camera );
+                           };
+                           animate();
+                        }
+                     }}>
+                        {/* Three.js Canvas will be injected here */}
+                        <div className="absolute bottom-4 left-4 text-white text-xs bg-black/50 px-2 py-1 rounded">Modelo 3D Interativo</div>
+                     </div>
+                  )}
+                  
+                  {/* Generic/Course View */}
+                  {viewingProduct?.type === 'course' && (
+                     <div className="bg-slate-100 rounded-lg h-[400px] flex items-center justify-center">
+                        <Video className="w-16 h-16 text-slate-300" />
+                        <span className="ml-4 text-slate-500">Player de Vídeo do Curso</span>
+                     </div>
+                  )}
+
+                  <div className="flex gap-2">
+                     <Button className="flex-1 bg-indigo-600" onClick={() => alert('Baixando PDF/Arquivo...')}>
+                        <Download className="w-4 h-4 mr-2" /> Baixar Arquivo
+                     </Button>
+                  </div>
+               </div>
+
+               {/* Chat for Changes */}
+               <div className="bg-slate-50 border border-slate-200 rounded-lg p-4 flex flex-col h-[500px]">
+                  <h4 className="font-bold text-sm mb-4 flex items-center gap-2"><MessageCircle className="w-4 h-4" /> Assistente de Produto</h4>
+                  <div className="flex-1 bg-white rounded border p-2 mb-2 overflow-y-auto text-sm space-y-2">
+                     <div className="bg-slate-100 p-2 rounded-lg text-slate-600">
+                        Olá! O que você gostaria de alterar neste produto? Posso mudar o conteúdo, design ou cores.
+                     </div>
+                     {/* Chat history would go here */}
+                  </div>
+                  <div className="flex gap-2">
+                     <Input placeholder="Ex: Mude a cor para azul..." className="text-xs" />
+                     <Button size="icon" variant="ghost"><Send className="w-4 h-4" /></Button>
+                  </div>
+               </div>
+            </div>
+         </DialogContent>
+      </Dialog>
 
       {/* Tabs for Management */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
