@@ -485,10 +485,10 @@ export default function Layout({ children }) {
                                 {profile?.is_admin && (
                                    <button 
                                       onClick={() => navigate(createPageUrl('AdminControl'))}
-                                      className="w-full text-left px-4 py-3 hover:bg-purple-50 transition-colors flex items-center gap-3 text-sm font-medium text-purple-700"
+                                      className="w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors flex items-center gap-3 text-sm font-medium text-[#0F172A]"
                                    >
-                                      <Shield className="w-4 h-4" />
-                                      Painel de Controle
+                                      <Shield className="w-4 h-4 text-[#64748B]" />
+                                      Controle
                                    </button>
                                 )}
                              </div>
