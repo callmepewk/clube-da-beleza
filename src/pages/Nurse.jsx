@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format, differenceInDays, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
-import { motion, AnimatePresence } from 'framer-motion';
+// import { motion, AnimatePresence } from 'framer-motion';
 
 const NURSE_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/6ad7fd07e_nurse.png";
 
@@ -152,11 +152,7 @@ export default function NursePage() {
       {/* Interactive Nurse Avatar Section */}
       <div className="w-1/3 hidden lg:flex flex-col items-center justify-center relative">
         <div className="relative z-10 w-full h-full flex flex-col items-center justify-center">
-          <motion.div
-             animate={{ y: [0, -10, 0] }}
-             transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-             className="relative"
-          >
+          <div className="relative">
              <div className="absolute -inset-4 bg-emerald-400/20 blur-3xl rounded-full" />
              <img 
                src={NURSE_IMAGE} 
@@ -165,21 +161,14 @@ export default function NursePage() {
              />
              
              {/* Speech Bubble */}
-             <AnimatePresence>
-                {chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === 'assistant' && (
-                   <motion.div 
-                     initial={{ opacity: 0, scale: 0.8, x: -20 }}
-                     animate={{ opacity: 1, scale: 1, x: 0 }}
-                     exit={{ opacity: 0, scale: 0.8 }}
-                     className="absolute -top-4 -right-20 bg-white p-4 rounded-2xl rounded-bl-none shadow-xl border-2 border-emerald-100 max-w-[250px] z-20"
-                   >
-                      <p className="text-sm text-slate-700 line-clamp-3">
-                        {chatHistory[chatHistory.length - 1].content}
-                      </p>
-                      <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-white border-b-2 border-l-2 border-emerald-100 transform rotate-45" />
-                   </motion.div>
-                )}
-             </AnimatePresence>
+             {chatHistory.length > 0 && chatHistory[chatHistory.length - 1].role === 'assistant' && (
+                 <div className="absolute -top-4 -right-20 bg-white p-4 rounded-2xl rounded-bl-none shadow-xl border-2 border-emerald-100 max-w-[250px] z-20">
+                    <p className="text-sm text-slate-700 line-clamp-3">
+                      {chatHistory[chatHistory.length - 1].content}
+                    </p>
+                    <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-white border-b-2 border-l-2 border-emerald-100 transform rotate-45" />
+                 </div>
+             )}
           </motion.div>
         </div>
         
@@ -238,9 +227,7 @@ export default function NursePage() {
             <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-slate-50/50" ref={scrollRef}>
               <div className="space-y-4 max-w-3xl mx-auto">
                 {chatHistory.map((msg, idx) => (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                  <div
                     key={idx}
                     className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}
                   >
@@ -267,11 +254,11 @@ export default function NursePage() {
                         {msg.content}
                       </div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
                 
                 {sendMessageMutation.isPending && (
-                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
+                  <div className="flex gap-3">
                     <Avatar className="w-8 h-8 bg-emerald-100 border border-emerald-200">
                       <AvatarImage src={NURSE_IMAGE} className="object-cover scale-150 pt-1" />
                     </Avatar>
@@ -280,20 +267,14 @@ export default function NursePage() {
                       <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                       <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
-                  </motion.div>
+                  </div>
                 )}
               </div>
             </div>
 
             {/* Interactive Suggestions */}
-            <AnimatePresence>
                {step === 'ask_topic' && (
-                  <motion.div 
-                     initial={{ height: 0, opacity: 0 }}
-                     animate={{ height: 'auto', opacity: 1 }}
-                     exit={{ height: 0, opacity: 0 }}
-                     className="px-4 py-2 bg-slate-50 border-t border-slate-100 overflow-x-auto flex flex-col gap-2 no-scrollbar max-h-32"
-                  >
+                  <div className="px-4 py-2 bg-slate-50 border-t border-slate-100 overflow-x-auto flex flex-col gap-2 no-scrollbar max-h-32">
                      <div className="flex gap-2 flex-wrap">
                        {EXAM_OPTIONS.map((item) => (
                           <Button 
@@ -301,7 +282,7 @@ export default function NursePage() {
                              variant="outline" 
                              size="sm" 
                              onClick={() => handleOptionClick(item, 'exam')}
-                             className="whitespace-nowrap border-emerald-200 text-emerald-700 hover:bg-emerald-50 hover:scale-105 transition-transform"
+                             className="whitespace-nowrap border-emerald-200 text-emerald-700 hover:bg-emerald-50 transition-transform"
                           >
                              {item}
                           </Button>
@@ -314,15 +295,14 @@ export default function NursePage() {
                              variant="outline" 
                              size="sm" 
                              onClick={() => handleOptionClick(item, 'procedure')}
-                             className="whitespace-nowrap border-purple-200 text-purple-700 hover:bg-purple-50 hover:scale-105 transition-transform"
+                             className="whitespace-nowrap border-purple-200 text-purple-700 hover:bg-purple-50 transition-transform"
                           >
                              {item}
                           </Button>
                        ))}
                      </div>
-                  </motion.div>
+                  </div>
                )}
-            </AnimatePresence>
 
             {/* Input Area */}
             <div className="p-4 bg-white border-t">
