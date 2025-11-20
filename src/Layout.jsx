@@ -453,7 +453,7 @@ export default function Layout({ children }) {
 
                   {profile?.is_admin && (
                     <button 
-                      onClick={() => navigate(createPageUrl('admincontrol'))}
+                      onClick={() => navigate(createPageUrl('AdminControl'))}
                       className={`w-full text-left px-4 py-3 hover:bg-[#FFF9F0] transition-colors flex items-center gap-3 text-sm font-light ${theme.textPrimary}`}
                     >
                       <Shield className={`w-4 h-4 ${theme.accent}`} />
