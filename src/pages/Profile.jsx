@@ -266,7 +266,9 @@ export default function ProfilePage() {
 
         <Tabs defaultValue="personal" className="w-full">
           <TabsList className="w-full bg-[#FEFBF7] border border-[#D4A574]/20 p-1.5 rounded-2xl">
-            <TabsTrigger value="personal" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">Dados Pessoais</TabsTrigger>
+            <TabsTrigger value="personal" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">
+              {profile?.type === 'professional' ? 'Profissional & Pessoal' : 'Dados Pessoais'}
+            </TabsTrigger>
             <TabsTrigger value="stats" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">Minhas Estatísticas</TabsTrigger>
             {profile?.type === 'patient' && <TabsTrigger value="medical" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">Ficha Médica</TabsTrigger>}
             {profile?.type === 'professional' && <TabsTrigger value="professional" className="rounded-xl data-[state=active]:bg-[#D4A574] data-[state=active]:text-white data-[state=active]:shadow-sm text-[#6B5D4F] font-light transition-all py-3">Profissional</TabsTrigger>}
@@ -295,7 +297,7 @@ export default function ProfilePage() {
                 <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
                    <span className="bg-white/20 px-4 py-1.5 rounded-full text-sm font-bold backdrop-blur-md flex items-center gap-2 shadow-inner border border-white/10">
                       <div className="w-2.5 h-2.5 bg-[#34D399] rounded-full animate-pulse shadow-[0_0_8px_#34D399]"></div>
-                      {profile?.type === 'professional' ? 'Profissional Certificado' : 'Paciente Premium'}
+                      {profile?.type === 'professional' ? 'Profissional Certificado' : profile?.type === 'sponsor' ? 'Patrocinador' : 'Paciente Premium'}
                    </span>
                    <span className="bg-white/20 px-4 py-1.5 rounded-full text-sm font-bold backdrop-blur-md shadow-inner border border-white/10">Plano: {profile?.plan || 'Free'}</span>
                 </div>
@@ -411,17 +413,18 @@ export default function ProfilePage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="personal">
+        <TabsContent value="personal" className="space-y-6">
           {/* Professional Services Section - FIRST for professionals */}
           {profile?.type === 'professional' && (
-            <Card className={cardClass + " mb-6"}>
+            <Card className={cardClass}>
               <CardHeader className="border-b border-[#D4A574]/20 pb-6 pt-6 px-8">
                 <CardTitle className="text-[#2D2416] flex items-center gap-4 text-xl">
-                   <div className="bg-[#FFF9F0] p-3 rounded-2xl"><Activity className="w-6 h-6 text-[#D4A574]" /></div>
+                   <div className="bg-[#FFF9F0] p-3 rounded-2xl"><DollarSign className="w-6 h-6 text-[#D4A574]" /></div>
                    Informações Profissionais
                 </CardTitle>
+                <p className="text-sm text-[#6B5D4F] mt-2 font-light">Configure seu registro profissional e catálogo completo de serviços</p>
               </CardHeader>
-              <CardContent className="space-y-6 pt-8 px-8 pb-8">
+              <CardContent className="space-y-8 pt-8 px-8 pb-8">
                 <div className="space-y-2">
                   <Label className={labelClass}>CRM / COREN / Registro Profissional</Label>
                   <Input className={inputClass} value={professionalData.registry} onChange={e => setProfessionalData({...professionalData, registry: e.target.value})} placeholder="00000/UF" />
