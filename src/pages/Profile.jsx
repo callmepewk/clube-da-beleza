@@ -349,32 +349,32 @@ export default function ProfilePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
              {/* Valuation & Conversion */}
-             <Card className="col-span-1 md:col-span-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-0">
+             <Card className="col-span-1 md:col-span-2 bg-gradient-to-r from-[#B8935C] to-[#D4A574] text-white border-0 shadow-lg">
                 <CardHeader className="pb-2">
-                   <CardTitle className="text-indigo-100 text-sm font-medium flex items-center gap-2">
+                   <CardTitle className="text-white/80 text-sm font-light flex items-center gap-2">
                       <TrendingUp className="w-4 h-4" /> Valuation das Criações
                    </CardTitle>
                 </CardHeader>
                 <CardContent>
-                   <div className="text-4xl font-bold">R$ {stats?.valuation?.toLocaleString('pt-BR') || '0,00'}</div>
+                   <div className="text-4xl font-light">R$ {stats?.valuation?.toLocaleString('pt-BR') || '0,00'}</div>
                    <div className="mt-4 flex items-center gap-4">
-                      <div className="bg-white/20 px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
-                         Poder de Conversão: <span className="text-yellow-300 font-bold">{stats?.conversionPower || 'N/A'}</span>
+                      <div className="bg-white/20 px-3 py-1 rounded-lg text-sm font-light backdrop-blur-sm">
+                         Poder de Conversão: <span className="text-[#E8E05C] font-light">{stats?.conversionPower || 'N/A'}</span>
                       </div>
                    </div>
                 </CardContent>
              </Card>
 
              <Card className={cardClass}>
-                <CardHeader className="pb-2"><CardTitle className="text-slate-500 text-xs font-bold uppercase">Valor em Produtos</CardTitle></CardHeader>
+                <CardHeader className="pb-2"><CardTitle className="text-[#6B5D4F] text-xs font-light uppercase tracking-wider">Valor em Produtos</CardTitle></CardHeader>
                 <CardContent>
-                   <div className="text-2xl font-bold text-emerald-600">R$ {stats?.productsValue?.toLocaleString('pt-BR') || '0,00'}</div>
+                   <div className="text-2xl font-light text-[#C9A868]">R$ {stats?.productsValue?.toLocaleString('pt-BR') || '0,00'}</div>
                 </CardContent>
              </Card>
              <Card className={cardClass}>
-                <CardHeader className="pb-2"><CardTitle className="text-slate-500 text-xs font-bold uppercase">Total Produtos</CardTitle></CardHeader>
+                <CardHeader className="pb-2"><CardTitle className="text-[#6B5D4F] text-xs font-light uppercase tracking-wider">Total Produtos</CardTitle></CardHeader>
                 <CardContent>
-                   <div className="text-2xl font-bold text-slate-800">{stats?.products || 0}</div>
+                   <div className="text-2xl font-light text-[#2D2416]">{stats?.products || 0}</div>
                 </CardContent>
              </Card>
           </div>
@@ -412,10 +412,203 @@ export default function ProfilePage() {
         </TabsContent>
 
         <TabsContent value="personal">
+          {/* Professional Services Section - FIRST for professionals */}
+          {profile?.type === 'professional' && (
+            <Card className={cardClass + " mb-6"}>
+              <CardHeader className="border-b border-[#D4A574]/20 pb-6 pt-6 px-8">
+                <CardTitle className="text-[#2D2416] flex items-center gap-4 text-xl">
+                   <div className="bg-[#FFF9F0] p-3 rounded-2xl"><Activity className="w-6 h-6 text-[#D4A574]" /></div>
+                   Informações Profissionais
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6 pt-8 px-8 pb-8">
+                <div className="space-y-2">
+                  <Label className={labelClass}>CRM / COREN / Registro Profissional</Label>
+                  <Input className={inputClass} value={professionalData.registry} onChange={e => setProfessionalData({...professionalData, registry: e.target.value})} placeholder="00000/UF" />
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className={labelClass}>Especialidades</Label>
+                  <Input className={inputClass} value={professionalData.specialties} onChange={e => setProfessionalData({...professionalData, specialties: e.target.value})} placeholder="Ex: Dermatologia, Cirurgia Plástica (separe por vírgula)" />
+                </div>
+
+                <div className="border-t border-[#D4A574]/20 pt-6 mt-6">
+                  <h3 className="font-bold text-[#2D2416] mb-6 flex items-center gap-2 text-lg">
+                     <DollarSign className="w-5 h-5 text-[#D4A574]" /> Catálogo de Serviços & Preços
+                  </h3>
+                  <p className="text-sm text-[#6B5D4F] mb-6">Configure todos os serviços que você oferece, incluindo consultas, exames e procedimentos estéticos.</p>
+
+                  <div className="bg-[#FFF9F0] p-6 rounded-2xl border border-[#D4A574]/20 mb-6">
+                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
+                        <div className="space-y-2 md:col-span-1">
+                           <Label className={labelClass}>Categoria *</Label>
+                           <select 
+                              className={inputClass + " px-4"}
+                              value={newService.category}
+                              onChange={e => setNewService({...newService, category: e.target.value})}
+                           >
+                              <option value="consultation">Consulta</option>
+                              <option value="exam">Exame</option>
+                              <option value="procedure">Procedimento</option>
+                           </select>
+                        </div>
+                        <div className="space-y-2 md:col-span-2 relative">
+                           <Label className={labelClass}>Nome do Serviço *</Label>
+                           <div className="relative">
+                              <Input 
+                                 className={inputClass} 
+                                 value={newService.name} 
+                                 onChange={async (e) => {
+                                    const val = e.target.value;
+                                    setNewService({...newService, name: val});
+                                    if (val.length > 2) {
+                                       setIsAiLoading(true);
+                                       try {
+                                          const categoryMap = {
+                                             consultation: 'consultas (presencial, online, teleconsulta)',
+                                             exam: 'exames estéticos (dermoscopia, bioimpedância, análise facial)',
+                                             procedure: 'procedimentos estéticos (botox, preenchimento, peeling, laser)'
+                                          };
+                                          const suggestions = await base44.integrations.Core.InvokeLLM({
+                                             prompt: `Liste 5 tipos comuns de ${categoryMap[newService.category]} na medicina estética que contenham ou sejam similares a "${val}". Retorne apenas os nomes em um array JSON.`,
+                                             response_json_schema: { type: "object", properties: { items: { type: "array", items: { type: "string" } } } }
+                                          });
+                                          setAiSuggestions(suggestions.items || []);
+                                       } catch(e) { 
+                                          console.error(e);
+                                       } finally { 
+                                          setIsAiLoading(false); 
+                                       }
+                                    } else {
+                                       setAiSuggestions([]);
+                                    }
+                                 }}
+                                 placeholder="Digite e veja sugestões..." 
+                              />
+                              {isAiLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-5 text-[#B8935C]" />}
+                              {aiSuggestions.length > 0 && (
+                                 <div className="absolute top-full left-0 right-0 bg-white border border-[#D4A574]/30 shadow-lg rounded-xl mt-1 z-50 max-h-48 overflow-y-auto">
+                                    {aiSuggestions.map((s, i) => (
+                                       <div 
+                                          key={i} 
+                                          className="p-3 hover:bg-[#FFF9F0] cursor-pointer text-sm text-[#2D2416] border-b last:border-0"
+                                          onClick={() => {
+                                             setNewService({...newService, name: s});
+                                             setAiSuggestions([]);
+                                          }}
+                                       >
+                                          {s}
+                                       </div>
+                                    ))}
+                                 </div>
+                              )}
+                           </div>
+                        </div>
+                        <div className="space-y-2 md:col-span-1">
+                           <Label className={labelClass}>Preço (R$)</Label>
+                           <Input 
+                              type="number" 
+                              step="0.01"
+                              className={inputClass} 
+                              value={newService.price} 
+                              onChange={e => setNewService({...newService, price: e.target.value})} 
+                              placeholder="0.00"
+                              disabled={newService.is_free}
+                           />
+                        </div>
+                     </div>
+                     <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                           <input 
+                              type="checkbox" 
+                              id="is_free_main" 
+                              checked={newService.is_free} 
+                              onChange={e => setNewService({...newService, is_free: e.target.checked, price: e.target.checked ? '0' : newService.price})} 
+                              className="w-5 h-5 text-[#D4A574] rounded border-[#D4A574]/30 focus:ring-[#D4A574]"
+                           />
+                           <label htmlFor="is_free_main" className="text-sm font-light text-[#6B5D4F] cursor-pointer">Gratuito / Presente</label>
+                        </div>
+                        <Button 
+                           onClick={() => {
+                              if (!newService.name) return alert("Digite o nome do serviço");
+                              setServicesCatalog([...servicesCatalog, { ...newService, price: parseFloat(newService.price) || 0 }]);
+                              setNewService({ category: 'consultation', name: '', price: '', is_free: false });
+                              setAiSuggestions([]);
+                           }}
+                           className="bg-[#D4A574] hover:bg-[#C49565] text-white font-light rounded-xl h-12 px-6"
+                        >
+                           + Adicionar Serviço
+                        </Button>
+                     </div>
+                  </div>
+
+                  {/* Revenue Summary */}
+                  {servicesCatalog.length > 0 && (
+                     <div className="bg-gradient-to-r from-[#FFF9F0] to-[#FFF5E6] p-6 rounded-2xl border border-[#D4A574]/30 mb-6">
+                        <div className="flex items-center justify-between">
+                           <div>
+                              <p className="text-sm text-[#B8935C] font-bold uppercase tracking-wide mb-1">Receita Estimada (Mensal)</p>
+                              <p className="text-3xl font-light text-[#2D2416]">
+                                 R$ {servicesCatalog.reduce((acc, s) => acc + (s.price || 0), 0).toFixed(2)}
+                              </p>
+                              <p className="text-xs text-[#6B5D4F] mt-1">Baseado em {servicesCatalog.length} serviço(s) cadastrado(s)</p>
+                           </div>
+                           <DollarSign className="w-12 h-12 text-[#D4A574]" />
+                        </div>
+                     </div>
+                  )}
+
+                  {/* Services List */}
+                  <div className="space-y-3">
+                     {servicesCatalog.length === 0 && (
+                        <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-[#D4A574]/30">
+                           <Activity className="w-12 h-12 text-[#D4A574]/30 mx-auto mb-3" />
+                           <p className="text-[#6B5D4F] font-light">Nenhum serviço cadastrado ainda.</p>
+                           <p className="text-xs text-[#B8935C] mt-1">Adicione seus serviços para calcular a receita estimada.</p>
+                        </div>
+                     )}
+                     {servicesCatalog.map((item, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-4 bg-white border border-[#D4A574]/20 rounded-xl shadow-sm hover:shadow-md transition-all">
+                           <div className="flex items-center gap-4">
+                              <div className={`p-3 rounded-lg ${item.category === 'consultation' ? 'bg-[#FFF9F0] text-[#D4A574]' : item.category === 'exam' ? 'bg-[#FFF9F0] text-[#B8935C]' : 'bg-[#FFF9F0] text-[#C9A868]'}`}>
+                                 {item.category === 'consultation' ? <UserIcon className="w-5 h-5" /> : item.category === 'exam' ? <Activity className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
+                              </div>
+                              <div>
+                                 <p className="font-light text-[#2D2416] text-base">{item.name}</p>
+                                 <p className="text-xs text-[#6B5D4F] capitalize font-light">
+                                    {item.category === 'consultation' ? 'Consulta' : item.category === 'exam' ? 'Exame' : 'Procedimento'}
+                                 </p>
+                              </div>
+                           </div>
+                           <div className="flex items-center gap-4">
+                              <span className={`font-light text-lg ${item.is_free ? 'text-[#C9A868]' : 'text-[#2D2416]'}`}>
+                                 {item.is_free ? 'Grátis' : `R$ ${item.price?.toFixed(2)}`}
+                              </span>
+                              <Button 
+                                 size="icon" 
+                                 variant="ghost" 
+                                 className="text-red-400 hover:text-red-600 hover:bg-red-50"
+                                 onClick={() => {
+                                    const newCat = [...servicesCatalog];
+                                    newCat.splice(idx, 1);
+                                    setServicesCatalog(newCat);
+                                 }}
+                              >
+                                 <Trash2 className="w-4 h-4" />
+                              </Button>
+                           </div>
+                        </div>
+                     ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <Card className={cardClass}>
-            <CardHeader className="border-b border-slate-100 pb-6 pt-6 px-8">
-              <CardTitle className="text-[#0F172A] flex items-center gap-4 text-xl">
-                 <div className="bg-[#F0FDFA] p-3 rounded-2xl"><UserIcon className="w-6 h-6 text-[#0D9488]" /></div>
+            <CardHeader className="border-b border-[#D4A574]/20 pb-6 pt-6 px-8">
+              <CardTitle className="text-[#2D2416] flex items-center gap-4 text-xl">
+                 <div className="bg-[#FFF9F0] p-3 rounded-2xl"><UserIcon className="w-6 h-6 text-[#D4A574]" /></div>
                  Informações Pessoais
               </CardTitle>
             </CardHeader>
@@ -448,10 +641,10 @@ export default function ProfilePage() {
                  </div>
               </div>
 
-              <div className="border-t border-slate-100 pt-8 mt-2">
+              <div className="border-t border-[#D4A574]/20 pt-8 mt-2">
                   <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold flex items-center gap-3 text-[#0F172A] text-lg">
-                       <div className="bg-[#F0FDFA] p-3 rounded-2xl"><MapPin className="w-5 h-5 text-[#0D9488]" /></div> 
+                    <h3 className="font-bold flex items-center gap-3 text-[#2D2416] text-lg">
+                       <div className="bg-[#FFF9F0] p-3 rounded-2xl"><MapPin className="w-5 h-5 text-[#D4A574]" /></div> 
                        Endereço
                     </h3>
                     <Button 
@@ -460,7 +653,7 @@ export default function ProfilePage() {
                       size="sm" 
                       onClick={handleLocationClick}
                       disabled={isLoadingLocation}
-                      className="text-xs h-10 px-4 bg-white text-[#0D9488] border-[#0D9488] hover:bg-[#F0FDFA] font-bold rounded-lg"
+                      className="text-xs h-10 px-4 bg-white text-[#D4A574] border-[#D4A574]/30 hover:bg-[#FFF9F0] font-light rounded-lg"
                     >
                       {isLoadingLocation ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <MapPin className="w-4 h-4 mr-2" />}
                       Usar minha localização
@@ -499,182 +692,6 @@ export default function ProfilePage() {
                      </div>
                   </div>
               </div>
-
-              {/* Professional Services & Pricing */}
-              {profile?.type === 'professional' && (
-                <div className="border-t-2 border-slate-50 pt-8 mt-2">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-bold flex items-center gap-3 text-[#0F172A] text-lg">
-                       <div className="bg-[#F0FDFA] p-3 rounded-2xl"><Activity className="w-5 h-5 text-[#0D9488]" /></div> 
-                       Catálogo de Serviços & Preços
-                    </h3>
-                  </div>
-                  <p className="text-sm text-[#64748B] mb-6">Configure todos os serviços que você oferece, incluindo consultas, exames e procedimentos estéticos.</p>
-
-                  <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
-                       <div className="space-y-2 md:col-span-1">
-                          <Label className={labelClass}>Categoria *</Label>
-                          <select 
-                             className={inputClass + " px-4"}
-                             value={newService.category}
-                             onChange={e => setNewService({...newService, category: e.target.value})}
-                          >
-                             <option value="consultation">Consulta</option>
-                             <option value="exam">Exame</option>
-                             <option value="procedure">Procedimento</option>
-                          </select>
-                       </div>
-                       <div className="space-y-2 md:col-span-2 relative">
-                          <Label className={labelClass}>Nome do Serviço *</Label>
-                          <div className="relative">
-                             <Input 
-                                className={inputClass} 
-                                value={newService.name} 
-                                onChange={async (e) => {
-                                   const val = e.target.value;
-                                   setNewService({...newService, name: val});
-                                   if (val.length > 2) {
-                                      setIsAiLoading(true);
-                                      try {
-                                         const categoryMap = {
-                                            consultation: 'consultas (presencial, online, teleconsulta)',
-                                            exam: 'exames estéticos (dermoscopia, bioimpedância, análise facial)',
-                                            procedure: 'procedimentos estéticos (botox, preenchimento, peeling, laser)'
-                                         };
-                                         const suggestions = await base44.integrations.Core.InvokeLLM({
-                                            prompt: `Liste 5 tipos comuns de ${categoryMap[newService.category]} na medicina estética que contenham ou sejam similares a "${val}". Retorne apenas os nomes em um array JSON.`,
-                                            response_json_schema: { type: "object", properties: { items: { type: "array", items: { type: "string" } } } }
-                                         });
-                                         setAiSuggestions(suggestions.items || []);
-                                      } catch(e) { 
-                                         console.error(e);
-                                      } finally { 
-                                         setIsAiLoading(false); 
-                                      }
-                                   } else {
-                                      setAiSuggestions([]);
-                                   }
-                                }}
-                                placeholder="Digite e veja sugestões..." 
-                             />
-                             {isAiLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-5 text-slate-400" />}
-                             {aiSuggestions.length > 0 && (
-                                <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 shadow-lg rounded-xl mt-1 z-50 max-h-48 overflow-y-auto">
-                                   {aiSuggestions.map((s, i) => (
-                                      <div 
-                                         key={i} 
-                                         className="p-3 hover:bg-slate-50 cursor-pointer text-sm text-slate-700 border-b last:border-0"
-                                         onClick={() => {
-                                            setNewService({...newService, name: s});
-                                            setAiSuggestions([]);
-                                         }}
-                                      >
-                                         {s}
-                                      </div>
-                                   ))}
-                                </div>
-                             )}
-                          </div>
-                       </div>
-                       <div className="space-y-2 md:col-span-1">
-                          <Label className={labelClass}>Preço (R$)</Label>
-                          <Input 
-                             type="number" 
-                             step="0.01"
-                             className={inputClass} 
-                             value={newService.price} 
-                             onChange={e => setNewService({...newService, price: e.target.value})} 
-                             placeholder="0.00"
-                             disabled={newService.is_free}
-                          />
-                       </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                       <div className="flex items-center gap-2">
-                          <input 
-                             type="checkbox" 
-                             id="is_free" 
-                             checked={newService.is_free} 
-                             onChange={e => setNewService({...newService, is_free: e.target.checked, price: e.target.checked ? '0' : newService.price})} 
-                             className="w-5 h-5 text-[#0D9488] rounded border-gray-300 focus:ring-[#0D9488]"
-                          />
-                          <label htmlFor="is_free" className="text-sm font-medium text-slate-700 cursor-pointer">Gratuito / Presente</label>
-                       </div>
-                       <Button 
-                          onClick={() => {
-                             if (!newService.name) return alert("Digite o nome do serviço");
-                             setServicesCatalog([...servicesCatalog, { ...newService, price: parseFloat(newService.price) || 0 }]);
-                             setNewService({ category: 'consultation', name: '', price: '', is_free: false });
-                             setAiSuggestions([]);
-                          }}
-                          className="bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl h-12 px-6"
-                       >
-                          + Adicionar Serviço
-                       </Button>
-                    </div>
-                 </div>
-
-                 {/* Revenue Summary */}
-                 {servicesCatalog.length > 0 && (
-                    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 mb-6">
-                       <div className="flex items-center justify-between">
-                          <div>
-                             <p className="text-sm text-emerald-700 font-bold uppercase tracking-wide mb-1">Receita Estimada (Mensal)</p>
-                             <p className="text-3xl font-black text-emerald-800">
-                                R$ {servicesCatalog.reduce((acc, s) => acc + (s.price || 0), 0).toFixed(2)}
-                             </p>
-                             <p className="text-xs text-emerald-600 mt-1">Baseado em {servicesCatalog.length} serviço(s) cadastrado(s)</p>
-                          </div>
-                          <DollarSign className="w-12 h-12 text-emerald-600" />
-                       </div>
-                    </div>
-                 )}
-
-                 {/* Services List */}
-                 <div className="space-y-3">
-                    {servicesCatalog.length === 0 && (
-                       <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300">
-                          <Activity className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                          <p className="text-slate-500 italic">Nenhum serviço cadastrado ainda.</p>
-                          <p className="text-xs text-slate-400 mt-1">Adicione seus serviços para calcular a receita estimada.</p>
-                       </div>
-                    )}
-                    {servicesCatalog.map((item, idx) => (
-                       <div key={idx} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all">
-                          <div className="flex items-center gap-4">
-                             <div className={`p-3 rounded-lg ${item.category === 'consultation' ? 'bg-blue-50 text-blue-600' : item.category === 'exam' ? 'bg-purple-50 text-purple-600' : 'bg-pink-50 text-pink-600'}`}>
-                                {item.category === 'consultation' ? <UserIcon className="w-5 h-5" /> : item.category === 'exam' ? <Activity className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
-                             </div>
-                             <div>
-                                <p className="font-bold text-slate-800 text-base">{item.name}</p>
-                                <p className="text-xs text-slate-500 capitalize font-medium">
-                                   {item.category === 'consultation' ? 'Consulta' : item.category === 'exam' ? 'Exame' : 'Procedimento'}
-                                </p>
-                             </div>
-                          </div>
-                          <div className="flex items-center gap-4">
-                             <span className={`font-bold text-lg ${item.is_free ? 'text-green-600' : 'text-slate-700'}`}>
-                                {item.is_free ? 'Grátis' : `R$ ${item.price?.toFixed(2)}`}
-                             </span>
-                             <Button 
-                                size="icon" 
-                                variant="ghost" 
-                                className="text-red-400 hover:text-red-600 hover:bg-red-50"
-                                onClick={() => {
-                                   const newCat = [...servicesCatalog];
-                                   newCat.splice(idx, 1);
-                                   setServicesCatalog(newCat);
-                                }}
-                             >
-                                <Trash2 className="w-4 h-4" />
-                             </Button>
-                          </div>
-                       </div>
-                    ))}
-                 </div>
-                </div>
-              )}
 
               <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#D4A574] hover:bg-[#C49565] text-white h-14 font-light shadow-lg shadow-[#D4A574]/20 hover:shadow-[#D4A574]/30 transition-all rounded-xl text-lg mt-4" disabled={saveMutation.isPending}>
                  {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
@@ -721,8 +738,11 @@ export default function ProfilePage() {
 
         <TabsContent value="medical">
           <Card className={cardClass}>
-            <CardHeader className="border-b border-[#E2E8F0] pb-4">
-              <CardTitle className="text-[#2D3748]">Ficha Médica Digital</CardTitle>
+            <CardHeader className="border-b border-[#D4A574]/20 pb-6 pt-6 px-8">
+              <CardTitle className="text-[#2D2416] flex items-center gap-4 text-xl">
+                 <div className="bg-[#FFF9F0] p-3 rounded-2xl"><Activity className="w-6 h-6 text-[#D4A574]" /></div>
+                 Ficha Médica Digital
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 pt-6">
               <div className="grid grid-cols-2 gap-4">
@@ -743,8 +763,9 @@ export default function ProfilePage() {
                 <Label className={labelClass}>Doenças Crônicas / Histórico</Label>
                 <Input className={inputClass} value={medicalData.diseases} onChange={e => setMedicalData({...medicalData, diseases: e.target.value})} placeholder="Separe por vírgula" />
               </div>
-              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#3BAE9C] hover:bg-[#2A9D8F] text-white h-12 font-bold shadow-md hover:shadow-lg transition-all rounded-xl" disabled={saveMutation.isPending}>
-                 Salvar Dados Médicos
+              <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#D4A574] hover:bg-[#C49565] text-white h-14 font-light shadow-lg shadow-[#D4A574]/20 hover:shadow-[#D4A574]/30 transition-all rounded-xl text-lg" disabled={saveMutation.isPending}>
+                 {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
+                 Salvar Alterações
               </Button>
             </CardContent>
           </Card>
@@ -752,10 +773,13 @@ export default function ProfilePage() {
 
          <TabsContent value="professional">
           <Card className={cardClass}>
-            <CardHeader className="border-b border-[#E2E8F0] pb-4">
-              <CardTitle className="text-[#2D3748]">Credenciais Profissionais</CardTitle>
+            <CardHeader className="border-b border-[#D4A574]/20 pb-6 pt-6 px-8">
+              <CardTitle className="text-[#2D2416] flex items-center gap-4 text-xl">
+                 <div className="bg-[#FFF9F0] p-3 rounded-2xl"><Activity className="w-6 h-6 text-[#D4A574]" /></div>
+                 Credenciais & Integrações
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4 pt-6">
+            <CardContent className="space-y-6 pt-8 px-8 pb-8">
               <div className="space-y-2">
                 <Label className={labelClass}>CRM / COREN / Registro</Label>
                 <Input className={inputClass} value={professionalData.registry} onChange={e => setProfessionalData({...professionalData, registry: e.target.value})} placeholder="00000/UF" />
@@ -765,217 +789,45 @@ export default function ProfilePage() {
                 <Input className={inputClass} value={professionalData.specialties} onChange={e => setProfessionalData({...professionalData, specialties: e.target.value})} placeholder="Ex: Dermatologia, Cirurgia Plástica" />
               </div>
 
-              <div className="mt-8 pt-6 border-t border-slate-100">
-                 <h3 className="font-bold text-[#0F172A] mb-4 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-[#0D9488]" /> Integrações de Agenda
+              <div className="mt-8 pt-6 border-t border-[#D4A574]/20">
+                 <h3 className="font-bold text-[#2D2416] mb-4 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-[#D4A574]" /> Integrações de Agenda
                  </h3>
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="border border-slate-200 rounded-xl p-4 flex items-center justify-between bg-slate-50">
+                    <div className="border border-[#D4A574]/20 rounded-xl p-4 flex items-center justify-between bg-[#FFF9F0]">
                        <div className="flex items-center gap-3">
                           <div className="bg-white p-2 rounded-lg shadow-sm">
-                             <Calendar className="w-5 h-5 text-blue-600" />
+                             <Calendar className="w-5 h-5 text-[#D4A574]" />
                           </div>
                           <div>
-                             <div className="font-bold text-slate-700">Google Agenda</div>
-                             <div className="text-xs text-slate-500">Sincronizar eventos</div>
+                             <div className="font-light text-[#2D2416]">Google Agenda</div>
+                             <div className="text-xs text-[#6B5D4F]">Sincronizar eventos</div>
                           </div>
                        </div>
-                       <Button variant="outline" size="sm" className="border-blue-200 text-blue-700 hover:bg-blue-50" onClick={() => alert("Google Agenda conectado!")}>Conectar</Button>
+                       <Button variant="outline" size="sm" className="border-[#D4A574]/30 text-[#D4A574] hover:bg-white font-light" onClick={() => alert("Google Agenda conectado!")}>Conectar</Button>
                     </div>
-                    <div className="border border-slate-200 rounded-xl p-4 flex items-center justify-between bg-slate-50">
+                    <div className="border border-[#D4A574]/20 rounded-xl p-4 flex items-center justify-between bg-[#FFF9F0]">
                        <div className="flex items-center gap-3">
                           <div className="bg-white p-2 rounded-lg shadow-sm">
-                             <Mail className="w-5 h-5 text-sky-600" />
+                             <Mail className="w-5 h-5 text-[#B8935C]" />
                           </div>
                           <div>
-                             <div className="font-bold text-slate-700">Outlook Calendar</div>
-                             <div className="text-xs text-slate-500">Sincronizar eventos</div>
+                             <div className="font-light text-[#2D2416]">Outlook Calendar</div>
+                             <div className="text-xs text-[#6B5D4F]">Sincronizar eventos</div>
                           </div>
                        </div>
-                       <Button variant="outline" size="sm" className="border-sky-200 text-sky-700 hover:bg-sky-50" onClick={() => alert("Outlook conectado!")}>Conectar</Button>
+                       <Button variant="outline" size="sm" className="border-[#D4A574]/30 text-[#D4A574] hover:bg-white font-light" onClick={() => alert("Outlook conectado!")}>Conectar</Button>
                     </div>
                  </div>
               </div>
 
-               {/* Services Catalog Section - Expanded */}
-               <div className="mt-8 pt-6 border-t border-slate-100">
-                 <h3 className="font-bold text-[#0F172A] mb-6 flex items-center gap-2 text-lg">
-                    <Activity className="w-5 h-5 text-[#0D9488]" /> Catálogo de Serviços & Preços
-                 </h3>
-                 <p className="text-sm text-[#64748B] mb-6">Configure todos os serviços que você oferece, incluindo consultas, exames e procedimentos estéticos.</p>
-
-                 <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-4">
-                       <div className="space-y-2 md:col-span-1">
-                          <Label className={labelClass}>Categoria *</Label>
-                          <select 
-                             className={inputClass + " px-4"}
-                             value={newService.category}
-                             onChange={e => setNewService({...newService, category: e.target.value})}
-                          >
-                             <option value="consultation">Consulta</option>
-                             <option value="exam">Exame</option>
-                             <option value="procedure">Procedimento</option>
-                          </select>
-                       </div>
-                       <div className="space-y-2 md:col-span-2 relative">
-                          <Label className={labelClass}>Nome do Serviço *</Label>
-                          <div className="relative">
-                             <Input 
-                                className={inputClass} 
-                                value={newService.name} 
-                                onChange={async (e) => {
-                                   const val = e.target.value;
-                                   setNewService({...newService, name: val});
-                                   if (val.length > 2) {
-                                      setIsAiLoading(true);
-                                      try {
-                                         const categoryMap = {
-                                            consultation: 'consultas (presencial, online, teleconsulta)',
-                                            exam: 'exames estéticos (dermoscopia, bioimpedância, análise facial)',
-                                            procedure: 'procedimentos estéticos (botox, preenchimento, peeling, laser)'
-                                         };
-                                         const suggestions = await base44.integrations.Core.InvokeLLM({
-                                            prompt: `Liste 5 tipos comuns de ${categoryMap[newService.category]} na medicina estética que contenham ou sejam similares a "${val}". Retorne apenas os nomes em um array JSON.`,
-                                            response_json_schema: { type: "object", properties: { items: { type: "array", items: { type: "string" } } } }
-                                         });
-                                         setAiSuggestions(suggestions.items || []);
-                                      } catch(e) { 
-                                         console.error(e);
-                                      } finally { 
-                                         setIsAiLoading(false); 
-                                      }
-                                   } else {
-                                      setAiSuggestions([]);
-                                   }
-                                }}
-                                placeholder="Digite e veja sugestões..." 
-                             />
-                             {isAiLoading && <Loader2 className="w-4 h-4 animate-spin absolute right-4 top-5 text-slate-400" />}
-                             {aiSuggestions.length > 0 && (
-                                <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 shadow-lg rounded-xl mt-1 z-50 max-h-48 overflow-y-auto">
-                                   {aiSuggestions.map((s, i) => (
-                                      <div 
-                                         key={i} 
-                                         className="p-3 hover:bg-slate-50 cursor-pointer text-sm text-slate-700 border-b last:border-0"
-                                         onClick={() => {
-                                            setNewService({...newService, name: s});
-                                            setAiSuggestions([]);
-                                         }}
-                                      >
-                                         {s}
-                                      </div>
-                                   ))}
-                                </div>
-                             )}
-                          </div>
-                       </div>
-                       <div className="space-y-2 md:col-span-1">
-                          <Label className={labelClass}>Preço (R$)</Label>
-                          <Input 
-                             type="number" 
-                             step="0.01"
-                             className={inputClass} 
-                             value={newService.price} 
-                             onChange={e => setNewService({...newService, price: e.target.value})} 
-                             placeholder="0.00"
-                             disabled={newService.is_free}
-                          />
-                       </div>
-                    </div>
-                    <div className="flex items-center justify-between">
-                       <div className="flex items-center gap-2">
-                          <input 
-                             type="checkbox" 
-                             id="is_free" 
-                             checked={newService.is_free} 
-                             onChange={e => setNewService({...newService, is_free: e.target.checked, price: e.target.checked ? '0' : newService.price})} 
-                             className="w-5 h-5 text-[#0D9488] rounded border-gray-300 focus:ring-[#0D9488]"
-                          />
-                          <label htmlFor="is_free" className="text-sm font-medium text-slate-700 cursor-pointer">Gratuito / Presente</label>
-                       </div>
-                       <Button 
-                          onClick={() => {
-                             if (!newService.name) return alert("Digite o nome do serviço");
-                             setServicesCatalog([...servicesCatalog, { ...newService, price: parseFloat(newService.price) || 0 }]);
-                             setNewService({ category: 'consultation', name: '', price: '', is_free: false });
-                             setAiSuggestions([]);
-                          }}
-                          className="bg-[#0D9488] hover:bg-[#0F766E] text-white font-bold rounded-xl h-12 px-6"
-                       >
-                          + Adicionar Serviço
-                       </Button>
-                    </div>
-                 </div>
-
-                 {/* Revenue Summary */}
-                 {servicesCatalog.length > 0 && (
-                    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-2xl border border-emerald-200 mb-6">
-                       <div className="flex items-center justify-between">
-                          <div>
-                             <p className="text-sm text-emerald-700 font-bold uppercase tracking-wide mb-1">Receita Estimada (Mensal)</p>
-                             <p className="text-3xl font-black text-emerald-800">
-                                R$ {servicesCatalog.reduce((acc, s) => acc + (s.price || 0), 0).toFixed(2)}
-                             </p>
-                             <p className="text-xs text-emerald-600 mt-1">Baseado em {servicesCatalog.length} serviço(s) cadastrado(s)</p>
-                          </div>
-                          <DollarSign className="w-12 h-12 text-emerald-600" />
-                       </div>
-                    </div>
-                 )}
-
-                 {/* Services List */}
-                 <div className="space-y-3">
-                    {servicesCatalog.length === 0 && (
-                       <div className="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300">
-                          <Activity className="w-12 h-12 text-slate-300 mx-auto mb-3" />
-                          <p className="text-slate-500 italic">Nenhum serviço cadastrado ainda.</p>
-                          <p className="text-xs text-slate-400 mt-1">Adicione seus serviços para calcular a receita estimada.</p>
-                       </div>
-                    )}
-                    {servicesCatalog.map((item, idx) => (
-                       <div key={idx} className="flex items-center justify-between p-4 bg-white border border-slate-100 rounded-xl shadow-sm hover:shadow-md transition-all">
-                          <div className="flex items-center gap-4">
-                             <div className={`p-3 rounded-lg ${item.category === 'consultation' ? 'bg-blue-50 text-blue-600' : item.category === 'exam' ? 'bg-purple-50 text-purple-600' : 'bg-pink-50 text-pink-600'}`}>
-                                {item.category === 'consultation' ? <UserIcon className="w-5 h-5" /> : item.category === 'exam' ? <Activity className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
-                             </div>
-                             <div>
-                                <p className="font-bold text-slate-800 text-base">{item.name}</p>
-                                <p className="text-xs text-slate-500 capitalize font-medium">
-                                   {item.category === 'consultation' ? 'Consulta' : item.category === 'exam' ? 'Exame' : 'Procedimento'}
-                                </p>
-                             </div>
-                          </div>
-                          <div className="flex items-center gap-4">
-                             <span className={`font-bold text-lg ${item.is_free ? 'text-green-600' : 'text-slate-700'}`}>
-                                {item.is_free ? 'Grátis' : `R$ ${item.price?.toFixed(2)}`}
-                             </span>
-                             <Button 
-                                size="icon" 
-                                variant="ghost" 
-                                className="text-red-400 hover:text-red-600 hover:bg-red-50"
-                                onClick={() => {
-                                   const newCat = [...servicesCatalog];
-                                   newCat.splice(idx, 1);
-                                   setServicesCatalog(newCat);
-                                }}
-                             >
-                                <Trash2 className="w-4 h-4" />
-                             </Button>
-                          </div>
-                       </div>
-                    ))}
-                 </div>
-                 </div>
-
-                 {/* Save Button at the End */}
-                 <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#0D9488] hover:bg-[#0F766E] text-white h-14 font-bold shadow-lg shadow-teal-900/20 hover:shadow-teal-900/30 transition-all rounded-xl text-lg mt-8" disabled={saveMutation.isPending}>
-                 {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
-                 Salvar Alterações
-                 </Button>
-                 </CardContent>
-                 </Card>
-                 </TabsContent>
+               <Button onClick={() => saveMutation.mutate()} className="w-full bg-[#D4A574] hover:bg-[#C49565] text-white h-14 font-light shadow-lg shadow-[#D4A574]/20 hover:shadow-[#D4A574]/30 transition-all rounded-xl text-lg mt-8" disabled={saveMutation.isPending}>
+                  {saveMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
+                  Salvar Alterações
+               </Button>
+               </CardContent>
+               </Card>
+               </TabsContent>
       </Tabs>
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
