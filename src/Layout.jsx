@@ -19,7 +19,9 @@ import {
   LogIn,
   Trash2,
   FileText,
-  HelpCircle
+  HelpCircle,
+  ChevronRight,
+  Bell
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
