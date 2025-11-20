@@ -359,12 +359,13 @@ export default function SitesPage() {
                    placeholder="Ex: Mude o fundo para azul marinho..."
                    value={chatMessage}
                    onChange={e => setChatMessage(e.target.value)}
-                   onKeyDown={e => e.key === 'Enter' && {
-                      /* Logic to call AI for HTML update would go here, simulating for UI */
-                      const newHist = [...chatHistory, { role: 'user', content: chatMessage }];
-                      setChatHistory(newHist);
-                      setChatMessage('');
-                      setTimeout(() => setChatHistory([...newHist, { role: 'assistant', content: 'Entendi, aplicando alterações...' }]), 1000);
+                   onKeyDown={e => {
+                      if (e.key === 'Enter') {
+                         const newHist = [...chatHistory, { role: 'user', content: chatMessage }];
+                         setChatHistory(newHist);
+                         setChatMessage('');
+                         setTimeout(() => setChatHistory([...newHist, { role: 'assistant', content: 'Entendi, aplicando alterações...' }]), 1000);
+                      }
                    }}
                  />
                  <Button size="icon" className="bg-emerald-600 hover:bg-emerald-700" onClick={() => {
@@ -378,7 +379,7 @@ export default function SitesPage() {
               </div>
            </div>
           )}
-          </div>
+        </div>
       </div>
     </div>
   );
