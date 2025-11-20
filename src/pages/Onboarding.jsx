@@ -231,7 +231,7 @@ export default function OnboardingPage() {
                <Button variant="ghost" size="icon" onClick={() => setStep(1)} className="h-8 w-8 -ml-2">
                   <ArrowLeft className="w-4 h-4" />
                </Button>
-               <span className="text-sm text-slate-500">Voltar para seleção</span>
+               <span className="text-sm text-slate-500 cursor-pointer hover:text-slate-800 transition-colors" onClick={() => setStep(1)}>Voltar para seleção</span>
             </div>
             <CardTitle>Cadastro de {role === 'patient' ? 'Paciente' : 'Profissional'}</CardTitle>
             <CardDescription>
