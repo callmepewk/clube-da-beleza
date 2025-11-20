@@ -22,7 +22,7 @@ export default function ProfilePage() {
        const user = await base44.auth.me();
        if (!user) return null;
        const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
-       return res.data[0] || {};
+       return res?.data?.[0] || {};
     }
   });
 

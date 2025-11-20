@@ -58,7 +58,7 @@ export default function Layout({ children }) {
       const u = await base44.auth.me();
       if (!u) return null;
       const res = await base44.entities.UserProfile.list({ query: { user_email: u.email } });
-      return res.data[0] || null;
+      return res?.data?.[0] || null;
     },
     enabled: !!user
   });

@@ -16,9 +16,10 @@ export default function SitesPage() {
     queryKey: ['mySites'],
     queryFn: async () => {
        const user = await base44.auth.me();
-       return (await base44.entities.AICreation.list({
+       const res = await base44.entities.AICreation.list({
            query: { type: 'landing_page', owner_email: user?.email }
-       })).data;
+       });
+       return res?.data || [];
     }
   });
 

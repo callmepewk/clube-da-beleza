@@ -41,7 +41,7 @@ export default function NursePage() {
           query: { user_email: user.email },
           limit: 1
       });
-      return profiles.data[0] || { user_email: user.email, type: 'patient' }; // Fallback
+      return profiles?.data?.[0] || { user_email: user.email, type: 'patient' }; // Fallback
     }
   });
 

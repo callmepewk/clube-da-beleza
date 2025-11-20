@@ -36,7 +36,7 @@ export default function SchedulePage() {
     const loadProfile = async () => {
       const user = await base44.auth.me();
       const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
-      setUserProfile(res.data[0]);
+      setUserProfile(res?.data?.[0]);
     };
     loadProfile();
   }, []);
