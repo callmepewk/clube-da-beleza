@@ -17,7 +17,7 @@ export default function Dashboard() {
       const u = await base44.auth.me();
       if (u) {
         const profiles = await base44.entities.UserProfile.list({ query: { user_email: u.email } });
-        setUser({ ...u, profile: profiles.data[0] });
+        setUser({ ...u, profile: profiles?.data?.[0] });
       }
     };
     loadUser();
