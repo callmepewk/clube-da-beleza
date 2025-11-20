@@ -223,6 +223,17 @@ export default function SchedulePage() {
   // Render for Patient (My Appointments)
   return (
     <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4">
+      {!userProfile && (
+        <div className="bg-indigo-50 border-l-4 border-indigo-500 p-4 mb-4">
+          <div className="flex">
+            <div className="ml-3">
+              <p className="text-sm text-indigo-700">
+                Você está visualizando como visitante. <a href="/onboarding" className="font-medium underline">Cadastre-se</a> para agendar consultas.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
           <h1 className="text-2xl font-bold text-slate-900">Meus Agendamentos</h1>
