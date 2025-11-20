@@ -36,7 +36,10 @@ export default function ProfilePage() {
        const user = await base44.auth.me();
        if (!user) return null;
        const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
-       return res?.data?.[0] || {};
+       const userProfile = res?.data?.[0] || {};
+       // Ensure email is populated from auth if missing in profile
+       if (!userProfile.user_email) userProfile.user_email = user.email;
+       return userProfile;
     }
   });
 

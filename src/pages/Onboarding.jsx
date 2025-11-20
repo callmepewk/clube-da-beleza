@@ -21,6 +21,7 @@ export default function OnboardingPage() {
   
   const [formData, setFormData] = useState({
     cpf: '',
+    email: '',
     phone: '',
     street: '',
     number: '',
@@ -269,14 +270,20 @@ export default function OnboardingPage() {
                       </div>
                    </div>
                 ) : (
-                   <div className="bg-[#282828] p-4 rounded-lg border border-[#3E3E3E] flex gap-3 items-start">
-                      <div className="bg-purple-900/30 p-2 rounded-full"><LogIn className="w-4 h-4 text-purple-400" /></div>
-                      <div>
-                         <h4 className="font-bold text-white text-sm">Login e Senha</h4>
-                         <p className="text-xs text-[#B3B3B3] mt-1">
-                            Após preencher os dados, você será redirecionado para criar seu login com segurança.
-                         </p>
-                      </div>
+                   <div className="space-y-2">
+                     <Label className={labelClass}>Email *</Label>
+                     <Input 
+                       className={inputClass}
+                       required 
+                       type="email"
+                       value={formData.email} 
+                       onChange={e => setFormData({...formData, email: e.target.value})} 
+                       placeholder="seu@email.com"
+                     />
+                     <div className="text-xs text-[#B3B3B3] flex items-center gap-2 mt-1">
+                        <LogIn className="w-3 h-3" />
+                        <span>Você definirá sua senha na próxima etapa.</span>
+                     </div>
                    </div>
                 )}
 

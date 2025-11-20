@@ -212,12 +212,21 @@ export default function Layout({ children }) {
                     </div>
                  </div>
               ) : (
-                 <Button 
-                   onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
-                   className="w-full bg-white text-black hover:bg-gray-200 font-bold rounded-full"
-                 >
-                   Entrar
-                 </Button>
+                 <div className="space-y-2">
+                    <Button 
+                      onClick={() => navigate(createPageUrl('Onboarding'))}
+                      className="w-full bg-purple-600 text-white hover:bg-purple-700 font-bold rounded-full"
+                    >
+                      Criar Conta
+                    </Button>
+                    <Button 
+                      onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
+                      variant="ghost"
+                      className="w-full text-[#B3B3B3] hover:text-white hover:bg-transparent h-8 text-xs"
+                    >
+                      Já tenho conta
+                    </Button>
+                 </div>
               )}
            </div>
         </aside>
