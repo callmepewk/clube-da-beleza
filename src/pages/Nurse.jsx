@@ -439,8 +439,9 @@ export default function NursePage() {
                </Button>
              </form>
             </div>
-         </Card>
-      </div>
-    </div>
-  );
-}
+            </Card>
+            </div>
+            </div>
+            </div>
+            );
+            }
