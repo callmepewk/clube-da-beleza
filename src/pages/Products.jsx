@@ -8,11 +8,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2 } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye } from 'lucide-react';
 
 export default function ProductsPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newProductType, setNewProductType] = useState('ebook');
+  const [activeTab, setActiveTab] = useState('all');
   const [formData, setFormData] = useState({ title: '', description: '', price: '', content_url: '' });
   const queryClient = useQueryClient();
 
@@ -64,10 +66,48 @@ export default function ProductsPage() {
     setIsCreateOpen(true);
   };
 
+  const filteredProducts = products?.filter(p => activeTab === 'all' || p.type === activeTab) || [];
+
+  const ProductList = ({ items }) => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+        {items.map(product => (
+          <Card key={product.id} className="hover:shadow-md transition-shadow border-slate-200">
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-start">
+                 <div className="bg-slate-50 p-2 rounded-lg w-fit">{getIcon(product.type)}</div>
+                 <div className="text-lg font-bold text-emerald-700">R$ {product.price}</div>
+              </div>
+              <CardTitle className="mt-4 text-lg">{product.title}</CardTitle>
+              <CardDescription className="line-clamp-2">{product.description}</CardDescription>
+            </CardHeader>
+            <CardFooter className="pt-2 flex gap-2">
+               <Button variant="outline" className="flex-1" title="Visualizar detalhes">
+                 <Eye className="w-4 h-4 mr-2" /> Visualizar
+               </Button>
+               <Button 
+                 variant="destructive" 
+                 size="icon" 
+                 onClick={() => { if(confirm('Deletar produto?')) deleteProductMutation.mutate(product.id); }}
+                 title="Excluir Produto"
+               >
+                 <Trash2 className="w-4 h-4" />
+               </Button>
+            </CardFooter>
+          </Card>
+        ))}
+        {items.length === 0 && (
+           <div className="col-span-full text-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+             <ShoppingBag className="w-12 h-12 mx-auto text-slate-300 mb-2" />
+             <p className="text-slate-500">Nenhum produto encontrado nesta categoria.</p>
+           </div>
+        )}
+    </div>
+  );
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-slate-900">Meus Produtos</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Gerenciar Produtos</h1>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
             <Button className="bg-emerald-600 hover:bg-emerald-700">
@@ -112,62 +152,53 @@ export default function ProductsPage() {
         </Dialog>
       </div>
 
-      {/* Shortcuts */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="cursor-pointer hover:border-emerald-500 transition-all" onClick={() => handleCreateClick('ebook')}>
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="bg-orange-50 p-3 rounded-xl">{getIcon('ebook')}</div>
-            <div>
-              <h3 className="font-bold text-lg">Criar E-book</h3>
-              <p className="text-sm text-slate-500">PDFs, Guias e Livros</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="cursor-pointer hover:border-emerald-500 transition-all" onClick={() => handleCreateClick('3d_model')}>
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="bg-purple-50 p-3 rounded-xl">{getIcon('3d_model')}</div>
-            <div>
-              <h3 className="font-bold text-lg">Novo Modelo 3D</h3>
-              <p className="text-sm text-slate-500">Arquivos .obj, .stl, .gltf</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card className="cursor-pointer hover:border-emerald-500 transition-all" onClick={() => handleCreateClick('course')}>
-          <CardContent className="p-6 flex items-center gap-4">
-            <div className="bg-blue-50 p-3 rounded-xl">{getIcon('course')}</div>
-            <div>
-              <h3 className="font-bold text-lg">Criar Curso</h3>
-              <p className="text-sm text-slate-500">Aulas em vídeo e módulos</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Tabs for Management */}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4 max-w-[600px]">
+          <TabsTrigger value="all">Todos ({products?.length || 0})</TabsTrigger>
+          <TabsTrigger value="ebook">E-books ({products?.filter(p => p.type === 'ebook').length || 0})</TabsTrigger>
+          <TabsTrigger value="3d_model">3D ({products?.filter(p => p.type === '3d_model').length || 0})</TabsTrigger>
+          <TabsTrigger value="course">Cursos ({products?.filter(p => p.type === 'course').length || 0})</TabsTrigger>
+        </TabsList>
 
-      {/* Product List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products?.map(product => (
-          <Card key={product.id} className="hover:shadow-md transition-shadow">
-            <CardHeader className="pb-2">
-              <div className="flex justify-between items-start">
-                 <div className="bg-slate-50 p-2 rounded-lg w-fit">{getIcon(product.type)}</div>
-                 <div className="text-lg font-bold text-emerald-700">R$ {product.price}</div>
-              </div>
-              <CardTitle className="mt-4 text-lg">{product.title}</CardTitle>
-              <CardDescription className="line-clamp-2">{product.description}</CardDescription>
-            </CardHeader>
-            <CardFooter className="pt-2 flex gap-2">
-               <Button variant="outline" className="flex-1">Gerenciar</Button>
-               <Button variant="destructive" size="icon" onClick={() => deleteProductMutation.mutate(product.id)}>
-                 <Trash2 className="w-4 h-4" />
-               </Button>
-            </CardFooter>
-          </Card>
-        ))}
-        {products?.length === 0 && (
-           <div className="col-span-full text-center py-12 text-slate-400">
-             Nenhum produto criado ainda.
-           </div>
-        )}
+        <TabsContent value={activeTab} className="mt-0">
+            {isLoading ? (
+              <div className="py-12 text-center"><Loader2 className="animate-spin mx-auto" /></div>
+            ) : (
+              <ProductList items={filteredProducts} />
+            )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Quick Create Shortcuts */}
+      <div className="mt-12 pt-8 border-t border-slate-200">
+         <h3 className="text-lg font-semibold mb-4 text-slate-800">Atalhos de Criação</h3>
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="cursor-pointer hover:border-emerald-500 transition-all bg-slate-50/50" onClick={() => handleCreateClick('ebook')}>
+            <CardContent className="p-4 flex items-center gap-4">
+               <div className="bg-orange-100 p-2 rounded-lg">{getIcon('ebook')}</div>
+               <div>
+                  <h3 className="font-bold">Adicionar E-book</h3>
+               </div>
+            </CardContent>
+            </Card>
+            <Card className="cursor-pointer hover:border-emerald-500 transition-all bg-slate-50/50" onClick={() => handleCreateClick('3d_model')}>
+            <CardContent className="p-4 flex items-center gap-4">
+               <div className="bg-purple-100 p-2 rounded-lg">{getIcon('3d_model')}</div>
+               <div>
+                  <h3 className="font-bold">Adicionar Modelo 3D</h3>
+               </div>
+            </CardContent>
+            </Card>
+            <Card className="cursor-pointer hover:border-emerald-500 transition-all bg-slate-50/50" onClick={() => handleCreateClick('course')}>
+            <CardContent className="p-4 flex items-center gap-4">
+               <div className="bg-blue-100 p-2 rounded-lg">{getIcon('course')}</div>
+               <div>
+                  <h3 className="font-bold">Adicionar Curso</h3>
+               </div>
+            </CardContent>
+            </Card>
+         </div>
       </div>
     </div>
   );

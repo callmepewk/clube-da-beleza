@@ -111,7 +111,8 @@ export default function OnboardingPage() {
       return base44.entities.UserProfile.create(commonData);
     },
     onSuccess: () => {
-      // Force reload to update layout state immediately
+      // Invalidate layout query to hide banner immediately
+      base44.queryClient?.invalidateQueries(['currentUserProfile']);
       window.location.href = createPageUrl('Dashboard');
     },
     onError: (error) => {
