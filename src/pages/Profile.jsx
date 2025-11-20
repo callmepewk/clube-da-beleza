@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon, Calendar, Mail } from 'lucide-react';
+import { MapPin, Save, Loader2, Upload, CreditCard, User as UserIcon, Calendar, Mail, Activity, BarChart3, DollarSign, Zap, Layout, MessageSquare, ShoppingBag, TrendingUp } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { createPageUrl } from '@/utils';
 import { useNavigate } from 'react-router-dom';
@@ -37,10 +37,50 @@ export default function ProfilePage() {
        if (!user) return null;
        const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
        const userProfile = res?.data?.[0] || {};
-       // Ensure email is populated from auth if missing in profile
        if (!userProfile.user_email) userProfile.user_email = user.email;
        return userProfile;
     }
+  });
+
+  const { data: stats } = useQuery({
+    queryKey: ['userStats'],
+    queryFn: async () => {
+       const user = await base44.auth.me();
+       if (!user) return null;
+
+       const [appts, nurse, creations, products] = await Promise.all([
+          base44.entities.Appointment.list({ query: { patient_email: user.email }, limit: 1000 }),
+          base44.entities.NurseInteraction.list({ query: { user_email: user.email }, limit: 1000 }),
+          base44.entities.AICreation.list({ query: { owner_email: user.email }, limit: 1000 }),
+          base44.entities.Product.list({ query: { owner_email: user.email }, limit: 1000 })
+       ]);
+
+       const productsValue = products.data.reduce((acc, p) => acc + (p.price || 0), 0);
+       // Valuation logic: Product Potential (10x price) + Asset Value
+       const valuation = (productsValue * 10) + 
+                         (creations.data.filter(c => c.type === 'landing_page').length * 500) +
+                         (creations.data.filter(c => c.type === 'chatbot').length * 300) +
+                         (creations.data.filter(c => c.type === 'design_project').length * 100);
+
+       // Conversion Power Calculation
+       const activityScore = appts.data.length + nurse.data.length + creations.data.length + products.data.length;
+       let conversionPower = 'Baixo';
+       if (activityScore > 20) conversionPower = 'Alto';
+       else if (activityScore > 5) conversionPower = 'Médio';
+
+       return {
+          appointments: appts.data.length,
+          nurse: nurse.data.length,
+          chatbots: creations.data.filter(c => c.type === 'chatbot').length,
+          sites: creations.data.filter(c => c.type === 'landing_page').length,
+          designs: creations.data.filter(c => c.type === 'design_project').length,
+          products: products.data.length,
+          productsValue,
+          valuation,
+          conversionPower
+       };
+    },
+    enabled: !!profile
   });
 
   useEffect(() => {
@@ -190,6 +230,7 @@ export default function ProfilePage() {
         <Tabs defaultValue="personal" className="w-full">
           <TabsList className="w-full bg-[#F1F5F9] border border-slate-200 p-1.5 rounded-2xl">
             <TabsTrigger value="personal" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Dados Pessoais</TabsTrigger>
+            <TabsTrigger value="stats" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Minhas Estatísticas</TabsTrigger>
             {profile?.type === 'patient' && <TabsTrigger value="medical" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Ficha Médica</TabsTrigger>}
             {profile?.type === 'professional' && <TabsTrigger value="professional" className="rounded-xl data-[state=active]:bg-white data-[state=active]:text-[#0D9488] data-[state=active]:shadow-sm text-[#64748B] font-bold transition-all py-3">Profissional</TabsTrigger>}
           </TabsList>
@@ -242,6 +283,71 @@ export default function ProfilePage() {
               </Button>
             </CardContent>
           </Card>
+
+        <TabsContent value="stats">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+             {/* Valuation & Conversion */}
+             <Card className="col-span-1 md:col-span-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-0">
+                <CardHeader className="pb-2">
+                   <CardTitle className="text-indigo-100 text-sm font-medium flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4" /> Valuation das Criações
+                   </CardTitle>
+                </CardHeader>
+                <CardContent>
+                   <div className="text-4xl font-bold">R$ {stats?.valuation?.toLocaleString('pt-BR') || '0,00'}</div>
+                   <div className="mt-4 flex items-center gap-4">
+                      <div className="bg-white/20 px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
+                         Poder de Conversão: <span className="text-yellow-300 font-bold">{stats?.conversionPower || 'N/A'}</span>
+                      </div>
+                   </div>
+                </CardContent>
+             </Card>
+
+             <Card className={cardClass}>
+                <CardHeader className="pb-2"><CardTitle className="text-slate-500 text-xs font-bold uppercase">Valor em Produtos</CardTitle></CardHeader>
+                <CardContent>
+                   <div className="text-2xl font-bold text-emerald-600">R$ {stats?.productsValue?.toLocaleString('pt-BR') || '0,00'}</div>
+                </CardContent>
+             </Card>
+             <Card className={cardClass}>
+                <CardHeader className="pb-2"><CardTitle className="text-slate-500 text-xs font-bold uppercase">Total Produtos</CardTitle></CardHeader>
+                <CardContent>
+                   <div className="text-2xl font-bold text-slate-800">{stats?.products || 0}</div>
+                </CardContent>
+             </Card>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-blue-50 w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                   <Calendar className="w-5 h-5 text-blue-600" />
+                </div>
+                <div className="text-2xl font-bold text-slate-800">{stats?.appointments || 0}</div>
+                <div className="text-xs text-slate-500 font-medium">Agendamentos</div>
+             </div>
+             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-pink-50 w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                   <Activity className="w-5 h-5 text-pink-600" />
+                </div>
+                <div className="text-2xl font-bold text-slate-800">{stats?.nurse || 0}</div>
+                <div className="text-xs text-slate-500 font-medium">Uso Enfermeira</div>
+             </div>
+             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-green-50 w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                   <MessageSquare className="w-5 h-5 text-green-600" />
+                </div>
+                <div className="text-2xl font-bold text-slate-800">{stats?.chatbots || 0}</div>
+                <div className="text-xs text-slate-500 font-medium">Chatbots Ativos</div>
+             </div>
+             <div className="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-all">
+                <div className="bg-orange-50 w-10 h-10 rounded-xl flex items-center justify-center mb-3">
+                   <Layout className="w-5 h-5 text-orange-600" />
+                </div>
+                <div className="text-2xl font-bold text-slate-800">{stats?.sites || 0}</div>
+                <div className="text-xs text-slate-500 font-medium">Sites Criados</div>
+             </div>
+          </div>
+        </TabsContent>
 
         <TabsContent value="personal">
           <Card className={cardClass}>
