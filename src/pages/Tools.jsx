@@ -70,7 +70,7 @@ export default function ToolsPage() {
       url: 'https://mapa-da-estetica.base44.app',
       color: 'from-[#D4A574] to-[#C9A868]',
       badge: 'Disponível Agora',
-      image: 'https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=800&q=80'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/4d503af00_image.png'
     },
     {
       icon: Zap,
@@ -86,7 +86,7 @@ export default function ToolsPage() {
       url: 'https://laser-code-pro.base44.app',
       color: 'from-[#B8935C] to-[#A68350]',
       badge: 'Disponível Agora',
-      image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=800&q=80'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/f9fbdc650_image.png'
     },
     {
       icon: Heart,
@@ -102,7 +102,7 @@ export default function ToolsPage() {
       url: 'https://dr-spok-pd.base44.app',
       color: 'from-[#C9A868] to-[#B59758]',
       badge: 'Disponível Agora',
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&q=80'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/9b6f558a9_image.png'
     },
     {
       icon: Sparkles,
@@ -118,7 +118,7 @@ export default function ToolsPage() {
       url: 'https://clube-da-beleza.base44.app',
       color: 'from-[#D4A574] to-[#E0B480]',
       badge: 'Clube Exclusivo de Benefícios',
-      image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=800&q=80'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/7ea4d15e3_image.png'
     }
   ];
 
@@ -189,10 +189,10 @@ export default function ToolsPage() {
         <div className="mb-10">
           <h2 className="text-4xl font-light text-[#2D2416] mb-4 flex items-center gap-4">
             <div className="w-2 h-10 bg-[#D4A574] rounded-full"></div>
-            Ecossistema de Parceiros
+            Ferramentas Especializadas
           </h2>
           <p className="text-[#6B5D4F] text-lg font-light ml-6">
-            Plataformas especializadas desenvolvidas para elevar sua prática profissional
+            Plataformas completas do Clube da Beleza para transformar sua prática profissional
           </p>
         </div>
 
