@@ -159,14 +159,14 @@ export default function SitesPage() {
               {/* Configuration Section */}
               <div className="grid grid-cols-2 gap-4 mb-4">
                  <div className="space-y-2">
-                    <label className="text-xs font-medium flex items-center gap-1"><LinkIcon className="w-3 h-3" /> Gerar Link de Acesso?</label>
+                  <T as="label" className="text-xs font-medium flex items-center gap-1"><LinkIcon className="w-3 h-3" /> Gerar Link de Acesso?</T>
                     <div className="flex items-center h-10">
                        <input type="checkbox" className="w-4 h-4 mr-2 accent-emerald-600" checked={generateLink} onChange={e => setGenerateLink(e.target.checked)} />
-                       <span className="text-sm">{generateLink ? 'Sim, gerar URL pública' : 'Não, apenas rascunho'}</span>
+                       <T as="span" className="text-sm">{generateLink ? 'Sim, gerar URL pública' : 'Não, apenas rascunho'}</T>
                     </div>
                  </div>
                  <div className="space-y-2">
-                    <label className="text-xs font-medium flex items-center gap-1"><ImageIcon className="w-3 h-3" /> Quantidade de Imagens</label>
+                  <T as="label" className="text-xs font-medium flex items-center gap-1"><ImageIcon className="w-3 h-3" /> Quantidade de Imagens</T>
                     <input 
                       type="number" 
                       min="0" 
@@ -181,20 +181,20 @@ export default function SitesPage() {
               {/* Image Management Section */}
               <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-4">
                  <div className="flex justify-between items-center">
-                    <h4 className="font-bold text-sm text-slate-700 flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Gerenciamento de Imagens</h4>
+                    <T as="h4" className="font-bold text-sm text-slate-700 flex items-center gap-2"><ImageIcon className="w-4 h-4" /> Gerenciamento de Imagens</T>
                     <select 
                       className="text-xs border rounded p-1"
                       value={imageUploadMode}
                       onChange={e => setImageUploadMode(e.target.value)}
                     >
-                       <option value="auto">Gerar com IA</option>
-                       <option value="manual">Fazer Upload Manual</option>
+                       <option value="auto"><T>Gerar com IA</T></option>
+                       <option value="manual"><T>Fazer Upload Manual</T></option>
                     </select>
                  </div>
                  
                  {imageUploadMode === 'manual' ? (
                  <div className="space-y-2 animate-in fade-in">
-                    <label className="text-xs font-medium">Upload Manual</label>
+                    <T as="label" className="text-xs font-medium">Upload Manual</T>
                     <Button variant="outline" size="sm" className="w-full relative">
                           <input 
                              type="file" 
@@ -218,7 +218,7 @@ export default function SitesPage() {
                  </div>
                  ) : (
                  <div className="space-y-2 animate-in fade-in">
-                    <label className="text-xs font-medium">IA Geradora</label>
+                    <T as="label" className="text-xs font-medium">IA Geradora</T>
                     <div className="flex gap-2">
                        <input 
                          className="flex-1 border rounded px-2 text-xs h-9" 

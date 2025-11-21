@@ -324,7 +324,7 @@ export default function ProductsPage() {
                   title="Editar Detalhes"
                   onClick={() => setEditingProduct(product)}
                >
-                 <Edit className="w-4 h-4 mr-2" /> Editar
+                 <Edit className="w-4 h-4 mr-2" /> <T>Editar</T>
                </Button>
                <Button 
                  variant="destructive" 
@@ -359,7 +359,7 @@ export default function ProductsPage() {
       </div>
       <div className="flex justify-end items-center gap-2">
            <Button className="bg-indigo-600 hover:bg-indigo-700" onClick={() => setIsBulkOpen(true)}>
-              <Sparkles className="w-4 h-4 mr-2" /> Gerar Pacote com IA
+              <Sparkles className="w-4 h-4 mr-2" /> <T>Gerar Pacote com IA</T>
            </Button>
            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
              <DialogTrigger asChild>
@@ -380,7 +380,7 @@ export default function ProductsPage() {
                        <span>Preencha os detalhes e a IA criará o produto completo (texto + imagem) para você.</span>
                     </div>
                     <div className="space-y-2">
-                       <Label>Tipo de Produto a Gerar</Label>
+                       <T as={Label}>Tipo de Produto a Gerar</T>
                        <Select value={newProductType} onValueChange={setNewProductType}>
                          <SelectTrigger><SelectValue /></SelectTrigger>
                          <SelectContent>
@@ -391,7 +391,7 @@ export default function ProductsPage() {
                        </Select>
                     </div>
                     <div className="space-y-2">
-                       <Label>Ideia Principal / Tópico</Label>
+                       <T as={Label}>Ideia Principal / Tópico</T>
                        <Textarea 
                           placeholder="Ex: Um guia completo sobre nutrição vegana para iniciantes..." 
                           value={aiPrompt}
@@ -401,16 +401,16 @@ export default function ProductsPage() {
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                        <div className="space-y-2">
-                          <Label>Público Alvo</Label>
+                          <T as={Label}>Público Alvo</T>
                           <Input placeholder="Ex: Jovens adultos" value={aiDetails.audience} onChange={e => setAiDetails({...aiDetails, audience: e.target.value})} />
                        </div>
                        <div className="space-y-2">
-                          <Label>Tom de Voz</Label>
+                          <T as={Label}>Tom de Voz</T>
                           <Input placeholder="Ex: Motivacional" value={aiDetails.tone} onChange={e => setAiDetails({...aiDetails, tone: e.target.value})} />
                        </div>
                     </div>
                     <div className="space-y-2">
-                       <Label>Palavras-chave (Opcional)</Label>
+                       <T as={Label}>Palavras-chave (Opcional)</T>
                        <Input placeholder="Ex: saúde, dieta..." value={aiDetails.keywords} onChange={e => setAiDetails({...aiDetails, keywords: e.target.value})} />
                     </div>
                     <Button 
@@ -418,14 +418,14 @@ export default function ProductsPage() {
                       className="w-full bg-purple-600 hover:bg-purple-700" 
                       disabled={generateProductMutation.isPending || !aiPrompt || !canCreateProduct}
                     >
-                       {generateProductMutation.isPending ? <><Loader2 className="animate-spin mr-2" /> Gerando Conteúdo e Imagem...</> : <><Sparkles className="mr-2 w-4 h-4" /> Gerar com IA</>}
+                       {generateProductMutation.isPending ? <><Loader2 className="animate-spin mr-2" /> <T>Gerando Conteúdo e Imagem...</T></> : <><Sparkles className="mr-2 w-4 h-4" /> <T>Gerar com IA</T></>}
                     </Button>
                  </div>
                ) : (
                <div className="space-y-4 animate-in zoom-in-95">
                   <div className="bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm p-4 space-y-4">
                      <div className="space-y-2">
-                        <Label>Imagem de Capa</Label>
+                        <T as={Label}>Imagem de Capa</T>
                         {generatedProduct.content_url && (
                            <div className="h-40 w-full bg-slate-100 rounded-md overflow-hidden relative mb-2">
                               <img src={generatedProduct.content_url} alt="Cover" className="w-full h-full object-cover" />
@@ -454,7 +454,7 @@ export default function ProductsPage() {
                      </div>
 
                      <div className="space-y-2">
-                        <Label>Título</Label>
+                        <T as={Label}>Título</T>
                         <div className="flex gap-2">
                            <Input value={generatedProduct.title} onChange={(e) => setGeneratedProduct({...generatedProduct, title: e.target.value})} />
                            <Button size="icon" variant="outline" onClick={async () => {
@@ -465,7 +465,7 @@ export default function ProductsPage() {
                      </div>
 
                      <div className="space-y-2">
-                        <Label>Descrição</Label>
+                        <T as={Label}>Descrição</T>
                         <div className="relative">
                            <Textarea value={generatedProduct.description} onChange={(e) => setGeneratedProduct({...generatedProduct, description: e.target.value})} className="pr-10" />
                            <Button size="icon" variant="ghost" className="absolute top-2 right-2" onClick={async () => {
@@ -476,7 +476,7 @@ export default function ProductsPage() {
                      </div>
 
                      <div className="space-y-2">
-                        <Label>Preço (R$)</Label>
+                        <T as={Label}>Preço (R$)</T>
                         <div className="flex gap-2">
                            <Input type="number" value={generatedProduct.price} onChange={(e) => setGeneratedProduct({...generatedProduct, price: parseFloat(e.target.value)})} />
                            <Button size="icon" variant="outline" onClick={async () => {
@@ -490,19 +490,19 @@ export default function ProductsPage() {
 
                   <div className="flex gap-2">
                        <Button 
-                          variant="outline" 
-                          className="flex-1" 
-                          onClick={() => setGeneratedProduct(null)} 
+                         variant="outline" 
+                         className="flex-1" 
+                         onClick={() => setGeneratedProduct(null)} 
                        >
-                          <Trash2 className="w-4 h-4 mr-2" /> Descartar
+                         <Trash2 className="w-4 h-4 mr-2" /> <T>Descartar</T>
                        </Button>
                        <Button 
-                          variant="outline" 
-                          className="flex-1" 
-                          onClick={() => generateProductMutation.mutate()}
-                          disabled={generateProductMutation.isPending}
+                         variant="outline" 
+                         className="flex-1" 
+                         onClick={() => generateProductMutation.mutate()}
+                         disabled={generateProductMutation.isPending}
                        >
-                          <RotateCcw className="w-4 h-4 mr-2" /> Tentar Outro
+                         <RotateCcw className="w-4 h-4 mr-2" /> <T>Tentar Outro</T>
                        </Button>
                     </div>
                     <Button 
@@ -515,7 +515,7 @@ export default function ProductsPage() {
                       })}
                       disabled={createProductMutation.isPending || !canCreateProduct}
                     >
-                       {createProductMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <><Save className="w-4 h-4 mr-2" /> Salvar Produto</>}
+                       {createProductMutation.isPending ? <Loader2 className="animate-spin mr-2" /> : <><Save className="w-4 h-4 mr-2" /> <T>Salvar Produto</T></>}
                     </Button>
                  </div>
                )}
@@ -527,7 +527,7 @@ export default function ProductsPage() {
         <Dialog open={isBulkOpen} onOpenChange={setIsBulkOpen}>
            <DialogContent>
               <DialogHeader>
-                 <DialogTitle>Gerar Pacote de Produtos Completo</DialogTitle>
+                 <T as={DialogTitle}>Gerar Pacote de Produtos Completo</T>
               </DialogHeader>
               <div className="space-y-4 py-4">
                  <div className="bg-indigo-50 p-4 rounded-lg text-indigo-800 text-sm">
@@ -563,7 +563,7 @@ export default function ProductsPage() {
         <Dialog open={!!editingProduct} onOpenChange={(open) => !open && setEditingProduct(null)}>
            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                 <DialogTitle>Editar Produto</DialogTitle>
+                 <T as={DialogTitle}>Editar Produto</T>
               </DialogHeader>
               {editingProduct && (
                  <div className="space-y-6 py-4">

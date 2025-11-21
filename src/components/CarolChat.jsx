@@ -223,7 +223,7 @@ export default function CarolChat() {
           <div className="p-4 bg-white border-t border-[#D4A574]/20">
             <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
               <Input
-                placeholder="Digite sua pergunta..."
+                placeholder={getCurrentLanguage() === 'pt-BR' ? "Digite sua pergunta..." : "Digite sua pergunta..."}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 disabled={sendMessageMutation.isPending}

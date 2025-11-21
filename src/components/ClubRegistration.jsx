@@ -221,7 +221,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr] gap-4">
                   <div>
-                    <Label className={labelClass}>Endereço</Label>
+                    <T as={Label} className={labelClass}>Endereço</T>
                     <Input 
                       className={inputClass}
                       value={formData.street}
@@ -230,7 +230,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
                     />
                   </div>
                   <div>
-                    <Label className={labelClass}>Número</Label>
+                    <T as={Label} className={labelClass}>Número</T>
                     <Input 
                       className={inputClass}
                       value={formData.number}
@@ -239,7 +239,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
                     />
                   </div>
                   <div>
-                    <Label className={labelClass}>Complemento</Label>
+                    <T as={Label} className={labelClass}>Complemento</T>
                     <Input 
                       className={inputClass}
                       value={formData.complement}
@@ -251,7 +251,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className={labelClass}>Bairro</Label>
+                    <T as={Label} className={labelClass}>Bairro</T>
                     <Input 
                       className={inputClass}
                       value={formData.neighborhood}
@@ -260,7 +260,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
                     />
                   </div>
                   <div>
-                    <Label className={labelClass}>Cidade</Label>
+                    <T as={Label} className={labelClass}>Cidade</T>
                     <Input 
                       className={inputClass}
                       value={formData.city}
@@ -272,7 +272,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className={labelClass}>Estado</Label>
+                    <T as={Label} className={labelClass}>Estado</T>
                     <Input 
                       className={inputClass}
                       value={formData.state}
@@ -281,7 +281,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
                     />
                   </div>
                   <div>
-                    <Label className={labelClass}>País</Label>
+                    <T as={Label} className={labelClass}>País</T>
                     <Input 
                       className={inputClass}
                       value={formData.country}

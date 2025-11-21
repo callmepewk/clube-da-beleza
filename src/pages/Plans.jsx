@@ -52,21 +52,21 @@ export default function PlansPage() {
                    <Crown className="w-8 h-8 text-yellow-300" />
                 </div>
                 <div>
-                   <p className="text-indigo-100 font-medium mb-1">Seu Plano Atual</p>
+                   <T as="p" className="text-indigo-100 font-medium mb-1">Seu Plano Atual</T>
                    <h1 className="text-3xl font-bold capitalize text-white">{planName.replace('_', ' ')}</h1>
                    {userProfile.test_account_start_date && (
-                      <Badge className="mt-2 bg-yellow-400 text-yellow-900 hover:bg-yellow-500">Período de Teste (7 dias)</Badge>
+                      <Badge className="mt-2 bg-yellow-400 text-yellow-900 hover:bg-yellow-500"><T>Período de Teste (7 dias)</T></Badge>
                    )}
                 </div>
              </div>
              <div className="flex gap-3">
-                <Button className="bg-white text-indigo-600 hover:bg-indigo-50 border-0">Gerenciar Assinatura</Button>
+                <Button className="bg-white text-indigo-600 hover:bg-indigo-50 border-0"><T>Gerenciar Assinatura</T></Button>
              </div>
           </div>
           <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t border-white/20">
-             <div className="flex items-center gap-3"><ShieldCheck className="w-5 h-5 text-green-300" /> <span>Suporte Premium Ativo</span></div>
-             <div className="flex items-center gap-3"><Star className="w-5 h-5 text-yellow-300" /> <span>Acesso Ilimitado à IA</span></div>
-             <div className="flex items-center gap-3"><Check className="w-5 h-5 text-blue-300" /> <span>Benefícios Exclusivos</span></div>
+             <div className="flex items-center gap-3"><ShieldCheck className="w-5 h-5 text-green-300" /> <T as="span">Suporte Premium Ativo</T></div>
+             <div className="flex items-center gap-3"><Star className="w-5 h-5 text-yellow-300" /> <T as="span">Acesso Ilimitado à IA</T></div>
+             <div className="flex items-center gap-3"><Check className="w-5 h-5 text-blue-300" /> <T as="span">Benefícios Exclusivos</T></div>
           </div>
         </div>
       ) : (

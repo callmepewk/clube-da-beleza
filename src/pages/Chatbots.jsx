@@ -205,7 +205,7 @@ export default function ChatbotsPage() {
 
                 {config.platform === 'whatsapp' && (
                    <div className="space-y-2 animate-in fade-in">
-                      <label className="text-sm font-medium">Número do WhatsApp Business</label>
+                      <T as="label" className="text-sm font-medium">Número do WhatsApp Business</T>
                       <input 
                         className="w-full p-2 border rounded-md"
                         placeholder="+55 (11) 99999-9999"
@@ -217,7 +217,7 @@ export default function ChatbotsPage() {
 
                 {config.platform === 'instagram' && (
                    <div className="space-y-2 animate-in fade-in">
-                      <label className="text-sm font-medium">Usuário do Instagram</label>
+                      <T as="label" className="text-sm font-medium">Usuário do Instagram</T>
                       <div className="flex items-center border rounded-md overflow-hidden">
                          <div className="bg-slate-100 p-2 text-slate-500">@</div>
                          <input 
@@ -263,7 +263,7 @@ export default function ChatbotsPage() {
                           )}
                         </div>
                         <div>
-                           <div className="text-sm font-medium">{config.name || 'Nome do Bot'}</div>
+                           <div className="text-sm font-medium">{config.name || <T>Nome do Bot</T>}</div>
                            {config.platform === 'whatsapp' && config.phone && <div className="text-[10px] opacity-80">{config.phone}</div>}
                            {config.platform === 'instagram' && config.instagram && <div className="text-[10px] opacity-80">@{config.instagram}</div>}
                         </div>
@@ -279,7 +279,7 @@ export default function ChatbotsPage() {
                          </>
                        ) : (
                          <div className="flex items-center justify-center h-full text-slate-400 text-xs text-center px-4">
-                           Configure e clique em "Criar" para ver a prévia
+                           <T>Configure e clique em "Criar" para ver a prévia</T>
                          </div>
                        )}
                     </div>

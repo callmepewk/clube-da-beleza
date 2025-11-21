@@ -432,9 +432,9 @@ export default function NursePage() {
              >
                <Input
                  placeholder={
-                    step === 'ask_name' ? "Digite seu nome..." :
-                    step === 'ask_topic' ? "Sobre o que gostaria de falar?" :
-                    "Digite sua mensagem..."
+                    step === 'ask_name' ? getCurrentLanguage() === 'pt-BR' ? "Digite seu nome..." : "Digite seu nome..." :
+                    step === 'ask_topic' ? getCurrentLanguage() === 'pt-BR' ? "Sobre o que gostaria de falar?" : "Sobre o que gostaria de falar?" :
+                    getCurrentLanguage() === 'pt-BR' ? "Digite sua mensagem..." : "Digite sua mensagem..."
                  }
                  value={message}
                  onChange={(e) => setMessage(e.target.value)}

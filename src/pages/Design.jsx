@@ -187,23 +187,23 @@ export default function DesignPage() {
               
               <div className="flex gap-2 mb-4">
                 <Button 
-                  variant={mode === 'text_to_design' ? 'default' : 'outline'} 
-                  onClick={() => setMode('text_to_design')}
-                  className="flex-1 text-xs"
+                variant={mode === 'text_to_design' ? 'default' : 'outline'} 
+                onClick={() => setMode('text_to_design')}
+                className="flex-1 text-xs"
                 >
-                  Texto p/ Design
+                <T>Texto p/ Design</T>
                 </Button>
                 <Button 
-                  variant={mode === 'image_remix' ? 'default' : 'outline'}
-                  onClick={() => setMode('image_remix')}
-                  className="flex-1 text-xs"
+                variant={mode === 'image_remix' ? 'default' : 'outline'}
+                onClick={() => setMode('image_remix')}
+                className="flex-1 text-xs"
                 >
-                  Remixar Imagem
+                <T>Remixar Imagem</T>
                 </Button>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Selecione o Formato *</label>
+                <T as="label" className="text-sm font-medium text-slate-700">Selecione o Formato *</T>
                 <div className="grid grid-cols-2 gap-2">
                   <select 
                     className="border rounded-md p-2 text-sm bg-white"
@@ -274,18 +274,18 @@ export default function DesignPage() {
                 
                 <div className="absolute top-4 right-4 flex gap-2">
                   <Button variant="secondary" size="sm" onClick={() => setShowTextTool(!showTextTool)}>
-                    <Type className="w-4 h-4 mr-2" /> Adicionar Texto
+                    <Type className="w-4 h-4 mr-2" /> <T>Adicionar Texto</T>
                   </Button>
                   <a href={result} target="_blank" download>
                     <Button variant="secondary" size="sm">
-                      <Download className="w-4 h-4 mr-2" /> Baixar
+                      <Download className="w-4 h-4 mr-2" /> <T>Baixar</T>
                     </Button>
                   </a>
                 </div>
 
                 {showTextTool && (
                    <div className="absolute top-16 right-4 bg-white p-4 rounded-lg shadow-xl w-64 space-y-3 animate-in fade-in slide-in-from-top-2">
-                      <h4 className="font-bold text-sm">Adicionar Texto</h4>
+                      <T as="h4" className="font-bold text-sm">Adicionar Texto</T>
                       <input 
                         className="w-full border p-2 rounded text-sm" 
                         placeholder="Texto (ex: Promoção 50%)"
@@ -310,7 +310,7 @@ export default function DesignPage() {
                         onChange={e => setTextConfig({...textConfig, style: e.target.value})}
                       />
                       <Button size="sm" className="w-full bg-indigo-600" onClick={() => addTextMutation.mutate()} disabled={addTextMutation.isPending}>
-                         {addTextMutation.isPending ? <Loader2 className="animate-spin w-3 h-3" /> : 'Aplicar na Imagem'}
+                         {addTextMutation.isPending ? <Loader2 className="animate-spin w-3 h-3" /> : <T>Aplicar na Imagem</T>}
                       </Button>
                    </div>
                 )}
@@ -327,8 +327,8 @@ export default function DesignPage() {
           {result && (
              <div className="bg-white border border-slate-200 rounded-xl p-4 h-64 flex flex-col">
                 <div className="flex items-center gap-2 mb-2 border-b pb-2">
-                   <MessageSquare className="w-4 h-4 text-indigo-600" />
-                   <span className="font-bold text-sm">Assistente de Design</span>
+                  <MessageSquare className="w-4 h-4 text-indigo-600" />
+                  <T as="span" className="font-bold text-sm">Assistente de Design</T>
                 </div>
                 <div className="flex-1 overflow-y-auto space-y-2 mb-2 pr-2">
                    {chatHistory.map((msg, i) => (
