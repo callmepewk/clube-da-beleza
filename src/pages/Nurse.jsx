@@ -66,8 +66,16 @@ export default function NursePage() {
   // Initialize Chat
   useEffect(() => {
     if (chatHistory.length === 0) {
+      const currentLang = getCurrentLanguage();
+      let greeting = 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?';
+      
+      if (currentLang !== 'pt-BR') {
+        // Will be translated by the T component when rendered
+        greeting = 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?';
+      }
+      
       setChatHistory([
-         { role: 'assistant', content: 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?' }
+         { role: 'assistant', content: greeting }
       ]);
     }
   }, []);
@@ -140,7 +148,8 @@ export default function NursePage() {
       await incrementNurseUsage();
       setConversationActive(false);
       alert("Conversa encerrada. Obrigado por conversar com a Bia!");
-      setChatHistory([{ role: 'assistant', content: 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?' }]);
+      const greeting = 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?';
+      setChatHistory([{ role: 'assistant', content: greeting }]);
       setStep('ask_name');
       setConversationActive(true);
     }
@@ -203,10 +212,11 @@ export default function NursePage() {
     // 1. Name Collection
     if (step === 'ask_name') {
       setName(msg);
+      const response = `Certo, ${msg}. Sobre o que você gostaria de saber hoje? Selecione uma opção ou digite sua dúvida.`;
       setChatHistory(prev => [
         ...prev, 
         { role: 'user', content: msg },
-        { role: 'assistant', content: `Certo, ${msg}. Sobre o que você gostaria de saber hoje? Selecione uma opção ou digite sua dúvida.` }
+        { role: 'assistant', content: response }
       ]);
       setStep('ask_topic');
       setMessage('');

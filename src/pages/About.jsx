@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, Heart, Leaf, Star, Target, Eye } from 'lucide-react';
+import T from '@/components/TranslatedText';
 
 export default function AboutPage() {
   return (
@@ -10,11 +11,11 @@ export default function AboutPage() {
       <div className="relative h-[400px] rounded-xl overflow-hidden shadow-2xl group bg-white border border-slate-100">
         <div className="absolute inset-0 bg-[url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_68ca933db3f173d5b5ee5174/424de1767_clubeimg.jpeg')] bg-cover bg-center opacity-20"></div>
         <div className="relative z-10 flex flex-col justify-end h-full p-8 max-w-4xl">
-           <h1 className="text-5xl font-bold tracking-tight text-[#0F172A] mb-4">Sobre o Club da Beleza</h1>
-           <p className="text-[#475569] text-lg font-medium leading-relaxed">
+           <T as="h1" className="text-5xl font-bold tracking-tight text-[#0F172A] mb-4">Sobre o Club da Beleza</T>
+           <T as="p" className="text-[#475569] text-lg font-medium leading-relaxed">
              O maior clube de benefícios exclusivo para quem ama o autocuidado e um planeta mais feliz.
              Democratizando o acesso a serviços de beleza e estética de qualidade no Brasil.
-           </p>
+           </T>
            <div className="mt-6">
               <Button 
                 onClick={() => window.open('https://clube-da-beleza.base44.app', '_blank')}

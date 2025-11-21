@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { User, Briefcase, MapPin, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import T from '@/components/TranslatedText';
 
 export default function ClubRegistration({ open, onOpenChange }) {
   const [step, setStep] = useState(1);
@@ -112,10 +113,10 @@ export default function ClubRegistration({ open, onOpenChange }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-gradient-to-br from-[#D4A574] to-[#8B6F47] text-white border-0 max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader className="border-b border-white/20 pb-4">
-          <DialogTitle className="text-3xl font-black text-white">Registre-se no Club da Beleza</DialogTitle>
-          <DialogDescription className="text-white/80 text-base">
+          <T as={DialogTitle} className="text-3xl font-black text-white">Registre-se no Club da Beleza</T>
+          <T as={DialogDescription} className="text-white/80 text-base">
             Conecte-se ao ecossistema completo de estética e bem-estar
-          </DialogDescription>
+          </T>
         </DialogHeader>
 
         {step === 1 && (

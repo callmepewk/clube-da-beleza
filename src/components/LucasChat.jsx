@@ -52,9 +52,10 @@ export default function LucasChat() {
 
   useEffect(() => {
     if (messages.length === 0) {
+      const greeting = 'Olá! Sou o Lucas, o host do Clube da Beleza! 👋\n\nEstou aqui para te ajudar a explorar todas as funcionalidades da nossa plataforma. O que você gostaria de saber?';
       setMessages([{
         role: 'assistant',
-        content: 'Olá! Sou o Lucas, o host do Clube da Beleza! 👋\n\nEstou aqui para te ajudar a explorar todas as funcionalidades da nossa plataforma. O que você gostaria de saber?'
+        content: greeting
       }]);
     }
   }, []);

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Loader2, Image as ImageIcon, Wand2, Download, MessageSquare, Type, Send } from 'lucide-react';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
+import T from '@/components/TranslatedText';
 
 const DESIGN_SIZES = {
   instagram: {
@@ -156,7 +157,7 @@ export default function DesignPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-start gap-4">
-        <h1 className="text-2xl font-bold text-[#0F172A]">Estúdio de Design & Projetos</h1>
+        <T as="h1" className="text-2xl font-bold text-[#0F172A]">Estúdio de Design & Projetos</T>
         <UsageLimitBanner 
           currentUsage={currentUsage}
           limit={planLimits.designs}

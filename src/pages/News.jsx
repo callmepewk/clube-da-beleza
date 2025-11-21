@@ -5,6 +5,7 @@ import { Loader2, ExternalLink, Newspaper, TrendingUp, Stethoscope, Laptop } fro
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import T from '@/components/TranslatedText';
 
 export default function NewsPage() {
   const [activeTab, setActiveTab] = useState('all');
@@ -64,8 +65,8 @@ export default function NewsPage() {
             <Newspaper className="w-8 h-8 text-blue-600" />
          </div>
          <div>
-            <h1 className="text-3xl font-bold text-slate-900">Portal de Notícias & Tendências</h1>
-            <p className="text-slate-500">Atualizações semanais para profissionais e parceiros.</p>
+            <T as="h1" className="text-3xl font-bold text-slate-900">Portal de Notícias & Tendências</T>
+            <T as="p" className="text-slate-500">Atualizações semanais para profissionais e parceiros.</T>
          </div>
       </div>
 
