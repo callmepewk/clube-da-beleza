@@ -21,6 +21,7 @@ import {
 import { createPageUrl } from '@/utils';
 import { getPlanLimits } from '@/components/usage/usageLimits';
 import { useNavigate } from 'react-router-dom';
+import T from '@/components/TranslatedText';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -256,11 +257,11 @@ export default function ProfilePage() {
     <div className="max-w-3xl mx-auto space-y-6 pb-10">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-light text-[#2D2416] tracking-tight">Meu Perfil</h1>
-            <p className="text-[#6B5D4F] font-light">Gerencie suas informações e preferências.</p>
+            <T as="h1" className="text-3xl font-light text-[#2D2416] tracking-tight">Meu Perfil</T>
+            <T as="p" className="text-[#6B5D4F] font-light">Gerencie suas informações e preferências.</T>
           </div>
           <Button variant="outline" onClick={() => navigate(createPageUrl('MyPlan'))} className="border-[#D4A574]/30 bg-[#FEFBF7] text-[#6B5D4F] hover:bg-[#FFF9F0] hover:text-[#D4A574] shadow-sm rounded-xl font-light">
-             <CreditCard className="w-4 h-4 mr-2 text-[#D4A574]" /> Ver Meu Plano
+             <CreditCard className="w-4 h-4 mr-2 text-[#D4A574]" /> <T>Ver Meu Plano</T>
           </Button>
         </div>
 
@@ -420,9 +421,9 @@ export default function ProfilePage() {
               <CardHeader className="border-b border-[#D4A574]/20 pb-6 pt-6 px-8">
                 <CardTitle className="text-[#2D2416] flex items-center gap-4 text-xl">
                    <div className="bg-[#FFF9F0] p-3 rounded-2xl"><DollarSign className="w-6 h-6 text-[#D4A574]" /></div>
-                   Informações Profissionais
+                   <T>Informações Profissionais</T>
                 </CardTitle>
-                <p className="text-sm text-[#6B5D4F] mt-2 font-light">Configure seu registro profissional e catálogo completo de serviços</p>
+                <T as="p" className="text-sm text-[#6B5D4F] mt-2 font-light">Configure seu registro profissional e catálogo completo de serviços</T>
               </CardHeader>
               <CardContent className="space-y-8 pt-8 px-8 pb-8">
                 <div className="space-y-2">

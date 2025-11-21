@@ -7,6 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
+import T from '@/components/TranslatedText';
 
 export default function ChatbotsPage() {
   const [activeTab, setActiveTab] = useState('config');
@@ -78,7 +79,7 @@ export default function ChatbotsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[#0F172A]">Meus Chatbots</h1>
+      <T as="h1" className="text-2xl font-bold text-[#0F172A]">Meus Chatbots</T>
       
       <UsageLimitBanner 
         currentUsage={currentUsage}

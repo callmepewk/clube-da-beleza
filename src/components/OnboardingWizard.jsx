@@ -3,6 +3,7 @@ import { X, ChevronRight, Calendar, Bot, Globe, Palette, ShoppingBag, Stethoscop
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import T from '@/components/TranslatedText';
 
 export default function OnboardingWizard({ isOpen, onClose }) {
   const [selectedTools, setSelectedTools] = useState([]);
@@ -87,8 +88,8 @@ export default function OnboardingWizard({ isOpen, onClose }) {
         {/* Header */}
         <div className="sticky top-0 bg-gradient-to-r from-[#D4A574] to-[#C9A868] p-8 flex items-center justify-between z-10">
           <div>
-            <h2 className="text-3xl font-light text-white mb-2">Bem-vindo ao Clube da Beleza! ✨</h2>
-            <p className="text-white/90 font-light">O que você gostaria de fazer hoje?</p>
+            <T as="h2" className="text-3xl font-light text-white mb-2">Bem-vindo ao Clube da Beleza! ✨</T>
+            <T as="p" className="text-white/90 font-light">O que você gostaria de fazer hoje?</T>
           </div>
           <button
             onClick={onClose}

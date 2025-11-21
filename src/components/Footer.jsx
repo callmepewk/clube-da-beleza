@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Instagram, Facebook, Mail } from 'lucide-react';
+import T from '@/components/TranslatedText';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();

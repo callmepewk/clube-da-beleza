@@ -24,6 +24,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import T from '@/components/TranslatedText';
 
 function NotificationSender() {
    const [form, setForm] = useState({ title: '', message: '', link: '', image_url: '', target_type: 'all' });

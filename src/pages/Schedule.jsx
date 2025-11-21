@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, Loader2, Globe, ExternalLink, Navigation } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import ClubRegistration from '@/components/ClubRegistration';
+import T from '@/components/TranslatedText';
 
 export default function SchedulePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -173,8 +174,8 @@ export default function SchedulePage() {
         
         <div className="flex justify-between items-start">
            <div>
-             <h1 className="text-2xl font-bold text-[#0F172A]">Gestão de Agenda</h1>
-             <p className="text-[#64748B]">Configure seus horários e disponibilidades.</p>
+             <T as="h1" className="text-2xl font-bold text-[#0F172A]">Gestão de Agenda</T>
+             <T as="p" className="text-[#64748B]">Configure seus horários e disponibilidades.</T>
            </div>
            <div className="flex gap-3">
               <Button 
@@ -511,7 +512,7 @@ export default function SchedulePage() {
 
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-bold text-[#0F172A]">Meus Agendamentos</h1>
+          <T as="h1" className="text-2xl font-bold text-[#0F172A]">Meus Agendamentos</T>
           <div className="flex items-center bg-white border rounded-lg p-1 shadow-sm">
             <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
             <span className="px-4 font-medium min-w-[140px] text-center capitalize">

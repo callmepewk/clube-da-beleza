@@ -9,6 +9,7 @@ import { Loader2, Globe, ExternalLink, Save, Plus, Image as ImageIcon, FileText,
 import ReactMarkdown from 'react-markdown';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
+import T from '@/components/TranslatedText';
 
 export default function SitesPage() {
   const [prompt, setPrompt] = useState('');
@@ -138,7 +139,7 @@ export default function SitesPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold text-[#0F172A]">Gerador de Landing Pages</h1>
+        <T as="h1" className="text-2xl font-bold text-[#0F172A]">Gerador de Landing Pages</T>
       </div>
       
       <UsageLimitBanner 

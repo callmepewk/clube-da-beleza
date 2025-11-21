@@ -13,6 +13,7 @@ import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye, Sp
 import * as THREE from 'three';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
+import T from '@/components/TranslatedText';
 
 export default function ProductsPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -348,7 +349,7 @@ export default function ProductsPage() {
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-start gap-4">
-        <h1 className="text-2xl font-bold text-[#0F172A]">Gerenciar Produtos</h1>
+        <T as="h1" className="text-2xl font-bold text-[#0F172A]">Gerenciar Produtos</T>
         <UsageLimitBanner 
           currentUsage={currentUsage}
           limit={planLimits.products}
