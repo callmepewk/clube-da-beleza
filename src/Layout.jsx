@@ -288,6 +288,13 @@ export default function Layout({ children }) {
       { icon: ShoppingBag, label: 'Produtos', path: '/products', translationKey: 'Produtos' },
       { icon: Zap, label: 'Ferramentas', path: '/tools', translationKey: 'Ferramentas' },
       { icon: CreditCard, label: 'Planos', path: '/plans', translationKey: 'Planos' },
+      { icon: FileText, label: 'Nossa Missão', path: '/OurMission', translationKey: 'Nossa Missão' },
+      { icon: Activity, label: 'Chá da Beleza', path: '/BeautyTea', translationKey: 'Chá da Beleza' },
+      { icon: UserCircle, label: 'Cuidadores da Pele', path: '/SkinCaretakers', translationKey: 'Cuidadores da Pele' },
+      { icon: Heart, label: 'Beleza Solidária', path: '/SolidBeauty', translationKey: 'Beleza Solidária' },
+      { icon: Activity, label: 'Dose Certa', path: '/RightDose', translationKey: 'Dose Certa' },
+      { icon: ShoppingBag, label: 'Beauty Box', path: '/BeautyBox', translationKey: 'Beauty Box' },
+      { icon: ShieldCheck, label: 'Selo de Qualidade', path: '/QualitySeal', translationKey: 'Selo de Qualidade' },
       { icon: HelpCircle, label: 'Sobre Nós', path: '/about', translationKey: 'Sobre Nós' },
     ];
 
