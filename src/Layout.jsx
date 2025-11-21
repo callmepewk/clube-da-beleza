@@ -50,6 +50,7 @@ import {
 import ClubRegistration from '@/components/ClubRegistration';
 import Footer from '@/components/Footer';
 import LucasChat from '@/components/LucasChat';
+import LanguageSelector from '@/components/LanguageSelector';
 
 export default function Layout({ children }) {
   const [user, setUser] = useState(null);
@@ -319,8 +320,11 @@ export default function Layout({ children }) {
            <Link to={createPageUrl('Dashboard')} className="flex items-center gap-3 transition-opacity hover:opacity-80">
               <div className="text-2xl font-light tracking-wider ${theme.textPrimary}">CLUBE DA BELEZA</div>
            </Link>
-           <div className="text-sm font-light ${theme.textSecondary} tracking-wide">
-             Finalizando Cadastro
+           <div className="flex items-center gap-4">
+             <LanguageSelector />
+             <div className="text-sm font-light ${theme.textSecondary} tracking-wide">
+               Finalizando Cadastro
+             </div>
            </div>
         </header>
         <main className="flex-1 p-4 md:p-8 max-w-5xl mx-auto w-full">
@@ -374,12 +378,17 @@ export default function Layout({ children }) {
       {/* Left Sidebar Navigation (Desktop) */}
       <aside className={`hidden lg:flex flex-col ${theme.sidebar} border-r ${theme.border} w-72 fixed left-0 top-0 bottom-0 z-50 overflow-y-auto`}>
         {/* Logo */}
-        <Link to={createPageUrl('Dashboard')} className="p-8 border-b border-[#D4A574]/20">
-          <div className={`text-2xl font-light tracking-[0.2em] ${theme.textPrimary} text-center`}>
-            CLUBE DA<br/>BELEZA
+        <div className="p-8 border-b border-[#D4A574]/20">
+          <Link to={createPageUrl('Dashboard')}>
+            <div className={`text-2xl font-light tracking-[0.2em] ${theme.textPrimary} text-center`}>
+              CLUBE DA<br/>BELEZA
+            </div>
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D4A574] to-transparent mt-4"></div>
+          </Link>
+          <div className="mt-4 flex justify-center">
+            <LanguageSelector />
           </div>
-          <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D4A574] to-transparent mt-4"></div>
-        </Link>
+        </div>
 
         {/* Navigation */}
         <nav className="flex-1 p-6 space-y-2 overflow-y-auto min-h-0 pb-32">
@@ -503,13 +512,16 @@ export default function Layout({ children }) {
           <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
             <div className={`text-lg font-light tracking-wider ${theme.textPrimary}`}>CLUBE DA BELEZA</div>
           </Link>
-          
-          <Sheet>
+
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
+            <Sheet>
             <SheetTrigger asChild>
               <button className={`p-2 ${theme.textPrimary} hover:bg-[#FFF9F0] rounded-full`}>
                 <Menu className="w-6 h-6" />
               </button>
             </SheetTrigger>
+            </div>
             <SheetContent side="right" className={`${theme.sidebar} border-l ${theme.border} ${theme.textPrimary} w-[300px]`}>
               <div className="flex flex-col h-full pt-6">
                 <nav className="space-y-2 flex-1">
@@ -540,8 +552,8 @@ export default function Layout({ children }) {
                 )}
               </div>
             </SheetContent>
-          </Sheet>
-        </header>
+            </Sheet>
+            </header>
 
         {/* Scrollable Page Content */}
         <main id="main-content" className={`flex-1 overflow-y-auto ${theme.bg}`}>
