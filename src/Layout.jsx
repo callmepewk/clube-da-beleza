@@ -516,44 +516,44 @@ export default function Layout({ children }) {
           <div className="flex items-center gap-2">
             <LanguageSelector />
             <Sheet>
-            <SheetTrigger asChild>
-              <button className={`p-2 ${theme.textPrimary} hover:bg-[#FFF9F0] rounded-full`}>
-                <Menu className="w-6 h-6" />
-              </button>
-            </SheetTrigger>
-            </div>
-            <SheetContent side="right" className={`${theme.sidebar} border-l ${theme.border} ${theme.textPrimary} w-[300px]`}>
-              <div className="flex flex-col h-full pt-6">
-                <nav className="space-y-2 flex-1">
-                  {navItems.map((item) => {
-                    const isActive = location.pathname === item.path;
-                    return (
-                      <Link
-                        key={item.path}
-                        to={createPageUrl(item.path.replace('/', ''))}
-                        className={`flex items-center gap-4 px-4 py-3 rounded-xl font-light transition-colors
-                          ${isActive ? `${theme.accentBg} text-white` : `${theme.textSecondary} hover:bg-[#FFF9F0]`}`}
-                      >
-                        <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : theme.accent}`} />
-                        {item.label}
-                      </Link>
-                    );
-                  })}
-                </nav>
-                {user && (
-                  <div className="pt-6 border-t border-[#D4A574]/20 space-y-2">
-                    <Button variant="ghost" className={`w-full justify-start ${theme.textSecondary} hover:bg-[#FFF9F0] font-light`} onClick={() => navigate(createPageUrl('Profile'))}>
-                      <UserCircle className="w-5 h-5 mr-2" /> Perfil
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 font-light" onClick={handleLogout}>
-                      <LogOut className="w-5 h-5 mr-2" /> Sair
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </SheetContent>
+              <SheetTrigger asChild>
+                <button className={`p-2 ${theme.textPrimary} hover:bg-[#FFF9F0] rounded-full`}>
+                  <Menu className="w-6 h-6" />
+                </button>
+              </SheetTrigger>
+              <SheetContent side="right" className={`${theme.sidebar} border-l ${theme.border} ${theme.textPrimary} w-[300px]`}>
+                <div className="flex flex-col h-full pt-6">
+                  <nav className="space-y-2 flex-1">
+                    {navItems.map((item) => {
+                      const isActive = location.pathname === item.path;
+                      return (
+                        <Link
+                          key={item.path}
+                          to={createPageUrl(item.path.replace('/', ''))}
+                          className={`flex items-center gap-4 px-4 py-3 rounded-xl font-light transition-colors
+                            ${isActive ? `${theme.accentBg} text-white` : `${theme.textSecondary} hover:bg-[#FFF9F0]`}`}
+                        >
+                          <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : theme.accent}`} />
+                          {item.label}
+                        </Link>
+                      );
+                    })}
+                  </nav>
+                  {user && (
+                    <div className="pt-6 border-t border-[#D4A574]/20 space-y-2">
+                      <Button variant="ghost" className={`w-full justify-start ${theme.textSecondary} hover:bg-[#FFF9F0] font-light`} onClick={() => navigate(createPageUrl('Profile'))}>
+                        <UserCircle className="w-5 h-5 mr-2" /> Perfil
+                      </Button>
+                      <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 font-light" onClick={handleLogout}>
+                        <LogOut className="w-5 h-5 mr-2" /> Sair
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </SheetContent>
             </Sheet>
-            </header>
+          </div>
+        </header>
 
         {/* Scrollable Page Content */}
         <main id="main-content" className={`flex-1 overflow-y-auto ${theme.bg}`}>
