@@ -49,7 +49,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import ClubRegistration from '@/components/ClubRegistration';
 import Footer from '@/components/Footer';
-import LucasChat from '@/components/LucasChat';
+import CarolChat from '@/components/CarolChat';
 import LanguageSelector from '@/components/LanguageSelector';
 import TranslationProvider from '@/components/TranslationProvider';
 import T from '@/components/TranslatedText';
@@ -585,8 +585,8 @@ export default function Layout({ children }) {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Lucas Chat */}
-      <LucasChat />
+      {/* Carol Chat */}
+      <CarolChat />
       </div>
     </TranslationProvider>
       );
