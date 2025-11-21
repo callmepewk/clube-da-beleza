@@ -179,15 +179,15 @@ export default function SchedulePage() {
            </div>
            <div className="flex gap-3">
               <Button 
-                onClick={() => setClubDialogOpen(true)}
-                variant="outline"
-                className="bg-gradient-to-r from-[#D4A574] to-[#8B6F47] text-white border-0 hover:opacity-90 font-bold shadow-lg"
+               onClick={() => setClubDialogOpen(true)}
+               variant="outline"
+               className="bg-gradient-to-r from-[#D4A574] to-[#8B6F47] text-white border-0 hover:opacity-90 font-bold shadow-lg"
               >
-                <Globe className="w-4 h-4 mr-2" />
-                Club da Beleza
+               <Globe className="w-4 h-4 mr-2" />
+               <T>Club da Beleza</T>
               </Button>
               <div className="bg-blue-50 p-2 rounded border border-blue-100 text-sm text-blue-800 max-w-md">
-                <span className="font-bold">Local:</span> {userProfile?.service_address?.street || 'Não definido'}
+               <T as="span" className="font-bold">Local:</T> {userProfile?.service_address?.street || <T>Não definido</T>}
               </div>
            </div>
         </div>
@@ -197,10 +197,10 @@ export default function SchedulePage() {
            <Card className="bg-white border-slate-200">
               <CardContent className="p-6 flex flex-col justify-between h-full">
                  <div>
-                    <h3 className="font-bold text-[#0F172A] mb-2 flex items-center gap-2">
-                       <CalendarIcon className="w-5 h-5 text-[#0D9488]" /> Integrações de Calendário
-                    </h3>
-                    <p className="text-sm text-[#64748B] mb-4">Conecte suas agendas externas para sincronizar feriados, aniversários e compromissos automaticamente.</p>
+                   <T as="h3" className="font-bold text-[#0F172A] mb-2 flex items-center gap-2">
+                      <CalendarIcon className="w-5 h-5 text-[#0D9488]" /> Integrações de Calendário
+                   </T>
+                   <T as="p" className="text-sm text-[#64748B] mb-4">Conecte suas agendas externas para sincronizar feriados, aniversários e compromissos automaticamente.</T>
                  </div>
                  <div className="flex gap-3">
                     <Button 
@@ -210,7 +210,7 @@ export default function SchedulePage() {
                       disabled={isSyncing}
                     >
                        <ExternalLink className="w-4 h-4 mr-2" />
-                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.google ? "✓ Conectado" : "Conectar Google Agenda")}
+                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.google ? <T>✓ Conectado</T> : <T>Conectar Google Agenda</T>)}
                     </Button>
                     <Button 
                       variant="outline"
@@ -219,7 +219,7 @@ export default function SchedulePage() {
                       disabled={isSyncing}
                     >
                        <ExternalLink className="w-4 h-4 mr-2" />
-                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.outlook ? "✓ Conectado" : "Conectar Outlook")}
+                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.outlook ? <T>✓ Conectado</T> : <T>Conectar Outlook</T>)}
                     </Button>
                  </div>
               </CardContent>
@@ -232,10 +232,10 @@ export default function SchedulePage() {
                    <Sparkles className="w-6 h-6" />
                  </div>
                  <div className="flex-1 space-y-3">
-                   <h3 className="font-semibold text-lg text-indigo-900">Assistente de Agenda Inteligente</h3>
-                   <p className="text-sm text-slate-600">
+                   <T as="h3" className="font-semibold text-lg text-indigo-900">Assistente de Agenda Inteligente</T>
+                   <T as="p" className="text-sm text-slate-600">
                      Diga-me quais dias e horários você atende e para quais procedimentos. Eu organizarei sua grade automaticamente com as cores corretas.
-                   </p>
+                   </T>
                    <div className="flex gap-2">
                      <Input 
                        placeholder="Ex: Atendo consultas segunda e quarta das 08h às 12h..." 
@@ -248,7 +248,7 @@ export default function SchedulePage() {
                        disabled={!aiPrompt || aiAvailabilityMutation.isPending}
                        className="bg-indigo-600 hover:bg-indigo-700 text-white"
                      >
-                       {aiAvailabilityMutation.isPending ? 'Configurando...' : 'Gerar Agenda'}
+                       {aiAvailabilityMutation.isPending ? <T>Configurando...</T> : <T>Gerar Agenda</T>}
                      </Button>
                    </div>
                  </div>
@@ -259,7 +259,7 @@ export default function SchedulePage() {
 
         <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col">
            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold">Sua Grade Semanal</h3>
+              <T as="h3" className="font-semibold">Sua Grade Semanal</T>
               <div className="flex items-center bg-slate-50 border rounded-lg p-1">
                 <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
                 <span className="px-4 font-medium text-sm min-w-[120px] text-center capitalize">
@@ -380,17 +380,17 @@ export default function SchedulePage() {
       <Dialog>
          <DialogTrigger asChild>
             <Button className="w-full sm:w-auto bg-black hover:bg-gray-900 text-[#D4AF37] border border-[#D4AF37] shadow-md font-bold">
-              <Sparkles className="w-4 h-4 mr-2 text-[#D4AF37]" /> Agendar com IA
+             <Sparkles className="w-4 h-4 mr-2 text-[#D4AF37]" /> <T>Agendar com IA</T>
             </Button>
          </DialogTrigger>
          <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Agendamento Inteligente</DialogTitle>
-              <DialogDescription>Preencha os detalhes e deixe a IA encontrar o melhor profissional para você.</DialogDescription>
+             <T as={DialogTitle}>Agendamento Inteligente</T>
+             <T as={DialogDescription}>Preencha os detalhes e deixe a IA encontrar o melhor profissional para você.</T>
             </DialogHeader>
             <div className="space-y-4 py-4">
                <div className="space-y-2">
-                  <Label>O que você precisa?</Label>
+                  <T as={Label}>O que você precisa?</T>
                   <div className="relative">
                     <Input 
                       placeholder="Ex: Consulta Dermatologista, Botox, Exame de Sangue..." 
@@ -422,11 +422,11 @@ export default function SchedulePage() {
 
                <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                     <Label>Quando?</Label>
+                     <T as={Label}>Quando?</T>
                      <Input type="date" />
                   </div>
                   <div className="space-y-2">
-                     <Label>Horário Preferido</Label>
+                     <T as={Label}>Horário Preferido</T>
                      <Select>
                         <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
                         <SelectContent>
@@ -442,7 +442,7 @@ export default function SchedulePage() {
 
                <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label>Onde?</Label>
+                    <T as={Label}>Onde?</T>
                     <Button 
                       type="button"
                       variant="outline"
@@ -456,7 +456,7 @@ export default function SchedulePage() {
                       ) : (
                         <Navigation className="w-3 h-3 mr-2" />
                       )}
-                      Usar minha localização
+                      <T>Usar minha localização</T>
                     </Button>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
@@ -497,14 +497,14 @@ export default function SchedulePage() {
                </div>
 
                <div className="space-y-2">
-                  <Label>Faixa de Preço (R$) - Opcional</Label>
+                  <T as={Label}>Faixa de Preço (R$) - Opcional</T>
                   <Input placeholder="Ex: até 300,00" type="number" />
                </div>
                <Button 
                  className="w-full bg-indigo-600 hover:bg-indigo-700"
                  onClick={() => alert('Funcionalidade em desenvolvimento. Em breve você poderá agendar diretamente com profissionais disponíveis!')}
                >
-                 Buscar & Agendar
+                 <T>Buscar & Agendar</T>
                </Button>
             </div>
          </DialogContent>
@@ -551,7 +551,7 @@ export default function SchedulePage() {
                   ))}
                   {dayEvents.length === 0 && isToday && (
                     <div className="flex flex-col items-center justify-center h-20 text-slate-300 text-xs">
-                      <span className="block">Livre</span>
+                      <T as="span" className="block">Livre</T>
                     </div>
                   )}
                 </div>

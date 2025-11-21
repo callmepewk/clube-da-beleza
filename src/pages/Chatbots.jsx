@@ -8,6 +8,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 import T from '@/components/TranslatedText';
+import { getCurrentLanguage } from '@/components/i18n/i18nUtils';
 
 export default function ChatbotsPage() {
   const [activeTab, setActiveTab] = useState('config');

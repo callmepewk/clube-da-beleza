@@ -170,7 +170,7 @@ export default function DesignPage() {
         <div className="lg:col-span-1 space-y-6">
           {/* Legend / Explanation */}
           <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mb-6 text-sm text-blue-800">
-            <h3 className="font-bold mb-2">Como funcionam as opções:</h3>
+            <T as="h3" className="font-bold mb-2">Como funcionam as opções:</T>
             <div className="space-y-2">
               <div>
                 <span className="font-semibold">1. Texto para Design:</span> Crie imagens do zero descrevendo o que você quer. A IA gera uma imagem única baseada na sua descrição.
@@ -183,7 +183,7 @@ export default function DesignPage() {
 
           <Card>
             <CardContent className="p-6 space-y-4">
-              <h2 className="font-semibold text-lg">Criar Novo Design</h2>
+              <T as="h2" className="font-semibold text-lg">Criar Novo Design</T>
               
               <div className="flex gap-2 mb-4">
                 <Button 

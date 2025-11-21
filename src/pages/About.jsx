@@ -20,9 +20,9 @@ export default function AboutPage() {
               <Button 
                 onClick={() => window.open('https://clube-da-beleza.base44.app', '_blank')}
                 className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-6 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all"
-              >
-                Conheça mais o nosso trabalho
-              </Button>
+                >
+                <T>Conheça mais o nosso trabalho</T>
+                </Button>
            </div>
         </div>
       </div>
@@ -48,7 +48,7 @@ export default function AboutPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
          <div className="space-y-6">
             <div>
-               <h2 className="text-3xl font-bold text-[#0F172A] mb-4">Nossa História</h2>
+               <T as="h2" className="text-3xl font-bold text-[#0F172A] mb-4">Nossa História</T>
                <p className="text-[#475569] leading-relaxed font-medium">
                  O <strong>Club da Beleza</strong> nasceu da visão de democratizar o acesso a serviços de beleza e estética de qualidade no Brasil.
                  Criamos uma plataforma inovadora que não apenas conecta clientes a profissionais certificados, mas também oferece benefícios exclusivos, descontos especiais e uma comunidade engajada em torno do bem-estar e da beleza sustentável.
@@ -57,14 +57,14 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                   <Target className="w-8 h-8 text-blue-600 mb-3" />
-                  <h3 className="font-bold text-[#0F172A] mb-2">Nossa Missão</h3>
+                  <T as="h3" className="font-bold text-[#0F172A] mb-2">Nossa Missão</T>
                   <p className="text-sm text-[#475569] font-medium">
                     Democratizar o acesso a serviços de beleza e estética de qualidade, conectando pessoas a profissionais qualificados e comprometidos com a excelência.
                   </p>
                </div>
                <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
                   <Eye className="w-8 h-8 text-emerald-600 mb-3" />
-                  <h3 className="font-bold text-[#0F172A] mb-2">Nossa Visão</h3>
+                  <T as="h3" className="font-bold text-[#0F172A] mb-2">Nossa Visão</T>
                   <p className="text-sm text-[#475569] font-medium">
                     Ser a maior e mais confiável rede de beleza e estética do Brasil, transformando a experiência de autocuidado em algo acessível e prazeroso.
                   </p>
@@ -82,7 +82,7 @@ export default function AboutPage() {
 
       {/* Values */}
       <div>
-         <h2 className="text-3xl font-bold text-[#0F172A] mb-6 text-center">Nossos Valores</h2>
+         <T as="h2" className="text-3xl font-bold text-[#0F172A] mb-6 text-center">Nossos Valores</T>
          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
                { icon: Heart, title: "Autocuidado", desc: "Acreditamos que cuidar de si mesmo é um ato de amor próprio essencial.", color: "text-pink-600" },
