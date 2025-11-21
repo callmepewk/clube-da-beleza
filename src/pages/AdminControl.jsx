@@ -4,8 +4,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Users, LayoutDashboard, DollarSign, Activity, Shield, Trash2, 
   BarChart3, UserCheck, Building2, Loader2, Search, Bell, Send,
-  User, Stethoscope, X, Globe, Bot, Palette, Calendar
+  User, Stethoscope, X, Globe, Bot, Palette, Calendar, Eye, MousePointer, BarChart2
 } from 'lucide-react';
+import BeautyTeaAdmin from '@/components/admin/BeautyTeaAdmin';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
@@ -378,7 +379,7 @@ export default function AdminControlPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 h-auto gap-2 bg-[#FEFBF7] border border-[#D4A574]/20 p-2">
+        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 h-auto gap-2 bg-[#FEFBF7] border border-[#D4A574]/20 p-2">
           <TabsTrigger value="overview" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Visão Geral</TabsTrigger>
           <TabsTrigger value="users" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Usuários</TabsTrigger>
           <TabsTrigger value="analytics" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Analytics</TabsTrigger>
@@ -386,6 +387,7 @@ export default function AdminControlPage() {
           <TabsTrigger value="seo" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">SEO & Tráfego</TabsTrigger>
           <TabsTrigger value="banners" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Anúncios</TabsTrigger>
           <TabsTrigger value="notifications" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Notificações</TabsTrigger>
+          <TabsTrigger value="beauty-tea" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Chá da Beleza</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -831,6 +833,11 @@ export default function AdminControlPage() {
                  <NotificationSender />
               </CardContent>
            </Card>
+        </TabsContent>
+
+        {/* Beauty Tea Tab */}
+        <TabsContent value="beauty-tea">
+          <BeautyTeaAdmin />
         </TabsContent>
       </Tabs>
 

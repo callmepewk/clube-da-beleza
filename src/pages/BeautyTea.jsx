@@ -1,8 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Coffee, Heart, Users, Sparkles, Calendar, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { base44 } from '@/api/base44Client';
+import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import T from '@/components/TranslatedText';
 
 export default function BeautyTeaPage() {
+  const [user, setUser] = useState(null);
+
+  React.useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const u = await base44.auth.me();
+        setUser(u);
+      } catch (e) {}
+    };
+    loadUser();
+  }, []);
+
+  const { data: events, isLoading } = useQuery({
+    queryKey: ['beautyTeaEvents'],
+    queryFn: async () => {
+      const res = await base44.entities.BeautyTeaEvent.list({ 
+        query: { status: 'active' },
+        sort: { date: 1 },
+        limit: 50 
+      });
+      return res.data;
+    }
+  });
+
   const benefits = [
     'Networking com profissionais da área',
     'Troca de experiências e conhecimentos',
@@ -12,26 +41,30 @@ export default function BeautyTeaPage() {
     'Sorteios e brindes exclusivos'
   ];
 
-  const upcomingEvents = [
-    {
-      date: '15 Dez',
-      title: 'Chá da Beleza - Edição Verão',
-      location: 'São Paulo - SP',
-      spots: 20
-    },
-    {
-      date: '22 Jan',
-      title: 'Chá da Beleza - Tendências 2025',
-      location: 'Rio de Janeiro - RJ',
-      spots: 25
-    },
-    {
-      date: '10 Fev',
-      title: 'Chá da Beleza - Networking',
-      location: 'Belo Horizonte - MG',
-      spots: 15
+  const handleReserve = (event) => {
+    const availableSlots = event.total_slots - (event.reserved_slots || 0);
+    if (availableSlots <= 0) {
+      alert('Este evento está lotado!');
+      return;
     }
-  ];
+
+    const userName = user?.full_name || 'Visitante';
+    const userEmail = user?.email || '';
+    const eventDate = format(new Date(event.date), 'dd/MM/yyyy', { locale: ptBR });
+    
+    const message = encodeURIComponent(
+      `Olá! Gostaria de reservar uma vaga para o evento:\n\n` +
+      `📅 Evento: ${event.name}\n` +
+      `🎨 Tema: ${event.theme}\n` +
+      `📍 Local: ${event.location}\n` +
+      `📆 Data: ${eventDate}\n` +
+      `🕒 Horário: ${event.time}\n\n` +
+      `👤 Nome: ${userName}\n` +
+      `✉️ Email: ${userEmail}`
+    );
+
+    window.open(`https://wa.me/5531972595643?text=${message}`, '_blank');
+  };
 
   return (
     <div className="space-y-16 pb-16">
@@ -103,31 +136,60 @@ export default function BeautyTeaPage() {
 
       {/* Upcoming Events */}
       <div>
-        <h2 className="text-4xl font-light text-[#2D2416] mb-10 text-center">Próximos Encontros</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {upcomingEvents.map((event, idx) => (
-            <div key={idx} className="bg-[#FEFBF7] rounded-[1.5rem] border border-[#D4A574]/20 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all group">
-              <div className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] p-6 text-white text-center">
-                <div className="text-4xl font-light mb-2">{event.date.split(' ')[0]}</div>
-                <div className="text-sm font-light uppercase tracking-wide opacity-90">{event.date.split(' ')[1]}</div>
-              </div>
-              <div className="p-6 space-y-4">
-                <h3 className="text-xl font-light text-[#2D2416]">{event.title}</h3>
-                <div className="flex items-center gap-2 text-[#6B5D4F] text-sm">
-                  <MapPin className="w-4 h-4 text-[#D4A574]" />
-                  {event.location}
+        <T as="h2" className="text-4xl font-light text-[#2D2416] mb-10 text-center">Próximos Encontros</T>
+        {isLoading ? (
+          <div className="text-center py-12 text-[#6B5D4F]"><T>Carregando eventos...</T></div>
+        ) : events && events.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {events.map((event) => {
+              const eventDate = new Date(event.date);
+              const availableSlots = event.total_slots - (event.reserved_slots || 0);
+              const isFull = availableSlots <= 0;
+              
+              return (
+                <div key={event.id} className="bg-[#FEFBF7] rounded-[1.5rem] border border-[#D4A574]/20 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all group">
+                  <div className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] p-6 text-white text-center">
+                    <div className="text-4xl font-light mb-2">{format(eventDate, 'dd')}</div>
+                    <div className="text-sm font-light uppercase tracking-wide opacity-90">{format(eventDate, 'MMM', { locale: ptBR })}</div>
+                  </div>
+                  <div className="p-6 space-y-4">
+                    <h3 className="text-xl font-light text-[#2D2416]">{event.name}</h3>
+                    <div className="text-sm text-[#D4A574] font-medium">🎨 {event.theme}</div>
+                    <div className="flex items-center gap-2 text-[#6B5D4F] text-sm">
+                      <MapPin className="w-4 h-4 text-[#D4A574]" />
+                      {event.location}
+                    </div>
+                    <div className="flex items-center gap-2 text-[#6B5D4F] text-sm">
+                      <Calendar className="w-4 h-4 text-[#D4A574]" />
+                      {event.time}
+                    </div>
+                    <div className="flex items-center gap-2 text-[#6B5D4F] text-sm">
+                      <Users className="w-4 h-4 text-[#D4A574]" />
+                      <T>{availableSlots} vagas disponíveis</T>
+                    </div>
+                    <Button 
+                      onClick={() => handleReserve(event)}
+                      disabled={isFull}
+                      className={`w-full h-12 rounded-xl font-light ${
+                        isFull 
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                          : 'bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white'
+                      }`}
+                    >
+                      {isFull ? <T>Esgotado</T> : <T>Reservar Vaga</T>}
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-[#6B5D4F] text-sm">
-                  <Users className="w-4 h-4 text-[#D4A574]" />
-                  {event.spots} vagas disponíveis
-                </div>
-                <Button className="w-full bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 rounded-xl font-light">
-                  Reservar Vaga
-                </Button>
-              </div>
-            </div>
-          ))}
-        </div>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-12 bg-[#FEFBF7] rounded-2xl border border-[#D4A574]/20">
+            <Coffee className="w-16 h-16 mx-auto text-[#D4A574] opacity-50 mb-4" />
+            <T as="p" className="text-[#6B5D4F] font-light">Nenhum evento disponível no momento.</T>
+            <T as="p" className="text-[#6B5D4F] text-sm mt-2">Em breve teremos novos encontros!</T>
+          </div>
+        )}
       </div>
 
       {/* CTA */}
