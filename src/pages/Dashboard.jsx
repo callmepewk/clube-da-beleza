@@ -11,12 +11,12 @@ const PatientNewsFeed = () => {
       queryKey: ['patientNews'],
       queryFn: async () => {
          const res = await base44.integrations.Core.InvokeLLM({
-            prompt: "Gere 4 notícias recentes e interessantes sobre saúde, estética, beleza e moda. Retorne JSON array com 'title', 'category', 'image_keyword' e 'summary'.",
+            prompt: "Gere 4 notícias recentes e interessantes sobre saúde, estética, beleza e moda. Para cada notícia, retorne JSON com 'title', 'category', 'image_keyword', 'summary' e 'url' (link real de artigo ou notícia sobre o tema).",
             add_context_from_internet: true,
             response_json_schema: {
                type: "object",
                properties: {
-                  news: { type: "array", items: { type: "object", properties: { title: {type:"string"}, category: {type:"string"}, image_keyword: {type:"string"}, summary: {type:"string"} } } }
+                  news: { type: "array", items: { type: "object", properties: { title: {type:"string"}, category: {type:"string"}, image_keyword: {type:"string"}, summary: {type:"string"}, url: {type:"string"} } } }
                }
             }
          });
@@ -30,11 +30,17 @@ const PatientNewsFeed = () => {
    return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
          {news?.map((item, idx) => (
-            <div key={idx} className="bg-[#FEFBF7] rounded-xl lg:rounded-2xl overflow-hidden shadow-md border border-[#D4A574]/20 hover:shadow-xl transition-all flex flex-col md:flex-row">
+            <a 
+               key={idx} 
+               href={item.url || `https://www.google.com/search?q=${encodeURIComponent(item.title + ' ' + item.category)}`}
+               target="_blank"
+               rel="noopener noreferrer"
+               className="bg-[#FEFBF7] rounded-xl lg:rounded-2xl overflow-hidden shadow-md border border-[#D4A574]/20 hover:shadow-xl transition-all flex flex-col md:flex-row cursor-pointer group"
+            >
                <div className="h-48 md:h-auto md:w-2/5 lg:w-1/3 bg-slate-100 relative overflow-hidden flex-shrink-0">
                   <img 
                      src={`https://source.unsplash.com/400x300/?${item.image_keyword || 'health,beauty'}`} 
-                     className="w-full h-full object-cover" 
+                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
                      alt={item.title}
                   />
                   <div className="absolute top-2 left-2 bg-white/95 px-3 py-1 rounded-lg text-xs font-bold uppercase text-[#2D2416] shadow-sm">
@@ -42,10 +48,10 @@ const PatientNewsFeed = () => {
                   </div>
                </div>
                <div className="p-4 md:p-6 md:w-3/5 lg:w-2/3 flex flex-col justify-center">
-                  <h3 className="font-light text-base md:text-lg text-[#2D2416] mb-2">{item.title}</h3>
+                  <h3 className="font-light text-base md:text-lg text-[#2D2416] mb-2 group-hover:text-[#D4A574] transition-colors">{item.title}</h3>
                   <p className="text-[#6B5D4F] text-sm font-light line-clamp-2 md:line-clamp-3">{item.summary}</p>
                </div>
-            </div>
+            </a>
          ))}
       </div>
    );
@@ -298,15 +304,16 @@ export default function Dashboard() {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
           {[
-            { title: "Skincare", img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&q=60", link: 'Schedule' },
-            { title: "Laser", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=60", link: 'Schedule' },
-            { title: "Harmonização", img: "https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=500&q=60", link: 'Schedule' },
-            { title: "Nutrologia", img: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=500&q=60", link: 'Schedule' }
+            { title: "Skincare", img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&q=60", url: 'https://www.google.com/search?q=tratamentos+skincare+faciais+est%C3%A9tica' },
+            { title: "Laser", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=60", url: 'https://www.google.com/search?q=tratamentos+a+laser+est%C3%A9tica+depila%C3%A7%C3%A3o' },
+            { title: "Harmonização", img: "https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=500&q=60", url: 'https://www.google.com/search?q=harmoniza%C3%A7%C3%A3o+facial+preenchimento+botox' },
+            { title: "Nutrologia", img: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=500&q=60", url: 'https://www.google.com/search?q=nutrologia+est%C3%A9tica+sa%C3%BAde+emagrecimento' }
           ].map((cat, i) => (
             <a 
               key={i} 
-              href={`#${cat.link.toLowerCase()}`}
-              onClick={(e) => { e.preventDefault(); window.location.href = createPageUrl(cat.link); }}
+              href={cat.url}
+              target="_blank"
+              rel="noopener noreferrer"
               className="relative h-40 md:h-48 lg:h-56 rounded-xl lg:rounded-2xl overflow-hidden cursor-pointer group transition-all duration-500 hover:shadow-2xl shadow-md block"
             >
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all z-10"></div>
