@@ -5,6 +5,7 @@ import { Loader2, Calendar, Sparkles, ChevronRight, DollarSign, Bot, Globe, Pale
 import { Button } from '@/components/ui/button';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { createPageUrl } from '@/utils';
+import T from '@/components/TranslatedText';
 
 const PatientNewsFeed = () => {
    const { data: news, isLoading } = useQuery({
@@ -25,7 +26,7 @@ const PatientNewsFeed = () => {
       staleTime: 1000 * 60 * 60 * 24 // 24h cache
    });
 
-   if (isLoading) return <div className="flex gap-4 justify-center py-8"><Loader2 className="animate-spin text-[#D4A574]" /> <span className="text-[#6B5D4F]">Carregando notícias...</span></div>;
+   if (isLoading) return <div className="flex gap-4 justify-center py-8"><Loader2 className="animate-spin text-[#D4A574]" /> <T className="text-[#6B5D4F]">Carregando notícias...</T></div>;
 
    return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
@@ -97,13 +98,11 @@ export default function Dashboard() {
               </div>
 
               <h1 className="text-5xl lg:text-7xl font-light tracking-tight text-[#2D2416] mb-6 leading-[1.1]">
-                {user ? `Olá, ${user.full_name?.split(' ')[0]}` : 'Bem-vindo ao'} <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4A574] to-[#B8935C] font-normal">{user ? '' : 'Clube da Beleza'}</span>
+                {user ? <><T>Olá</T>, {user.full_name?.split(' ')[0]}</> : <><T>Bem-vindo ao</T> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4A574] to-[#B8935C] font-normal"><T>Clube da Beleza</T></span></>}
               </h1>
 
               <p className="text-xl lg:text-2xl text-[#6B5D4F] leading-relaxed font-light mb-10">
-                Sua plataforma completa de saúde, estética e bem-estar. 
-                Transforme sua rotina com ferramentas de IA, gestão inteligente, 
-                criação de conteúdo profissional e muito mais.
+                <T>Sua plataforma completa de saúde, estética e bem-estar. Transforme sua rotina com ferramentas de IA, gestão inteligente, criação de conteúdo profissional e muito mais.</T>
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -113,14 +112,14 @@ export default function Dashboard() {
                       onClick={() => base44.auth.redirectToLogin()} 
                       className="bg-[#D4A574] hover:bg-[#C49565] text-white h-14 px-8 text-lg font-light shadow-xl rounded-2xl"
                     >
-                      Entrar / Cadastrar
+                      <T>Entrar / Cadastrar</T>
                     </Button>
                     <Button 
                       onClick={() => window.open('https://mapa-da-estetica.base44.app', '_blank')}
                       variant="outline"
                       className="border-2 border-[#D4A574]/40 text-[#B8935C] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-2xl"
                     >
-                      Já uso o Mapa da Estética
+                      <T>Já uso o Mapa da Estética</T>
                     </Button>
                   </>
                 ) : (
@@ -128,7 +127,7 @@ export default function Dashboard() {
                     onClick={() => setShowWizard(true)}
                     className="bg-[#D4A574] hover:bg-[#C49565] text-white h-14 px-8 text-lg font-light shadow-xl rounded-2xl"
                   >
-                    Começar Agora
+                    <T>Começar Agora</T>
                   </Button>
                 )}
               </div>
@@ -139,32 +138,32 @@ export default function Dashboard() {
                 <div className="bg-gradient-to-br from-[#D4A574] to-[#C9A868] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Calendar className="w-8 h-8 text-white" />
                 </div>
-                <div className="text-lg font-light text-[#2D2416] mb-2">Agendamento Inteligente</div>
-                <div className="text-sm text-[#6B5D4F] leading-relaxed font-light">Gestão completa de consultas com IA</div>
+                <T className="text-lg font-light text-[#2D2416] mb-2">Agendamento Inteligente</T>
+                <T className="text-sm text-[#6B5D4F] leading-relaxed font-light">Gestão completa de consultas com IA</T>
               </div>
 
               <div className="bg-[#FEFBF7] p-8 rounded-3xl border border-[#D4A574]/20 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 mt-8">
                 <div className="bg-gradient-to-br from-[#B8935C] to-[#A68350] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Bot className="w-8 h-8 text-white" />
                 </div>
-                <div className="text-lg font-light text-[#2D2416] mb-2">Chatbots 24/7</div>
-                <div className="text-sm text-[#6B5D4F] leading-relaxed font-light">Atendimento automático</div>
+                <T className="text-lg font-light text-[#2D2416] mb-2">Chatbots 24/7</T>
+                <T className="text-sm text-[#6B5D4F] leading-relaxed font-light">Atendimento automático</T>
               </div>
 
               <div className="bg-[#FEFBF7] p-8 rounded-3xl border border-[#D4A574]/20 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2">
                 <div className="bg-gradient-to-br from-[#C9A868] to-[#B59758] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Globe className="w-8 h-8 text-white" />
                 </div>
-                <div className="text-lg font-light text-[#2D2416] mb-2">Sites Profissionais</div>
-                <div className="text-sm text-[#6B5D4F] leading-relaxed font-light">Presença digital em minutos</div>
+                <T className="text-lg font-light text-[#2D2416] mb-2">Sites Profissionais</T>
+                <T className="text-sm text-[#6B5D4F] leading-relaxed font-light">Presença digital em minutos</T>
               </div>
 
               <div className="bg-[#FEFBF7] p-8 rounded-3xl border border-[#D4A574]/20 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 mt-8">
                 <div className="bg-gradient-to-br from-[#D4A574] to-[#E0B480] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Palette className="w-8 h-8 text-white" />
                 </div>
-                <div className="text-lg font-light text-[#2D2416] mb-2">Design com IA</div>
-                <div className="text-sm text-[#6B5D4F] leading-relaxed font-light">Criação visual automatizada</div>
+                <T className="text-lg font-light text-[#2D2416] mb-2">Design com IA</T>
+                <T className="text-sm text-[#6B5D4F] leading-relaxed font-light">Criação visual automatizada</T>
               </div>
             </div>
           </div>
@@ -179,8 +178,8 @@ export default function Dashboard() {
               <Calendar className="text-[#D4A574] w-8 h-8 group-hover:text-white transition-colors" />
             </div>
             <div>
-              <h3 className="font-light text-[#2D2416] text-xl group-hover:text-[#D4A574] transition-colors">Próxima Consulta</h3>
-              <p className="text-[#6B5D4F] text-sm font-light mt-1">Em breve</p>
+              <T as="h3" className="font-light text-[#2D2416] text-xl group-hover:text-[#D4A574] transition-colors">Próxima Consulta</T>
+              <T as="p" className="text-[#6B5D4F] text-sm font-light mt-1">Em breve</T>
             </div>
           </div>
 
@@ -189,7 +188,7 @@ export default function Dashboard() {
               <DollarSign className="text-[#B8935C] w-8 h-8 group-hover:text-white transition-colors" />
             </div>
             <div>
-              <h3 className="font-light text-[#2D2416] text-xl group-hover:text-[#B8935C] transition-colors">Meu Plano</h3>
+              <T as="h3" className="font-light text-[#2D2416] text-xl group-hover:text-[#B8935C] transition-colors">Meu Plano</T>
               <p className="text-[#6B5D4F] text-sm font-light mt-1">{user.profile?.plan || 'Free'}</p>
             </div>
           </div>
@@ -199,8 +198,8 @@ export default function Dashboard() {
               <Sparkles className="text-[#C9A868] w-8 h-8 group-hover:text-white transition-colors" />
             </div>
             <div>
-              <h3 className="font-light text-[#2D2416] text-xl group-hover:text-[#C9A868] transition-colors">Ferramentas</h3>
-              <p className="text-[#6B5D4F] text-sm font-light mt-1">6 Disponíveis</p>
+              <T as="h3" className="font-light text-[#2D2416] text-xl group-hover:text-[#C9A868] transition-colors">Ferramentas</T>
+              <T as="p" className="text-[#6B5D4F] text-sm font-light mt-1">6 Disponíveis</T>
             </div>
           </div>
         </div>
@@ -300,7 +299,7 @@ export default function Dashboard() {
       <div>
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-light text-[#2D2416] mb-6 lg:mb-8 flex items-center gap-3 lg:gap-4">
           <div className="w-1.5 lg:w-2 h-6 lg:h-8 bg-[#D4A574] rounded-full"></div>
-          Explorar Procedimentos
+          <T>Explorar Procedimentos</T>
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
           {[
@@ -331,7 +330,7 @@ export default function Dashboard() {
       <div className="space-y-4 lg:space-y-6">
         <h2 className="text-2xl md:text-3xl lg:text-4xl font-light text-[#2D2416] flex items-center gap-3 lg:gap-4">
           <div className="w-1.5 lg:w-2 h-6 lg:h-8 bg-[#D4A574] rounded-full"></div>
-          Notícias & Tendências
+          <T>Notícias & Tendências</T>
         </h2>
         <PatientNewsFeed />
       </div>

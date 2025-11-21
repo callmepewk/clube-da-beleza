@@ -51,6 +51,7 @@ import ClubRegistration from '@/components/ClubRegistration';
 import Footer from '@/components/Footer';
 import LucasChat from '@/components/LucasChat';
 import LanguageSelector from '@/components/LanguageSelector';
+import TranslationProvider from '@/components/TranslationProvider';
 
 export default function Layout({ children }) {
   const [user, setUser] = useState(null);
@@ -335,6 +336,7 @@ export default function Layout({ children }) {
   }
 
   return (
+    <TranslationProvider>
     <div className={`min-h-screen ${theme.bg} flex font-serif ${theme.textPrimary}`}>
 
       {/* Club Registration Modal */}
@@ -585,5 +587,6 @@ export default function Layout({ children }) {
       {/* Lucas Chat */}
       <LucasChat />
       </div>
+    </TranslationProvider>
       );
       }
