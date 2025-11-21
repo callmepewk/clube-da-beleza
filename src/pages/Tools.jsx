@@ -134,7 +134,7 @@ export default function ToolsPage() {
       url: 'https://dr-beleza-ai.base44.app',
       color: 'from-[#B8935C] to-[#D4A574]',
       badge: 'IA Especializada',
-      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=800&auto=format&fit=crop'
+      image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/8a99916a6_image.png'
     }
   ];
 
