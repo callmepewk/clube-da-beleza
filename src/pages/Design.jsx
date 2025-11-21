@@ -236,7 +236,7 @@ export default function DesignPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">O que você quer criar?</label>
+                <T as="label" className="text-sm font-medium text-slate-700">O que você quer criar?</T>
                 <textarea
                   className="w-full h-32 p-3 border rounded-md bg-slate-50 text-sm"
                   placeholder="Ex: Promoção de Botox Day, fundo dourado e branco, foto de mulher sorrindo..."
@@ -257,9 +257,9 @@ export default function DesignPage() {
                 className="w-full bg-purple-600 hover:bg-purple-700"
               >
                 {generateDesignMutation.isPending ? (
-                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Criando Arte...</>
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> <T>Criando Arte...</T></>
                 ) : (
-                  <><Wand2 className="w-4 h-4 mr-2" /> Gerar Design</>
+                  <><Wand2 className="w-4 h-4 mr-2" /> <T>Gerar Design</T></>
                 )}
               </Button>
             </CardContent>
@@ -318,7 +318,7 @@ export default function DesignPage() {
             ) : (
               <div className="text-center text-slate-400">
                 <ImageIcon className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <p>Seu design aparecerá aqui</p>
+                <T as="p">Seu design aparecerá aqui</T>
               </div>
             )}
           </div>

@@ -364,12 +364,12 @@ export default function ProductsPage() {
            <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
              <DialogTrigger asChild>
                <Button className="bg-emerald-600 hover:bg-emerald-700">
-                 <Plus className="w-4 h-4 mr-2" /> Novo Produto
+                 <Plus className="w-4 h-4 mr-2" /> <T>Novo Produto</T>
                </Button>
              </DialogTrigger>
           <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Criar Novo Produto com IA</DialogTitle>
+              <T as={DialogTitle}>Criar Novo Produto com IA</T>
             </DialogHeader>
             
             <div className="space-y-4">

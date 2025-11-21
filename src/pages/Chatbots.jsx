@@ -91,20 +91,20 @@ export default function ChatbotsPage() {
       
       <Tabs defaultValue="create" className="w-full">
         <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
-          <TabsTrigger value="create">Criar Novo</TabsTrigger>
-          <TabsTrigger value="manage">Gerenciar</TabsTrigger>
+          <TabsTrigger value="create"><T>Criar Novo</T></TabsTrigger>
+          <TabsTrigger value="manage"><T>Gerenciar</T></TabsTrigger>
         </TabsList>
 
         <TabsContent value="create" className="space-y-6 mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <Card>
               <CardHeader>
-                <CardTitle>Configuração do Assistente</CardTitle>
-                <CardDescription>Defina como seu bot irá interagir com os pacientes.</CardDescription>
+                <T as={CardTitle}>Configuração do Assistente</T>
+                <T as={CardDescription}>Defina como seu bot irá interagir com os pacientes.</T>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Nome do Chatbot</label>
+                  <T as="label" className="text-sm font-medium">Nome do Chatbot</T>
                   <input 
                     className="w-full p-2 border rounded-md"
                     placeholder="Ex: Atendente Virtual Dr. Silva"
@@ -114,7 +114,7 @@ export default function ChatbotsPage() {
                 </div>
 
                 <div className="space-y-2">
-                   <label className="text-sm font-medium">Foto de Perfil (Avatar)</label>
+                   <T as="label" className="text-sm font-medium">Foto de Perfil (Avatar)</T>
                    <div className="flex items-center gap-4">
                       <div className="w-16 h-16 rounded-full bg-slate-100 border flex items-center justify-center overflow-hidden relative">
                         {config.avatar ? (
@@ -156,7 +156,7 @@ export default function ChatbotsPage() {
                       </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Personalidade / Tom de Voz</label>
+                  <T as="label" className="text-sm font-medium">Personalidade / Tom de Voz</T>
                   <select 
                     className="w-full p-2 border rounded-md"
                     value={config.personality}
@@ -169,7 +169,7 @@ export default function ChatbotsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Instruções do Sistema (Prompt)</label>
+                  <T as="label" className="text-sm font-medium">Instruções do Sistema (Prompt)</T>
                   <textarea
                     className="w-full p-2 border rounded-md h-24 text-sm"
                     placeholder="Descreva como o bot deve se comportar..."
@@ -184,7 +184,7 @@ export default function ChatbotsPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Plataforma de Integração</label>
+                  <T as="label" className="text-sm font-medium">Plataforma de Integração</T>
                   <div className="grid grid-cols-2 gap-4">
                     <button 
                       onClick={() => setConfig({...config, platform: 'whatsapp'})}
@@ -236,9 +236,9 @@ export default function ChatbotsPage() {
                   disabled={deployMutation.isPending || !config.name}
                 >
                   {deployMutation.isPending ? (
-                    <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Implementando IA...</>
+                    <><Loader2 className="w-4 h-4 animate-spin mr-2" /> <T>Implementando IA...</T></>
                   ) : (
-                    <><Bot className="w-4 h-4 mr-2" /> Criar e Integrar</>
+                    <><Bot className="w-4 h-4 mr-2" /> <T>Criar e Integrar</T></>
                   )}
                 </Button>
               </CardContent>
@@ -290,7 +290,7 @@ export default function ChatbotsPage() {
 
         <TabsContent value="manage">
           <div className="text-center py-12 text-slate-500">
-            Você ainda não possui chatbots ativos. Crie um para começar.
+            <T>Você ainda não possui chatbots ativos. Crie um para começar.</T>
           </div>
         </TabsContent>
       </Tabs>

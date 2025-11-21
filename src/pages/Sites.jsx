@@ -153,7 +153,7 @@ export default function SitesPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Nova Página com IA</CardTitle>
+              <T as={CardTitle}>Nova Página com IA</T>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Configuration Section */}
@@ -273,7 +273,7 @@ export default function SitesPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Descreva sua página</label>
+                <T as="label" className="text-sm font-medium">Descreva sua página</T>
                 <textarea
                   className="w-full min-h-[150px] p-3 border rounded-md bg-slate-50 focus:ring-2 focus:ring-emerald-500 outline-none"
                   placeholder="Ex: Uma página de captura para minha clínica de dermatologia, com foco em tratamento de acne, tons de azul e branco, formulário de contato..."
@@ -315,16 +315,16 @@ export default function SitesPage() {
                 className="w-full bg-emerald-600 hover:bg-emerald-700"
               >
                 {generateSiteMutation.isPending ? (
-                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Gerando...</>
+                  <><Loader2 className="w-4 h-4 animate-spin mr-2" /> <T>Gerando...</T></>
                 ) : (
-                  <><Globe className="w-4 h-4 mr-2" /> Criar Página</>
+                  <><Globe className="w-4 h-4 mr-2" /> <T>Criar Página</T></>
                 )}
               </Button>
             </CardContent>
           </Card>
 
           <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Meus Sites</h3>
+            <T as="h3" className="font-semibold text-lg">Meus Sites</T>
             {sites?.map(site => (
               <Card key={site.id} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-4 flex justify-between items-center">
@@ -371,14 +371,14 @@ export default function SitesPage() {
                <div dangerouslySetInnerHTML={{ __html: generatedContent.html_content }} />
                <div className="absolute bottom-4 right-4 z-10">
                  <Button onClick={() => saveSiteMutation.mutate()} className="bg-emerald-600 shadow-lg">
-                   <Save className="w-4 h-4 mr-2" /> Salvar & Publicar
+                   <Save className="w-4 h-4 mr-2" /> <T>Salvar & Publicar</T>
                  </Button>
                </div>
              </>
            ) : (
              <div className="flex flex-col items-center justify-center h-full text-slate-400">
                <Globe className="w-16 h-16 mb-4 opacity-20" />
-               <p>O preview do seu site aparecerá aqui</p>
+               <T as="p">O preview do seu site aparecerá aqui</T>
              </div>
            )}
           </div>

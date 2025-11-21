@@ -71,9 +71,9 @@ export default function PlansPage() {
 
       <Tabs defaultValue="patient" className="w-full flex flex-col items-center">
         <TabsList className="grid w-full max-w-[600px] grid-cols-3 bg-slate-100 text-slate-500">
-          <TabsTrigger value="patient" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm">Pacientes</TabsTrigger>
-          <TabsTrigger value="professional" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm">Profissionais</TabsTrigger>
-          <TabsTrigger value="sponsor" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm">Patrocinadores</TabsTrigger>
+          <TabsTrigger value="patient" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm"><T>Pacientes</T></TabsTrigger>
+          <TabsTrigger value="professional" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm"><T>Profissionais</T></TabsTrigger>
+          <TabsTrigger value="sponsor" className="data-[state=active]:bg-white data-[state=active]:text-[#0F172A] data-[state=active]:shadow-sm"><T>Patrocinadores</T></TabsTrigger>
         </TabsList>
 
         <TabsContent value="patient" className="w-full mt-8">
@@ -81,9 +81,9 @@ export default function PlansPage() {
             {/* Basic */}
             <Card className={`bg-white border-slate-200 shadow-sm hover:shadow-md transition-all ${planName === 'free' ? 'ring-2 ring-emerald-500' : ''}`}>
               <CardHeader>
-                <CardTitle className="text-[#0F172A]">Básico</CardTitle>
-                <div className="text-3xl font-bold mt-2 text-[#0F172A]">Grátis</div>
-                <CardDescription className="text-[#64748B]">Para começar a cuidar da saúde</CardDescription>
+                <T as={CardTitle} className="text-[#0F172A]">Básico</T>
+                <T className="text-3xl font-bold mt-2 text-[#0F172A]">Grátis</T>
+                <T as={CardDescription} className="text-[#64748B]">Para começar a cuidar da saúde</T>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 text-[#64748B]">
@@ -101,9 +101,9 @@ export default function PlansPage() {
             <Card className={`bg-white border-emerald-500 shadow-lg relative overflow-hidden ${planName === 'premium' ? 'ring-4 ring-emerald-50' : ''}`}>
               <div className="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">POPULAR</div>
               <CardHeader>
-                <CardTitle className="text-emerald-600">Premium</CardTitle>
+                <T as={CardTitle} className="text-emerald-600">Premium</T>
                 <div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 29,90<span className="text-sm font-normal text-[#64748B]">/mês</span></div>
-                <CardDescription className="text-[#64748B]">Acompanhamento completo</CardDescription>
+                <T as={CardDescription} className="text-[#64748B]">Acompanhamento completo</T>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 text-[#64748B]">
@@ -120,9 +120,9 @@ export default function PlansPage() {
              {/* Family Patient */}
              <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-all">
               <CardHeader>
-                <CardTitle className="text-[#0F172A]">Família</CardTitle>
+                <T as={CardTitle} className="text-[#0F172A]">Família</T>
                 <div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 79,90<span className="text-sm font-normal text-[#64748B]">/mês</span></div>
-                <CardDescription className="text-[#64748B]">Até 5 dependentes</CardDescription>
+                <T as={CardDescription} className="text-[#64748B]">Até 5 dependentes</T>
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 text-[#64748B]">
