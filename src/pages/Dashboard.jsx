@@ -102,7 +102,7 @@ export default function Dashboard() {
               </h1>
 
               <p className="text-xl lg:text-2xl text-[#6B5D4F] leading-relaxed font-light mb-10">
-                <T>Sua plataforma completa de saúde, estética e bem-estar. Transforme sua rotina com ferramentas de IA, gestão inteligente, criação de conteúdo profissional e muito mais.</T>
+                <T>A maior comunidade de skincare do planeta. Transforme sua rotina de autocuidado com ferramentas de IA, gestão inteligente, criação de conteúdo profissional e muito mais.</T>
               </p>
 
               <div className="flex flex-wrap gap-4">
