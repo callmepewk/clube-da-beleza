@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Globe } from 'lucide-react';
-import { LANGUAGES, getCurrentLanguage, setLanguage } from '@/utils/i18n';
+import { LANGUAGES, getCurrentLanguage, setLanguage } from '@/components/i18n/i18nUtils';
 import {
   Popover,
   PopoverContent,
