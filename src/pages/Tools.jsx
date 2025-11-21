@@ -15,7 +15,7 @@ export default function ToolsPage() {
     },
     {
       icon: Stethoscope,
-      name: 'Enfermeira Virtual',
+      name: 'Bia - Cuidadora Virtual',
       description: 'Assistente de saúde com IA disponível 24/7 para tirar dúvidas sobre procedimentos e cuidados.',
       features: ['Respostas instantâneas', 'Base de conhecimento médico', 'Orientações personalizadas'],
       color: 'from-[#B8935C] to-[#A68350]',

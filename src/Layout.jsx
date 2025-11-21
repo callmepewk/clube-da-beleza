@@ -277,7 +277,7 @@ export default function Layout({ children }) {
       { icon: LayoutDashboard, label: 'Início', path: '/' },
       { icon: Newspaper, label: 'Notícias', path: '/news' },
       { icon: Calendar, label: 'Agendamentos', path: '/schedule' },
-      { icon: Stethoscope, label: 'Enfermeira Virtual', path: '/nurse' },
+      { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse' },
       { icon: Bot, label: 'Chatbots', path: '/chatbots' },
       { icon: Globe, label: 'Sites', path: '/sites' },
       { icon: Palette, label: 'Design', path: '/design' },
