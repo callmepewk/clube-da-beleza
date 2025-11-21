@@ -162,9 +162,9 @@ export default function ChatbotsPage() {
                     value={config.personality}
                     onChange={(e) => setConfig({...config, personality: e.target.value})}
                   >
-                    <option value="friendly">Amigável e Acolhedor</option>
-                    <option value="formal">Formal e Direto</option>
-                    <option value="clinical">Clínico e Técnico</option>
+                    <option value="friendly"><T>Amigável e Acolhedor</T></option>
+                    <option value="formal"><T>Formal e Direto</T></option>
+                    <option value="clinical"><T>Clínico e Técnico</T></option>
                   </select>
                 </div>
 

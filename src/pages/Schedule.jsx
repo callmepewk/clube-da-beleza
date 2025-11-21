@@ -10,7 +10,8 @@ import {
   parseISO,
   addHours 
 } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
+import { ptBR, enUS, es, fr, de, it, ja, zhCN, ru, ar } from 'date-fns/locale';
+import { getCurrentLanguage } from '@/components/i18n/i18nUtils';
 import { 
   Dialog,
   DialogContent,
@@ -34,6 +35,15 @@ export default function SchedulePage() {
   const queryClient = useQueryClient();
   const [userProfile, setUserProfile] = useState(null);
   const [clubDialogOpen, setClubDialogOpen] = useState(false);
+  
+  const getDateLocale = () => {
+    const lang = getCurrentLanguage();
+    const locales = {
+      'pt-BR': ptBR, 'pt-PT': ptBR, 'en': enUS, 'es': es, 
+      'fr': fr, 'de': de, 'it': it, 'ja': ja, 'zh': zhCN, 'ru': ru, 'ar': ar
+    };
+    return locales[lang] || ptBR;
+  };
 
   // Fetch Profile for Access Control
   useEffect(() => {
@@ -263,7 +273,7 @@ export default function SchedulePage() {
               <div className="flex items-center bg-slate-50 border rounded-lg p-1">
                 <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
                 <span className="px-4 font-medium text-sm min-w-[120px] text-center capitalize">
-                  {format(currentDate, "MMMM yyyy", { locale: ptBR })}
+                  {format(currentDate, "MMMM yyyy", { locale: getDateLocale() })}
                 </span>
                 <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
               </div>
@@ -276,8 +286,8 @@ export default function SchedulePage() {
                   return (
                     <div key={i} className="flex flex-col h-full border-r border-slate-50 last:border-0 pr-2">
                       <div className="text-center py-2 mb-2">
-                         <div className="text-xs font-bold text-slate-400 uppercase">{format(day, 'EEE', { locale: ptBR })}</div>
-                         <div className="text-lg font-bold text-slate-700">{format(day, 'dd')}</div>
+                           <div className="text-xs font-bold text-slate-400 uppercase">{format(day, 'EEE', { locale: getDateLocale() })}</div>
+                           <div className="text-lg font-bold text-slate-700">{format(day, 'dd')}</div>
                       </div>
                       <div className="space-y-2">
                         {dayEvents.map(evt => (
@@ -516,7 +526,7 @@ export default function SchedulePage() {
           <div className="flex items-center bg-white border rounded-lg p-1 shadow-sm">
             <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
             <span className="px-4 font-medium min-w-[140px] text-center capitalize">
-              {format(currentDate, "MMMM yyyy", { locale: ptBR })}
+              {format(currentDate, "MMMM yyyy", { locale: getDateLocale() })}
             </span>
             <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
           </div>
@@ -531,7 +541,7 @@ export default function SchedulePage() {
             return (
               <div key={i} className={`flex flex-col h-full ${isToday ? 'bg-emerald-50/30 rounded-lg border border-emerald-100' : ''}`}>
                 <div className="text-center py-3 border-b border-slate-100 mb-2">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{format(day, 'EEE', { locale: ptBR })}</div>
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{format(day, 'EEE', { locale: getDateLocale() })}</div>
                   <div className={`text-xl font-bold mt-1 ${isToday ? 'text-emerald-600' : 'text-slate-700'}`}>{format(day, 'dd')}</div>
                 </div>
                 <div className="flex-1 space-y-2 p-2 overflow-y-auto">

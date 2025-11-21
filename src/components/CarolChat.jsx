@@ -6,6 +6,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { getCurrentLanguage } from '@/components/i18n/i18nUtils';
+import T from '@/components/TranslatedText';
 
 const CAROL_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/f90ca3f97_carolia.png";
 
@@ -33,7 +34,7 @@ const PAGE_INFO = {
   '/ClubePlus': 'Clube+ - programa de benefícios exclusivos'
 };
 
-const QUICK_QUESTIONS = [
+const QUICK_QUESTIONS_RAW = [
   'O que é o Clube da Beleza?',
   'Quais ferramentas estão disponíveis?',
   'Como funcionam os planos?',
@@ -163,7 +164,7 @@ export default function CarolChat() {
               </div>
               <div>
                 <h3 className="text-white font-light text-lg">Carol</h3>
-                <p className="text-white/80 text-xs font-light">A Host do Clube</p>
+                <T as="p" className="text-white/80 text-xs font-light">A Host do Clube</T>
               </div>
             </div>
             <button
@@ -185,7 +186,7 @@ export default function CarolChat() {
                       : 'bg-white text-[#2D2416] border border-[#D4A574]/20 rounded-tl-none shadow-sm'
                   }`}
                 >
-                  <p className="text-sm font-light whitespace-pre-wrap">{msg.content}</p>
+                  <p className="text-sm font-light whitespace-pre-wrap">{msg.needsTranslation ? <T>{msg.content}</T> : msg.content}</p>
                 </div>
               </div>
             ))}
@@ -205,13 +206,13 @@ export default function CarolChat() {
           {messages.length <= 2 && (
             <div className="p-3 bg-white border-t border-[#D4A574]/20 overflow-x-auto">
               <div className="flex gap-2 flex-wrap">
-                {QUICK_QUESTIONS.map((q, idx) => (
+                {QUICK_QUESTIONS_RAW.map((q, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSend(q)}
                     className="text-xs bg-[#FFF9F0] hover:bg-[#D4A574] hover:text-white text-[#6B5D4F] px-3 py-2 rounded-full border border-[#D4A574]/30 transition-all font-light whitespace-nowrap"
                   >
-                    {q}
+                    <T>{q}</T>
                   </button>
                 ))}
               </div>

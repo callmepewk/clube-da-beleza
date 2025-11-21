@@ -231,10 +231,10 @@ export default function SitesPage() {
                           value={imageConfig.position}
                           onChange={e => setImageConfig({...imageConfig, position: e.target.value})}
                        >
-                          <option value="center">Centro</option>
-                          <option value="header">Topo (Header)</option>
-                          <option value="background">Fundo</option>
-                          <option value="gallery">Galeria</option>
+                          <option value="center"><T>Centro</T></option>
+                          <option value="header"><T>Topo (Header)</T></option>
+                          <option value="background"><T>Fundo</T></option>
+                          <option value="gallery"><T>Galeria</T></option>
                        </select>
                        <Button 
                           size="sm" 

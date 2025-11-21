@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
-import { Check, X, Crown, ShieldCheck, Star } from 'lucide-react';
+import { Check, X, Crown, ShieldCheck, Star, DollarSign } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import T from '@/components/TranslatedText';
 
 export default function PlansPage() {
   const [userProfile, setUserProfile] = useState(null);
+  const [currency, setCurrency] = useState('BRL');
 
   useEffect(() => {
     const load = async () => {
@@ -29,6 +31,13 @@ export default function PlansPage() {
     basic: ["Agendamento online", "Histórico básico", "Enfermeira Virtual (Limitado)"],
     pro: ["Tudo do Básico", "Enfermeira Virtual Ilimitada", "Descontos em consultas", "Suporte prioritário"],
     premium: ["Tudo do Pro", "Telemedicina ilimitada", "Concierge de saúde 24h", "Cashback em exames"]
+  };
+
+  const formatPrice = (brlPrice) => {
+    if (currency === 'USD') {
+      return `$${(brlPrice / 5).toFixed(2)}`;
+    }
+    return `R$ ${brlPrice.toFixed(2)}`;
   };
 
   return (
@@ -62,10 +71,21 @@ export default function PlansPage() {
         </div>
       ) : (
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-[#0F172A]">Escolha o plano ideal para você</h1>
-          <p className="text-lg text-[#475569] max-w-2xl mx-auto">
+          <div className="flex justify-center items-center gap-4 mb-4">
+            <T as="h1" className="text-4xl font-bold text-[#0F172A]">Escolha o plano ideal para você</T>
+            <Select value={currency} onValueChange={setCurrency}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="BRL">🇧🇷 BRL</SelectItem>
+                <SelectItem value="USD">🇺🇸 USD</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <T as="p" className="text-lg text-[#475569] max-w-2xl mx-auto">
             Desbloqueie todo o potencial da sua saúde ou da sua carreira médica com nossos planos exclusivos.
-          </p>
+          </T>
         </div>
       )}
 
@@ -102,7 +122,7 @@ export default function PlansPage() {
               <div className="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">POPULAR</div>
               <CardHeader>
                 <T as={CardTitle} className="text-emerald-600">Premium</T>
-                <div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 29,90<span className="text-sm font-normal text-[#64748B]">/mês</span></div>
+                <div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(29.90)}<T as="span" className="text-sm font-normal text-[#64748B]">/mês</T></div>
                 <T as={CardDescription} className="text-[#64748B]">Acompanhamento completo</T>
               </CardHeader>
               <CardContent>
@@ -121,7 +141,7 @@ export default function PlansPage() {
              <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md transition-all">
               <CardHeader>
                 <T as={CardTitle} className="text-[#0F172A]">Família</T>
-                <div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 79,90<span className="text-sm font-normal text-[#64748B]">/mês</span></div>
+                <div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(79.90)}<T as="span" className="text-sm font-normal text-[#64748B]">/mês</T></div>
                 <T as={CardDescription} className="text-[#64748B]">Até 5 dependentes</T>
               </CardHeader>
               <CardContent>
@@ -139,17 +159,17 @@ export default function PlansPage() {
         <TabsContent value="professional" className="w-full mt-8">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
              <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md">
-                <CardHeader><CardTitle className="text-[#0F172A]">Start</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 99,00</div></CardHeader>
+                <CardHeader><T as={CardTitle} className="text-[#0F172A]">Start</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(99.00)}</div></CardHeader>
                 <CardContent><p className="text-sm text-[#64748B]">Agenda básica e perfil público.</p></CardContent>
                 <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline">Escolher</Button></CardFooter>
              </Card>
              <Card className="bg-white border-purple-500 shadow-lg">
-                <CardHeader><CardTitle className="text-purple-600">Growth</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 199,00</div></CardHeader>
+                <CardHeader><T as={CardTitle} className="text-purple-600">Growth</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(199.00)}</div></CardHeader>
                 <CardContent><p className="text-sm text-[#64748B]">IA de atendimento, Chatbots e Sites ilimitados.</p></CardContent>
                 <CardFooter><Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">Escolher</Button></CardFooter>
              </Card>
              <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md">
-                <CardHeader><CardTitle className="text-[#0F172A]">Clinic</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 499,00</div></CardHeader>
+                <CardHeader><T as={CardTitle} className="text-[#0F172A]">Clinic</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(499.00)}</div></CardHeader>
                 <CardContent><p className="text-sm text-[#64748B]">Gestão multi-profissional e relatórios avançados.</p></CardContent>
                 <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline">Escolher</Button></CardFooter>
              </Card>
@@ -159,17 +179,17 @@ export default function PlansPage() {
         <TabsContent value="sponsor" className="w-full mt-8">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
              <Card className="bg-white border-amber-200 shadow-sm hover:shadow-md">
-                <CardHeader><CardTitle className="text-amber-600">Partner</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 1.000</div></CardHeader>
+                <CardHeader><T as={CardTitle} className="text-amber-600">Partner</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(1000)}</div></CardHeader>
                 <CardContent><p className="text-sm text-[#64748B]">Visibilidade em buscas locais.</p></CardContent>
                 <CardFooter><Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">Contatar Vendas</Button></CardFooter>
              </Card>
              <Card className="bg-white border-amber-500 shadow-lg">
-                <CardHeader><CardTitle className="text-amber-600">Gold</CardTitle><div className="text-3xl font-bold mt-2 text-[#0F172A]">R$ 5.000</div></CardHeader>
+                <CardHeader><T as={CardTitle} className="text-amber-600">Gold</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(5000)}</div></CardHeader>
                 <CardContent><p className="text-sm text-[#64748B]">Banners na home e destaque em categorias.</p></CardContent>
                 <CardFooter><Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">Contatar Vendas</Button></CardFooter>
              </Card>
              <Card className="bg-gradient-to-b from-slate-900 to-slate-800 border-slate-800 text-white">
-                <CardHeader><CardTitle className="text-white">Diamond</CardTitle><div className="text-3xl font-bold mt-2 text-white">Sob Consulta</div></CardHeader>
+                <CardHeader><T as={CardTitle} className="text-white">Diamond</T><T className="text-3xl font-bold mt-2 text-white">Sob Consulta</T></CardHeader>
                 <CardContent><p className="text-sm text-slate-300">Parceria estratégica e dados de inteligência.</p></CardContent>
                 <CardFooter><Button className="w-full bg-white text-black hover:bg-gray-100">Agendar Reunião</Button></CardFooter>
              </Card>

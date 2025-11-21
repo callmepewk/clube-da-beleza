@@ -61,7 +61,7 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <h4 className="text-[#D4A574] font-light text-sm uppercase tracking-wider mb-4">Navegação</h4>
+            <T as="h4" className="text-[#D4A574] font-light text-sm uppercase tracking-wider mb-4">Navegação</T>
             <ul className="space-y-2">
               {navigationLinks.map((link) => (
                 <li key={link.path}>
@@ -78,7 +78,7 @@ export default function Footer() {
 
           {/* Tools */}
           <div>
-            <h4 className="text-[#D4A574] font-light text-sm uppercase tracking-wider mb-4">Ferramentas</h4>
+            <T as="h4" className="text-[#D4A574] font-light text-sm uppercase tracking-wider mb-4">Ferramentas</T>
             <ul className="space-y-2">
               {toolsLinks.map((link) => (
                 <li key={link.path}>
@@ -95,7 +95,7 @@ export default function Footer() {
 
           {/* Community */}
           <div>
-            <h4 className="text-[#D4A574] font-light text-sm uppercase tracking-wider mb-4">Comunidade</h4>
+            <T as="h4" className="text-[#D4A574] font-light text-sm uppercase tracking-wider mb-4">Comunidade</T>
             <ul className="space-y-2">
               {communityLinks.map((link) => (
                 <li key={link.path}>

@@ -66,16 +66,9 @@ export default function NursePage() {
   // Initialize Chat
   useEffect(() => {
     if (chatHistory.length === 0) {
-      const currentLang = getCurrentLanguage();
-      let greeting = 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?';
-      
-      if (currentLang !== 'pt-BR') {
-        // Will be translated by the T component when rendered
-        greeting = 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?';
-      }
-      
+      const greeting = 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?';
       setChatHistory([
-         { role: 'assistant', content: greeting }
+         { role: 'assistant', content: greeting, needsTranslation: true }
       ]);
     }
   }, []);
@@ -216,7 +209,7 @@ export default function NursePage() {
       setChatHistory(prev => [
         ...prev, 
         { role: 'user', content: msg },
-        { role: 'assistant', content: response }
+        { role: 'assistant', content: response, needsTranslation: true }
       ]);
       setStep('ask_topic');
       setMessage('');
@@ -375,7 +368,7 @@ export default function NursePage() {
                             : 'bg-white text-slate-700 border border-slate-100 rounded-tl-none'
                         }`}
                       >
-                        {msg.content}
+                        {msg.needsTranslation ? <T>{msg.content}</T> : msg.content}
                       </div>
                     </div>
                   </div>
@@ -408,7 +401,7 @@ export default function NursePage() {
                              onClick={() => handleOptionClick(item, 'exam')}
                              className="whitespace-nowrap border-emerald-200 text-emerald-700 hover:bg-emerald-50 transition-transform"
                           >
-                             {item}
+                             <T>{item}</T>
                           </Button>
                        ))}
                      </div>
@@ -421,7 +414,7 @@ export default function NursePage() {
                              onClick={() => handleOptionClick(item, 'procedure')}
                              className="whitespace-nowrap border-purple-200 text-purple-700 hover:bg-purple-50 transition-transform"
                           >
-                             {item}
+                             <T>{item}</T>
                           </Button>
                        ))}
                      </div>

@@ -30,15 +30,15 @@ export default function AboutPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
          {[
-            { number: "500+", label: "Membros Ativos" },
-            { number: "100+", label: "Parceiros Certificados" },
-            { number: "50+", label: "Cidades Atendidas" },
-            { number: "98%", label: "Satisfação" }
+            { number: "500+", label: "Membros Ativos", key: "membros" },
+            { number: "100+", label: "Parceiros Certificados", key: "parceiros" },
+            { number: "50+", label: "Cidades Atendidas", key: "cidades" },
+            { number: "98%", label: "Satisfação", key: "satisfacao" }
          ].map((stat, i) => (
             <Card key={i} className="bg-white border-slate-200 text-center py-6 shadow-sm">
                <CardContent className="p-0">
                   <div className="text-3xl font-bold text-purple-600">{stat.number}</div>
-                  <div className="text-sm text-[#475569] uppercase tracking-wider mt-1 font-bold">{stat.label}</div>
+                  <T className="text-sm text-[#475569] uppercase tracking-wider mt-1 font-bold">{stat.label}</T>
                </CardContent>
             </Card>
          ))}
@@ -85,16 +85,16 @@ export default function AboutPage() {
          <T as="h2" className="text-3xl font-bold text-[#0F172A] mb-6 text-center">Nossos Valores</T>
          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
-               { icon: Heart, title: "Autocuidado", desc: "Acreditamos que cuidar de si mesmo é um ato de amor próprio essencial.", color: "text-pink-600" },
-               { icon: Leaf, title: "Sustentabilidade", desc: "Comprometidos com práticas sustentáveis e responsáveis.", color: "text-emerald-600" },
-               { icon: Users, title: "Comunidade", desc: "Construímos uma rede forte de profissionais e clientes.", color: "text-blue-600" },
-               { icon: Star, title: "Excelência", desc: "Selecionamos apenas os melhores profissionais.", color: "text-yellow-500" }
+               { icon: Heart, title: "Autocuidado", desc: "Acreditamos que cuidar de si mesmo é um ato de amor próprio essencial.", color: "text-pink-600", key: "autocuidado" },
+               { icon: Leaf, title: "Sustentabilidade", desc: "Comprometidos com práticas sustentáveis e responsáveis.", color: "text-emerald-600", key: "sustentabilidade" },
+               { icon: Users, title: "Comunidade", desc: "Construímos uma rede forte de profissionais e clientes.", color: "text-blue-600", key: "comunidade" },
+               { icon: Star, title: "Excelência", desc: "Selecionamos apenas os melhores profissionais.", color: "text-yellow-500", key: "excelencia" }
             ].map((val, i) => (
                <Card key={i} className="bg-white border-slate-200 hover:shadow-lg transition-all shadow-sm">
                   <CardContent className="p-6 flex flex-col items-center text-center">
                      <val.icon className={`w-12 h-12 ${val.color} mb-4`} />
-                     <h3 className="font-bold text-[#0F172A] text-lg mb-2">{val.title}</h3>
-                     <p className="text-sm text-[#475569] font-medium">{val.desc}</p>
+                     <T as="h3" className="font-bold text-[#0F172A] text-lg mb-2">{val.title}</T>
+                     <T as="p" className="text-sm text-[#475569] font-medium">{val.desc}</T>
                   </CardContent>
                </Card>
             ))}

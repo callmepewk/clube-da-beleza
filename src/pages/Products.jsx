@@ -340,7 +340,7 @@ export default function ProductsPage() {
         {items.length === 0 && (
            <div className="col-span-full text-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
              <ShoppingBag className="w-12 h-12 mx-auto text-slate-300 mb-2" />
-             <p className="text-slate-500">Nenhum produto encontrado nesta categoria.</p>
+             <T as="p" className="text-slate-500">Nenhum produto encontrado nesta categoria.</T>
            </div>
         )}
     </div>
@@ -780,10 +780,10 @@ export default function ProductsPage() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <div className="overflow-x-auto pb-2">
            <TabsList className="grid w-full grid-cols-4 max-w-[600px] min-w-[400px]">
-             <TabsTrigger value="all">Todos ({products?.length || 0})</TabsTrigger>
-             <TabsTrigger value="ebook">E-books ({products?.filter(p => p.type === 'ebook').length || 0})</TabsTrigger>
+             <TabsTrigger value="all"><T>Todos</T> ({products?.length || 0})</TabsTrigger>
+             <TabsTrigger value="ebook"><T>E-books</T> ({products?.filter(p => p.type === 'ebook').length || 0})</TabsTrigger>
              <TabsTrigger value="3d_model">3D ({products?.filter(p => p.type === '3d_model').length || 0})</TabsTrigger>
-             <TabsTrigger value="course">Cursos ({products?.filter(p => p.type === 'course').length || 0})</TabsTrigger>
+             <TabsTrigger value="course"><T>Cursos</T> ({products?.filter(p => p.type === 'course').length || 0})</TabsTrigger>
            </TabsList>
         </div>
 
