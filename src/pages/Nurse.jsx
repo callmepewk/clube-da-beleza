@@ -65,7 +65,7 @@ export default function NursePage() {
   useEffect(() => {
     if (chatHistory.length === 0) {
       setChatHistory([
-         { role: 'assistant', content: 'Olá! Sou sua enfermeira virtual. Para começarmos, qual é o seu nome?' }
+         { role: 'assistant', content: 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?' }
       ]);
     }
   }, []);
@@ -137,8 +137,8 @@ export default function NursePage() {
     if (conversationActive && chatHistory.length > 2 && profile) {
       await incrementNurseUsage();
       setConversationActive(false);
-      alert("Conversa encerrada. Obrigado por usar nossa Enfermeira Virtual!");
-      setChatHistory([{ role: 'assistant', content: 'Olá! Sou sua enfermeira virtual. Para começarmos, qual é o seu nome?' }]);
+      alert("Conversa encerrada. Obrigado por conversar com a Bia!");
+      setChatHistory([{ role: 'assistant', content: 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?' }]);
       setStep('ask_name');
       setConversationActive(true);
     }
@@ -147,7 +147,7 @@ export default function NursePage() {
   const sendMessageMutation = useMutation({
     mutationFn: async ({ userMsg, topic }) => {
       const context = `
-        Você é uma Enfermeira Virtual especialista em estética e saúde.
+        Você é a Bia, uma cuidadora virtual especialista em estética e saúde.
         Paciente: ${name} (${profile?.type || 'visitante'}).
         Tópico de interesse: ${topic || 'Geral'}.
         
@@ -223,13 +223,13 @@ export default function NursePage() {
         <UsageLimitBanner 
           currentUsage={currentUsage}
           limit={planLimits.nurse_conversations_monthly}
-          resourceName="Conversas com Enfermeira Virtual"
+          resourceName="Conversas com a Bia"
           planName={planLimits.name}
         />
         <div className="text-center py-12 text-slate-500">
           <Bot className="w-16 h-16 mx-auto mb-4 opacity-30" />
           <p className="text-lg font-semibold">Limite mensal atingido</p>
-          <p className="text-sm mt-2">Faça upgrade para continuar usando a Enfermeira Virtual</p>
+          <p className="text-sm mt-2">Faça upgrade para continuar conversando com a Bia</p>
         </div>
       </div>
     );
@@ -313,11 +313,11 @@ export default function NursePage() {
                 <img src={NURSE_IMAGE} alt="Icon" className="w-full h-full object-cover scale-150 pt-2" />
               </div>
               <div>
-                <h2 className="font-bold text-slate-800">Enfermeira Virtual</h2>
-                <p className="text-xs text-slate-500 flex items-center gap-1">
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  Online • IA Assistente de Saúde
-                </p>
+               <h2 className="font-bold text-slate-800">Bia - Cuidadora Virtual</h2>
+               <p className="text-xs text-slate-500 flex items-center gap-1">
+                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                 Online • IA Assistente de Saúde
+               </p>
               </div>
             </div>
 
@@ -340,7 +340,7 @@ export default function NursePage() {
                     
                     <div className={`flex flex-col gap-1 max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                       <span className="text-xs text-slate-400 px-1">
-                        {msg.role === 'assistant' ? 'Enfermeira' : 'Você'}
+                        {msg.role === 'assistant' ? 'Bia' : 'Você'}
                       </span>
                       <div
                         className={`p-3 rounded-2xl text-sm shadow-sm ${
