@@ -1,6 +1,7 @@
 import React from 'react';
 import { Activity, Shield, Award, AlertTriangle, CheckCircle, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import T from '@/components/TranslatedText';
 
 export default function RightDosePage() {
   const principles = [
@@ -54,31 +55,31 @@ export default function RightDosePage() {
             <Activity className="w-12 h-12 text-white" />
           </div>
           <h1 className="text-6xl font-light tracking-tight mb-6 leading-tight max-w-4xl">
-            Beleza na <span className="font-normal text-[#E8E05C]">Dose Certa</span>
+            <T>Beleza na</T> <span className="font-normal text-[#E8E05C]"><T>Dose Certa</T></span>
           </h1>
-          <p className="text-xl font-light leading-relaxed max-w-3xl opacity-95">
+          <T as="p" className="text-xl font-light leading-relaxed max-w-3xl opacity-95">
             Educação e conscientização sobre dosagens seguras e responsáveis em medicina estética
-          </p>
+          </T>
         </div>
       </div>
 
       {/* Introduction */}
       <div className="max-w-4xl mx-auto text-center space-y-6">
         <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-3 rounded-full font-light text-sm mb-4 uppercase tracking-wider">
-          Campanha Educativa
+          <T>Campanha Educativa</T>
         </div>
-        <h2 className="text-4xl font-light text-[#2D2416]">O Perigo da Sobredosagem</h2>
-        <p className="text-[#6B5D4F] font-light leading-relaxed text-lg">
+        <T as="h2" className="text-4xl font-light text-[#2D2416]">O Perigo da Sobredosagem</T>
+        <T as="p" className="text-[#6B5D4F] font-light leading-relaxed text-lg">
           A medicina estética avançou muito, mas com ela veio a necessidade de conscientização sobre o uso responsável de procedimentos injetáveis. O programa "Beleza na Dose Certa" é uma iniciativa educativa do Clube da Beleza para orientar profissionais e pacientes sobre os riscos da sobredosagem e a importância de tratamentos equilibrados e naturais.
-        </p>
+        </T>
         <div className="bg-amber-50 border-l-4 border-amber-500 p-6 rounded-xl text-left">
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-bold text-amber-900 mb-2">Alerta Importante</h3>
-              <p className="text-amber-800 font-light text-sm">
+              <T as="h3" className="font-bold text-amber-900 mb-2">Alerta Importante</T>
+              <T as="p" className="text-amber-800 font-light text-sm">
                 Mais nem sempre é melhor. Excesso de produtos injetáveis pode causar complicações graves, resultados artificiais e até danos irreversíveis. A beleza natural e harmoniosa deve ser sempre o objetivo.
-              </p>
+              </T>
             </div>
           </div>
         </div>
@@ -86,15 +87,15 @@ export default function RightDosePage() {
 
       {/* Principles */}
       <div>
-        <h2 className="text-4xl font-light text-[#2D2416] mb-10 text-center">Nossos Princípios</h2>
+        <T as="h2" className="text-4xl font-light text-[#2D2416] mb-10 text-center">Nossos Princípios</T>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {principles.map((principle, idx) => (
             <div key={idx} className="bg-[#FEFBF7] rounded-[1.5rem] p-8 border border-[#D4A574]/20 text-center hover:shadow-xl hover:-translate-y-2 transition-all">
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574] to-[#C9A868] flex items-center justify-center mx-auto mb-6 shadow-lg">
                 <principle.icon className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-light text-[#2D2416] mb-3">{principle.title}</h3>
-              <p className="text-[#6B5D4F] font-light text-sm leading-relaxed">{principle.description}</p>
+              <T as="h3" className="text-xl font-light text-[#2D2416] mb-3">{principle.title}</T>
+              <T as="p" className="text-[#6B5D4F] font-light text-sm leading-relaxed">{principle.description}</T>
             </div>
           ))}
         </div>
@@ -103,8 +104,8 @@ export default function RightDosePage() {
       {/* Dangers and Prevention */}
       <div>
         <div className="text-center mb-10">
-          <h2 className="text-4xl font-light text-[#2D2416] mb-4">Riscos e Prevenção</h2>
-          <p className="text-[#6B5D4F] font-light text-lg">Conheça os principais riscos da sobredosagem e como evitá-los</p>
+          <T as="h2" className="text-4xl font-light text-[#2D2416] mb-4">Riscos e Prevenção</T>
+          <T as="p" className="text-[#6B5D4F] font-light text-lg">Conheça os principais riscos da sobredosagem e como evitá-los</T>
         </div>
         <div className="space-y-6">
           {dangers.map((danger, idx) => (
@@ -117,7 +118,7 @@ export default function RightDosePage() {
               </div>
               <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                  <h4 className="text-sm font-bold text-[#2D2416] uppercase tracking-wide mb-4 text-red-600">Riscos Potenciais</h4>
+                  <T as="h4" className="text-sm font-bold text-[#2D2416] uppercase tracking-wide mb-4 text-red-600">Riscos Potenciais</T>
                   <ul className="space-y-2">
                     {danger.risks.map((risk, i) => (
                       <li key={i} className="flex items-start gap-2 text-[#6B5D4F] font-light">
@@ -128,7 +129,7 @@ export default function RightDosePage() {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-[#2D2416] uppercase tracking-wide mb-4 text-green-600">Como Prevenir</h4>
+                  <T as="h4" className="text-sm font-bold text-[#2D2416] uppercase tracking-wide mb-4 text-green-600">Como Prevenir</T>
                   <p className="text-[#6B5D4F] font-light leading-relaxed bg-green-50 p-4 rounded-xl border border-green-200">
                     {danger.prevention}
                   </p>
@@ -141,34 +142,34 @@ export default function RightDosePage() {
 
       {/* Guidelines */}
       <div className="bg-gradient-to-br from-[#FFF9F0] to-[#FFF5E6] rounded-[2rem] p-12 border border-[#D4A574]/20">
-        <h2 className="text-4xl font-light text-[#2D2416] mb-8 text-center">Diretrizes de Ouro</h2>
+        <T as="h2" className="text-4xl font-light text-[#2D2416] mb-8 text-center">Diretrizes de Ouro</T>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           <div className="flex items-start gap-4 bg-white p-6 rounded-xl border border-[#D4A574]/20">
             <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-light text-[#2D2416] mb-2">Menos é Mais</h3>
-              <p className="text-sm text-[#6B5D4F] font-light">Começar com doses conservadoras e aumentar gradualmente se necessário.</p>
+              <T as="h3" className="font-light text-[#2D2416] mb-2">Menos é Mais</T>
+              <T as="p" className="text-sm text-[#6B5D4F] font-light">Começar com doses conservadoras e aumentar gradualmente se necessário.</T>
             </div>
           </div>
           <div className="flex items-start gap-4 bg-white p-6 rounded-xl border border-[#D4A574]/20">
             <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-light text-[#2D2416] mb-2">Respeitar a Anatomia</h3>
-              <p className="text-sm text-[#6B5D4F] font-light">Cada rosto é único e requer abordagem personalizada.</p>
+              <T as="h3" className="font-light text-[#2D2416] mb-2">Respeitar a Anatomia</T>
+              <T as="p" className="text-sm text-[#6B5D4F] font-light">Cada rosto é único e requer abordagem personalizada.</T>
             </div>
           </div>
           <div className="flex items-start gap-4 bg-white p-6 rounded-xl border border-[#D4A574]/20">
             <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-light text-[#2D2416] mb-2">Intervalos Adequados</h3>
-              <p className="text-sm text-[#6B5D4F] font-light">Respeitar tempo entre sessões para avaliação de resultados.</p>
+              <T as="h3" className="font-light text-[#2D2416] mb-2">Intervalos Adequados</T>
+              <T as="p" className="text-sm text-[#6B5D4F] font-light">Respeitar tempo entre sessões para avaliação de resultados.</T>
             </div>
           </div>
           <div className="flex items-start gap-4 bg-white p-6 rounded-xl border border-[#D4A574]/20">
             <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
             <div>
-              <h3 className="font-light text-[#2D2416] mb-2">Produtos Certificados</h3>
-              <p className="text-sm text-[#6B5D4F] font-light">Sempre usar produtos aprovados pela ANVISA e autênticos.</p>
+              <T as="h3" className="font-light text-[#2D2416] mb-2">Produtos Certificados</T>
+              <T as="p" className="text-sm text-[#6B5D4F] font-light">Sempre usar produtos aprovados pela ANVISA e autênticos.</T>
             </div>
           </div>
         </div>
@@ -179,12 +180,12 @@ export default function RightDosePage() {
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
         <div className="relative z-10">
           <Shield className="w-16 h-16 mx-auto mb-6 opacity-90" />
-          <h3 className="text-4xl font-light mb-4">Pratique a Beleza Responsável</h3>
-          <p className="text-white/90 text-lg font-light mb-8 max-w-2xl mx-auto">
+          <T as="h3" className="text-4xl font-light mb-4">Pratique a Beleza Responsável</T>
+          <T as="p" className="text-white/90 text-lg font-light mb-8 max-w-2xl mx-auto">
             Profissionais e pacientes: comprometam-se com tratamentos seguros e resultados naturais.
-          </p>
+          </T>
           <Button className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl">
-            Saiba Mais
+            <T>Saiba Mais</T>
           </Button>
         </div>
       </div>

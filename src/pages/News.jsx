@@ -51,11 +51,11 @@ export default function NewsPage() {
   });
 
   const categories = [
-    { id: 'all', label: 'Todas' },
-    { id: 'medicina', label: 'Medicina' },
-    { id: 'tecnologia', label: 'Tecnologia' },
-    { id: 'estetica', label: 'Estética' },
-    { id: 'negocios', label: 'Negócios' }
+    { id: 'all', label: 'Todas', translationKey: 'Todas' },
+    { id: 'medicina', label: 'Medicina', translationKey: 'Medicina' },
+    { id: 'tecnologia', label: 'Tecnologia', translationKey: 'Tecnologia' },
+    { id: 'estetica', label: 'Estética', translationKey: 'Estética' },
+    { id: 'negocios', label: 'Negócios', translationKey: 'Negócios' }
   ];
 
   return (
@@ -74,11 +74,11 @@ export default function NewsPage() {
         <TabsList className="flex flex-wrap h-auto gap-2 bg-transparent p-0">
            {categories.map(cat => (
               <TabsTrigger 
-                key={cat.id} 
-                value={cat.id}
-                className="data-[state=active]:bg-blue-600 data-[state=active]:text-white bg-white border border-slate-200 px-6 py-2 rounded-full"
+               key={cat.id} 
+               value={cat.id}
+               className="data-[state=active]:bg-blue-600 data-[state=active]:text-white bg-white border border-slate-200 px-6 py-2 rounded-full"
               >
-                {cat.label}
+               <T>{cat.translationKey}</T>
               </TabsTrigger>
            ))}
         </TabsList>
@@ -87,7 +87,7 @@ export default function NewsPage() {
            {isLoading ? (
              <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                 <Loader2 className="w-10 h-10 animate-spin mb-4 text-blue-600" />
-                <p>Buscando as últimas notícias do setor...</p>
+                <T as="p">Buscando as últimas notícias do setor...</T>
              </div>
            ) : (
              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -108,7 +108,7 @@ export default function NewsPage() {
                          <div className="flex justify-between w-full items-center">
                             <span className="text-xs font-bold text-slate-500">{item.source}</span>
                             <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 p-0 hover:bg-transparent">
-                               Ler Completo <ExternalLink className="w-3 h-3 ml-1" />
+                               <T>Ler Completo</T> <ExternalLink className="w-3 h-3 ml-1" />
                             </Button>
                          </div>
                       </CardFooter>
