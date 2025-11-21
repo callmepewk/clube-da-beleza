@@ -49,6 +49,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import ClubRegistration from '@/components/ClubRegistration';
 import Footer from '@/components/Footer';
+import LucasChat from '@/components/LucasChat';
 
 export default function Layout({ children }) {
   const [user, setUser] = useState(null);
@@ -568,6 +569,9 @@ export default function Layout({ children }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
-  );
-}
+
+      {/* Lucas Chat */}
+      <LucasChat />
+      </div>
+      );
+      }
