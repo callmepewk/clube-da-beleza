@@ -122,7 +122,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
         {step === 1 && (
           <div className="space-y-6 pt-6">
             <div>
-              <Label className="text-white text-base font-bold mb-4 block">Tipo de Conta *</Label>
+              <T as={Label} className="text-white text-base font-bold mb-4 block">Tipo de Conta *</T>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
                   onClick={() => { setAccountType('patient'); setStep(2); }}
@@ -133,8 +133,8 @@ export default function ClubRegistration({ open, onOpenChange }) {
                   }`}
                 >
                   <User className="w-10 h-10 mb-3 mx-auto" />
-                  <div className="font-bold text-lg">Paciente</div>
-                  <div className="text-sm mt-1 opacity-80">Busco tratamentos</div>
+                  <T className="font-bold text-lg">Paciente</T>
+                  <T className="text-sm mt-1 opacity-80">Busco tratamentos</T>
                 </button>
                 <button
                   onClick={() => { setAccountType('professional'); setStep(2); }}
@@ -145,8 +145,8 @@ export default function ClubRegistration({ open, onOpenChange }) {
                   }`}
                 >
                   <Briefcase className="w-10 h-10 mb-3 mx-auto" />
-                  <div className="font-bold text-lg">Profissional</div>
-                  <div className="text-sm mt-1 opacity-80">Ofereço serviços</div>
+                  <T className="font-bold text-lg">Profissional</T>
+                  <T className="text-sm mt-1 opacity-80">Ofereço serviços</T>
                 </button>
               </div>
             </div>
@@ -157,7 +157,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
           <form onSubmit={handleSubmit} className="space-y-6 pt-6">
             <div className="space-y-4">
               <div>
-                <Label className={labelClass}>Nome Completo *</Label>
+                <T as={Label} className={labelClass}>Nome Completo *</T>
                 <Input 
                   required
                   className={inputClass}
@@ -169,7 +169,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label className={labelClass}>E-mail *</Label>
+                  <T as={Label} className={labelClass}>E-mail *</T>
                   <Input 
                     required
                     type="email"
@@ -180,7 +180,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
                   />
                 </div>
                 <div>
-                  <Label className={labelClass}>Telefone/WhatsApp *</Label>
+                  <T as={Label} className={labelClass}>Telefone/WhatsApp *</T>
                   <Input 
                     required
                     className={inputClass}
@@ -192,7 +192,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
               </div>
 
               <div>
-                <Label className={labelClass}>CPF *</Label>
+                <T as={Label} className={labelClass}>CPF *</T>
                 <Input 
                   required
                   className={inputClass}
@@ -205,7 +205,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
 
             <div className="border-t border-white/20 pt-6">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-bold text-white">Localização</h3>
+                <T as="h3" className="text-xl font-bold text-white">Localização</T>
                 <Button
                   type="button"
                   variant="outline"
@@ -214,7 +214,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
                   className="bg-white/20 border-white/40 text-white hover:bg-white/30 backdrop-blur-md"
                 >
                   <MapPin className="w-4 h-4 mr-2" />
-                  Usar Localização Atual
+                  <T>Usar Localização Atual</T>
                 </Button>
               </div>
 
@@ -299,7 +299,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
                 onClick={() => setStep(1)}
                 className="flex-1 bg-white/20 border-white/40 text-white hover:bg-white/30 h-14 rounded-xl font-bold"
               >
-                Voltar
+                <T>Voltar</T>
               </Button>
               <Button
                 type="submit"
@@ -307,7 +307,7 @@ export default function ClubRegistration({ open, onOpenChange }) {
                 className="flex-1 bg-white text-[#8B6F47] hover:bg-white/90 h-14 rounded-xl font-bold shadow-xl"
               >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-                Finalizar Registro
+                <T>Finalizar Registro</T>
               </Button>
             </div>
           </form>

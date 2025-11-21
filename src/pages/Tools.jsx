@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Calendar, Stethoscope, Bot, Globe, Palette, ShoppingBag, MapPin, Zap, Heart, Sparkles, ExternalLink, ArrowRight } from 'lucide-react';
+import T from '@/components/TranslatedText';
 
 export default function ToolsPage() {
   const internalTools = [
@@ -162,12 +163,12 @@ export default function ToolsPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-[#FEFBF7] via-[#FEFBF7]/90 to-[#FEFBF7]/20"></div>
         <div className="relative z-10 flex items-center justify-center h-full p-12">
           <div className="text-center max-w-3xl">
-            <h1 className="text-6xl font-light tracking-tight text-[#2D2416] mb-6 leading-tight">
+            <T as="h1" className="text-6xl font-light tracking-tight text-[#2D2416] mb-6 leading-tight">
               Nossas <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4A574] to-[#B8935C] font-normal">Ferramentas</span>
-            </h1>
-            <p className="text-[#6B5D4F] text-2xl font-light leading-relaxed">
+            </T>
+            <T as="p" className="text-[#6B5D4F] text-2xl font-light leading-relaxed">
               Descubra todo o ecossistema de tecnologia e inovação do Clube da Beleza
-            </p>
+            </T>
           </div>
         </div>
       </div>
@@ -175,13 +176,13 @@ export default function ToolsPage() {
       {/* Internal Tools Section */}
       <div>
         <div className="mb-10">
-          <h2 className="text-4xl font-light text-[#2D2416] mb-4 flex items-center gap-4">
+          <T as="h2" className="text-4xl font-light text-[#2D2416] mb-4 flex items-center gap-4">
             <div className="w-2 h-10 bg-[#D4A574] rounded-full"></div>
             Ferramentas Integradas
-          </h2>
-          <p className="text-[#6B5D4F] text-lg font-light ml-6">
+          </T>
+          <T as="p" className="text-[#6B5D4F] text-lg font-light ml-6">
             Ferramentas poderosas incluídas na sua assinatura do Clube da Beleza
-          </p>
+          </T>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -208,7 +209,7 @@ export default function ToolsPage() {
                   onClick={() => window.location.href = tool.link}
                   className="w-full bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 rounded-xl font-light shadow-lg group-hover:shadow-xl transition-all"
                 >
-                  Acessar Ferramenta <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  <T>Acessar Ferramenta</T> <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </CardContent>
             </Card>
@@ -219,13 +220,13 @@ export default function ToolsPage() {
       {/* External Tools Section */}
       <div>
         <div className="mb-10">
-          <h2 className="text-4xl font-light text-[#2D2416] mb-4 flex items-center gap-4">
+          <T as="h2" className="text-4xl font-light text-[#2D2416] mb-4 flex items-center gap-4">
             <div className="w-2 h-10 bg-[#D4A574] rounded-full"></div>
             Ferramentas Especializadas
-          </h2>
-          <p className="text-[#6B5D4F] text-lg font-light ml-6">
+          </T>
+          <T as="p" className="text-[#6B5D4F] text-lg font-light ml-6">
             Plataformas completas do Clube da Beleza para transformar sua prática profissional
-          </p>
+          </T>
         </div>
 
         <div className="space-y-12">
@@ -291,7 +292,7 @@ export default function ToolsPage() {
                   onClick={() => window.open(tool.url, '_blank')}
                   className={`w-full bg-gradient-to-r ${tool.color} hover:opacity-90 text-white h-14 rounded-xl font-light text-lg shadow-xl hover:shadow-2xl transition-all group`}
                 >
-                  Visitar Plataforma <ExternalLink className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  <T>Visitar Plataforma</T> <ExternalLink className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
             </div>
@@ -303,16 +304,16 @@ export default function ToolsPage() {
       <div className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] rounded-[2rem] p-12 text-white text-center shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
         <div className="relative z-10">
-          <h3 className="text-4xl font-light mb-4">Pronto para transformar sua prática?</h3>
-          <p className="text-white/90 text-lg font-light mb-8 max-w-2xl mx-auto">
+          <T as="h3" className="text-4xl font-light mb-4">Pronto para transformar sua prática?</T>
+          <T as="p" className="text-white/90 text-lg font-light mb-8 max-w-2xl mx-auto">
             Junte-se a centenas de profissionais que já estão revolucionando a medicina estética com nossas ferramentas.
-          </p>
+          </T>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl">
-              Criar Conta Grátis
+              <T>Criar Conta Grátis</T>
             </Button>
             <Button variant="outline" className="border-2 border-white text-white hover:bg-white/10 h-14 px-8 text-lg font-light rounded-xl">
-              Falar com Vendas
+              <T>Falar com Vendas</T>
             </Button>
           </div>
         </div>
