@@ -182,7 +182,7 @@ export default function NursePage() {
       return response;
     },
     onSuccess: (data, variables) => {
-      setChatHistory(prev => [...prev, { role: 'assistant', content: data }]);
+      setChatHistory(prev => [...prev, { role: 'assistant', content: data, needsTranslation: false }]);
       
       // Log interaction
       if (profile) {

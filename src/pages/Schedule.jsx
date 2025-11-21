@@ -10,7 +10,7 @@ import {
   parseISO,
   addHours 
 } from 'date-fns';
-import { ptBR, enUS, es, fr, de, it, ja, zhCN, ru, ar } from 'date-fns/locale';
+import { ptBR, enUS, es, fr, de, it, ja, zhCN, ru, ar as arSA } from 'date-fns/locale';
 import { getCurrentLanguage } from '@/components/i18n/i18nUtils';
 import { 
   Dialog,
@@ -40,7 +40,7 @@ export default function SchedulePage() {
     const lang = getCurrentLanguage();
     const locales = {
       'pt-BR': ptBR, 'pt-PT': ptBR, 'en': enUS, 'es': es, 
-      'fr': fr, 'de': de, 'it': it, 'ja': ja, 'zh': zhCN, 'ru': ru, 'ar': ar
+      'fr': fr, 'de': de, 'it': it, 'ja': ja, 'zh': zhCN, 'ru': ru, 'ar': arSA
     };
     return locales[lang] || ptBR;
   };

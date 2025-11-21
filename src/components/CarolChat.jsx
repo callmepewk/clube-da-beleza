@@ -111,7 +111,7 @@ export default function CarolChat() {
       return response;
     },
     onSuccess: (data) => {
-      setMessages(prev => [...prev, { role: 'assistant', content: data }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data, needsTranslation: false }]);
     }
   });
 

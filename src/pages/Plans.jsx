@@ -107,12 +107,12 @@ export default function PlansPage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 text-[#64748B]">
-                  {features.basic.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> {f}</li>)}
+                  {features.basic.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> <T>{f}</T></li>)}
                 </ul>
               </CardContent>
               <CardFooter>
                 <Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant={planName === 'free' ? "secondary" : "outline"} disabled={planName === 'free'}>
-                  {planName === 'free' ? 'Plano Atual' : 'Escolher'}
+                  {planName === 'free' ? <T>Plano Atual</T> : <T>Escolher</T>}
                 </Button>
               </CardFooter>
             </Card>
@@ -127,12 +127,12 @@ export default function PlansPage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 text-[#64748B]">
-                  {features.pro.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> {f}</li>)}
+                  {features.pro.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> <T>{f}</T></li>)}
                 </ul>
               </CardContent>
               <CardFooter>
                 <Button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white" disabled={planName === 'premium'}>
-                   {planName === 'premium' ? 'Plano Atual' : 'Assinar Agora'}
+                   {planName === 'premium' ? <T>Plano Atual</T> : <T>Assinar Agora</T>}
                 </Button>
               </CardFooter>
             </Card>
@@ -146,11 +146,11 @@ export default function PlansPage() {
               </CardHeader>
               <CardContent>
                 <ul className="space-y-3 text-[#64748B]">
-                  {features.premium.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> {f}</li>)}
+                  {features.premium.map((f, i) => <li key={i} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-emerald-500" /> <T>{f}</T></li>)}
                 </ul>
               </CardContent>
               <CardFooter>
-                <Button className="w-full bg-[#0F172A] text-white hover:bg-slate-800">Assinar Família</Button>
+                <Button className="w-full bg-[#0F172A] text-white hover:bg-slate-800"><T>Assinar Família</T></Button>
               </CardFooter>
             </Card>
           </div>
@@ -160,18 +160,18 @@ export default function PlansPage() {
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
              <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md">
                 <CardHeader><T as={CardTitle} className="text-[#0F172A]">Start</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(99.00)}</div></CardHeader>
-                <CardContent><p className="text-sm text-[#64748B]">Agenda básica e perfil público.</p></CardContent>
-                <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline">Escolher</Button></CardFooter>
+                <CardContent><T as="p" className="text-sm text-[#64748B]">Agenda básica e perfil público.</T></CardContent>
+                <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline"><T>Escolher</T></Button></CardFooter>
              </Card>
              <Card className="bg-white border-purple-500 shadow-lg">
                 <CardHeader><T as={CardTitle} className="text-purple-600">Growth</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(199.00)}</div></CardHeader>
-                <CardContent><p className="text-sm text-[#64748B]">IA de atendimento, Chatbots e Sites ilimitados.</p></CardContent>
-                <CardFooter><Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">Escolher</Button></CardFooter>
+                <CardContent><T as="p" className="text-sm text-[#64748B]">IA de atendimento, Chatbots e Sites ilimitados.</T></CardContent>
+                <CardFooter><Button className="w-full bg-purple-600 hover:bg-purple-700 text-white"><T>Escolher</T></Button></CardFooter>
              </Card>
              <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md">
                 <CardHeader><T as={CardTitle} className="text-[#0F172A]">Clinic</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(499.00)}</div></CardHeader>
-                <CardContent><p className="text-sm text-[#64748B]">Gestão multi-profissional e relatórios avançados.</p></CardContent>
-                <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline">Escolher</Button></CardFooter>
+                <CardContent><T as="p" className="text-sm text-[#64748B]">Gestão multi-profissional e relatórios avançados.</T></CardContent>
+                <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline"><T>Escolher</T></Button></CardFooter>
              </Card>
            </div>
         </TabsContent>
@@ -180,18 +180,18 @@ export default function PlansPage() {
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
              <Card className="bg-white border-amber-200 shadow-sm hover:shadow-md">
                 <CardHeader><T as={CardTitle} className="text-amber-600">Partner</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(1000)}</div></CardHeader>
-                <CardContent><p className="text-sm text-[#64748B]">Visibilidade em buscas locais.</p></CardContent>
-                <CardFooter><Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">Contatar Vendas</Button></CardFooter>
+                <CardContent><T as="p" className="text-sm text-[#64748B]">Visibilidade em buscas locais.</T></CardContent>
+                <CardFooter><Button className="w-full bg-amber-600 hover:bg-amber-700 text-white"><T>Contatar Vendas</T></Button></CardFooter>
              </Card>
              <Card className="bg-white border-amber-500 shadow-lg">
                 <CardHeader><T as={CardTitle} className="text-amber-600">Gold</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(5000)}</div></CardHeader>
-                <CardContent><p className="text-sm text-[#64748B]">Banners na home e destaque em categorias.</p></CardContent>
-                <CardFooter><Button className="w-full bg-amber-600 hover:bg-amber-700 text-white">Contatar Vendas</Button></CardFooter>
+                <CardContent><T as="p" className="text-sm text-[#64748B]">Banners na home e destaque em categorias.</T></CardContent>
+                <CardFooter><Button className="w-full bg-amber-600 hover:bg-amber-700 text-white"><T>Contatar Vendas</T></Button></CardFooter>
              </Card>
              <Card className="bg-gradient-to-b from-slate-900 to-slate-800 border-slate-800 text-white">
                 <CardHeader><T as={CardTitle} className="text-white">Diamond</T><T className="text-3xl font-bold mt-2 text-white">Sob Consulta</T></CardHeader>
-                <CardContent><p className="text-sm text-slate-300">Parceria estratégica e dados de inteligência.</p></CardContent>
-                <CardFooter><Button className="w-full bg-white text-black hover:bg-gray-100">Agendar Reunião</Button></CardFooter>
+                <CardContent><T as="p" className="text-sm text-slate-300">Parceria estratégica e dados de inteligência.</T></CardContent>
+                <CardFooter><Button className="w-full bg-white text-black hover:bg-gray-100"><T>Agendar Reunião</T></Button></CardFooter>
              </Card>
            </div>
         </TabsContent>

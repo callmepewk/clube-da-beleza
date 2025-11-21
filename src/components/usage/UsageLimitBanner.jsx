@@ -4,6 +4,7 @@ import { Card } from '@/components/ui/card';
 import { ArrowUpCircle, AlertTriangle, Crown, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
+import T from '@/components/TranslatedText';
 
 export default function UsageLimitBanner({ 
   currentUsage, 
@@ -23,8 +24,8 @@ export default function UsageLimitBanner({
               <Crown className="w-5 h-5 text-purple-600" />
             </div>
             <div>
-              <p className="font-bold text-purple-900">Plano {planName}</p>
-              <p className="text-sm text-purple-600">{resourceName}: Ilimitado ✨</p>
+              <T as="p" className="font-bold text-purple-900">Plano {planName}</T>
+              <p className="text-sm text-purple-600"><T>{resourceName}</T>: <T>Ilimitado</T> ✨</p>
             </div>
           </div>
         </div>
@@ -49,7 +50,7 @@ export default function UsageLimitBanner({
           <div className="flex items-center gap-2 mb-2">
             {isAtLimit && <AlertTriangle className="w-5 h-5 text-red-600" />}
             <p className="font-bold text-sm text-slate-700">
-              {resourceName} - Plano {planName}
+              <T>{resourceName}</T> - <T>Plano</T> {planName}
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -70,9 +71,9 @@ export default function UsageLimitBanner({
             </span>
           </div>
           {isAtLimit && (
-            <p className="text-xs text-red-600 mt-2 font-semibold">
+            <T as="p" className="text-xs text-red-600 mt-2 font-semibold">
               ⚠️ Limite atingido! Faça upgrade para continuar usando.
-            </p>
+            </T>
           )}
         </div>
         
@@ -87,12 +88,12 @@ export default function UsageLimitBanner({
           {isAtLimit ? (
             <>
               <Zap className="w-4 h-4 mr-2" />
-              Fazer Upgrade Agora
+              <T>Fazer Upgrade Agora</T>
             </>
           ) : (
             <>
               <ArrowUpCircle className="w-4 h-4 mr-2" />
-              Ver Planos
+              <T>Ver Planos</T>
             </>
           )}
         </Button>
