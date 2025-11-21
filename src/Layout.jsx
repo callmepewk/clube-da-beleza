@@ -52,6 +52,7 @@ import Footer from '@/components/Footer';
 import LucasChat from '@/components/LucasChat';
 import LanguageSelector from '@/components/LanguageSelector';
 import TranslationProvider from '@/components/TranslationProvider';
+import T from '@/components/TranslatedText';
 
 export default function Layout({ children }) {
   const [user, setUser] = useState(null);
@@ -239,7 +240,7 @@ export default function Layout({ children }) {
         </PopoverTrigger>
         <PopoverContent className="w-80 p-0" align="end">
            <div className="p-4 border-b flex justify-between items-center bg-slate-50">
-              <h4 className="font-bold text-sm text-slate-700">Notificações ({notifications?.length || 0})</h4>
+              <h4 className="font-bold text-sm text-slate-700"><T>Notificações</T> ({notifications?.length || 0})</h4>
               <div className="flex gap-1">
                  <Button variant="ghost" size="icon" className="h-6 w-6" title="Marcar lidas" onClick={() => markAllReadMutation.mutate()}>
                     <CheckCheck className="w-4 h-4 text-green-600" />
@@ -251,7 +252,7 @@ export default function Layout({ children }) {
            </div>
            <ScrollArea className="h-[300px]">
               {notifications?.length === 0 ? (
-                 <div className="p-8 text-center text-slate-400 text-sm">Nenhuma notificação nova.</div>
+                 <div className="p-8 text-center text-slate-400 text-sm"><T>Nenhuma notificação nova.</T></div>
               ) : (
                  <div className="divide-y">
                     {notifications?.map(n => (
@@ -261,7 +262,7 @@ export default function Layout({ children }) {
                           {n.image_url && <img src={n.image_url} className="w-full h-24 object-cover rounded mb-2" />}
                           {n.link && (
                              <a href={n.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline font-medium">
-                                Ver detalhes
+                                <T>Ver detalhes</T>
                              </a>
                           )}
                        </div>
@@ -277,22 +278,22 @@ export default function Layout({ children }) {
   // Define all available pages with requested order
   const navItems = React.useMemo(() => {
     const items = [
-      { icon: LayoutDashboard, label: 'Início', path: '/' },
-      { icon: Newspaper, label: 'Notícias', path: '/news' },
-      { icon: Calendar, label: 'Agendamentos', path: '/schedule' },
-      { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse' },
-      { icon: Bot, label: 'Chatbots', path: '/chatbots' },
-      { icon: Globe, label: 'Sites', path: '/sites' },
-      { icon: Palette, label: 'Design', path: '/design' },
-      { icon: ShoppingBag, label: 'Produtos', path: '/products' },
-      { icon: Zap, label: 'Ferramentas', path: '/tools' },
-      { icon: CreditCard, label: 'Planos', path: '/plans' },
-      { icon: HelpCircle, label: 'Sobre Nós', path: '/about' },
+      { icon: LayoutDashboard, label: 'Início', path: '/', translationKey: 'Início' },
+      { icon: Newspaper, label: 'Notícias', path: '/news', translationKey: 'Notícias' },
+      { icon: Calendar, label: 'Agendamentos', path: '/schedule', translationKey: 'Agendamentos' },
+      { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse', translationKey: 'Bia - Cuidadora Virtual' },
+      { icon: Bot, label: 'Chatbots', path: '/chatbots', translationKey: 'Chatbots' },
+      { icon: Globe, label: 'Sites', path: '/sites', translationKey: 'Sites' },
+      { icon: Palette, label: 'Design', path: '/design', translationKey: 'Design' },
+      { icon: ShoppingBag, label: 'Produtos', path: '/products', translationKey: 'Produtos' },
+      { icon: Zap, label: 'Ferramentas', path: '/tools', translationKey: 'Ferramentas' },
+      { icon: CreditCard, label: 'Planos', path: '/plans', translationKey: 'Planos' },
+      { icon: HelpCircle, label: 'Sobre Nós', path: '/about', translationKey: 'Sobre Nós' },
     ];
 
     // Add Controle page only for admins
     if (profile?.is_admin) {
-      items.splice(1, 0, { icon: Shield, label: 'Controle', path: '/admincontrol' });
+      items.splice(1, 0, { icon: Shield, label: 'Controle', path: '/admincontrol', translationKey: 'Controle' });
     }
 
     return items;
@@ -324,7 +325,7 @@ export default function Layout({ children }) {
            <div className="flex items-center gap-4">
              <LanguageSelector />
              <div className="text-sm font-light ${theme.textSecondary} tracking-wide">
-               Finalizando Cadastro
+               <T>Finalizando Cadastro</T>
              </div>
            </div>
         </header>
@@ -346,9 +347,9 @@ export default function Layout({ children }) {
       <AlertDialog open={showProfileModal} onOpenChange={setShowProfileModal}>
         <AlertDialogContent className={`${theme.sidebar} border ${theme.border} rounded-3xl ${theme.textPrimary} shadow-2xl max-w-lg`}>
           <AlertDialogHeader>
-            <AlertDialogTitle className={`text-2xl font-light text-center ${theme.accent} tracking-wide`}>Complete seu Perfil</AlertDialogTitle>
+            <AlertDialogTitle className={`text-2xl font-light text-center ${theme.accent} tracking-wide`}><T>Complete seu Perfil</T></AlertDialogTitle>
             <AlertDialogDescription className={`text-center ${theme.textSecondary} text-base font-light`}>
-               Para aproveitar todas as ferramentas exclusivas do <span className={`font-medium ${theme.textPrimary}`}>Clube da Beleza</span>, precisamos de algumas informações adicionais. É rapidinho!
+               <T>Para aproveitar todas as ferramentas exclusivas do Clube da Beleza, precisamos de algumas informações adicionais. É rapidinho!</T>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex justify-center py-4">
@@ -360,16 +361,16 @@ export default function Layout({ children }) {
             <Button 
                onClick={() => navigate(createPageUrl('Onboarding'))} 
                className={`w-full ${theme.accentBg} hover:bg-[#C49565] text-white font-light h-12 rounded-2xl shadow-lg tracking-wide`}
-            >
-               Completar Agora
-            </Button>
-            <Button 
+               >
+               <T>Completar Agora</T>
+               </Button>
+               <Button 
                variant="ghost" 
                onClick={() => setShowProfileModal(false)}
                className={`w-full ${theme.textSecondary} hover:${theme.textPrimary} font-light`}
-            >
-               Fazer isso depois
-            </Button>
+               >
+               <T>Fazer isso depois</T>
+               </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -407,7 +408,7 @@ export default function Layout({ children }) {
                   }`}
               >
                 <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : theme.accent}`} />
-                <span>{item.label}</span>
+                <T>{item.translationKey}</T>
               </Link>
             );
           })}
@@ -449,7 +450,7 @@ export default function Layout({ children }) {
                     className={`w-full text-left px-4 py-3 hover:bg-[#FFF9F0] transition-colors flex items-center gap-3 text-sm font-light ${theme.textPrimary}`}
                   >
                     <UserCircle className={`w-4 h-4 ${theme.accent}`} />
-                    Meu Perfil
+                    <T>Meu Perfil</T>
                   </button>
 
                   <button 
@@ -458,7 +459,7 @@ export default function Layout({ children }) {
                   >
                     <CreditCard className={`w-4 h-4 ${theme.accent}`} />
                     <div className="flex-1 flex items-center justify-between">
-                      <span>Plano Atual</span>
+                      <T>Plano Atual</T>
                       <span className={`text-xs font-medium ${theme.accent} uppercase`}>
                         {profile?.plan || 'Free'}
                       </span>
@@ -471,7 +472,7 @@ export default function Layout({ children }) {
                       className={`w-full text-left px-4 py-3 hover:bg-[#FFF9F0] transition-colors flex items-center gap-3 text-sm font-light ${theme.textPrimary}`}
                     >
                       <Shield className={`w-4 h-4 ${theme.accent}`} />
-                      Controle
+                      <T>Controle</T>
                     </button>
                   )}
                 </div>
@@ -480,10 +481,10 @@ export default function Layout({ children }) {
                   <button 
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-3 hover:bg-red-50 transition-colors flex items-center gap-3 text-sm font-light text-red-600"
-                  >
+                    >
                     <LogOut className="w-4 h-4" />
-                    Sair da Conta
-                  </button>
+                    <T>Sair da Conta</T>
+                    </button>
                 </div>
               </PopoverContent>
             </Popover>
@@ -494,15 +495,15 @@ export default function Layout({ children }) {
               onClick={() => base44.auth.redirectToLogin(createPageUrl('Dashboard'))}
               variant="outline"
               className={`w-full border ${theme.border} ${theme.textSecondary} hover:${theme.accentBg} hover:text-white font-light rounded-2xl`}
-            >
-              Login
-            </Button>
+              >
+              <T>Login</T>
+              </Button>
             <Button 
               onClick={() => navigate(createPageUrl('Onboarding'))}
               className={`w-full ${theme.accentBg} hover:bg-[#C49565] text-white font-light rounded-2xl shadow-lg`}
-            >
-              Criar Conta
-            </Button>
+              >
+              <T>Criar Conta</T>
+              </Button>
           </div>
         )}
       </aside>
@@ -534,20 +535,20 @@ export default function Layout({ children }) {
                           to={createPageUrl(item.path.replace('/', ''))}
                           className={`flex items-center gap-4 px-4 py-3 rounded-xl font-light transition-colors
                             ${isActive ? `${theme.accentBg} text-white` : `${theme.textSecondary} hover:bg-[#FFF9F0]`}`}
-                        >
-                          <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : theme.accent}`} />
-                          {item.label}
-                        </Link>
+                            >
+                            <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : theme.accent}`} />
+                            <T>{item.translationKey}</T>
+                            </Link>
                       );
                     })}
                   </nav>
                   {user && (
                     <div className="pt-6 border-t border-[#D4A574]/20 space-y-2">
                       <Button variant="ghost" className={`w-full justify-start ${theme.textSecondary} hover:bg-[#FFF9F0] font-light`} onClick={() => navigate(createPageUrl('Profile'))}>
-                        <UserCircle className="w-5 h-5 mr-2" /> Perfil
+                        <UserCircle className="w-5 h-5 mr-2" /> <T>Perfil</T>
                       </Button>
                       <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 font-light" onClick={handleLogout}>
-                        <LogOut className="w-5 h-5 mr-2" /> Sair
+                        <LogOut className="w-5 h-5 mr-2" /> <T>Sair</T>
                       </Button>
                     </div>
                   )}
@@ -570,15 +571,15 @@ export default function Layout({ children }) {
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
         <AlertDialogContent className={`${theme.sidebar} border ${theme.border} ${theme.textPrimary} rounded-3xl`}>
           <AlertDialogHeader>
-            <AlertDialogTitle className={theme.textPrimary}>Tem certeza absoluta?</AlertDialogTitle>
+            <AlertDialogTitle className={theme.textPrimary}><T>Tem certeza absoluta?</T></AlertDialogTitle>
             <AlertDialogDescription className={theme.textSecondary}>
-              Esta ação não pode ser desfeita. Isso excluirá permanentemente seu perfil e removerá seus dados de nossos servidores.
+              <T>Esta ação não pode ser desfeita. Isso excluirá permanentemente seu perfil e removerá seus dados de nossos servidores.</T>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className={`${theme.border} ${theme.textSecondary} hover:bg-[#FFF9F0]`}>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel className={`${theme.border} ${theme.textSecondary} hover:bg-[#FFF9F0]`}><T>Cancelar</T></AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteAccount} className="bg-red-600 hover:bg-red-700 text-white border-0">
-              Sim, excluir minha conta
+              <T>Sim, excluir minha conta</T>
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
