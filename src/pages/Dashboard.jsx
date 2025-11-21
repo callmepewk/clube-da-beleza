@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Loader2, Calendar, Sparkles, ChevronRight, DollarSign, Bot, Globe, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import OnboardingWizard from '@/components/OnboardingWizard';
+import { createPageUrl } from '@/utils';
 
 const PatientNewsFeed = () => {
    const { data: news, isLoading } = useQuery({
@@ -27,22 +28,22 @@ const PatientNewsFeed = () => {
    if (isLoading) return <div className="flex gap-4 justify-center py-8"><Loader2 className="animate-spin text-[#D4A574]" /> <span className="text-[#6B5D4F]">Carregando notícias...</span></div>;
 
    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
          {news?.map((item, idx) => (
-            <div key={idx} className="bg-[#FEFBF7] rounded-2xl overflow-hidden shadow-md border border-[#D4A574]/20 hover:shadow-xl transition-all flex flex-col">
-               <div className="h-48 bg-slate-100 relative overflow-hidden">
+            <div key={idx} className="bg-[#FEFBF7] rounded-xl lg:rounded-2xl overflow-hidden shadow-md border border-[#D4A574]/20 hover:shadow-xl transition-all flex flex-col md:flex-row">
+               <div className="h-48 md:h-auto md:w-2/5 lg:w-1/3 bg-slate-100 relative overflow-hidden flex-shrink-0">
                   <img 
-                     src={`https://source.unsplash.com/400x300/?${item.image_keyword || 'health'}`} 
+                     src={`https://source.unsplash.com/400x300/?${item.image_keyword || 'health,beauty'}`} 
                      className="w-full h-full object-cover" 
                      alt={item.title}
                   />
-                  <div className="absolute top-2 left-2 bg-white/90 px-3 py-1 rounded-lg text-xs font-bold uppercase text-[#2D2416]">
+                  <div className="absolute top-2 left-2 bg-white/95 px-3 py-1 rounded-lg text-xs font-bold uppercase text-[#2D2416] shadow-sm">
                      {item.category}
                   </div>
                </div>
-               <div className="p-6">
-                  <h3 className="font-light text-lg text-[#2D2416] mb-2">{item.title}</h3>
-                  <p className="text-[#6B5D4F] text-sm font-light line-clamp-3">{item.summary}</p>
+               <div className="p-4 md:p-6 md:w-3/5 lg:w-2/3 flex flex-col justify-center">
+                  <h3 className="font-light text-base md:text-lg text-[#2D2416] mb-2">{item.title}</h3>
+                  <p className="text-[#6B5D4F] text-sm font-light line-clamp-2 md:line-clamp-3">{item.summary}</p>
                </div>
             </div>
          ))}
@@ -291,33 +292,38 @@ export default function Dashboard() {
 
       {/* Explorar Procedimentos */}
       <div>
-        <h2 className="text-3xl lg:text-4xl font-light text-[#2D2416] mb-8 flex items-center gap-4">
-          <div className="w-2 h-8 bg-[#D4A574] rounded-full"></div>
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-light text-[#2D2416] mb-6 lg:mb-8 flex items-center gap-3 lg:gap-4">
+          <div className="w-1.5 lg:w-2 h-6 lg:h-8 bg-[#D4A574] rounded-full"></div>
           Explorar Procedimentos
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
           {[
-            { title: "Skincare", img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&q=60" },
-            { title: "Laser", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=60" },
-            { title: "Harmonização", img: "https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=500&q=60" },
-            { title: "Nutrologia", img: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=500&q=60" }
+            { title: "Skincare", img: "https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=500&q=60", link: 'Schedule' },
+            { title: "Laser", img: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=500&q=60", link: 'Schedule' },
+            { title: "Harmonização", img: "https://images.unsplash.com/photo-1519415943484-9fa1873496d4?w=500&q=60", link: 'Schedule' },
+            { title: "Nutrologia", img: "https://images.unsplash.com/photo-1551076805-e1869033e561?w=500&q=60", link: 'Schedule' }
           ].map((cat, i) => (
-            <div key={i} className="relative h-48 lg:h-56 rounded-2xl overflow-hidden cursor-pointer group transition-all duration-500 hover:shadow-2xl shadow-md">
+            <a 
+              key={i} 
+              href={`#${cat.link.toLowerCase()}`}
+              onClick={(e) => { e.preventDefault(); window.location.href = createPageUrl(cat.link); }}
+              className="relative h-40 md:h-48 lg:h-56 rounded-xl lg:rounded-2xl overflow-hidden cursor-pointer group transition-all duration-500 hover:shadow-2xl shadow-md block"
+            >
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all z-10"></div>
-              <div className="absolute bottom-4 left-4 text-lg lg:text-xl font-bold text-white z-20 drop-shadow-md">{cat.title}</div>
+              <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 text-base md:text-lg lg:text-xl font-bold text-white z-20 drop-shadow-md">{cat.title}</div>
               <img src={cat.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={cat.title} />
-              <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-md p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                <ChevronRight className="text-white w-4 h-4" />
+              <div className="absolute top-3 md:top-4 right-3 md:right-4 bg-white/20 backdrop-blur-md p-1.5 md:p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                <ChevronRight className="text-white w-3 h-3 md:w-4 md:h-4" />
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
 
       {/* News Feed */}
-      <div className="space-y-6">
-        <h2 className="text-3xl lg:text-4xl font-light text-[#2D2416] flex items-center gap-4">
-          <div className="w-2 h-8 bg-[#D4A574] rounded-full"></div>
+      <div className="space-y-4 lg:space-y-6">
+        <h2 className="text-2xl md:text-3xl lg:text-4xl font-light text-[#2D2416] flex items-center gap-3 lg:gap-4">
+          <div className="w-1.5 lg:w-2 h-6 lg:h-8 bg-[#D4A574] rounded-full"></div>
           Notícias & Tendências
         </h2>
         <PatientNewsFeed />
