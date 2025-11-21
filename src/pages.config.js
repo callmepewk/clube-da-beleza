@@ -17,6 +17,10 @@ import OurMission from './pages/OurMission';
 import BeautyTea from './pages/BeautyTea';
 import SkinCaretakers from './pages/SkinCaretakers';
 import SolidBeauty from './pages/SolidBeauty';
+import RightDose from './pages/RightDose';
+import BeautyBox from './pages/BeautyBox';
+import QualitySeal from './pages/QualitySeal';
+import ClubePlus from './pages/ClubePlus';
 import __Layout from './Layout.jsx';
 
 
@@ -40,6 +44,10 @@ export const PAGES = {
     "BeautyTea": BeautyTea,
     "SkinCaretakers": SkinCaretakers,
     "SolidBeauty": SolidBeauty,
+    "RightDose": RightDose,
+    "BeautyBox": BeautyBox,
+    "QualitySeal": QualitySeal,
+    "ClubePlus": ClubePlus,
 }
 
 export const pagesConfig = {
