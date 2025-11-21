@@ -119,6 +119,22 @@ export default function ToolsPage() {
       color: 'from-[#D4A574] to-[#E0B480]',
       badge: 'Clube Exclusivo de Benefícios',
       image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/7ea4d15e3_image.png'
+    },
+    {
+      icon: Stethoscope,
+      name: 'Dr. Beleza',
+      description: 'IA Especialista em Medicina Estética',
+      details: 'Inteligência artificial avançada com conhecimento profundo sobre tratamentos, procedimentos, cirurgias, doenças e valores do mundo da medicina e medicina estética. Consultoria 24/7 com precisão e atualização constante.',
+      features: ['Conhecimento completo sobre procedimentos', 'Informações sobre valores e custos', 'Orientações sobre tratamentos', 'Base de dados médica atualizada', 'Respostas instantâneas e precisas'],
+      stats: [
+        { value: '1000+', label: 'Procedimentos' },
+        { value: '24/7', label: 'Disponível' },
+        { value: '99%', label: 'Precisão' }
+      ],
+      url: 'https://dr-beleza-ai.base44.app',
+      color: 'from-[#B8935C] to-[#D4A574]',
+      badge: 'IA Especializada',
+      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=800&auto=format&fit=crop'
     }
   ];
 
