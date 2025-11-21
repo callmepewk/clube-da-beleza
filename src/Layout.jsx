@@ -26,8 +26,10 @@ import {
   CheckCheck,
   Trash,
   Shield,
+  ShieldCheck,
   MapPin,
-  Zap
+  Zap,
+  Heart
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
