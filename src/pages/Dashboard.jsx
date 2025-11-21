@@ -101,9 +101,9 @@ export default function Dashboard() {
                 {user ? <><T>Olá</T>, {user.full_name?.split(' ')[0]}</> : <><T>Bem-vindo ao</T> <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4A574] to-[#B8935C] font-normal"><T>Clube da Beleza</T></span></>}
               </h1>
 
-              <p className="text-xl lg:text-2xl text-[#6B5D4F] leading-relaxed font-light mb-10">
-                <T>A maior comunidade de skincare do planeta. Transforme sua rotina de autocuidado com ferramentas de IA, gestão inteligente, criação de conteúdo profissional e muito mais.</T>
-              </p>
+              <T as="p" className="text-xl lg:text-2xl text-[#6B5D4F] leading-relaxed font-light mb-10">
+                A maior comunidade de skincare do planeta. Transforme sua rotina de autocuidado com ferramentas de IA, gestão inteligente, criação de conteúdo profissional e muito mais.
+              </T>
 
               <div className="flex flex-wrap gap-4">
                 {!user ? (
@@ -154,16 +154,16 @@ export default function Dashboard() {
                 <div className="bg-gradient-to-br from-[#C9A868] to-[#B59758] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Globe className="w-8 h-8 text-white" />
                 </div>
-                <T className="text-lg font-light text-[#2D2416] mb-2">Sites Profissionais</T>
-                <T className="text-sm text-[#6B5D4F] leading-relaxed font-light">Presença digital em minutos</T>
+                <T as="p" className="text-lg font-light text-[#2D2416] mb-2">Sites Profissionais</T>
+                <T as="p" className="text-sm text-[#6B5D4F] leading-relaxed font-light">Presença digital em minutos</T>
               </div>
 
               <div className="bg-[#FEFBF7] p-8 rounded-3xl border border-[#D4A574]/20 shadow-lg hover:shadow-2xl transition-all hover:-translate-y-2 mt-8">
                 <div className="bg-gradient-to-br from-[#D4A574] to-[#E0B480] w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
                   <Palette className="w-8 h-8 text-white" />
                 </div>
-                <T className="text-lg font-light text-[#2D2416] mb-2">Design com IA</T>
-                <T className="text-sm text-[#6B5D4F] leading-relaxed font-light">Criação visual automatizada</T>
+                <T as="p" className="text-lg font-light text-[#2D2416] mb-2">Design com IA</T>
+                <T as="p" className="text-sm text-[#6B5D4F] leading-relaxed font-light">Criação visual automatizada</T>
               </div>
             </div>
           </div>
@@ -211,12 +211,12 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
           <div className="p-8 lg:p-12">
             <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
-              Tecnologia Humanizada
+              <T>Tecnologia Humanizada</T>
             </div>
-            <h3 className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">A Rede Credenciada</h3>
-            <p className="text-[#6B5D4F] font-light leading-relaxed">
+            <T as="h3" className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">A Rede Credenciada</T>
+            <T as="p" className="text-[#6B5D4F] font-light leading-relaxed">
               Clubdabeleza.com usa o melhor da transformação digital para o benefício das boas práticas na estética brasileira. O Clubdabeleza.com por essa razão tem uma plataforma digital que irá impulsionar seu consultório, clínica ou negócio sem você se distanciar de cada paciente.
-            </p>
+            </T>
           </div>
           <div className="relative h-64 lg:h-96">
             <img 
@@ -240,15 +240,15 @@ export default function Dashboard() {
           </div>
           <div className="p-8 lg:p-12 order-1 lg:order-2">
             <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
-              + Compromisso
+              <T>+ Compromisso</T>
             </div>
-            <h3 className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">O Selo PREMIUM</h3>
-            <p className="text-[#6B5D4F] font-light leading-relaxed mb-4">
+            <T as="h3" className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">O Selo PREMIUM</T>
+            <T as="p" className="text-[#6B5D4F] font-light leading-relaxed mb-4">
               O SELO PREMIUM do Clubdabeleza.com tem como missão destacar os especialistas quem melhor atendem. Somente especialista talentosos verificados e aplicados a submissão do SELO PREMIUM podem fazer parte.
-            </p>
-            <p className="text-[#6B5D4F] font-light leading-relaxed">
+            </T>
+            <T as="p" className="text-[#6B5D4F] font-light leading-relaxed">
               Aqui segurança e eficácia é básico. Solicite mais informações de como ter o SELO PREMIUM Clubdabeleza.com na sua Clínica ou consultório.
-            </p>
+            </T>
           </div>
         </div>
 
@@ -256,12 +256,12 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
           <div className="p-8 lg:p-12">
             <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
-              + Pacientes
+              <T>+ Pacientes</T>
             </div>
-            <h3 className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">Gerador de Ordem de Serviços</h3>
-            <p className="text-[#6B5D4F] font-light leading-relaxed">
+            <T as="h3" className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">Gerador de Ordem de Serviços</T>
+            <T as="p" className="text-[#6B5D4F] font-light leading-relaxed">
               Gostaria de ter mais pacientes? Está procurando aumentar o número de procedimentos que realiza? O SELO EXCELÊNCIA do Clubdabeleza.com oferece para seu consultório o gerador de ordem de serviços. Uma ferramenta que aproxima pacientes qualificados. Destaque seus serviços e leva até você mais pedidos.
-            </p>
+            </T>
           </div>
           <div className="relative h-64 lg:h-96">
             <img 
@@ -285,12 +285,12 @@ export default function Dashboard() {
           </div>
           <div className="p-8 lg:p-12 order-1 lg:order-2">
             <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
-              Fidelize +
+              <T>Fidelize +</T>
             </div>
-            <h3 className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">O Selo Clube+</h3>
-            <p className="text-[#6B5D4F] font-light leading-relaxed">
+            <T as="h3" className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">O Selo Clube+</T>
+            <T as="p" className="text-[#6B5D4F] font-light leading-relaxed">
               Mantenha seus pacientes mais perto de você. O Selo Clube+ Clubdabeleza.com facilita em tudo o controle de seus pacientes mais fiéis e aproxima os pacientes novos em 98%.
-            </p>
+            </T>
           </div>
         </div>
       </div>
