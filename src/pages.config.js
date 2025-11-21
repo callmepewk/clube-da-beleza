@@ -13,6 +13,10 @@ import Support from './pages/Support';
 import About from './pages/About';
 import News from './pages/News';
 import Tools from './pages/Tools';
+import OurMission from './pages/OurMission';
+import BeautyTea from './pages/BeautyTea';
+import SkinCaretakers from './pages/SkinCaretakers';
+import SolidBeauty from './pages/SolidBeauty';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +36,10 @@ export const PAGES = {
     "About": About,
     "News": News,
     "Tools": Tools,
+    "OurMission": OurMission,
+    "BeautyTea": BeautyTea,
+    "SkinCaretakers": SkinCaretakers,
+    "SolidBeauty": SolidBeauty,
 }
 
 export const pagesConfig = {
