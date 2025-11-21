@@ -1,6 +1,7 @@
 import React from 'react';
 import { Package, Gift, Star, Sparkles, Heart, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import T from '@/components/TranslatedText';
 
 export default function BeautyBoxPage() {
   const boxes = [
@@ -64,17 +65,17 @@ export default function BeautyBoxPage() {
         <div className="relative z-10 flex flex-col justify-end h-full p-12 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-3 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
-              Assinatura Mensal
+              <T>Assinatura Mensal</T>
             </div>
             <h1 className="text-6xl font-light tracking-tight text-white mb-6 leading-tight">
               Beauty <span className="font-normal text-[#E8E05C]">Box</span>
             </h1>
-            <p className="text-white/90 text-2xl font-light leading-relaxed mb-8">
+            <T as="p" className="text-white/90 text-2xl font-light leading-relaxed mb-8">
               Receba mensalmente uma seleção exclusiva de produtos premium de skincare e beleza na sua casa
-            </p>
+            </T>
             <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white h-14 px-8 text-lg font-light rounded-xl shadow-xl">
               <Package className="w-5 h-5 mr-2" />
-              Assinar Agora
+              <T>Assinar Agora</T>
             </Button>
           </div>
         </div>
@@ -82,13 +83,13 @@ export default function BeautyBoxPage() {
 
       {/* Introduction */}
       <div className="max-w-4xl mx-auto text-center space-y-6">
-        <h2 className="text-4xl font-light text-[#2D2416]">Sua Dose Mensal de Autocuidado</h2>
-        <p className="text-[#6B5D4F] font-light leading-relaxed text-lg">
+        <T as="h2" className="text-4xl font-light text-[#2D2416]">Sua Dose Mensal de Autocuidado</T>
+        <T as="p" className="text-[#6B5D4F] font-light leading-relaxed text-lg">
           A Beauty Box é a assinatura exclusiva do Clube da Beleza que transforma sua rotina de cuidados com a pele. A cada mês, você recebe em casa uma caixa cuidadosamente curada com produtos premium, novidades do mercado e itens exclusivos que você não encontra em outros lugares.
-        </p>
-        <p className="text-[#6B5D4F] font-light leading-relaxed text-lg">
+        </T>
+        <T as="p" className="text-[#6B5D4F] font-light leading-relaxed text-lg">
           Experimente novos produtos, descubra suas marcas favoritas e economize enquanto cuida de você.
-        </p>
+        </T>
       </div>
 
       {/* Benefits */}
@@ -98,21 +99,21 @@ export default function BeautyBoxPage() {
             <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#D4A574] to-[#C9A868] flex items-center justify-center mx-auto mb-6 shadow-lg">
               <benefit.icon className="w-8 h-8 text-white" />
             </div>
-            <h3 className="text-xl font-light text-[#2D2416] mb-3">{benefit.title}</h3>
-            <p className="text-[#6B5D4F] font-light text-sm leading-relaxed">{benefit.description}</p>
+            <T as="h3" className="text-xl font-light text-[#2D2416] mb-3">{benefit.title}</T>
+            <T as="p" className="text-[#6B5D4F] font-light text-sm leading-relaxed">{benefit.description}</T>
           </div>
         ))}
       </div>
 
       {/* Box Plans */}
       <div>
-        <h2 className="text-4xl font-light text-[#2D2416] mb-10 text-center">Escolha Sua Beauty Box</h2>
+        <T as="h2" className="text-4xl font-light text-[#2D2416] mb-10 text-center">Escolha Sua Beauty Box</T>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {boxes.map((box, idx) => (
             <div key={idx} className={`bg-[#FEFBF7] rounded-[2rem] border-2 ${box.popular ? 'border-[#D4A574] shadow-2xl scale-105' : 'border-[#D4A574]/20'} overflow-hidden hover:shadow-2xl transition-all relative`}>
               {box.popular && (
                 <div className="absolute top-4 right-4 bg-[#E8E05C] text-[#2D2416] px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider z-10">
-                  Mais Popular
+                  <T>Mais Popular</T>
                 </div>
               )}
               <div className={`bg-gradient-to-r ${box.color} p-8 text-white text-center`}>
