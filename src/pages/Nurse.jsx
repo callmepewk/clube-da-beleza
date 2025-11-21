@@ -15,6 +15,7 @@ import { format, differenceInDays, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
 import T from '@/components/TranslatedText';
+import { getCurrentLanguage } from '@/components/i18n/i18nUtils';
 
 const NURSE_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/6ad7fd07e_nurse.png";
 
@@ -147,15 +148,29 @@ export default function NursePage() {
 
   const sendMessageMutation = useMutation({
     mutationFn: async ({ userMsg, topic }) => {
-      const context = `
-        Você é a Bia, uma cuidadora virtual especialista em estética e saúde.
-        Paciente: ${name} (${profile?.type || 'visitante'}).
-        Tópico de interesse: ${topic || 'Geral'}.
+      const currentLang = getCurrentLanguage();
+      const langName = currentLang === 'pt-BR' ? 'Português Brasileiro' : 
+                       currentLang === 'en' ? 'English' :
+                       currentLang === 'es' ? 'Español' :
+                       currentLang === 'fr' ? 'Français' :
+                       currentLang === 'de' ? 'Deutsch' :
+                       currentLang === 'it' ? 'Italiano' :
+                       currentLang === 'zh' ? '中文' :
+                       currentLang === 'ja' ? '日本語' :
+                       currentLang === 'ko' ? '한국어' :
+                       currentLang === 'ar' ? 'العربية' :
+                       currentLang === 'ru' ? 'Русский' : 'English';
+      
+      const context = `You are Bia, a virtual caregiver specialized in aesthetics and health.
+        Patient: ${name} (${profile?.type || 'visitor'}).
+        Topic of interest: ${topic || 'General'}.
         
-        Responda de forma clara, educada e informativa sobre ${topic === 'exam' ? 'exames estéticos' : topic === 'procedure' ? 'procedimentos estéticos' : 'saúde geral'}.
-        Se o usuário perguntar preços, dê uma estimativa média de mercado no Brasil.
+        Respond clearly, politely and informatively about ${topic === 'exam' ? 'aesthetic exams' : topic === 'procedure' ? 'aesthetic procedures' : 'general health'}.
+        If the user asks about prices, provide average market estimates in Brazil (BRL).
         
-        Pergunta do usuário: ${userMsg}
+        CRITICAL: You MUST respond in ${langName} language only. All your responses must be in ${langName}.
+        
+        User question: ${userMsg}
       `;
 
       const response = await base44.integrations.Core.InvokeLLM({
@@ -314,10 +329,10 @@ export default function NursePage() {
                 <img src={NURSE_IMAGE} alt="Icon" className="w-full h-full object-cover scale-150 pt-2" />
               </div>
               <div>
-               <h2 className="font-bold text-slate-800">Bia - Cuidadora Virtual</h2>
+               <T as="h2" className="font-bold text-slate-800">Bia - Cuidadora Virtual</T>
                <p className="text-xs text-slate-500 flex items-center gap-1">
                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                 Online • IA Assistente de Saúde
+                 <T>Online</T> • <T>IA Assistente de Saúde</T>
                </p>
               </div>
             </div>
@@ -341,7 +356,7 @@ export default function NursePage() {
                     
                     <div className={`flex flex-col gap-1 max-w-[80%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
                       <span className="text-xs text-slate-400 px-1">
-                        {msg.role === 'assistant' ? 'Bia' : 'Você'}
+                         {msg.role === 'assistant' ? 'Bia' : <T>Você</T>}
                       </span>
                       <div
                         className={`p-3 rounded-2xl text-sm shadow-sm ${
