@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format, differenceInDays, formatDistanceToNow } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
+import T from '@/components/TranslatedText';
 
 const NURSE_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/6ad7fd07e_nurse.png";
 
@@ -228,8 +229,8 @@ export default function NursePage() {
         />
         <div className="text-center py-12 text-slate-500">
           <Bot className="w-16 h-16 mx-auto mb-4 opacity-30" />
-          <p className="text-lg font-semibold">Limite mensal atingido</p>
-          <p className="text-sm mt-2">Faça upgrade para continuar conversando com a Bia</p>
+          <T as="p" className="text-lg font-semibold">Limite mensal atingido</T>
+          <T as="p" className="text-sm mt-2">Faça upgrade para continuar conversando com a Bia</T>
         </div>
       </div>
     );
@@ -285,8 +286,8 @@ export default function NursePage() {
                      <Sparkles className="w-5 h-5" />
                   </div>
                   <div>
-                     <p className="text-xs text-slate-500">Status da IA</p>
-                     <p className="text-sm font-bold text-emerald-700">Ativa e Pronta</p>
+                     <T as="p" className="text-xs text-slate-500">Status da IA</T>
+                     <T as="p" className="text-sm font-bold text-emerald-700">Ativa e Pronta</T>
                   </div>
                </CardContent>
             </Card>
@@ -296,10 +297,10 @@ export default function NursePage() {
                      <Calendar className="w-5 h-5" />
                   </div>
                   <div>
-                     <p className="text-xs text-slate-500">Próximo Compromisso</p>
-                     <p className="text-sm font-bold text-slate-700">
+                     <T as="p" className="text-xs text-slate-500">Próximo Compromisso</T>
+                     <T as="p" className="text-sm font-bold text-slate-700">
                         {appointments?.[0] ? formatDistanceToNow(new Date(appointments[0].start_time), { locale: ptBR, addSuffix: true }) : 'Nenhum agendado'}
-                     </p>
+                     </T>
                   </div>
                </CardContent>
             </Card>
@@ -428,7 +429,7 @@ export default function NursePage() {
                   variant="outline"
                   className="text-red-600 hover:bg-red-50"
                >
-                 Encerrar
+                 <T>Encerrar</T>
                </Button>
                <Button 
                   type="submit" 

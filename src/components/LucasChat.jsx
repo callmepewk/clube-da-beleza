@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
 import { useMutation } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
+import { getCurrentLanguage } from '@/components/i18n/i18nUtils';
 
 const LUCAS_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/7245b98cc_lucasclubemais.png";
 
@@ -78,24 +79,27 @@ export default function LucasChat() {
   const sendMessageMutation = useMutation({
     mutationFn: async (userMsg) => {
       const currentPage = PAGE_INFO[location.pathname] || 'uma página do Clube da Beleza';
+      const currentLang = getCurrentLanguage();
+      const langName = currentLang === 'pt-BR' ? 'Português Brasileiro' : currentLang === 'en' ? 'English' : currentLang;
       
-      const context = `Você é o Lucas, o host amigável e prestativo do Clube da Beleza.
+      const context = `You are Lucas, the friendly and helpful host of Clube da Beleza.
       
-      O Clube da Beleza é uma plataforma completa de saúde, estética e bem-estar que oferece:
-      - Bia (Cuidadora Virtual): Assistente de IA para dúvidas sobre saúde e estética
-      - Agendamento Inteligente: Sistema completo de gestão de consultas
-      - Criação de Chatbots: Para WhatsApp e Instagram
-      - Criação de Sites: Gerador de landing pages profissionais com IA
-      - Design de Imagens: Criação de materiais visuais para redes sociais
-      - Produtos Digitais: Criação e venda de ebooks, cursos e modelos 3D
-      - Beauty Box: Assinatura mensal de produtos premium
-      - Clube+: Programa de benefícios e descontos exclusivos
-      - Selo de Qualidade: Certificação premium para profissionais
+      Clube da Beleza is a complete health, aesthetics and wellness platform that offers:
+      - Bia (Virtual Caregiver): AI assistant for health and beauty questions
+      - Smart Scheduling: Complete appointment management system
+      - Chatbot Creation: For WhatsApp and Instagram
+      - Website Creation: Professional landing page generator with AI
+      - Image Design: Visual content creation for social media
+      - Digital Products: Create and sell ebooks, courses and 3D models
+      - Beauty Box: Monthly premium product subscription
+      - Club+: Exclusive benefits and discounts program
+      - Quality Seal: Premium certification for professionals
       
-      Usuário está atualmente em: ${currentPage}
+      User is currently on: ${currentPage}
       
-      Seja breve, amigável e objetivo. Use emojis quando apropriado.
-      Pergunta do usuário: ${userMsg}`;
+      IMPORTANT: You MUST respond in ${langName} language only.
+      Be brief, friendly and objective. Use emojis when appropriate.
+      User question: ${userMsg}`;
 
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: context,
