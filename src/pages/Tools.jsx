@@ -135,6 +135,22 @@ export default function ToolsPage() {
       color: 'from-[#B8935C] to-[#D4A574]',
       badge: 'IA Especializada',
       image: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/8a99916a6_image.png'
+    },
+    {
+      icon: Sparkles,
+      name: 'Eccellenza',
+      description: 'Excelência em Gestão Estética',
+      details: 'Plataforma completa de gestão para clínicas e profissionais de estética, com ferramentas avançadas para otimizar seu negócio e elevar seus resultados.',
+      features: ['Gestão completa de clientes', 'Controle financeiro integrado', 'Agendamento inteligente', 'Relatórios e análises', 'Sistema de fidelização'],
+      stats: [
+        { value: '80+', label: 'Clínicas' },
+        { value: '15k+', label: 'Agendamentos' },
+        { value: '99%', label: 'Satisfação' }
+      ],
+      url: 'https://eccellenza.base44.app',
+      color: 'from-[#D4A574] to-[#C9A868]',
+      badge: 'Gestão Premium',
+      image: 'https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=800&q=80'
     }
   ];
 
