@@ -281,18 +281,14 @@ export default function Layout({ children }) {
   const navItems = React.useMemo(() => {
     const items = [
       { icon: LayoutDashboard, label: 'Início', path: '/', translationKey: 'Início' },
-      { icon: Shield, label: 'Controle', path: '/admincontrol', translationKey: 'Controle' },
       { icon: Newspaper, label: 'Notícias', path: '/news', translationKey: 'Notícias' },
       { icon: Calendar, label: 'Pesquisa Detalhada', path: '/schedule', translationKey: 'Pesquisa Detalhada' },
       { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse', translationKey: 'Bia - Cuidadora Virtual' },
       { icon: Bot, label: 'Crie Chatbots', path: '/chatbots', translationKey: 'Crie Chatbots' },
-      { icon: Globe, label: 'Crie Sites', path: '/sites', translationKey: 'Crie Sites' },
-      { icon: Palette, label: 'Faça Designs', path: '/design', translationKey: 'Faça Designs' },
-      { icon: ShoppingBag, label: 'Crie Produtos', path: '/products', translationKey: 'Crie Produtos' },
-      { icon: Zap, label: 'Nossas Ferramentas', path: '/tools', translationKey: 'Nossas Ferramentas' },
+      { icon: Palette, label: 'Beauty Space', path: '/beautyspace', translationKey: 'Beauty Space' },
       { icon: CreditCard, label: 'Planos', path: '/plans', translationKey: 'Planos' },
-      { icon: FileText, label: 'Nossa Missão', path: '/OurMission', translationKey: 'Nossa Missão' },
       { icon: HelpCircle, label: 'Sobre Nós', path: '/about', translationKey: 'Sobre Nós' },
+      { icon: Shield, label: 'Controle', path: '/admincontrol', translationKey: 'Controle' },
     ];
 
     return items;
