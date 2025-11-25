@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Loader2, Globe, ExternalLink, Save, Plus, Image as ImageIcon, FileText, Link as LinkIcon, Share2, Wand2, MessageSquare, Send, Layers, Layout } from 'lucide-react';
+import { Loader2, Globe, ExternalLink, Save, Plus, Image as ImageIcon, FileText, Link as LinkIcon, Share2, Wand2, MessageSquare, Send, Layers, Layout, History } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 import T from '@/components/TranslatedText';
+import HistoryPanel from '@/components/history/HistoryPanel';
 
 export default function SitesPage() {
   const [prompt, setPrompt] = useState('');
@@ -97,8 +98,19 @@ export default function SitesPage() {
       });
       return response; // integration returns the object directly if schema provided
     },
-    onSuccess: async (data) => {
+    onSuccess: async (data, userPrompt) => {
       setGeneratedContent(data);
+      
+      // Save to history
+      const u = await base44.auth.me();
+      await base44.entities.ChatHistory.create({
+        user_email: u.email,
+        type: 'site',
+        title: data.title || 'Site sem título',
+        prompt: prompt,
+        response_preview: `Tema: ${data.theme || 'default'}`,
+        full_data: { prompt, images: siteImages, generatedTitle: data.title }
+      });
       
       const month = getCurrentMonth();
       const usage = profile.monthly_usage || {};
@@ -140,6 +152,9 @@ export default function SitesPage() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <T as="h1" className="text-2xl font-bold text-[#0F172A]">Gerador de Landing Pages</T>
+        <Button variant="outline" onClick={() => document.getElementById('history-section')?.scrollIntoView({ behavior: 'smooth' })}>
+          <History className="w-4 h-4 mr-2" /> <T>Ver Histórico</T>
+        </Button>
       </div>
       
       <UsageLimitBanner 
@@ -430,6 +445,24 @@ export default function SitesPage() {
            </div>
           )}
         </div>
+      </div>
+
+      {/* History Section */}
+      <div id="history-section" className="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <History className="w-5 h-5" /> <T>Histórico de Sites Criados</T>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <HistoryPanel 
+              type="site" 
+              title="Histórico de Sites" 
+              promptLabel="Descrição da Página"
+            />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

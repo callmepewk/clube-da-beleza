@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Loader2, Image as ImageIcon, Wand2, Download, MessageSquare, Type, Send } from 'lucide-react';
+import { Loader2, Image as ImageIcon, Wand2, Download, MessageSquare, Type, Send, History } from 'lucide-react';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 import T from '@/components/TranslatedText';
+import HistoryPanel from '@/components/history/HistoryPanel';
 
 const DESIGN_SIZES = {
   instagram: {
@@ -94,6 +95,17 @@ export default function DesignPage() {
       setResult(url);
       setChatHistory(prev => [...prev, { role: 'system', content: 'Design gerado com sucesso! O que achou?' }]);
       
+      // Save to history
+      const u = await base44.auth.me();
+      await base44.entities.ChatHistory.create({
+        user_email: u.email,
+        type: 'design',
+        title: `Design ${selectedPlatform} - ${selectedSize}`,
+        prompt: prompt,
+        response_preview: url,
+        full_data: { prompt, platform: selectedPlatform, size: selectedSize, resultUrl: url }
+      });
+      
       const month = getCurrentMonth();
       const usage = profile.monthly_usage || {};
       if (usage.month !== month) {
@@ -156,9 +168,15 @@ export default function DesignPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-start gap-4">
+      <div className="flex justify-between items-start gap-4 flex-wrap">
         <T as="h1" className="text-2xl font-bold text-[#0F172A]">Estúdio de Design & Projetos</T>
-        <UsageLimitBanner 
+        <div className="flex gap-2 items-center">
+          <Button variant="outline" size="sm" onClick={() => document.getElementById('design-history')?.scrollIntoView({ behavior: 'smooth' })}>
+            <History className="w-4 h-4 mr-1" /> <T>Histórico</T>
+          </Button>
+        </div>
+      </div>
+      <UsageLimitBanner 
           currentUsage={currentUsage}
           limit={planLimits.designs}
           resourceName="Designs"
@@ -362,6 +380,24 @@ export default function DesignPage() {
              </div>
           )}
         </div>
+      </div>
+
+      {/* History Section */}
+      <div id="design-history" className="mt-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <History className="w-5 h-5" /> <T>Histórico de Designs</T>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <HistoryPanel 
+              type="design" 
+              title="Histórico de Designs" 
+              promptLabel="O que você quis criar"
+            />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

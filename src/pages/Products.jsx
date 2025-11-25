@@ -9,11 +9,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye, Sparkles, RotateCcw, Save, MessageCircle, Send, BookOpen, Cuboid, Download } from 'lucide-react';
+import { ShoppingBag, Box, FileText, Video, Plus, Loader2, Edit, Trash2, Eye, Sparkles, RotateCcw, Save, MessageCircle, Send, BookOpen, Cuboid, Download, History } from 'lucide-react';
 import * as THREE from 'three';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 import T from '@/components/TranslatedText';
+import HistoryPanel from '@/components/history/HistoryPanel';
 
 export default function ProductsPage() {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -174,8 +175,26 @@ export default function ProductsPage() {
 
        return { ...textRes, content_url: imageUrl, content_data: contentData };
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
        setGeneratedProduct(data);
+       
+       // Save to history
+       const u = await base44.auth.me();
+       await base44.entities.ChatHistory.create({
+         user_email: u.email,
+         type: 'product',
+         title: data.title || 'Produto gerado',
+         prompt: aiPrompt,
+         response_preview: data.description,
+         full_data: { 
+           type: newProductType, 
+           prompt: aiPrompt, 
+           audience: aiDetails.audience, 
+           tone: aiDetails.tone, 
+           keywords: aiDetails.keywords,
+           generatedData: data 
+         }
+       });
     }
   });
 
@@ -779,16 +798,27 @@ export default function ProductsPage() {
       {/* Tabs for Management */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <div className="overflow-x-auto pb-2">
-           <TabsList className="grid w-full grid-cols-4 max-w-[600px] min-w-[400px]">
+           <TabsList className="grid w-full grid-cols-5 max-w-[700px] min-w-[500px]">
              <TabsTrigger value="all"><T>Todos</T> ({products?.length || 0})</TabsTrigger>
              <TabsTrigger value="ebook"><T>E-books</T> ({products?.filter(p => p.type === 'ebook').length || 0})</TabsTrigger>
              <TabsTrigger value="3d_model">3D ({products?.filter(p => p.type === '3d_model').length || 0})</TabsTrigger>
              <TabsTrigger value="course"><T>Cursos</T> ({products?.filter(p => p.type === 'course').length || 0})</TabsTrigger>
+             <TabsTrigger value="history"><History className="w-4 h-4 mr-1" /><T>Histórico</T></TabsTrigger>
            </TabsList>
         </div>
 
         <TabsContent value={activeTab} className="mt-0">
-            {isLoading ? (
+            {activeTab === 'history' ? (
+              <Card className="mt-6">
+                <CardContent className="p-6">
+                  <HistoryPanel 
+                    type="product" 
+                    title="Histórico de Produtos Criados com IA" 
+                    promptLabel="Ideia/Tópico do Produto"
+                  />
+                </CardContent>
+              </Card>
+            ) : isLoading ? (
               <div className="py-12 text-center"><Loader2 className="animate-spin mx-auto" /></div>
             ) : (
               <ProductList items={filteredProducts} />

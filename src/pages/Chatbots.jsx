@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Bot, MessageCircle, Instagram, Settings, Loader2, Plus, Wand2 } from 'lucide-react';
+import { Bot, MessageCircle, Instagram, Settings, Loader2, Plus, Wand2, History } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth, sendWhatsAppMessage } from '@/components/usage/usageLimits';
 import T from '@/components/TranslatedText';
 import { getCurrentLanguage } from '@/components/i18n/i18nUtils';
+import HistoryPanel from '@/components/history/HistoryPanel';
 
 export default function ChatbotsPage() {
   const [activeTab, setActiveTab] = useState('config');
@@ -55,6 +56,17 @@ export default function ChatbotsPage() {
       
       await new Promise(r => setTimeout(r, 2000));
       
+      // Save to history
+      const u = await base44.auth.me();
+      await base44.entities.ChatHistory.create({
+        user_email: u.email,
+        type: 'chatbot',
+        title: config.name || 'Chatbot sem nome',
+        prompt: config.instructions,
+        response_preview: `Plataforma: ${config.platform}, Personalidade: ${config.personality}`,
+        full_data: config
+      });
+      
       const month = getCurrentMonth();
       const usage = profile.monthly_usage || {};
       if (usage.month !== month) {
@@ -90,9 +102,10 @@ export default function ChatbotsPage() {
       />
       
       <Tabs defaultValue="create" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 max-w-[400px]">
+        <TabsList className="grid w-full grid-cols-3 max-w-[500px]">
           <TabsTrigger value="create"><T>Criar Novo</T></TabsTrigger>
           <TabsTrigger value="manage"><T>Gerenciar</T></TabsTrigger>
+          <TabsTrigger value="history"><History className="w-4 h-4 mr-1" /><T>Histórico</T></TabsTrigger>
         </TabsList>
 
         <TabsContent value="create" className="space-y-6 mt-6">
@@ -292,6 +305,18 @@ export default function ChatbotsPage() {
           <div className="text-center py-12 text-slate-500">
             <T>Você ainda não possui chatbots ativos. Crie um para começar.</T>
           </div>
+        </TabsContent>
+
+        <TabsContent value="history" className="mt-6">
+          <Card>
+            <CardContent className="p-6">
+              <HistoryPanel 
+                type="chatbot" 
+                title="Histórico de Chatbots" 
+                promptLabel="Instruções do Sistema (Prompt)"
+              />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
