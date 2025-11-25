@@ -93,6 +93,21 @@ export default function Layout({ children }) {
     enabled: !!user
   });
 
+  // Fetch page blocks
+  const { data: pageBlocks } = useQuery({
+    queryKey: ['pageBlocksLayout'],
+    queryFn: async () => {
+      const res = await base44.entities.PageBlock.list({ limit: 100 });
+      return res?.data || [];
+    }
+  });
+
+  const isPageBlocked = (path) => {
+    if (profile?.is_admin) return false; // Admins can access all pages
+    const block = pageBlocks?.find(p => p.page_path === path);
+    return block?.is_blocked || false;
+  };
+
   // Activity Tracking
   const updateActivityMutation = useMutation({
      mutationFn: async () => {
