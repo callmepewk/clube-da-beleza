@@ -29,7 +29,8 @@ import {
   ShieldCheck,
   MapPin,
   Zap,
-  Heart
+  Heart,
+  Lock
 } from 'lucide-react';
 import { createPageUrl } from '@/utils';
 import { Button } from '@/components/ui/button';
