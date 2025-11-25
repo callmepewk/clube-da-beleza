@@ -749,22 +749,43 @@ export default function AdminControlPage() {
           <Card className="p-6">
              <CardHeader><CardTitle>Relatório de SEO (Simulado)</CardTitle></CardHeader>
              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                    <div className="bg-green-50 p-4 rounded-lg">
                       <div className="text-sm text-green-700 font-bold">Tráfego Orgânico</div>
                       <div className="text-2xl font-bold text-green-900">+15%</div>
                       <div className="text-xs text-green-600">Últimos 30 dias</div>
                    </div>
                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <div className="text-sm text-blue-700 font-bold">Palavras-chave Top 3</div>
-                      <div className="text-2xl font-bold text-blue-900">24</div>
-                      <div className="text-xs text-blue-600">"clinica estetica", "dermatologista"</div>
+                      <div className="text-sm text-blue-700 font-bold">Keywords Top 10</div>
+                      <div className="text-2xl font-bold text-blue-900">10</div>
+                      <div className="text-xs text-blue-600">Palavras rankeadas</div>
                    </div>
                    <div className="bg-orange-50 p-4 rounded-lg">
                       <div className="text-sm text-orange-700 font-bold">Backlinks Ativos</div>
                       <div className="text-2xl font-bold text-orange-900">142</div>
                       <div className="text-xs text-orange-600">Domínios de alta autoridade</div>
                    </div>
+                </div>
+                
+                {/* Top 10 Keywords Table */}
+                <div className="bg-slate-50 rounded-xl p-4">
+                  <h4 className="font-bold text-slate-800 mb-4">Top 10 Palavras-Chave</h4>
+                  <div className="space-y-2">
+                    {SEO_KEYWORDS.map((kw, idx) => (
+                      <div key={kw.keyword} className="flex items-center justify-between p-3 bg-white rounded-lg border">
+                        <div className="flex items-center gap-3">
+                          <span className="w-6 h-6 rounded-full bg-[#D4A574] text-white text-xs font-bold flex items-center justify-center">{idx + 1}</span>
+                          <span className="font-medium text-slate-800">{kw.keyword}</span>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm">
+                          <span className="text-slate-500">{kw.volume.toLocaleString()} buscas/mês</span>
+                          <span className={`font-bold ${kw.change.startsWith('+') ? 'text-green-600' : kw.change.startsWith('-') ? 'text-red-600' : 'text-slate-500'}`}>
+                            {kw.change}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
              </CardContent>
           </Card>
@@ -1095,20 +1116,25 @@ export default function AdminControlPage() {
             </Card>
 
             <Card>
-              <CardHeader><CardTitle>Palavras-chave & SEO</CardTitle></CardHeader>
+              <CardHeader><CardTitle>Top 10 Keywords</CardTitle></CardHeader>
               <CardContent>
-                <div className="space-y-3">
-                  <div className="p-3 bg-slate-50 rounded-lg">
-                    <div className="font-bold text-slate-800 mb-1">Top 3 Keywords</div>
-                    <div className="text-sm text-slate-600">• "clinica estetica"</div>
-                    <div className="text-sm text-slate-600">• "dermatologista"</div>
-                    <div className="text-sm text-slate-600">• "harmonização facial"</div>
-                  </div>
-                  <div className="p-3 bg-orange-50 rounded-lg">
-                    <div className="font-bold text-orange-800 mb-1">Backlinks Ativos</div>
-                    <div className="text-2xl font-black text-orange-900">142</div>
-                    <div className="text-xs text-orange-600">Domínios de alta autoridade</div>
-                  </div>
+                <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                  {SEO_KEYWORDS.map((kw, idx) => (
+                    <div key={kw.keyword} className="flex items-center justify-between p-2 bg-slate-50 rounded-lg text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="w-5 h-5 rounded-full bg-[#D4A574] text-white text-xs font-bold flex items-center justify-center">{idx + 1}</span>
+                        <span className="font-medium text-slate-700">{kw.keyword}</span>
+                      </div>
+                      <span className={`font-bold text-xs ${kw.change.startsWith('+') ? 'text-green-600' : kw.change.startsWith('-') ? 'text-red-600' : 'text-slate-500'}`}>
+                        {kw.change}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 p-3 bg-orange-50 rounded-lg">
+                  <div className="font-bold text-orange-800 mb-1">Backlinks Ativos</div>
+                  <div className="text-2xl font-black text-orange-900">142</div>
+                  <div className="text-xs text-orange-600">Domínios de alta autoridade</div>
                 </div>
               </CardContent>
             </Card>
