@@ -281,6 +281,7 @@ export default function Layout({ children }) {
   const navItems = React.useMemo(() => {
     const items = [
       { icon: LayoutDashboard, label: 'Início', path: '/', translationKey: 'Início' },
+      { icon: Shield, label: 'Controle', path: '/admincontrol', translationKey: 'Controle' },
       { icon: Newspaper, label: 'Notícias', path: '/news', translationKey: 'Notícias' },
       { icon: Calendar, label: 'Pesquisa Detalhada', path: '/schedule', translationKey: 'Pesquisa Detalhada' },
       { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse', translationKey: 'Bia - Cuidadora Virtual' },
@@ -294,13 +295,8 @@ export default function Layout({ children }) {
       { icon: HelpCircle, label: 'Sobre Nós', path: '/about', translationKey: 'Sobre Nós' },
     ];
 
-    // Add Controle page only for admins
-    if (profile?.is_admin) {
-      items.splice(1, 0, { icon: Shield, label: 'Controle', path: '/admincontrol', translationKey: 'Controle' });
-    }
-
     return items;
-  }, [profile?.is_admin]);
+  }, []);
 
 
 
