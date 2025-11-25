@@ -491,54 +491,54 @@ export default function SchedulePage() {
   return (
     <div className="space-y-6">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-[#D4A574] to-[#B8935C] rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
+      <div className="bg-gradient-to-r from-[#D4A574] to-[#B8935C] rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative z-10">
-          <div className="flex items-center gap-3 mb-3">
-            <Search className="w-8 h-8" />
-            <T as="h1" className="text-2xl md:text-3xl font-light tracking-wide">Pesquisa Detalhada</T>
+          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <Search className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
+            <T as="h1" className="text-xl sm:text-2xl md:text-3xl font-light tracking-wide">Pesquisa Detalhada</T>
           </div>
-          <T as="p" className="text-white/90 max-w-2xl font-light">
+          <T as="p" className="text-white/90 max-w-2xl font-light text-sm sm:text-base">
             Encontre os melhores profissionais, clínicas, produtos e procedimentos estéticos. 
             Nossa IA ajuda você a encontrar exatamente o que precisa com filtros avançados.
           </T>
         </div>
-        <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full"></div>
-        <div className="absolute -top-5 -right-20 w-32 h-32 bg-white/5 rounded-full"></div>
+        <div className="absolute -bottom-10 -right-10 w-24 sm:w-40 h-24 sm:h-40 bg-white/10 rounded-full"></div>
+        <div className="absolute -top-5 -right-20 w-20 sm:w-32 h-20 sm:h-32 bg-white/5 rounded-full"></div>
       </div>
 
       {/* Info Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         <Card className="bg-[#FFF9F0] border-[#D4A574]/20">
-          <CardContent className="p-4 flex items-start gap-3">
-            <div className="bg-[#D4A574]/20 p-2 rounded-full">
-              <Lightbulb className="w-5 h-5 text-[#D4A574]" />
+          <CardContent className="p-3 sm:p-4 flex items-start gap-3">
+            <div className="bg-[#D4A574]/20 p-2 rounded-full flex-shrink-0">
+              <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A574]" />
             </div>
-            <div>
-              <T as="h4" className="font-semibold text-[#2D2416] text-sm">Como Funciona</T>
-              <T as="p" className="text-xs text-[#6B5D4F]">Selecione uma categoria, descreva o que procura e deixe nossa IA sugerir as melhores opções.</T>
+            <div className="min-w-0">
+              <T as="h4" className="font-semibold text-[#2D2416] text-xs sm:text-sm">Como Funciona</T>
+              <T as="p" className="text-xs text-[#6B5D4F] line-clamp-2">Selecione uma categoria, descreva o que procura e deixe nossa IA sugerir as melhores opções.</T>
             </div>
           </CardContent>
         </Card>
         <Card className="bg-[#FFF9F0] border-[#D4A574]/20">
-          <CardContent className="p-4 flex items-start gap-3">
-            <div className="bg-[#D4A574]/20 p-2 rounded-full">
-              <ShieldCheck className="w-5 h-5 text-[#D4A574]" />
+          <CardContent className="p-3 sm:p-4 flex items-start gap-3">
+            <div className="bg-[#D4A574]/20 p-2 rounded-full flex-shrink-0">
+              <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A574]" />
             </div>
-            <div>
-              <T as="h4" className="font-semibold text-[#2D2416] text-sm">Profissionais Verificados</T>
-              <T as="p" className="text-xs text-[#6B5D4F]">Filtre apenas profissionais com selo de qualidade Clube da Beleza.</T>
+            <div className="min-w-0">
+              <T as="h4" className="font-semibold text-[#2D2416] text-xs sm:text-sm">Profissionais Verificados</T>
+              <T as="p" className="text-xs text-[#6B5D4F] line-clamp-2">Filtre apenas profissionais com selo de qualidade Clube da Beleza.</T>
             </div>
           </CardContent>
         </Card>
-        <Card className="bg-[#FFF9F0] border-[#D4A574]/20">
-          <CardContent className="p-4 flex items-start gap-3">
-            <div className="bg-[#D4A574]/20 p-2 rounded-full">
-              <Star className="w-5 h-5 text-[#D4A574]" />
+        <Card className="bg-[#FFF9F0] border-[#D4A574]/20 sm:col-span-2 lg:col-span-1">
+          <CardContent className="p-3 sm:p-4 flex items-start gap-3">
+            <div className="bg-[#D4A574]/20 p-2 rounded-full flex-shrink-0">
+              <Star className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A574]" />
             </div>
-            <div>
-              <T as="h4" className="font-semibold text-[#2D2416] text-sm">Avaliações Reais</T>
-              <T as="p" className="text-xs text-[#6B5D4F]">Veja avaliações e comentários de outros usuários da plataforma.</T>
+            <div className="min-w-0">
+              <T as="h4" className="font-semibold text-[#2D2416] text-xs sm:text-sm">Avaliações Reais</T>
+              <T as="p" className="text-xs text-[#6B5D4F] line-clamp-2">Veja avaliações e comentários de outros usuários da plataforma.</T>
             </div>
           </CardContent>
         </Card>
@@ -559,21 +559,21 @@ export default function SchedulePage() {
           
           {/* Category Selection */}
           <div className="space-y-3">
-            <T as={Label} className="text-[#2D2416] font-semibold">O que você está procurando?</T>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <T as={Label} className="text-[#2D2416] font-semibold text-sm sm:text-base">O que você está procurando?</T>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
               {SEARCH_CATEGORIES.map((cat) => (
                 <button
                   key={cat.value}
                   onClick={() => setSearchCategory(cat.value)}
-                  className={`p-4 rounded-xl border-2 transition-all text-left ${
+                  className={`p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all text-left ${
                     searchCategory === cat.value 
                       ? 'border-[#D4A574] bg-[#FFF9F0] shadow-md' 
                       : 'border-[#E8DCC8] bg-white hover:border-[#D4A574]/50'
                   }`}
                 >
-                  <cat.icon className={`w-6 h-6 mb-2 ${searchCategory === cat.value ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
-                  <T as="p" className="font-semibold text-sm text-[#2D2416]">{cat.label}</T>
-                  <T as="p" className="text-xs text-[#6B5D4F] mt-1">{cat.description}</T>
+                  <cat.icon className={`w-5 h-5 sm:w-6 sm:h-6 mb-1 sm:mb-2 ${searchCategory === cat.value ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
+                  <T as="p" className="font-semibold text-xs sm:text-sm text-[#2D2416]">{cat.label}</T>
+                  <T as="p" className="text-xs text-[#6B5D4F] mt-1 hidden sm:block">{cat.description}</T>
                 </button>
               ))}
             </div>
@@ -620,16 +620,16 @@ export default function SchedulePage() {
 
           {/* Date Selection */}
           <div className="space-y-3">
-            <T as={Label} className="text-[#2D2416] font-semibold flex items-center gap-2">
+            <T as={Label} className="text-[#2D2416] font-semibold flex items-center gap-2 text-sm sm:text-base">
               <Clock className="w-4 h-4 text-[#D4A574]" />
               Quando?
             </T>
             <Tabs value={dateMode} onValueChange={setDateMode} className="w-full">
-              <TabsList className="grid w-full grid-cols-2 max-w-md bg-[#F5F1E8]">
-                <TabsTrigger value="calendar" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white">
-                  <CalendarIcon className="w-4 h-4 mr-2" /> <T>Data Específica</T>
+              <TabsList className="grid w-full grid-cols-2 max-w-full sm:max-w-md bg-[#F5F1E8]">
+                <TabsTrigger value="calendar" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-xs sm:text-sm">
+                  <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" /> <T>Data Específica</T>
                 </TabsTrigger>
-                <TabsTrigger value="weekday" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white">
+                <TabsTrigger value="weekday" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-xs sm:text-sm">
                   <T>Dia da Semana</T>
                 </TabsTrigger>
               </TabsList>
@@ -662,13 +662,13 @@ export default function SchedulePage() {
               </TabsContent>
               <TabsContent value="weekday" className="mt-4">
                 <div className="space-y-3">
-                  <T as="p" className="text-sm text-[#6B5D4F]">Selecione os dias da semana de sua preferência:</T>
-                  <div className="flex flex-wrap gap-2">
+                  <T as="p" className="text-xs sm:text-sm text-[#6B5D4F]">Selecione os dias da semana de sua preferência:</T>
+                  <div className="flex flex-wrap gap-1.5 sm:gap-2">
                     {WEEKDAYS.map((day) => (
                       <button
                         key={day.value}
                         onClick={() => toggleWeekday(day.value)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                        className={`px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
                           selectedWeekdays.includes(day.value)
                             ? 'bg-[#D4A574] text-white shadow-md'
                             : 'bg-white border border-[#E8DCC8] text-[#6B5D4F] hover:border-[#D4A574]'
@@ -741,15 +741,15 @@ export default function SchedulePage() {
 
           {/* Price Range */}
           <div className="space-y-3">
-            <T as={Label} className="text-[#2D2416] font-semibold flex items-center gap-2">
+            <T as={Label} className="text-[#2D2416] font-semibold flex items-center gap-2 text-sm sm:text-base">
               <DollarSign className="w-4 h-4 text-[#D4A574]" />
               Faixa de Preço Média
             </T>
-            <RadioGroup value={priceRange} onValueChange={setPriceRange} className="space-y-2">
+            <RadioGroup value={priceRange} onValueChange={setPriceRange} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {PRICE_RANGES.map((range) => (
                 <div 
                   key={range.value}
-                  className={`flex items-center space-x-3 p-3 rounded-lg border transition-all cursor-pointer ${
+                  className={`flex items-center space-x-2 sm:space-x-3 p-2.5 sm:p-3 rounded-lg border transition-all cursor-pointer ${
                     priceRange === range.value 
                       ? 'border-[#D4A574] bg-[#FFF9F0]' 
                       : 'border-[#E8DCC8] bg-white hover:border-[#D4A574]/50'
@@ -758,7 +758,7 @@ export default function SchedulePage() {
                 >
                   <RadioGroupItem value={range.value} id={`price-${range.value}`} />
                   <Label htmlFor={`price-${range.value}`} className="flex-1 cursor-pointer">
-                    <span className="font-semibold text-[#2D2416]">{range.label}</span>
+                    <span className="font-semibold text-[#2D2416] text-xs sm:text-sm">{range.label}</span>
                   </Label>
                 </div>
               ))}
@@ -767,12 +767,12 @@ export default function SchedulePage() {
 
           {/* Amenities */}
           <div className="space-y-3">
-            <T as={Label} className="text-[#2D2416] font-semibold">Amenidades do Estabelecimento (Opcional)</T>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <T as={Label} className="text-[#2D2416] font-semibold text-sm sm:text-base">Amenidades do Estabelecimento (Opcional)</T>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
               {AMENITIES.map((amenity) => (
                 <div 
                   key={amenity.id}
-                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                  className={`flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 rounded-lg border cursor-pointer transition-all ${
                     selectedAmenities.includes(amenity.id)
                       ? 'border-[#D4A574] bg-[#FFF9F0]'
                       : 'border-[#E8DCC8] bg-white hover:border-[#D4A574]/50'
@@ -782,9 +782,10 @@ export default function SchedulePage() {
                   <Checkbox 
                     checked={selectedAmenities.includes(amenity.id)}
                     onCheckedChange={() => toggleAmenity(amenity.id)}
+                    className="flex-shrink-0"
                   />
-                  <amenity.icon className={`w-4 h-4 ${selectedAmenities.includes(amenity.id) ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
-                  <T as="span" className="text-sm text-[#2D2416]">{amenity.label}</T>
+                  <amenity.icon className={`w-4 h-4 flex-shrink-0 ${selectedAmenities.includes(amenity.id) ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
+                  <T as="span" className="text-xs sm:text-sm text-[#2D2416] truncate">{amenity.label}</T>
                 </div>
               ))}
             </div>
@@ -792,7 +793,7 @@ export default function SchedulePage() {
 
           {/* Verified Only */}
           <div 
-            className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
+            className={`flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg sm:rounded-xl border cursor-pointer transition-all ${
               verifiedOnly 
                 ? 'border-[#D4A574] bg-[#FFF9F0]' 
                 : 'border-[#E8DCC8] bg-white hover:border-[#D4A574]/50'
@@ -802,28 +803,29 @@ export default function SchedulePage() {
             <Checkbox 
               checked={verifiedOnly}
               onCheckedChange={setVerifiedOnly}
+              className="flex-shrink-0"
             />
-            <BadgeCheck className={`w-6 h-6 ${verifiedOnly ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
-            <div className="flex-1">
-              <T as="p" className="font-semibold text-[#2D2416]">Apenas Profissionais Verificados</T>
-              <T as="p" className="text-xs text-[#6B5D4F]">Mostrar apenas profissionais com Selo de Qualidade Clube da Beleza</T>
+            <BadgeCheck className={`w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 ${verifiedOnly ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
+            <div className="flex-1 min-w-0">
+              <T as="p" className="font-semibold text-[#2D2416] text-sm sm:text-base">Apenas Profissionais Verificados</T>
+              <T as="p" className="text-xs text-[#6B5D4F] line-clamp-1">Mostrar apenas profissionais com Selo de Qualidade Clube da Beleza</T>
             </div>
           </div>
 
           {/* Search Button */}
           <Button 
-            className="w-full h-14 bg-[#D4A574] hover:bg-[#C49565] text-white text-lg font-semibold shadow-lg"
+            className="w-full h-12 sm:h-14 bg-[#D4A574] hover:bg-[#C49565] text-white text-base sm:text-lg font-semibold shadow-lg"
             onClick={handleSearch}
             disabled={isSearching}
           >
             {isSearching ? (
               <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 mr-2 animate-spin" />
                 <T>Buscando...</T>
               </>
             ) : (
               <>
-                <Search className="w-5 h-5 mr-2" />
+                <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                 <T>Pesquisar</T>
               </>
             )}
@@ -833,55 +835,55 @@ export default function SchedulePage() {
 
       {/* My Appointments Section */}
       <Card className="bg-[#FEFBF7] border-[#E8DCC8]">
-        <CardHeader className="border-b border-[#E8DCC8]">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <CardHeader className="border-b border-[#E8DCC8] p-4 sm:p-6">
+          <div className="flex flex-col gap-3 sm:gap-4">
             <div>
-              <CardTitle className="text-[#2D2416] flex items-center gap-2">
-                <CalendarIcon className="w-5 h-5 text-[#D4A574]" />
+              <CardTitle className="text-[#2D2416] flex items-center gap-2 text-base sm:text-lg">
+                <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A574]" />
                 <T>Meus Agendamentos</T>
               </CardTitle>
-              <CardDescription className="text-[#6B5D4F]">
+              <CardDescription className="text-[#6B5D4F] text-xs sm:text-sm">
                 <T>Visualize e gerencie seus compromissos</T>
               </CardDescription>
             </div>
-            <div className="flex items-center bg-white border border-[#E8DCC8] rounded-lg p-1 shadow-sm">
-              <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
-              <span className="px-4 font-medium min-w-[140px] text-center capitalize text-[#6B5D4F]">
+            <div className="flex items-center justify-center sm:justify-start bg-white border border-[#E8DCC8] rounded-lg p-1 shadow-sm w-fit">
+              <Button variant="ghost" size="icon" onClick={prevWeek} className="h-8 w-8"><ChevronLeft className="w-4 h-4" /></Button>
+              <span className="px-2 sm:px-4 font-medium min-w-[100px] sm:min-w-[140px] text-center capitalize text-[#6B5D4F] text-xs sm:text-sm">
                 {format(currentDate, "MMMM yyyy", { locale: getDateLocale() })}
               </span>
-              <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
+              <Button variant="ghost" size="icon" onClick={nextWeek} className="h-8 w-8"><ChevronRight className="w-4 h-4" /></Button>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-4">
-          <div className="overflow-x-auto">
-            <div className="grid grid-cols-7 gap-4 min-w-[800px]">
+        <CardContent className="p-2 sm:p-4">
+          <div className="overflow-x-auto -mx-2 sm:mx-0 px-2 sm:px-0">
+            <div className="grid grid-cols-7 gap-1 sm:gap-4 min-w-[600px] sm:min-w-[800px]">
               {weekDays.map((day, i) => {
                 const dayEvents = getEventsForDay(day);
                 const isToday = isSameDay(day, new Date());
                 return (
-                  <div key={i} className={`flex flex-col min-h-[200px] ${isToday ? 'bg-[#FFF9F0] rounded-lg border border-[#D4A574]/30' : ''}`}>
-                    <div className="text-center py-3 border-b border-[#E8DCC8] mb-2">
-                      <div className="text-xs font-bold text-[#6B5D4F] uppercase tracking-wider">{format(day, 'EEE', { locale: getDateLocale() })}</div>
-                      <div className={`text-xl font-bold mt-1 ${isToday ? 'text-[#D4A574]' : 'text-[#2D2416]'}`}>{format(day, 'dd')}</div>
+                  <div key={i} className={`flex flex-col min-h-[150px] sm:min-h-[200px] ${isToday ? 'bg-[#FFF9F0] rounded-lg border border-[#D4A574]/30' : ''}`}>
+                    <div className="text-center py-2 sm:py-3 border-b border-[#E8DCC8] mb-1 sm:mb-2">
+                      <div className="text-[10px] sm:text-xs font-bold text-[#6B5D4F] uppercase tracking-wider">{format(day, 'EEE', { locale: getDateLocale() })}</div>
+                      <div className={`text-base sm:text-xl font-bold mt-0.5 sm:mt-1 ${isToday ? 'text-[#D4A574]' : 'text-[#2D2416]'}`}>{format(day, 'dd')}</div>
                     </div>
-                    <div className="flex-1 space-y-2 p-2 overflow-y-auto">
+                    <div className="flex-1 space-y-1 sm:space-y-2 p-1 sm:p-2 overflow-y-auto">
                       {dayEvents.map(evt => (
-                        <div key={evt.id} className={`p-2 rounded-lg text-xs border shadow-sm ${getTypeColor(evt.type)} hover:brightness-95 transition-all cursor-pointer`}>
-                          <div className="font-bold truncate mb-1" title={evt.title}>{evt.title}</div>
+                        <div key={evt.id} className={`p-1.5 sm:p-2 rounded-lg text-[10px] sm:text-xs border shadow-sm ${getTypeColor(evt.type)} hover:brightness-95 transition-all cursor-pointer`}>
+                          <div className="font-bold truncate mb-0.5 sm:mb-1" title={evt.title}>{evt.title}</div>
                           <div className="flex items-center justify-between opacity-80">
                             <span>{format(evt.start, 'HH:mm')}</span>
-                            {evt.modality === 'teleconsultation' && <Video className="w-3 h-3" />}
+                            {evt.modality === 'teleconsultation' && <Video className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
                           </div>
                           {evt.location_details && (
-                            <div className="flex items-center gap-1 mt-1 opacity-70 truncate">
-                              <MapPin className="w-3 h-3" /> {evt.location_details}
+                            <div className="flex items-center gap-1 mt-0.5 sm:mt-1 opacity-70 truncate hidden sm:flex">
+                              <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0" /> <span className="truncate">{evt.location_details}</span>
                             </div>
                           )}
                         </div>
                       ))}
                       {dayEvents.length === 0 && isToday && (
-                        <div className="flex flex-col items-center justify-center h-20 text-[#6B5D4F]/50 text-xs">
+                        <div className="flex flex-col items-center justify-center h-12 sm:h-20 text-[#6B5D4F]/50 text-[10px] sm:text-xs">
                           <T as="span" className="block">Livre</T>
                         </div>
                       )}
