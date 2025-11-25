@@ -214,6 +214,17 @@ function NotificationSender() {
 
 function BannerAdminList() {
   const queryClient = useQueryClient();
+  const [showCreateBanner, setShowCreateBanner] = useState(false);
+  const [newBanner, setNewBanner] = useState({
+    title: '',
+    media_url: '',
+    link_url: '',
+    position: 'center',
+    target_audience: 'all',
+    contact_email: '',
+    contact_phone: ''
+  });
+
   const { data: banners } = useQuery({
     queryKey: ['adminBanners'],
     queryFn: async () => (await base44.entities.Banner.list({ limit: 100 })).data
@@ -227,9 +238,116 @@ function BannerAdminList() {
     }
   });
 
+  const createBannerMutation = useMutation({
+    mutationFn: async () => {
+      const user = await base44.auth.me();
+      return base44.entities.Banner.create({
+        ...newBanner,
+        owner_email: user.email,
+        active: true,
+        views: 0,
+        clicks: 0
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['adminBanners']);
+      setShowCreateBanner(false);
+      setNewBanner({ title: '', media_url: '', link_url: '', position: 'center', target_audience: 'all', contact_email: '', contact_phone: '' });
+      alert("Banner criado com sucesso!");
+    }
+  });
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setNewBanner(prev => ({ ...prev, media_url: file_url }));
+    }
+  };
+
   return (
-     <Table>
-        <TableHeader><TableRow><TableHead>Título</TableHead><TableHead>Dono</TableHead><TableHead>Posição</TableHead><TableHead>Público</TableHead><TableHead>Ações</TableHead></TableRow></TableHeader>
+    <div className="space-y-6">
+      {/* Create Banner Button */}
+      <div className="flex justify-end">
+        <Button onClick={() => setShowCreateBanner(!showCreateBanner)} className="bg-[#D4A574] hover:bg-[#C49565] text-white">
+          <Plus className="w-4 h-4 mr-2" />
+          <T>Criar Banner</T>
+        </Button>
+      </div>
+
+      {/* Create Banner Form */}
+      {showCreateBanner && (
+        <Card className="bg-[#FFF9F0] border-[#D4A574]/30">
+          <CardHeader>
+            <CardTitle className="text-[#2D2416]"><T>Novo Banner</T></CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label><T>Título</T></Label>
+                <Input value={newBanner.title} onChange={e => setNewBanner(p => ({ ...p, title: e.target.value }))} placeholder="Nome do banner" />
+              </div>
+              <div className="space-y-2">
+                <Label><T>Link de Destino</T></Label>
+                <Input value={newBanner.link_url} onChange={e => setNewBanner(p => ({ ...p, link_url: e.target.value }))} placeholder="https://..." />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label><T>Imagem do Banner</T></Label>
+              <div className="flex gap-4 items-center">
+                <Input type="file" accept="image/*" onChange={handleImageUpload} className="flex-1" />
+                {newBanner.media_url && <img src={newBanner.media_url} className="w-20 h-20 object-cover rounded" />}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label><T>Posição</T></Label>
+                <Select value={newBanner.position} onValueChange={v => setNewBanner(p => ({ ...p, position: v }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="center">Centro</SelectItem>
+                    <SelectItem value="header">Cabeçalho</SelectItem>
+                    <SelectItem value="sidebar_right">Lateral Direita</SelectItem>
+                    <SelectItem value="sidebar_left">Lateral Esquerda</SelectItem>
+                    <SelectItem value="bottom">Rodapé</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label><T>Público Alvo</T></Label>
+                <Select value={newBanner.target_audience} onValueChange={v => setNewBanner(p => ({ ...p, target_audience: v }))}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    <SelectItem value="patient">Pacientes</SelectItem>
+                    <SelectItem value="professional">Profissionais</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label><T>Email de Contato</T></Label>
+                <Input value={newBanner.contact_email} onChange={e => setNewBanner(p => ({ ...p, contact_email: e.target.value }))} placeholder="contato@empresa.com" />
+              </div>
+              <div className="space-y-2">
+                <Label><T>Telefone de Contato</T></Label>
+                <Input value={newBanner.contact_phone} onChange={e => setNewBanner(p => ({ ...p, contact_phone: e.target.value }))} placeholder="(11) 99999-9999" />
+              </div>
+            </div>
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setShowCreateBanner(false)}><T>Cancelar</T></Button>
+              <Button onClick={() => createBannerMutation.mutate()} disabled={!newBanner.title || !newBanner.media_url || !newBanner.link_url || createBannerMutation.isPending} className="bg-[#D4A574] hover:bg-[#C49565] text-white">
+                {createBannerMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <T>Criar Banner</T>}
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Banner List */}
+      <Table>
+        <TableHeader><TableRow><TableHead>Título</TableHead><TableHead>Dono</TableHead><TableHead>Posição</TableHead><TableHead>Público</TableHead><TableHead>Views/Clicks</TableHead><TableHead>Ações</TableHead></TableRow></TableHeader>
         <TableBody>
            {banners?.map(b => (
               <TableRow key={b.id}>
@@ -243,6 +361,9 @@ function BannerAdminList() {
                  <TableCell>{b.position}</TableCell>
                  <TableCell>{b.target_audience}</TableCell>
                  <TableCell>
+                   <span className="text-blue-600">{b.views || 0}</span> / <span className="text-green-600">{b.clicks || 0}</span>
+                 </TableCell>
+                 <TableCell>
                     <Button variant="ghost" size="icon" className="text-red-500" onClick={() => { if(confirm('Excluir anúncio?')) deleteBannerMutation.mutate(b.id); }}>
                        <Trash2 className="w-4 h-4" />
                     </Button>
@@ -251,6 +372,154 @@ function BannerAdminList() {
            ))}
         </TableBody>
      </Table>
+    </div>
+  );
+}
+
+// Page Block Management Component
+function PageBlockManager() {
+  const queryClient = useQueryClient();
+  
+  const { data: pageBlocks, isLoading } = useQuery({
+    queryKey: ['pageBlocks'],
+    queryFn: async () => {
+      const res = await base44.entities.PageBlock.list({ limit: 100 });
+      return res.data || [];
+    }
+  });
+
+  const updateBlockMutation = useMutation({
+    mutationFn: async ({ pageData, isBlocked }) => {
+      // Check if block exists
+      const existing = pageBlocks?.find(p => p.page_path === pageData.path);
+      if (existing) {
+        return base44.entities.PageBlock.update(existing.id, { is_blocked: isBlocked });
+      } else {
+        return base44.entities.PageBlock.create({
+          page_path: pageData.path,
+          page_name: pageData.name,
+          is_blocked: isBlocked
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['pageBlocks']);
+    }
+  });
+
+  const blockAllMutation = useMutation({
+    mutationFn: async (block) => {
+      for (const page of SYSTEM_PAGES) {
+        const existing = pageBlocks?.find(p => p.page_path === page.path);
+        if (existing) {
+          await base44.entities.PageBlock.update(existing.id, { is_blocked: block });
+        } else {
+          await base44.entities.PageBlock.create({
+            page_path: page.path,
+            page_name: page.name,
+            is_blocked: block
+          });
+        }
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['pageBlocks']);
+    }
+  });
+
+  const isPageBlocked = (path) => {
+    const block = pageBlocks?.find(p => p.page_path === path);
+    return block?.is_blocked || false;
+  };
+
+  return (
+    <Card className="border-red-200">
+      <CardHeader className="bg-red-600 text-white rounded-t-lg">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Lock className="w-5 h-5" />
+            <CardTitle><T>Bloqueio de Páginas</T></CardTitle>
+          </div>
+          <div className="flex gap-2">
+            <Button 
+              variant="secondary"
+              size="sm"
+              onClick={() => blockAllMutation.mutate(false)}
+              disabled={blockAllMutation.isPending}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              <Unlock className="w-4 h-4 mr-2" />
+              <T>Liberar Todas</T>
+            </Button>
+            <Button 
+              variant="outline"
+              size="sm"
+              onClick={() => blockAllMutation.mutate(true)}
+              disabled={blockAllMutation.isPending}
+              className="bg-white text-red-600 hover:bg-red-50"
+            >
+              <Lock className="w-4 h-4 mr-2" />
+              <T>Bloquear Todas</T>
+            </Button>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent className="p-6">
+        {/* Warning */}
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+          <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+          <div>
+            <T as="p" className="font-bold text-yellow-800">Atenção</T>
+            <T as="p" className="text-sm text-yellow-700">
+              Páginas bloqueadas exibirão uma mensagem informando que estão em manutenção. Apenas administradores poderão acessá-las normalmente.
+            </T>
+          </div>
+        </div>
+
+        {/* Pages Grid */}
+        {isLoading ? (
+          <div className="flex justify-center py-8">
+            <Loader2 className="w-6 h-6 animate-spin text-[#D4A574]" />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {SYSTEM_PAGES.map((page) => {
+              const blocked = isPageBlocked(page.path);
+              return (
+                <div 
+                  key={page.path}
+                  className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                    blocked 
+                      ? 'bg-red-50 border-red-200' 
+                      : 'bg-green-50 border-green-200'
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`p-2 rounded-full ${blocked ? 'bg-red-100' : 'bg-green-100'}`}>
+                      <Lock className={`w-4 h-4 ${blocked ? 'text-red-600' : 'text-green-600'}`} />
+                    </div>
+                    <div>
+                      <p className="font-medium text-slate-800">{page.name}</p>
+                      <p className="text-xs text-slate-500">{page.path}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Badge className={blocked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}>
+                      {blocked ? 'Bloqueada' : 'Liberada'}
+                    </Badge>
+                    <Switch 
+                      checked={!blocked}
+                      onCheckedChange={(checked) => updateBlockMutation.mutate({ pageData: page, isBlocked: !checked })}
+                      disabled={updateBlockMutation.isPending}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
