@@ -1,27 +1,30 @@
 import React, { useState } from 'react';
-import { Globe, Palette, ShoppingBag, Sparkles } from 'lucide-react';
+import { Globe, Palette, ShoppingBag, Bot, Sparkles } from 'lucide-react';
 import T from '@/components/TranslatedText';
 
 // Import section pages as components
 import SitesPage from './Sites';
 import DesignPage from './Design';
 import ProductsPage from './Products';
+import ChatbotsPage from './Chatbots';
 
 const sections = [
+  { id: 'chatbots', label: 'Crie Chatbots', icon: Bot },
   { id: 'sites', label: 'Crie Sites', icon: Globe },
   { id: 'design', label: 'Faça Designs', icon: Palette },
   { id: 'products', label: 'Crie Produtos', icon: ShoppingBag },
 ];
 
 export default function BeautySpacePage() {
-  const [activeSection, setActiveSection] = useState('sites');
+  const [activeSection, setActiveSection] = useState('chatbots');
 
   const renderSection = () => {
     switch (activeSection) {
+      case 'chatbots': return <ChatbotsPage />;
       case 'sites': return <SitesPage />;
       case 'design': return <DesignPage />;
       case 'products': return <ProductsPage />;
-      default: return <SitesPage />;
+      default: return <ChatbotsPage />;
     }
   };
 
