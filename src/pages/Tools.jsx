@@ -156,17 +156,17 @@ export default function ToolsPage() {
   ];
 
   return (
-    <div className="space-y-16 pb-16">
+    <div className="space-y-8 sm:space-y-12 lg:space-y-16 pb-8 sm:pb-12 lg:pb-16">
       {/* Hero Section */}
-      <div className="relative h-96 rounded-[2rem] overflow-hidden shadow-2xl group bg-[#FEFBF7] border border-[#D4A574]/20">
+      <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 rounded-xl sm:rounded-2xl lg:rounded-[2rem] overflow-hidden shadow-lg sm:shadow-2xl group bg-[#FEFBF7] border border-[#D4A574]/20">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-[0.08]"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-[#FEFBF7] via-[#FEFBF7]/90 to-[#FEFBF7]/20"></div>
-        <div className="relative z-10 flex items-center justify-center h-full p-12">
+        <div className="relative z-10 flex items-center justify-center h-full p-4 sm:p-8 lg:p-12">
           <div className="text-center max-w-3xl">
-            <T as="h1" className="text-6xl font-light tracking-tight text-[#2D2416] mb-6 leading-tight">
+            <T as="h1" className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-[#2D2416] mb-3 sm:mb-4 lg:mb-6 leading-tight">
               Nossas <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4A574] to-[#B8935C] font-normal">Ferramentas</span>
             </T>
-            <T as="p" className="text-[#6B5D4F] text-2xl font-light leading-relaxed">
+            <T as="p" className="text-[#6B5D4F] text-sm sm:text-lg md:text-xl lg:text-2xl font-light leading-relaxed px-4">
               Descubra todo o ecossistema de tecnologia e inovação do Clube da Beleza
             </T>
           </div>
@@ -175,41 +175,41 @@ export default function ToolsPage() {
 
       {/* Internal Tools Section */}
       <div>
-        <div className="mb-10">
-          <T as="h2" className="text-4xl font-light text-[#2D2416] mb-4 flex items-center gap-4">
-            <div className="w-2 h-10 bg-[#D4A574] rounded-full"></div>
+        <div className="mb-6 sm:mb-8 lg:mb-10">
+          <T as="h2" className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-[#2D2416] mb-2 sm:mb-4 flex items-center gap-2 sm:gap-4">
+            <div className="w-1 sm:w-2 h-6 sm:h-8 lg:h-10 bg-[#D4A574] rounded-full"></div>
             Ferramentas Integradas
           </T>
-          <T as="p" className="text-[#6B5D4F] text-lg font-light ml-6">
+          <T as="p" className="text-[#6B5D4F] text-sm sm:text-base lg:text-lg font-light ml-3 sm:ml-6">
             Ferramentas poderosas incluídas na sua assinatura do Clube da Beleza
           </T>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {internalTools.map((tool, idx) => (
-            <Card key={idx} className="bg-[#FEFBF7] border-[#D4A574]/20 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group cursor-pointer rounded-[1.5rem] overflow-hidden">
-              <div className={`h-2 bg-gradient-to-r ${tool.color}`}></div>
-              <CardHeader className="pb-4 pt-8 px-8">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <tool.icon className="w-8 h-8 text-white" />
+            <Card key={idx} className="bg-[#FEFBF7] border-[#D4A574]/20 hover:shadow-2xl hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-300 group cursor-pointer rounded-xl sm:rounded-2xl lg:rounded-[1.5rem] overflow-hidden">
+              <div className={`h-1.5 sm:h-2 bg-gradient-to-r ${tool.color}`}></div>
+              <CardHeader className="pb-3 sm:pb-4 pt-4 sm:pt-6 lg:pt-8 px-4 sm:px-6 lg:px-8">
+                <div className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-3 sm:mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <tool.icon className="w-6 h-6 sm:w-7 sm:h-7 lg:w-8 lg:h-8 text-white" />
                 </div>
-                <CardTitle className="text-[#2D2416] text-xl font-light">{tool.name}</CardTitle>
-                <CardDescription className="text-[#6B5D4F] font-light">{tool.description}</CardDescription>
+                <CardTitle className="text-[#2D2416] text-base sm:text-lg lg:text-xl font-light">{tool.name}</CardTitle>
+                <CardDescription className="text-[#6B5D4F] font-light text-xs sm:text-sm">{tool.description}</CardDescription>
               </CardHeader>
-              <CardContent className="px-8 pb-8 space-y-4">
-                <ul className="space-y-2">
+              <CardContent className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8 space-y-3 sm:space-y-4">
+                <ul className="space-y-1.5 sm:space-y-2">
                   {tool.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm text-[#6B5D4F] font-light">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#D4A574] mt-1.5 flex-shrink-0"></div>
+                    <li key={i} className="flex items-start gap-2 text-xs sm:text-sm text-[#6B5D4F] font-light">
+                      <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#D4A574] mt-1.5 flex-shrink-0"></div>
                       {feature}
                     </li>
                   ))}
                 </ul>
                 <Button 
                   onClick={() => window.location.href = tool.link}
-                  className="w-full bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 rounded-xl font-light shadow-lg group-hover:shadow-xl transition-all"
+                  className="w-full bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-10 sm:h-12 rounded-lg sm:rounded-xl font-light shadow-lg group-hover:shadow-xl transition-all text-sm sm:text-base"
                 >
-                  <T>Acessar Ferramenta</T> <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  <T>Acessar Ferramenta</T> <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </CardContent>
             </Card>
@@ -219,21 +219,21 @@ export default function ToolsPage() {
 
       {/* External Tools Section */}
       <div>
-        <div className="mb-10">
-          <T as="h2" className="text-4xl font-light text-[#2D2416] mb-4 flex items-center gap-4">
-            <div className="w-2 h-10 bg-[#D4A574] rounded-full"></div>
+        <div className="mb-6 sm:mb-8 lg:mb-10">
+          <T as="h2" className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-[#2D2416] mb-2 sm:mb-4 flex items-center gap-2 sm:gap-4">
+            <div className="w-1 sm:w-2 h-6 sm:h-8 lg:h-10 bg-[#D4A574] rounded-full"></div>
             Ferramentas Especializadas
           </T>
-          <T as="p" className="text-[#6B5D4F] text-lg font-light ml-6">
+          <T as="p" className="text-[#6B5D4F] text-sm sm:text-base lg:text-lg font-light ml-3 sm:ml-6">
             Plataformas completas do Clube da Beleza para transformar sua prática profissional
           </T>
         </div>
 
-        <div className="space-y-12">
+        <div className="space-y-6 sm:space-y-8 lg:space-y-12">
           {externalTools.map((tool, idx) => (
-            <div key={idx} className={`grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-[2rem] overflow-hidden border border-[#D4A574]/20 shadow-lg hover:shadow-2xl transition-all ${idx % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
+            <div key={idx} className={`grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-center bg-[#FEFBF7] rounded-xl sm:rounded-2xl lg:rounded-[2rem] overflow-hidden border border-[#D4A574]/20 shadow-lg hover:shadow-2xl transition-all ${idx % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
               {/* Image */}
-              <div className={`relative h-96 lg:h-full ${idx % 2 === 1 ? 'lg:col-start-2' : ''}`}>
+              <div className={`relative h-48 sm:h-64 md:h-80 lg:h-full min-h-[200px] lg:min-h-[400px] ${idx % 2 === 1 ? 'lg:col-start-2' : ''}`}>
                 <img 
                   src={tool.image}
                   alt={tool.name}
@@ -242,57 +242,57 @@ export default function ToolsPage() {
                 <div className={`absolute inset-0 bg-gradient-to-${idx % 2 === 1 ? 'l' : 'r'} from-[#FEFBF7] to-transparent opacity-50`}></div>
                 
                 {/* Floating Card */}
-                <div className="absolute bottom-8 left-8 right-8 bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border border-[#D4A574]/20">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-xl font-light text-[#2D2416] mb-1">{tool.name}</h4>
-                      <p className="text-sm text-[#6B5D4F] font-light">{tool.badge}</p>
+                <div className="absolute bottom-3 sm:bottom-6 lg:bottom-8 left-3 sm:left-6 lg:left-8 right-3 sm:right-6 lg:right-8 bg-white/95 backdrop-blur-md rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 shadow-2xl border border-[#D4A574]/20">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <h4 className="text-sm sm:text-lg lg:text-xl font-light text-[#2D2416] mb-0.5 sm:mb-1 truncate">{tool.name}</h4>
+                      <p className="text-xs sm:text-sm text-[#6B5D4F] font-light truncate">{tool.badge}</p>
                     </div>
-                    <div className="bg-[#FFF9F0] p-3 rounded-full">
-                      <tool.icon className="w-6 h-6 text-[#D4A574]" />
+                    <div className="bg-[#FFF9F0] p-2 sm:p-3 rounded-full flex-shrink-0">
+                      <tool.icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-[#D4A574]" />
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Content */}
-              <div className={`p-12 ${idx % 2 === 1 ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
-                <div className={`inline-block bg-gradient-to-r ${tool.color} text-white px-4 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider shadow-lg`}>
-                  <tool.icon className="w-4 h-4 inline mr-2" />
+              <div className={`p-4 sm:p-6 lg:p-12 ${idx % 2 === 1 ? 'lg:col-start-1 lg:row-start-1' : ''}`}>
+                <div className={`inline-block bg-gradient-to-r ${tool.color} text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-light text-xs sm:text-sm mb-4 sm:mb-6 uppercase tracking-wider shadow-lg`}>
+                  <tool.icon className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1 sm:mr-2" />
                   {tool.badge}
                 </div>
                 
-                <h3 className="text-3xl font-light text-[#2D2416] mb-3">{tool.name}</h3>
-                <p className="text-[#B8935C] text-lg font-light mb-4">{tool.description}</p>
-                <p className="text-[#6B5D4F] font-light leading-relaxed mb-6">{tool.details}</p>
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-light text-[#2D2416] mb-2 sm:mb-3">{tool.name}</h3>
+                <p className="text-[#B8935C] text-sm sm:text-base lg:text-lg font-light mb-2 sm:mb-4">{tool.description}</p>
+                <p className="text-[#6B5D4F] font-light leading-relaxed mb-4 sm:mb-6 text-xs sm:text-sm lg:text-base">{tool.details}</p>
                 
                 {/* Features */}
-                <div className="space-y-2 mb-6">
-                  {tool.features.map((feature, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <div className="w-5 h-5 rounded-full bg-[#FFF9F0] flex items-center justify-center flex-shrink-0 mt-0.5">
-                        <div className="w-2 h-2 rounded-full bg-[#D4A574]"></div>
+                <div className="space-y-1.5 sm:space-y-2 mb-4 sm:mb-6">
+                  {tool.features.slice(0, 4).map((feature, i) => (
+                    <div key={i} className="flex items-start gap-2 sm:gap-3">
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#FFF9F0] flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[#D4A574]"></div>
                       </div>
-                      <span className="text-[#6B5D4F] font-light">{feature}</span>
+                      <span className="text-[#6B5D4F] font-light text-xs sm:text-sm lg:text-base">{feature}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 mb-8 bg-[#FFF9F0] p-6 rounded-2xl border border-[#D4A574]/20">
+                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4 sm:mb-6 lg:mb-8 bg-[#FFF9F0] p-3 sm:p-4 lg:p-6 rounded-xl sm:rounded-2xl border border-[#D4A574]/20">
                   {tool.stats.map((stat, i) => (
                     <div key={i} className="text-center">
-                      <div className="text-3xl font-light text-[#D4A574] mb-1">{stat.value}</div>
-                      <div className="text-xs text-[#6B5D4F] font-light uppercase tracking-wide">{stat.label}</div>
+                      <div className="text-lg sm:text-2xl lg:text-3xl font-light text-[#D4A574] mb-0.5 sm:mb-1">{stat.value}</div>
+                      <div className="text-[10px] sm:text-xs text-[#6B5D4F] font-light uppercase tracking-wide">{stat.label}</div>
                     </div>
                   ))}
                 </div>
 
                 <Button 
                   onClick={() => window.open(tool.url, '_blank')}
-                  className={`w-full bg-gradient-to-r ${tool.color} hover:opacity-90 text-white h-14 rounded-xl font-light text-lg shadow-xl hover:shadow-2xl transition-all group`}
+                  className={`w-full bg-gradient-to-r ${tool.color} hover:opacity-90 text-white h-10 sm:h-12 lg:h-14 rounded-lg sm:rounded-xl font-light text-sm sm:text-base lg:text-lg shadow-xl hover:shadow-2xl transition-all group`}
                 >
-                  <T>Visitar Plataforma</T> <ExternalLink className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  <T>Visitar Plataforma</T> <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </div>
             </div>
@@ -301,18 +301,18 @@ export default function ToolsPage() {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] rounded-[2rem] p-12 text-white text-center shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+      <div className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] rounded-xl sm:rounded-2xl lg:rounded-[2rem] p-6 sm:p-8 lg:p-12 text-white text-center shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-white/10 rounded-full -mr-16 sm:-mr-24 lg:-mr-32 -mt-16 sm:-mt-24 lg:-mt-32 blur-3xl"></div>
         <div className="relative z-10">
-          <T as="h3" className="text-4xl font-light mb-4">Pronto para transformar sua prática?</T>
-          <T as="p" className="text-white/90 text-lg font-light mb-8 max-w-2xl mx-auto">
+          <T as="h3" className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light mb-2 sm:mb-4">Pronto para transformar sua prática?</T>
+          <T as="p" className="text-white/90 text-sm sm:text-base lg:text-lg font-light mb-4 sm:mb-6 lg:mb-8 max-w-2xl mx-auto">
             Junte-se a centenas de profissionais que já estão revolucionando a medicina estética com nossas ferramentas.
           </T>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+            <Button className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-10 sm:h-12 lg:h-14 px-4 sm:px-6 lg:px-8 text-sm sm:text-base lg:text-lg font-light rounded-lg sm:rounded-xl shadow-xl">
               <T>Criar Conta Grátis</T>
             </Button>
-            <Button variant="outline" className="border-2 border-white text-white hover:bg-white/10 h-14 px-8 text-lg font-light rounded-xl">
+            <Button variant="outline" className="border-2 border-white text-white hover:bg-white/10 h-10 sm:h-12 lg:h-14 px-4 sm:px-6 lg:px-8 text-sm sm:text-base lg:text-lg font-light rounded-lg sm:rounded-xl">
               <T>Falar com Vendas</T>
             </Button>
           </div>
