@@ -855,68 +855,6 @@ export default function SchedulePage() {
         </CardContent>
       </Card>
 
-      {/* My Appointments Section */}
-      <Card className="bg-[#FEFBF7] border-[#E8DCC8]">
-        <CardHeader className="border-b border-[#E8DCC8] p-4 sm:p-6">
-          <div className="flex flex-col gap-3 sm:gap-4">
-            <div>
-              <CardTitle className="text-[#2D2416] flex items-center gap-2 text-base sm:text-lg">
-                <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5 text-[#D4A574]" />
-                <T>Meus Agendamentos</T>
-              </CardTitle>
-              <CardDescription className="text-[#6B5D4F] text-xs sm:text-sm">
-                <T>Visualize e gerencie seus compromissos</T>
-              </CardDescription>
-            </div>
-            <div className="flex items-center justify-center sm:justify-start bg-white border border-[#E8DCC8] rounded-lg p-1 shadow-sm w-fit">
-              <Button variant="ghost" size="icon" onClick={prevWeek} className="h-8 w-8"><ChevronLeft className="w-4 h-4" /></Button>
-              <span className="px-2 sm:px-4 font-medium min-w-[100px] sm:min-w-[140px] text-center capitalize text-[#6B5D4F] text-xs sm:text-sm">
-                {format(currentDate, "MMMM yyyy", { locale: getDateLocale() })}
-              </span>
-              <Button variant="ghost" size="icon" onClick={nextWeek} className="h-8 w-8"><ChevronRight className="w-4 h-4" /></Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="p-2 sm:p-4">
-          <div className="overflow-x-auto -mx-2 sm:mx-0 px-2 sm:px-0">
-            <div className="grid grid-cols-7 gap-1 sm:gap-4 min-w-[600px] sm:min-w-[800px]">
-              {weekDays.map((day, i) => {
-                const dayEvents = getEventsForDay(day);
-                const isToday = isSameDay(day, new Date());
-                return (
-                  <div key={i} className={`flex flex-col min-h-[150px] sm:min-h-[200px] ${isToday ? 'bg-[#FFF9F0] rounded-lg border border-[#D4A574]/30' : ''}`}>
-                    <div className="text-center py-2 sm:py-3 border-b border-[#E8DCC8] mb-1 sm:mb-2">
-                      <div className="text-[10px] sm:text-xs font-bold text-[#6B5D4F] uppercase tracking-wider">{format(day, 'EEE', { locale: getDateLocale() })}</div>
-                      <div className={`text-base sm:text-xl font-bold mt-0.5 sm:mt-1 ${isToday ? 'text-[#D4A574]' : 'text-[#2D2416]'}`}>{format(day, 'dd')}</div>
-                    </div>
-                    <div className="flex-1 space-y-1 sm:space-y-2 p-1 sm:p-2 overflow-y-auto">
-                      {dayEvents.map(evt => (
-                        <div key={evt.id} className={`p-1.5 sm:p-2 rounded-lg text-[10px] sm:text-xs border shadow-sm ${getTypeColor(evt.type)} hover:brightness-95 transition-all cursor-pointer`}>
-                          <div className="font-bold truncate mb-0.5 sm:mb-1" title={evt.title}>{evt.title}</div>
-                          <div className="flex items-center justify-between opacity-80">
-                            <span>{format(evt.start, 'HH:mm')}</span>
-                            {evt.modality === 'teleconsultation' && <Video className="w-2.5 h-2.5 sm:w-3 sm:h-3" />}
-                          </div>
-                          {evt.location_details && (
-                            <div className="flex items-center gap-1 mt-0.5 sm:mt-1 opacity-70 truncate hidden sm:flex">
-                              <MapPin className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0" /> <span className="truncate">{evt.location_details}</span>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                      {dayEvents.length === 0 && isToday && (
-                        <div className="flex flex-col items-center justify-center h-12 sm:h-20 text-[#6B5D4F]/50 text-[10px] sm:text-xs">
-                          <T as="span" className="block">Livre</T>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

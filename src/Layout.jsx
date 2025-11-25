@@ -298,12 +298,12 @@ export default function Layout({ children }) {
     const items = [
       { icon: LayoutDashboard, label: 'Início', path: '/', translationKey: 'Início' },
       { icon: Newspaper, label: 'Notícias', path: '/news', translationKey: 'Notícias' },
-      { icon: Calendar, label: 'Pesquisa Detalhada', path: '/schedule', translationKey: 'Pesquisa Detalhada' },
+      { icon: MapPin, label: 'Pesquisa Detalhada', path: '/schedule', translationKey: 'Pesquisa Detalhada' },
       { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse', translationKey: 'Bia - Cuidadora Virtual' },
-      { icon: Bot, label: 'Crie Chatbots', path: '/chatbots', translationKey: 'Crie Chatbots' },
       { icon: Palette, label: 'Beauty Space', path: '/beautyspace', translationKey: 'Beauty Space' },
       { icon: CreditCard, label: 'Planos', path: '/plans', translationKey: 'Planos' },
-      { icon: HelpCircle, label: 'Sobre Nós', path: '/about', translationKey: 'Sobre Nós' },
+      { icon: Heart, label: 'Sobre Nós', path: '/about', translationKey: 'Sobre Nós' },
+      { icon: HelpCircle, label: 'Suporte', path: '/support', translationKey: 'Suporte' },
       { icon: Shield, label: 'Controle', path: '/admincontrol', translationKey: 'Controle' },
     ];
 
