@@ -5,7 +5,7 @@ import {
   Users, LayoutDashboard, DollarSign, Activity, Shield, Trash2, 
   BarChart3, UserCheck, Building2, Loader2, Search, Bell, Send,
   User, Stethoscope, X, Globe, Bot, Palette, Calendar, Eye, MousePointer, BarChart2,
-  Lock, Unlock, AlertTriangle, Plus, Image
+  Lock, Unlock, AlertTriangle, Plus, Image, Clock, CalendarClock
 } from 'lucide-react';
 import BeautyTeaAdmin from '@/components/admin/BeautyTeaAdmin';
 import { Button } from '@/components/ui/button';
@@ -379,6 +379,10 @@ function BannerAdminList() {
 // Page Block Management Component
 function PageBlockManager() {
   const queryClient = useQueryClient();
+  const [schedulingPage, setSchedulingPage] = useState(null);
+  const [scheduleType, setScheduleType] = useState('unblock'); // 'block' or 'unblock'
+  const [scheduleDate, setScheduleDate] = useState('');
+  const [scheduleTime, setScheduleTime] = useState('');
   
   const { data: pageBlocks, isLoading } = useQuery({
     queryKey: ['pageBlocks'],
@@ -388,9 +392,39 @@ function PageBlockManager() {
     }
   });
 
+  // Check for scheduled actions on load
+  React.useEffect(() => {
+    const checkSchedules = () => {
+      if (!pageBlocks) return;
+      const now = new Date();
+      
+      pageBlocks.forEach(async (block) => {
+        // Check scheduled block
+        if (block.scheduled_block_date && new Date(block.scheduled_block_date) <= now && !block.is_blocked) {
+          await base44.entities.PageBlock.update(block.id, { 
+            is_blocked: true, 
+            scheduled_block_date: null 
+          });
+          queryClient.invalidateQueries(['pageBlocks']);
+        }
+        // Check scheduled unblock
+        if (block.scheduled_unblock_date && new Date(block.scheduled_unblock_date) <= now && block.is_blocked) {
+          await base44.entities.PageBlock.update(block.id, { 
+            is_blocked: false, 
+            scheduled_unblock_date: null 
+          });
+          queryClient.invalidateQueries(['pageBlocks']);
+        }
+      });
+    };
+    
+    checkSchedules();
+    const interval = setInterval(checkSchedules, 60000); // Check every minute
+    return () => clearInterval(interval);
+  }, [pageBlocks, queryClient]);
+
   const updateBlockMutation = useMutation({
     mutationFn: async ({ pageData, isBlocked }) => {
-      // Check if block exists
       const existing = pageBlocks?.find(p => p.page_path === pageData.path);
       if (existing) {
         return base44.entities.PageBlock.update(existing.id, { is_blocked: isBlocked });
@@ -400,6 +434,48 @@ function PageBlockManager() {
           page_name: pageData.name,
           is_blocked: isBlocked
         });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['pageBlocks']);
+    }
+  });
+
+  const scheduleBlockMutation = useMutation({
+    mutationFn: async ({ pageData, type, dateTime }) => {
+      const existing = pageBlocks?.find(p => p.page_path === pageData.path);
+      const updateData = type === 'block' 
+        ? { scheduled_block_date: dateTime }
+        : { scheduled_unblock_date: dateTime };
+      
+      if (existing) {
+        return base44.entities.PageBlock.update(existing.id, updateData);
+      } else {
+        return base44.entities.PageBlock.create({
+          page_path: pageData.path,
+          page_name: pageData.name,
+          is_blocked: false,
+          ...updateData
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['pageBlocks']);
+      setSchedulingPage(null);
+      setScheduleDate('');
+      setScheduleTime('');
+      alert('Agendamento salvo com sucesso!');
+    }
+  });
+
+  const clearScheduleMutation = useMutation({
+    mutationFn: async ({ pageData, type }) => {
+      const existing = pageBlocks?.find(p => p.page_path === pageData.path);
+      if (existing) {
+        const updateData = type === 'block' 
+          ? { scheduled_block_date: null }
+          : { scheduled_unblock_date: null };
+        return base44.entities.PageBlock.update(existing.id, updateData);
       }
     },
     onSuccess: () => {
@@ -432,10 +508,20 @@ function PageBlockManager() {
     return block?.is_blocked || false;
   };
 
+  const getPageSchedule = (path) => {
+    return pageBlocks?.find(p => p.page_path === path);
+  };
+
+  const handleSaveSchedule = () => {
+    if (!scheduleDate || !scheduleTime || !schedulingPage) return;
+    const dateTime = new Date(`${scheduleDate}T${scheduleTime}`).toISOString();
+    scheduleBlockMutation.mutate({ pageData: schedulingPage, type: scheduleType, dateTime });
+  };
+
   return (
-    <Card className="border-red-200">
-      <CardHeader className="bg-red-600 text-white rounded-t-lg">
-        <div className="flex items-center justify-between">
+    <Card className="border-[#D4A574]/30">
+      <CardHeader className="bg-gradient-to-r from-[#D4A574] to-[#B8935C] text-white rounded-t-lg">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Lock className="w-5 h-5" />
             <CardTitle><T>Bloqueio de Páginas</T></CardTitle>
@@ -456,7 +542,7 @@ function PageBlockManager() {
               size="sm"
               onClick={() => blockAllMutation.mutate(true)}
               disabled={blockAllMutation.isPending}
-              className="bg-white text-red-600 hover:bg-red-50"
+              className="bg-white text-[#D4A574] hover:bg-[#FFF9F0]"
             >
               <Lock className="w-4 h-4 mr-2" />
               <T>Bloquear Todas</T>
@@ -465,14 +551,25 @@ function PageBlockManager() {
         </div>
       </CardHeader>
       <CardContent className="p-6">
-        {/* Warning */}
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 flex items-start gap-3">
-          <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-          <div>
-            <T as="p" className="font-bold text-yellow-800">Atenção</T>
-            <T as="p" className="text-sm text-yellow-700">
-              Páginas bloqueadas exibirão uma mensagem informando que estão em manutenção. Apenas administradores poderão acessá-las normalmente.
-            </T>
+        {/* Info Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-start gap-3">
+            <AlertTriangle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <T as="p" className="font-bold text-yellow-800">Atenção</T>
+              <T as="p" className="text-sm text-yellow-700">
+                Páginas bloqueadas exibirão uma mensagem de manutenção. Apenas admins podem acessá-las.
+              </T>
+            </div>
+          </div>
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
+            <CalendarClock className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div>
+              <T as="p" className="font-bold text-blue-800">Agendamento</T>
+              <T as="p" className="text-sm text-blue-700">
+                Agende bloqueios/desbloqueios automáticos para lançamentos ou manutenções programadas.
+              </T>
+            </div>
           </div>
         </div>
 
@@ -482,43 +579,173 @@ function PageBlockManager() {
             <Loader2 className="w-6 h-6 animate-spin text-[#D4A574]" />
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-3">
             {SYSTEM_PAGES.map((page) => {
               const blocked = isPageBlocked(page.path);
+              const schedule = getPageSchedule(page.path);
+              const hasBlockSchedule = !!schedule?.scheduled_block_date;
+              const hasUnblockSchedule = !!schedule?.scheduled_unblock_date;
+              
               return (
                 <div 
                   key={page.path}
-                  className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                  className={`p-4 rounded-xl border-2 transition-all ${
                     blocked 
                       ? 'bg-red-50 border-red-200' 
                       : 'bg-green-50 border-green-200'
                   }`}
                 >
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-full ${blocked ? 'bg-red-100' : 'bg-green-100'}`}>
-                      <Lock className={`w-4 h-4 ${blocked ? 'text-red-600' : 'text-green-600'}`} />
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-2 rounded-full ${blocked ? 'bg-red-100' : 'bg-green-100'}`}>
+                        <Lock className={`w-4 h-4 ${blocked ? 'text-red-600' : 'text-green-600'}`} />
+                      </div>
+                      <div>
+                        <p className="font-medium text-slate-800">{page.name}</p>
+                        <p className="text-xs text-slate-500">{page.path}</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="font-medium text-slate-800">{page.name}</p>
-                      <p className="text-xs text-slate-500">{page.path}</p>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <Badge className={blocked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}>
+                        {blocked ? 'Bloqueada' : 'Liberada'}
+                      </Badge>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setSchedulingPage(page);
+                          setScheduleType(blocked ? 'unblock' : 'block');
+                        }}
+                        className="text-xs border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0]"
+                      >
+                        <CalendarClock className="w-3 h-3 mr-1" />
+                        Agendar
+                      </Button>
+                      <Switch 
+                        checked={!blocked}
+                        onCheckedChange={(checked) => updateBlockMutation.mutate({ pageData: page, isBlocked: !checked })}
+                        disabled={updateBlockMutation.isPending}
+                      />
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className={blocked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}>
-                      {blocked ? 'Bloqueada' : 'Liberada'}
-                    </Badge>
-                    <Switch 
-                      checked={!blocked}
-                      onCheckedChange={(checked) => updateBlockMutation.mutate({ pageData: page, isBlocked: !checked })}
-                      disabled={updateBlockMutation.isPending}
-                    />
-                  </div>
+                  
+                  {/* Show scheduled actions */}
+                  {(hasBlockSchedule || hasUnblockSchedule) && (
+                    <div className="mt-3 pt-3 border-t border-slate-200 flex flex-wrap gap-2">
+                      {hasBlockSchedule && (
+                        <div className="flex items-center gap-2 bg-red-100 text-red-700 px-3 py-1.5 rounded-lg text-xs">
+                          <Clock className="w-3 h-3" />
+                          <span>Bloqueio: {format(new Date(schedule.scheduled_block_date), "dd/MM/yyyy 'às' HH:mm")}</span>
+                          <button 
+                            onClick={() => clearScheduleMutation.mutate({ pageData: page, type: 'block' })}
+                            className="ml-1 hover:bg-red-200 rounded p-0.5"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                      {hasUnblockSchedule && (
+                        <div className="flex items-center gap-2 bg-green-100 text-green-700 px-3 py-1.5 rounded-lg text-xs">
+                          <Clock className="w-3 h-3" />
+                          <span>Desbloqueio: {format(new Date(schedule.scheduled_unblock_date), "dd/MM/yyyy 'às' HH:mm")}</span>
+                          <button 
+                            onClick={() => clearScheduleMutation.mutate({ pageData: page, type: 'unblock' })}
+                            className="ml-1 hover:bg-green-200 rounded p-0.5"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               );
             })}
           </div>
         )}
       </CardContent>
+
+      {/* Schedule Modal */}
+      {schedulingPage && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setSchedulingPage(null)}>
+          <div className="bg-white rounded-2xl max-w-md w-full p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-bold text-[#2D2416]">Agendar {scheduleType === 'block' ? 'Bloqueio' : 'Desbloqueio'}</h3>
+              <Button variant="ghost" size="icon" onClick={() => setSchedulingPage(null)}>
+                <X className="w-5 h-5" />
+              </Button>
+            </div>
+
+            <div className="space-y-4">
+              <div className="bg-[#FFF9F0] border border-[#D4A574]/30 rounded-lg p-4">
+                <p className="font-medium text-[#2D2416]">{schedulingPage.name}</p>
+                <p className="text-sm text-[#6B5D4F]">{schedulingPage.path}</p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Tipo de Agendamento</Label>
+                <Select value={scheduleType} onValueChange={setScheduleType}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="block">
+                      <div className="flex items-center gap-2">
+                        <Lock className="w-4 h-4 text-red-500" />
+                        <span>Agendar Bloqueio</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="unblock">
+                      <div className="flex items-center gap-2">
+                        <Unlock className="w-4 h-4 text-green-500" />
+                        <span>Agendar Desbloqueio</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Data</Label>
+                  <Input 
+                    type="date" 
+                    value={scheduleDate}
+                    onChange={(e) => setScheduleDate(e.target.value)}
+                    min={new Date().toISOString().split('T')[0]}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Horário</Label>
+                  <Input 
+                    type="time" 
+                    value={scheduleTime}
+                    onChange={(e) => setScheduleTime(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
+                <p className="font-medium mb-1">💡 Dica</p>
+                <p>Use para lançamentos: bloqueie a página, prepare tudo e agende o desbloqueio para o momento do lançamento!</p>
+              </div>
+
+              <div className="flex gap-2 pt-4">
+                <Button variant="outline" className="flex-1" onClick={() => setSchedulingPage(null)}>
+                  Cancelar
+                </Button>
+                <Button 
+                  className="flex-1 bg-[#D4A574] hover:bg-[#C49565] text-white"
+                  onClick={handleSaveSchedule}
+                  disabled={!scheduleDate || !scheduleTime || scheduleBlockMutation.isPending}
+                >
+                  {scheduleBlockMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Salvar Agendamento'}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </Card>
   );
 }
