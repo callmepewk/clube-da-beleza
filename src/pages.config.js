@@ -21,6 +21,7 @@ import RightDose from './pages/RightDose';
 import BeautyBox from './pages/BeautyBox';
 import QualitySeal from './pages/QualitySeal';
 import ClubePlus from './pages/ClubePlus';
+import BeautySpace from './pages/BeautySpace';
 import __Layout from './Layout.jsx';
 
 
@@ -48,6 +49,7 @@ export const PAGES = {
     "BeautyBox": BeautyBox,
     "QualitySeal": QualitySeal,
     "ClubePlus": ClubePlus,
+    "BeautySpace": BeautySpace,
 }
 
 export const pagesConfig = {
