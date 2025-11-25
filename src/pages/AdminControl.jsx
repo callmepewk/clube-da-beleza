@@ -681,15 +681,16 @@ export default function AdminControlPage() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 h-auto gap-2 bg-[#FEFBF7] border border-[#D4A574]/20 p-2">
-          <TabsTrigger value="overview" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Visão Geral</TabsTrigger>
-          <TabsTrigger value="users" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Usuários</TabsTrigger>
-          <TabsTrigger value="analytics" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Analytics</TabsTrigger>
-          <TabsTrigger value="tools" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Ferramentas</TabsTrigger>
-          <TabsTrigger value="seo" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">SEO & Tráfego</TabsTrigger>
-          <TabsTrigger value="banners" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Anúncios</TabsTrigger>
-          <TabsTrigger value="notifications" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Notificações</TabsTrigger>
-          <TabsTrigger value="beauty-tea" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light">Chá da Beleza</TabsTrigger>
+        <TabsList className="flex flex-wrap h-auto gap-2 bg-[#FEFBF7] border border-[#D4A574]/20 p-2">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Visão Geral</TabsTrigger>
+          <TabsTrigger value="users" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Usuários</TabsTrigger>
+          <TabsTrigger value="analytics" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Analytics</TabsTrigger>
+          <TabsTrigger value="tools" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Ferramentas</TabsTrigger>
+          <TabsTrigger value="seo" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">SEO & Tráfego</TabsTrigger>
+          <TabsTrigger value="page-blocks" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Bloqueio</TabsTrigger>
+          <TabsTrigger value="banners" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Anúncios</TabsTrigger>
+          <TabsTrigger value="notifications" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Notificações</TabsTrigger>
+          <TabsTrigger value="beauty-tea" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Chá da Beleza</TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
@@ -1112,6 +1113,11 @@ export default function AdminControlPage() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Page Blocks Tab */}
+        <TabsContent value="page-blocks" className="space-y-6">
+          <PageBlockManager />
         </TabsContent>
 
         {/* Banners Tab */}
