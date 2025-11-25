@@ -502,6 +502,12 @@ export default function SchedulePage() {
             Encontre os melhores profissionais, clínicas, produtos e procedimentos estéticos. 
             Nossa IA ajuda você a encontrar exatamente o que precisa com filtros avançados.
           </T>
+          <div className="mt-3 sm:mt-4 flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-lg px-3 py-2 w-fit">
+            <MapPin className="w-4 h-4 flex-shrink-0" />
+            <T as="span" className="text-xs sm:text-sm font-light">
+              Esta pesquisa é realizada no Mapa da Estética - nossa plataforma de busca especializada
+            </T>
+          </div>
         </div>
         <div className="absolute -bottom-10 -right-10 w-24 sm:w-40 h-24 sm:h-40 bg-white/10 rounded-full"></div>
         <div className="absolute -top-5 -right-20 w-20 sm:w-32 h-20 sm:h-32 bg-white/5 rounded-full"></div>
@@ -660,7 +666,7 @@ export default function SchedulePage() {
                   </div>
                 </div>
               </TabsContent>
-              <TabsContent value="weekday" className="mt-4">
+              <TabsContent value="weekday" className="mt-4 space-y-4">
                 <div className="space-y-3">
                   <T as="p" className="text-xs sm:text-sm text-[#6B5D4F]">Selecione os dias da semana de sua preferência:</T>
                   <div className="flex flex-wrap gap-1.5 sm:gap-2">
@@ -679,6 +685,22 @@ export default function SchedulePage() {
                     ))}
                   </div>
                 </div>
+                {selectedWeekdays.length > 0 && (
+                  <div className="space-y-2">
+                    <T as={Label}>Horário Preferido</T>
+                    <Select value={selectedTime} onValueChange={setSelectedTime}>
+                      <SelectTrigger className="bg-white border-[#E8DCC8]">
+                        <SelectValue placeholder="Selecione o horário" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="manha">Manhã (08h - 12h)</SelectItem>
+                        <SelectItem value="tarde">Tarde (12h - 18h)</SelectItem>
+                        <SelectItem value="noite">Noite (18h - 22h)</SelectItem>
+                        <SelectItem value="qualquer">Qualquer horário</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </TabsContent>
             </Tabs>
           </div>
