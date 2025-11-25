@@ -71,7 +71,7 @@ export default function BeautyBoxPage() {
               Beauty <span className="font-normal text-[#E8E05C]">Box</span>
             </h1>
             <T as="p" className="text-white/90 text-2xl font-light leading-relaxed mb-8">
-              Receba mensalmente uma seleção exclusiva de produtos premium de skincare e beleza na sua casa
+              Caixa exclusiva com produtos premium de autocuidado para assinantes do Clube da Beleza
             </T>
             <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white h-14 px-8 text-lg font-light rounded-xl shadow-xl">
               <Package className="w-5 h-5 mr-2" />
@@ -83,12 +83,12 @@ export default function BeautyBoxPage() {
 
       {/* Introduction */}
       <div className="max-w-4xl mx-auto text-center space-y-6">
-        <T as="h2" className="text-4xl font-light text-[#2D2416]">Sua Dose Mensal de Autocuidado</T>
+        <T as="h2" className="text-4xl font-light text-[#2D2416]">Sua Caixa Premium de Autocuidado</T>
         <T as="p" className="text-[#6B5D4F] font-light leading-relaxed text-lg">
-          A Beauty Box é a assinatura exclusiva do Clube da Beleza que transforma sua rotina de cuidados com a pele. A cada mês, você recebe em casa uma caixa cuidadosamente curada com produtos premium, novidades do mercado e itens exclusivos que você não encontra em outros lugares.
+          A Beauty Box é uma caixa exclusiva com diversos produtos de autocuidado feitos especialmente para os assinantes do Clube da Beleza. Produtos premium selecionados que transformam sua rotina de beleza.
         </T>
         <T as="p" className="text-[#6B5D4F] font-light leading-relaxed text-lg">
-          Experimente novos produtos, descubra suas marcas favoritas e economize enquanto cuida de você.
+          Você pode adquirir sua Beauty Box usando Beauty Coins (nossa moeda virtual) ou acumulando pontos no Mapa da Estética ao adquirir produtos, serviços, planos ou indicar amigos.
         </T>
       </div>
 
