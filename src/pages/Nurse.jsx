@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
-  Send, Bot, Activity, Calendar, MapPin, Loader2, Sparkles, User 
+  Send, Bot, Activity, Calendar, MapPin, Loader2, Sparkles, User, History, Trash2, RefreshCw 
 } from 'lucide-react';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature, getCurrentMonth } from '@/components/usage/usageLimits';
@@ -16,6 +16,24 @@ import { ptBR } from 'date-fns/locale';
 import ReactMarkdown from 'react-markdown';
 import T from '@/components/TranslatedText';
 import { getCurrentLanguage } from '@/components/i18n/i18nUtils';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const NURSE_IMAGE = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/6ad7fd07e_nurse.png";
 
@@ -37,6 +55,7 @@ export default function NursePage() {
   const [step, setStep] = useState('ask_name'); // ask_name, ask_topic, chat
   const [chatHistory, setChatHistory] = useState([]);
   const [conversationActive, setConversationActive] = useState(true);
+  const [showHistory, setShowHistory] = useState(false);
   const scrollRef = useRef(null);
   const queryClient = useQueryClient();
   
@@ -61,6 +80,38 @@ export default function NursePage() {
     queryFn: async () => {
        return (await base44.entities.Appointment.list({ sort: { start_time: 1 }, limit: 5 })).data;
     }
+  });
+
+  // Fetch Bia conversation history
+  const { data: biaHistory, refetch: refetchHistory } = useQuery({
+    queryKey: ['biaHistory'],
+    queryFn: async () => {
+      const user = await base44.auth.me();
+      if (!user) return [];
+      const res = await base44.entities.ChatHistory.filter(
+        { user_email: user.email, type: 'bia' },
+        '-created_date',
+        20
+      );
+      return res || [];
+    }
+  });
+
+  const deleteHistoryItemMutation = useMutation({
+    mutationFn: async (id) => {
+      await base44.entities.ChatHistory.delete(id);
+    },
+    onSuccess: () => refetchHistory()
+  });
+
+  const deleteAllHistoryMutation = useMutation({
+    mutationFn: async () => {
+      if (!biaHistory) return;
+      for (const item of biaHistory) {
+        await base44.entities.ChatHistory.delete(item.id);
+      }
+    },
+    onSuccess: () => refetchHistory()
   });
 
   // Initialize Chat
@@ -139,12 +190,43 @@ export default function NursePage() {
   const handleEndChat = async () => {
     if (conversationActive && chatHistory.length > 2 && profile) {
       await incrementNurseUsage();
+      
+      // Save conversation to history
+      const u = await base44.auth.me();
+      const firstUserMessage = chatHistory.find(m => m.role === 'user')?.content || 'Conversa';
+      await base44.entities.ChatHistory.create({
+        user_email: u.email,
+        type: 'bia',
+        title: `Conversa: ${firstUserMessage.substring(0, 50)}...`,
+        prompt: name,
+        response_preview: chatHistory.slice(-1)[0]?.content?.substring(0, 100) || '',
+        messages: chatHistory
+      });
+      refetchHistory();
+      
       setConversationActive(false);
-      alert("Conversa encerrada. Obrigado por conversar com a Bia!");
+      alert("Conversa encerrada e salva no histórico. Obrigado por conversar com a Bia!");
       const greeting = 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?';
-      setChatHistory([{ role: 'assistant', content: greeting }]);
+      setChatHistory([{ role: 'assistant', content: greeting, needsTranslation: true }]);
       setStep('ask_name');
       setConversationActive(true);
+    }
+  };
+
+  const handleNewChat = () => {
+    const greeting = 'Olá! Sou a Bia, sua cuidadora virtual. Para começarmos, qual é o seu nome?';
+    setChatHistory([{ role: 'assistant', content: greeting, needsTranslation: true }]);
+    setStep('ask_name');
+    setName('');
+    setConversationActive(true);
+  };
+
+  const loadHistoryItem = (item) => {
+    if (item.messages && item.messages.length > 0) {
+      setChatHistory(item.messages);
+      setName(item.prompt || '');
+      setStep('chat');
+      setShowHistory(false);
     }
   };
 
@@ -327,16 +409,90 @@ export default function NursePage() {
          {/* Chat Card */}
          <Card className="flex-1 flex flex-col shadow-xl border-slate-200 overflow-hidden bg-white/90 backdrop-blur rounded-2xl">
             {/* Chat Header */}
-            <div className="p-4 border-b flex items-center gap-3 bg-white shadow-sm z-10">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-emerald-500 overflow-hidden">
-                <img src={NURSE_IMAGE} alt="Icon" className="w-full h-full object-cover scale-150 pt-2" />
+            <div className="p-4 border-b flex items-center justify-between gap-3 bg-white shadow-sm z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-emerald-500 overflow-hidden">
+                  <img src={NURSE_IMAGE} alt="Icon" className="w-full h-full object-cover scale-150 pt-2" />
+                </div>
+                <div>
+                 <T as="h2" className="font-bold text-slate-800">Bia - Cuidadora Virtual</T>
+                 <p className="text-xs text-slate-500 flex items-center gap-1">
+                   <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                   <T>Online</T> • <T>IA Assistente de Saúde</T>
+                 </p>
+                </div>
               </div>
-              <div>
-               <T as="h2" className="font-bold text-slate-800">Bia - Cuidadora Virtual</T>
-               <p className="text-xs text-slate-500 flex items-center gap-1">
-                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                 <T>Online</T> • <T>IA Assistente de Saúde</T>
-               </p>
+              <div className="flex gap-2">
+                <Button variant="ghost" size="sm" onClick={handleNewChat} className="text-emerald-600">
+                  <RefreshCw className="w-4 h-4 mr-1" /> <T>Novo Chat</T>
+                </Button>
+                <Sheet open={showHistory} onOpenChange={setShowHistory}>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      <History className="w-4 h-4 mr-1" /> <T>Histórico</T>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent className="w-[400px]">
+                    <SheetHeader>
+                      <SheetTitle className="flex items-center justify-between">
+                        <span><T>Histórico de Conversas</T></span>
+                        {biaHistory && biaHistory.length > 0 && (
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button variant="ghost" size="sm" className="text-red-500">
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle><T>Limpar todo histórico?</T></AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  <T>Esta ação não pode ser desfeita.</T>
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel><T>Cancelar</T></AlertDialogCancel>
+                                <AlertDialogAction onClick={() => deleteAllHistoryMutation.mutate()} className="bg-red-600">
+                                  <T>Excluir Tudo</T>
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        )}
+                      </SheetTitle>
+                    </SheetHeader>
+                    <div className="mt-4 space-y-3 max-h-[70vh] overflow-y-auto">
+                      {!biaHistory || biaHistory.length === 0 ? (
+                        <div className="text-center py-8 text-slate-400">
+                          <History className="w-12 h-12 mx-auto mb-2 opacity-30" />
+                          <T as="p">Nenhuma conversa salva</T>
+                        </div>
+                      ) : (
+                        biaHistory.map((item) => (
+                          <div key={item.id} className="bg-slate-50 p-3 rounded-lg border border-slate-200 hover:shadow-md transition-all">
+                            <div className="flex justify-between items-start">
+                              <div className="flex-1 cursor-pointer" onClick={() => loadHistoryItem(item)}>
+                                <p className="font-medium text-sm text-slate-800 line-clamp-1">{item.title}</p>
+                                <p className="text-xs text-slate-500 mt-1 line-clamp-2">{item.response_preview}</p>
+                                <p className="text-xs text-slate-400 mt-2">
+                                  {format(new Date(item.created_date), "dd/MM/yyyy HH:mm", { locale: ptBR })}
+                                </p>
+                              </div>
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-6 w-6 text-red-400 hover:text-red-600"
+                                onClick={() => deleteHistoryItemMutation.mutate(item.id)}
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </SheetContent>
+                </Sheet>
               </div>
             </div>
 
