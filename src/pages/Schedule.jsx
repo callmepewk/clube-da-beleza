@@ -24,17 +24,102 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, Loader2, Globe, ExternalLink, Navigation } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { 
+  Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, 
+  Loader2, Globe, ExternalLink, Navigation, Search, ShieldCheck, Car, PawPrint, Sofa, 
+  Wine, Music, Shield, Package, Wrench, Building, Scissors, BadgeCheck, DollarSign,
+  Info, Lightbulb, HelpCircle, Star, Clock
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ClubRegistration from '@/components/ClubRegistration';
 import T from '@/components/TranslatedText';
+
+// Tipos de profissionais de estética
+const PROFESSIONAL_TYPES = [
+  { value: 'dermatologista', label: 'Dermatologista' },
+  { value: 'esteticista', label: 'Esteticista' },
+  { value: 'cirurgiao_plastico', label: 'Cirurgião Plástico' },
+  { value: 'biomédico', label: 'Biomédico Esteta' },
+  { value: 'fisioterapeuta', label: 'Fisioterapeuta Dermato-funcional' },
+  { value: 'nutricionista', label: 'Nutricionista Estético' },
+  { value: 'enfermeiro', label: 'Enfermeiro Esteta' },
+  { value: 'farmaceutico', label: 'Farmacêutico Esteta' },
+  { value: 'dentista', label: 'Dentista (Harmonização Orofacial)' },
+  { value: 'cosmetologo', label: 'Cosmetólogo' },
+  { value: 'tricologista', label: 'Tricologista' },
+  { value: 'massagista', label: 'Massoterapeuta' },
+  { value: 'maquiador', label: 'Maquiador Profissional' },
+  { value: 'micropigmentador', label: 'Micropigmentador' },
+  { value: 'podólogo', label: 'Podólogo' },
+  { value: 'designer_sobrancelha', label: 'Designer de Sobrancelhas' },
+  { value: 'nail_designer', label: 'Nail Designer' },
+  { value: 'cabeleireiro', label: 'Cabeleireiro/Hair Stylist' },
+];
+
+// Faixas de preço
+const PRICE_RANGES = [
+  { value: '500', label: '$ - Até R$ 500', description: 'Econômico' },
+  { value: '1000', label: '$$ - R$ 500 a R$ 1.000', description: 'Intermediário' },
+  { value: '2000', label: '$$$ - R$ 1.000 a R$ 2.000', description: 'Premium' },
+  { value: '5000', label: '$$$$ - R$ 2.000 a R$ 5.000', description: 'Luxo' },
+  { value: '5001', label: '$$$$$ - Acima de R$ 5.000', description: 'Ultra Premium' },
+];
+
+// Amenidades
+const AMENITIES = [
+  { id: 'estacionamento', label: 'Estacionamento', icon: Car },
+  { id: 'valet', label: 'Estacionamento com Valet', icon: Car },
+  { id: 'aceita_pets', label: 'Aceita Pets', icon: PawPrint },
+  { id: 'lounge', label: 'Lounge', icon: Sofa },
+  { id: 'lounge_bar', label: 'Lounge Bar', icon: Wine },
+  { id: 'musica_ambiente', label: 'Música Ambiente', icon: Music },
+  { id: 'seguranca_24h', label: 'Segurança 24h', icon: Shield },
+];
+
+// Categorias de busca
+const SEARCH_CATEGORIES = [
+  { value: 'produto', label: 'Produto', icon: Package, description: 'Cosméticos, dermocosméticos, equipamentos' },
+  { value: 'servico', label: 'Serviço', icon: Scissors, description: 'Tratamentos, massagens, procedimentos' },
+  { value: 'local', label: 'Local', icon: Building, description: 'Clínicas, spas, salões de beleza' },
+  { value: 'procedimento', label: 'Procedimento', icon: Wrench, description: 'Botox, preenchimento, laser, etc.' },
+];
+
+// Dias da semana
+const WEEKDAYS = [
+  { value: 'domingo', label: 'Domingo' },
+  { value: 'segunda', label: 'Segunda-feira' },
+  { value: 'terca', label: 'Terça-feira' },
+  { value: 'quarta', label: 'Quarta-feira' },
+  { value: 'quinta', label: 'Quinta-feira' },
+  { value: 'sexta', label: 'Sexta-feira' },
+  { value: 'sabado', label: 'Sábado' },
+];
 
 export default function SchedulePage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const queryClient = useQueryClient();
   const [userProfile, setUserProfile] = useState(null);
   const [clubDialogOpen, setClubDialogOpen] = useState(false);
+  
+  // Search States
+  const [searchCategory, setSearchCategory] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const [dateMode, setDateMode] = useState('calendar'); // 'calendar' or 'weekday'
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedWeekdays, setSelectedWeekdays] = useState([]);
+  const [selectedTime, setSelectedTime] = useState('');
+  const [professionalType, setProfessionalType] = useState('');
+  const [priceRange, setPriceRange] = useState('');
+  const [selectedAmenities, setSelectedAmenities] = useState([]);
+  const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [locationInput, setLocationInput] = useState({ city: '', state: '' });
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
   
   const getDateLocale = () => {
     const lang = getCurrentLanguage();
@@ -48,9 +133,13 @@ export default function SchedulePage() {
   // Fetch Profile for Access Control
   useEffect(() => {
     const loadProfile = async () => {
-      const user = await base44.auth.me();
-      const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
-      setUserProfile(res?.data?.[0]);
+      try {
+        const user = await base44.auth.me();
+        const res = await base44.entities.UserProfile.list({ query: { user_email: user.email }});
+        setUserProfile(res?.data?.[0]);
+      } catch (e) {
+        console.log('User not logged in');
+      }
     };
     loadProfile();
   }, []);
@@ -91,13 +180,11 @@ export default function SchedulePage() {
 
   const handleConnect = (type) => {
     setIsSyncing(true);
-    // Simulate connection delay
     setTimeout(() => {
       setIntegrations(prev => ({ ...prev, [type]: !prev[type] }));
       setIsSyncing(false);
       alert(`${type === 'google' ? 'Google Calendar' : 'Outlook'} ${!integrations[type] ? 'conectado e sincronizado' : 'desconectado'} com sucesso!`);
       if (!integrations[type]) {
-         // Add mock holidays/birthdays
          createMutation.mutate({
             title: "Feriado Nacional (Importado)",
             type: 'consultation',
@@ -116,7 +203,6 @@ export default function SchedulePage() {
   const [aiPrompt, setAiPrompt] = useState('');
   const aiAvailabilityMutation = useMutation({
     mutationFn: async () => {
-      // This simulates the "AI questions which days and hours"
       const res = await base44.integrations.Core.InvokeLLM({
         prompt: `O profissional médico informou sua disponibilidade: "${aiPrompt}". 
         Data de referência: ${new Date().toISOString()}.
@@ -143,15 +229,14 @@ export default function SchedulePage() {
       return res.slots;
     },
     onSuccess: (slots) => {
-      // Bulk create slots (simplified)
       slots.forEach(slot => {
         createMutation.mutate({
           title: slot.title,
           type: slot.type,
-          modality: 'in_person', // default
+          modality: 'in_person',
           start_time: slot.start,
           end_time: slot.end,
-          patient_email: 'available_slot', // Flag as open
+          patient_email: 'available_slot',
           professional_email: userProfile?.user_email,
           location_details: userProfile?.service_address?.street || 'Consultório',
           status: 'scheduled'
@@ -176,153 +261,21 @@ export default function SchedulePage() {
     }
   };
 
-  // Render for Professional (Availability Manager)
-  if (userProfile?.type === 'professional') {
-    return (
-      <div className="h-[calc(100vh-8rem)] flex flex-col space-y-6">
-        <ClubRegistration open={clubDialogOpen} onOpenChange={setClubDialogOpen} />
-        
-        <div className="flex justify-between items-start">
-           <div>
-             <T as="h1" className="text-2xl font-bold text-[#0F172A]">Gestão de Agenda</T>
-             <T as="p" className="text-[#64748B]">Configure seus horários e disponibilidades.</T>
-           </div>
-           <div className="flex gap-3">
-              <Button 
-               onClick={() => setClubDialogOpen(true)}
-               variant="outline"
-               className="bg-gradient-to-r from-[#D4A574] to-[#8B6F47] text-white border-0 hover:opacity-90 font-bold shadow-lg"
-              >
-               <Globe className="w-4 h-4 mr-2" />
-               <T>Club da Beleza</T>
-              </Button>
-              <div className="bg-blue-50 p-2 rounded border border-blue-100 text-sm text-blue-800 max-w-md">
-               <T as="span" className="font-bold">Local:</T> {userProfile?.service_address?.street || <T>Não definido</T>}
-              </div>
-           </div>
-        </div>
-
-        {/* Integrations Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           <Card className="bg-white border-slate-200">
-              <CardContent className="p-6 flex flex-col justify-between h-full">
-                 <div>
-                   <T as="h3" className="font-bold text-[#0F172A] mb-2 flex items-center gap-2">
-                      <CalendarIcon className="w-5 h-5 text-[#0D9488]" /> Integrações de Calendário
-                   </T>
-                   <T as="p" className="text-sm text-[#64748B] mb-4">Conecte suas agendas externas para sincronizar feriados, aniversários e compromissos automaticamente.</T>
-                 </div>
-                 <div className="flex gap-3">
-                    <Button 
-                      variant="outline"
-                      className={`flex-1 border-blue-200 text-blue-600 hover:bg-blue-50 ${integrations.google ? 'bg-green-50 text-green-700 border-green-200' : ''}`}
-                      onClick={() => handleConnect('google')}
-                      disabled={isSyncing}
-                    >
-                       <ExternalLink className="w-4 h-4 mr-2" />
-                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.google ? <T>✓ Conectado</T> : <T>Conectar Google Agenda</T>)}
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      className={`flex-1 border-sky-200 text-sky-600 hover:bg-sky-50 ${integrations.outlook ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}`}
-                      onClick={() => handleConnect('outlook')}
-                      disabled={isSyncing}
-                    >
-                       <ExternalLink className="w-4 h-4 mr-2" />
-                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.outlook ? <T>✓ Conectado</T> : <T>Conectar Outlook</T>)}
-                    </Button>
-                 </div>
-              </CardContent>
-           </Card>
-
-           <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-100">
-             <CardContent className="p-6">
-               <div className="flex gap-4 items-start">
-                 <div className="bg-white p-3 rounded-full shadow-sm text-indigo-600">
-                   <Sparkles className="w-6 h-6" />
-                 </div>
-                 <div className="flex-1 space-y-3">
-                   <T as="h3" className="font-semibold text-lg text-indigo-900">Assistente de Agenda Inteligente</T>
-                   <T as="p" className="text-sm text-slate-600">
-                     Diga-me quais dias e horários você atende e para quais procedimentos. Eu organizarei sua grade automaticamente com as cores corretas.
-                   </T>
-                   <div className="flex gap-2">
-                     <Input 
-                       placeholder="Ex: Atendo consultas segunda e quarta das 08h às 12h..." 
-                       value={aiPrompt}
-                       onChange={(e) => setAiPrompt(e.target.value)}
-                       className="bg-white"
-                     />
-                     <Button 
-                       onClick={() => aiAvailabilityMutation.mutate()} 
-                       disabled={!aiPrompt || aiAvailabilityMutation.isPending}
-                       className="bg-indigo-600 hover:bg-indigo-700 text-white"
-                     >
-                       {aiAvailabilityMutation.isPending ? <T>Configurando...</T> : <T>Gerar Agenda</T>}
-                     </Button>
-                   </div>
-                 </div>
-               </div>
-             </CardContent>
-           </Card>
-        </div>
-
-        <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4 flex flex-col">
-           <div className="flex items-center justify-between mb-4">
-              <T as="h3" className="font-semibold">Sua Grade Semanal</T>
-              <div className="flex items-center bg-slate-50 border rounded-lg p-1">
-                <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
-                <span className="px-4 font-medium text-sm min-w-[120px] text-center capitalize">
-                  {format(currentDate, "MMMM yyyy", { locale: getDateLocale() })}
-                </span>
-                <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
-              </div>
-           </div>
-           
-           <div className="flex-1 overflow-x-auto">
-              <div className="grid grid-cols-7 gap-4 min-w-[800px] h-full">
-                {weekDays.map((day, i) => {
-                  const dayEvents = getEventsForDay(day);
-                  return (
-                    <div key={i} className="flex flex-col h-full border-r border-slate-50 last:border-0 pr-2">
-                      <div className="text-center py-2 mb-2">
-                           <div className="text-xs font-bold text-slate-400 uppercase">{format(day, 'EEE', { locale: getDateLocale() })}</div>
-                           <div className="text-lg font-bold text-slate-700">{format(day, 'dd')}</div>
-                      </div>
-                      <div className="space-y-2">
-                        {dayEvents.map(evt => (
-                          <div key={evt.id} className={`p-2 rounded text-xs border ${getTypeColor(evt.type)}`}>
-                            <div className="font-bold">{evt.title}</div>
-                            <div>{format(evt.start, 'HH:mm')} - {format(evt.end, 'HH:mm')}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-           </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Patient Scheduling States
-  const [aiSearchQuery, setAiSearchQuery] = useState('');
-  const [aiSuggestions, setAiSuggestions] = useState([]);
-  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
-  const [locationInput, setLocationInput] = useState({
-    street: '', number: '', neighborhood: '', city: '', state: '', complement: ''
-  });
-  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
-
+  // AI Search Handler
   const handleSearchChange = async (value) => {
-    setAiSearchQuery(value);
-    if (value.length > 2) {
+    setSearchQuery(value);
+    if (value.length > 2 && searchCategory) {
       setIsLoadingSuggestions(true);
       try {
+        const categoryLabel = SEARCH_CATEGORIES.find(c => c.value === searchCategory)?.label || '';
         const res = await base44.integrations.Core.InvokeLLM({
-          prompt: `O usuário está buscando por: "${value}". Liste 5 tratamentos, consultas, procedimentos ou exames médicos/estéticos relacionados com a faixa de preço média em reais (Brasil). Retorne JSON com nome e faixa de preço realista.`,
+          prompt: `O usuário está buscando por "${value}" na categoria "${categoryLabel}" no ramo de estética e beleza. 
+          Liste 6 sugestões relevantes com nome e descrição curta. 
+          Se for produto: liste produtos cosméticos ou equipamentos.
+          Se for serviço: liste tratamentos e serviços estéticos.
+          Se for local: liste tipos de estabelecimentos.
+          Se for procedimento: liste procedimentos estéticos específicos.
+          Retorne JSON com nome e descrição.`,
           response_json_schema: {
             type: "object",
             properties: {
@@ -332,7 +285,7 @@ export default function SchedulePage() {
                   type: "object",
                   properties: {
                     name: { type: "string" },
-                    price_range: { type: "string" }
+                    description: { type: "string" }
                   }
                 }
               }
@@ -364,12 +317,8 @@ export default function SchedulePage() {
         const data = await response.json();
         if (data && data.address) {
           setLocationInput({
-            street: data.address.road || '',
-            number: '',
-            neighborhood: data.address.suburb || data.address.neighbourhood || '',
             city: data.address.city || data.address.town || '',
             state: data.address.state || '',
-            complement: ''
           });
         }
       } catch (error) {
@@ -383,193 +332,567 @@ export default function SchedulePage() {
     });
   };
 
-  // Render for Patient (My Appointments)
-  return (
-    <div className="h-[calc(100vh-8rem)] flex flex-col space-y-4">
-      {/* AI Scheduling Modal */}
-      <Dialog>
-         <DialogTrigger asChild>
-            <Button className="w-full sm:w-auto bg-black hover:bg-gray-900 text-[#D4AF37] border border-[#D4AF37] shadow-md font-bold">
-             <Sparkles className="w-4 h-4 mr-2 text-[#D4AF37]" /> <T>Agendar com IA</T>
-            </Button>
-         </DialogTrigger>
-         <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-             <T as={DialogTitle}>Agendamento Inteligente</T>
-             <T as={DialogDescription}>Preencha os detalhes e deixe a IA encontrar o melhor profissional para você.</T>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-               <div className="space-y-2">
-                  <T as={Label}>O que você precisa?</T>
-                  <div className="relative">
-                    <Input 
-                      placeholder="Ex: Consulta Dermatologista, Botox, Exame de Sangue..." 
-                      value={aiSearchQuery}
-                      onChange={(e) => handleSearchChange(e.target.value)}
-                    />
-                    {isLoadingSuggestions && (
-                      <Loader2 className="absolute right-3 top-3 w-4 h-4 animate-spin text-slate-400" />
-                    )}
-                    {aiSuggestions.length > 0 && (
-                      <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 rounded-lg shadow-lg mt-1 z-50 max-h-48 overflow-y-auto">
-                        {aiSuggestions.map((sug, i) => (
-                          <div 
-                            key={i}
-                            className="p-3 hover:bg-slate-50 cursor-pointer border-b last:border-0"
-                            onClick={() => {
-                              setAiSearchQuery(sug.name);
-                              setAiSuggestions([]);
-                            }}
-                          >
-                            <div className="font-medium text-sm text-slate-900">{sug.name}</div>
-                            <div className="text-xs text-slate-500">Faixa de preço: {sug.price_range}</div>
+  const toggleWeekday = (day) => {
+    setSelectedWeekdays(prev => 
+      prev.includes(day) 
+        ? prev.filter(d => d !== day)
+        : [...prev, day]
+    );
+  };
+
+  const toggleAmenity = (amenityId) => {
+    setSelectedAmenities(prev => 
+      prev.includes(amenityId) 
+        ? prev.filter(a => a !== amenityId)
+        : [...prev, amenityId]
+    );
+  };
+
+  const handleSearch = () => {
+    setIsSearching(true);
+    setTimeout(() => {
+      setIsSearching(false);
+      alert('Funcionalidade de busca em desenvolvimento. Em breve você poderá encontrar os melhores profissionais e estabelecimentos!');
+    }, 1500);
+  };
+
+  // Render for Professional (Availability Manager)
+  if (userProfile?.type === 'professional') {
+    return (
+      <div className="h-[calc(100vh-8rem)] flex flex-col space-y-6">
+        <ClubRegistration open={clubDialogOpen} onOpenChange={setClubDialogOpen} />
+        
+        <div className="flex justify-between items-start">
+           <div>
+             <T as="h1" className="text-2xl font-bold text-[#2D2416]">Gestão de Agenda</T>
+             <T as="p" className="text-[#6B5D4F]">Configure seus horários e disponibilidades.</T>
+           </div>
+           <div className="flex gap-3">
+              <Button 
+               onClick={() => setClubDialogOpen(true)}
+               variant="outline"
+               className="bg-gradient-to-r from-[#D4A574] to-[#8B6F47] text-white border-0 hover:opacity-90 font-bold shadow-lg"
+              >
+               <Globe className="w-4 h-4 mr-2" />
+               <T>Club da Beleza</T>
+              </Button>
+              <div className="bg-[#FFF9F0] p-2 rounded border border-[#D4A574]/30 text-sm text-[#6B5D4F] max-w-md">
+               <T as="span" className="font-bold">Local:</T> {userProfile?.service_address?.street || <T>Não definido</T>}
+              </div>
+           </div>
+        </div>
+
+        {/* Integrations Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           <Card className="bg-[#FEFBF7] border-[#E8DCC8]">
+              <CardContent className="p-6 flex flex-col justify-between h-full">
+                 <div>
+                   <T as="h3" className="font-bold text-[#2D2416] mb-2 flex items-center gap-2">
+                      <CalendarIcon className="w-5 h-5 text-[#D4A574]" /> Integrações de Calendário
+                   </T>
+                   <T as="p" className="text-sm text-[#6B5D4F] mb-4">Conecte suas agendas externas para sincronizar feriados, aniversários e compromissos automaticamente.</T>
+                 </div>
+                 <div className="flex gap-3">
+                    <Button 
+                      variant="outline"
+                      className={`flex-1 border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0] ${integrations.google ? 'bg-green-50 text-green-700 border-green-200' : ''}`}
+                      onClick={() => handleConnect('google')}
+                      disabled={isSyncing}
+                    >
+                       <ExternalLink className="w-4 h-4 mr-2" />
+                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.google ? <T>✓ Conectado</T> : <T>Conectar Google Agenda</T>)}
+                    </Button>
+                    <Button 
+                      variant="outline"
+                      className={`flex-1 border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0] ${integrations.outlook ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}`}
+                      onClick={() => handleConnect('outlook')}
+                      disabled={isSyncing}
+                    >
+                       <ExternalLink className="w-4 h-4 mr-2" />
+                       {isSyncing ? <Loader2 className="w-4 h-4 animate-spin" /> : (integrations.outlook ? <T>✓ Conectado</T> : <T>Conectar Outlook</T>)}
+                    </Button>
+                 </div>
+              </CardContent>
+           </Card>
+
+           <Card className="bg-gradient-to-r from-[#FFF9F0] to-[#F5F1E8] border-[#D4A574]/30">
+             <CardContent className="p-6">
+               <div className="flex gap-4 items-start">
+                 <div className="bg-white p-3 rounded-full shadow-sm text-[#D4A574]">
+                   <Sparkles className="w-6 h-6" />
+                 </div>
+                 <div className="flex-1 space-y-3">
+                   <T as="h3" className="font-semibold text-lg text-[#2D2416]">Assistente de Agenda Inteligente</T>
+                   <T as="p" className="text-sm text-[#6B5D4F]">
+                     Diga-me quais dias e horários você atende e para quais procedimentos. Eu organizarei sua grade automaticamente com as cores corretas.
+                   </T>
+                   <div className="flex gap-2">
+                     <Input 
+                       placeholder="Ex: Atendo consultas segunda e quarta das 08h às 12h..." 
+                       value={aiPrompt}
+                       onChange={(e) => setAiPrompt(e.target.value)}
+                       className="bg-white border-[#E8DCC8]"
+                     />
+                     <Button 
+                       onClick={() => aiAvailabilityMutation.mutate()} 
+                       disabled={!aiPrompt || aiAvailabilityMutation.isPending}
+                       className="bg-[#D4A574] hover:bg-[#C49565] text-white"
+                     >
+                       {aiAvailabilityMutation.isPending ? <T>Configurando...</T> : <T>Gerar Agenda</T>}
+                     </Button>
+                   </div>
+                 </div>
+               </div>
+             </CardContent>
+           </Card>
+        </div>
+
+        <div className="flex-1 bg-[#FEFBF7] rounded-xl shadow-sm border border-[#E8DCC8] p-4 flex flex-col">
+           <div className="flex items-center justify-between mb-4">
+              <T as="h3" className="font-semibold text-[#2D2416]">Sua Grade Semanal</T>
+              <div className="flex items-center bg-white border border-[#E8DCC8] rounded-lg p-1">
+                <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
+                <span className="px-4 font-medium text-sm min-w-[120px] text-center capitalize text-[#6B5D4F]">
+                  {format(currentDate, "MMMM yyyy", { locale: getDateLocale() })}
+                </span>
+                <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
+              </div>
+           </div>
+           
+           <div className="flex-1 overflow-x-auto">
+              <div className="grid grid-cols-7 gap-4 min-w-[800px] h-full">
+                {weekDays.map((day, i) => {
+                  const dayEvents = getEventsForDay(day);
+                  return (
+                    <div key={i} className="flex flex-col h-full border-r border-[#E8DCC8] last:border-0 pr-2">
+                      <div className="text-center py-2 mb-2">
+                           <div className="text-xs font-bold text-[#6B5D4F] uppercase">{format(day, 'EEE', { locale: getDateLocale() })}</div>
+                           <div className="text-lg font-bold text-[#2D2416]">{format(day, 'dd')}</div>
+                      </div>
+                      <div className="space-y-2">
+                        {dayEvents.map(evt => (
+                          <div key={evt.id} className={`p-2 rounded text-xs border ${getTypeColor(evt.type)}`}>
+                            <div className="font-bold">{evt.title}</div>
+                            <div>{format(evt.start, 'HH:mm')} - {format(evt.end, 'HH:mm')}</div>
                           </div>
                         ))}
                       </div>
-                    )}
-                  </div>
-               </div>
+                    </div>
+                  );
+                })}
+              </div>
+           </div>
+        </div>
+      </div>
+    );
+  }
 
-               <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                     <T as={Label}>Quando?</T>
-                     <Input type="date" />
-                  </div>
-                  <div className="space-y-2">
-                     <T as={Label}>Horário Preferido</T>
-                     <Select>
-                        <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
-                        <SelectContent>
-                           {Array.from({ length: 24 }).map((_, i) => (
-                             <SelectItem key={i} value={`${i}:00`}>
-                               {`${String(i).padStart(2, '0')}:00`}
-                             </SelectItem>
-                           ))}
-                        </SelectContent>
-                     </Select>
-                  </div>
-               </div>
-
-               <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <T as={Label}>Onde?</T>
-                    <Button 
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={handleUseMyLocation}
-                      disabled={isLoadingLocation}
-                      className="text-xs"
-                    >
-                      {isLoadingLocation ? (
-                        <Loader2 className="w-3 h-3 animate-spin mr-2" />
-                      ) : (
-                        <Navigation className="w-3 h-3 mr-2" />
-                      )}
-                      <T>Usar minha localização</T>
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <Input 
-                      placeholder="Cidade" 
-                      value={locationInput.city}
-                      onChange={(e) => setLocationInput({...locationInput, city: e.target.value})}
-                    />
-                    <Input 
-                      placeholder="Estado" 
-                      value={locationInput.state}
-                      onChange={(e) => setLocationInput({...locationInput, state: e.target.value})}
-                    />
-                  </div>
-                  <Input 
-                    placeholder="Rua" 
-                    value={locationInput.street}
-                    onChange={(e) => setLocationInput({...locationInput, street: e.target.value})}
-                  />
-                  <div className="grid grid-cols-3 gap-3">
-                    <Input 
-                      placeholder="Número" 
-                      value={locationInput.number}
-                      onChange={(e) => setLocationInput({...locationInput, number: e.target.value})}
-                    />
-                    <Input 
-                      placeholder="Bairro" 
-                      value={locationInput.neighborhood}
-                      onChange={(e) => setLocationInput({...locationInput, neighborhood: e.target.value})}
-                      className="col-span-2"
-                    />
-                  </div>
-                  <Input 
-                    placeholder="Complemento (opcional)" 
-                    value={locationInput.complement}
-                    onChange={(e) => setLocationInput({...locationInput, complement: e.target.value})}
-                  />
-               </div>
-
-               <div className="space-y-2">
-                  <T as={Label}>Faixa de Preço (R$) - Opcional</T>
-                  <Input placeholder="Ex: até 300,00" type="number" />
-               </div>
-               <Button 
-                 className="w-full bg-indigo-600 hover:bg-indigo-700"
-                 onClick={() => alert('Funcionalidade em desenvolvimento. Em breve você poderá agendar diretamente com profissionais disponíveis!')}
-               >
-                 <T>Buscar & Agendar</T>
-               </Button>
-            </div>
-         </DialogContent>
-      </Dialog>
-
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="flex items-center gap-4">
-          <T as="h1" className="text-2xl font-bold text-[#0F172A]">Meus Agendamentos</T>
-          <div className="flex items-center bg-white border rounded-lg p-1 shadow-sm">
-            <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
-            <span className="px-4 font-medium min-w-[140px] text-center capitalize">
-              {format(currentDate, "MMMM yyyy", { locale: getDateLocale() })}
-            </span>
-            <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
+  // Patient/User Search Interface
+  return (
+    <div className="space-y-6">
+      {/* Hero Section */}
+      <div className="bg-gradient-to-r from-[#D4A574] to-[#B8935C] rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-3">
+            <Search className="w-8 h-8" />
+            <T as="h1" className="text-2xl md:text-3xl font-light tracking-wide">Pesquisa Detalhada</T>
           </div>
+          <T as="p" className="text-white/90 max-w-2xl font-light">
+            Encontre os melhores profissionais, clínicas, produtos e procedimentos estéticos. 
+            Nossa IA ajuda você a encontrar exatamente o que precisa com filtros avançados.
+          </T>
         </div>
-        </div>
+        <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white/10 rounded-full"></div>
+        <div className="absolute -top-5 -right-20 w-32 h-32 bg-white/5 rounded-full"></div>
+      </div>
 
-      <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-100 p-4 overflow-x-auto">
-        <div className="grid grid-cols-7 gap-4 min-w-[800px] h-full">
-          {weekDays.map((day, i) => {
-            const dayEvents = getEventsForDay(day);
-            const isToday = isSameDay(day, new Date());
-            return (
-              <div key={i} className={`flex flex-col h-full ${isToday ? 'bg-emerald-50/30 rounded-lg border border-emerald-100' : ''}`}>
-                <div className="text-center py-3 border-b border-slate-100 mb-2">
-                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider">{format(day, 'EEE', { locale: getDateLocale() })}</div>
-                  <div className={`text-xl font-bold mt-1 ${isToday ? 'text-emerald-600' : 'text-slate-700'}`}>{format(day, 'dd')}</div>
-                </div>
-                <div className="flex-1 space-y-2 p-2 overflow-y-auto">
-                  {dayEvents.map(evt => (
-                    <div key={evt.id} className={`p-2 rounded-lg text-xs border shadow-sm ${getTypeColor(evt.type)} hover:brightness-95 transition-all cursor-pointer`}>
-                      <div className="font-bold truncate mb-1" title={evt.title}>{evt.title}</div>
-                      <div className="flex items-center justify-between opacity-80">
-                        <span>{format(evt.start, 'HH:mm')}</span>
-                        {evt.modality === 'teleconsultation' && <Video className="w-3 h-3" />}
+      {/* Info Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="bg-[#FFF9F0] border-[#D4A574]/20">
+          <CardContent className="p-4 flex items-start gap-3">
+            <div className="bg-[#D4A574]/20 p-2 rounded-full">
+              <Lightbulb className="w-5 h-5 text-[#D4A574]" />
+            </div>
+            <div>
+              <T as="h4" className="font-semibold text-[#2D2416] text-sm">Como Funciona</T>
+              <T as="p" className="text-xs text-[#6B5D4F]">Selecione uma categoria, descreva o que procura e deixe nossa IA sugerir as melhores opções.</T>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-[#FFF9F0] border-[#D4A574]/20">
+          <CardContent className="p-4 flex items-start gap-3">
+            <div className="bg-[#D4A574]/20 p-2 rounded-full">
+              <ShieldCheck className="w-5 h-5 text-[#D4A574]" />
+            </div>
+            <div>
+              <T as="h4" className="font-semibold text-[#2D2416] text-sm">Profissionais Verificados</T>
+              <T as="p" className="text-xs text-[#6B5D4F]">Filtre apenas profissionais com selo de qualidade Clube da Beleza.</T>
+            </div>
+          </CardContent>
+        </Card>
+        <Card className="bg-[#FFF9F0] border-[#D4A574]/20">
+          <CardContent className="p-4 flex items-start gap-3">
+            <div className="bg-[#D4A574]/20 p-2 rounded-full">
+              <Star className="w-5 h-5 text-[#D4A574]" />
+            </div>
+            <div>
+              <T as="h4" className="font-semibold text-[#2D2416] text-sm">Avaliações Reais</T>
+              <T as="p" className="text-xs text-[#6B5D4F]">Veja avaliações e comentários de outros usuários da plataforma.</T>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Search Form */}
+      <Card className="bg-[#FEFBF7] border-[#E8DCC8] shadow-lg">
+        <CardHeader className="border-b border-[#E8DCC8]">
+          <CardTitle className="flex items-center gap-2 text-[#2D2416]">
+            <Sparkles className="w-5 h-5 text-[#D4A574]" />
+            <T>Busca Inteligente com IA</T>
+          </CardTitle>
+          <CardDescription className="text-[#6B5D4F]">
+            <T>Preencha os campos abaixo para encontrar o que você precisa</T>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-6 space-y-6">
+          
+          {/* Category Selection */}
+          <div className="space-y-3">
+            <T as={Label} className="text-[#2D2416] font-semibold">O que você está procurando?</T>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {SEARCH_CATEGORIES.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => setSearchCategory(cat.value)}
+                  className={`p-4 rounded-xl border-2 transition-all text-left ${
+                    searchCategory === cat.value 
+                      ? 'border-[#D4A574] bg-[#FFF9F0] shadow-md' 
+                      : 'border-[#E8DCC8] bg-white hover:border-[#D4A574]/50'
+                  }`}
+                >
+                  <cat.icon className={`w-6 h-6 mb-2 ${searchCategory === cat.value ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
+                  <T as="p" className="font-semibold text-sm text-[#2D2416]">{cat.label}</T>
+                  <T as="p" className="text-xs text-[#6B5D4F] mt-1">{cat.description}</T>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* AI Search Input */}
+          {searchCategory && (
+            <div className="space-y-3">
+              <T as={Label} className="text-[#2D2416] font-semibold">Descreva o que você precisa</T>
+              <div className="relative">
+                <Input 
+                  placeholder="Ex: Botox, Limpeza de pele, Clínica com estacionamento..." 
+                  value={searchQuery}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className="bg-white border-[#E8DCC8] h-12 text-base pr-10"
+                />
+                {isLoadingSuggestions && (
+                  <Loader2 className="absolute right-3 top-4 w-5 h-5 animate-spin text-[#D4A574]" />
+                )}
+                {aiSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-white border border-[#E8DCC8] rounded-xl shadow-lg mt-2 z-50 max-h-60 overflow-y-auto">
+                    {aiSuggestions.map((sug, i) => (
+                      <div 
+                        key={i}
+                        className="p-4 hover:bg-[#FFF9F0] cursor-pointer border-b border-[#E8DCC8] last:border-0 transition-colors"
+                        onClick={() => {
+                          setSearchQuery(sug.name);
+                          setAiSuggestions([]);
+                        }}
+                      >
+                        <div className="font-medium text-[#2D2416]">{sug.name}</div>
+                        <div className="text-xs text-[#6B5D4F] mt-1">{sug.description}</div>
                       </div>
-                      {evt.location_details && (
-                        <div className="flex items-center gap-1 mt-1 opacity-70 truncate">
-                          <MapPin className="w-3 h-3" /> {evt.location_details}
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center gap-2 text-xs text-[#6B5D4F]">
+                <Sparkles className="w-3 h-3 text-[#D4A574]" />
+                <T>A IA irá sugerir opções enquanto você digita</T>
+              </div>
+            </div>
+          )}
+
+          {/* Date Selection */}
+          <div className="space-y-3">
+            <T as={Label} className="text-[#2D2416] font-semibold flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#D4A574]" />
+              Quando?
+            </T>
+            <Tabs value={dateMode} onValueChange={setDateMode} className="w-full">
+              <TabsList className="grid w-full grid-cols-2 max-w-md bg-[#F5F1E8]">
+                <TabsTrigger value="calendar" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white">
+                  <CalendarIcon className="w-4 h-4 mr-2" /> <T>Data Específica</T>
+                </TabsTrigger>
+                <TabsTrigger value="weekday" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white">
+                  <T>Dia da Semana</T>
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="calendar" className="mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <T as={Label}>Data</T>
+                    <Input 
+                      type="date" 
+                      value={selectedDate}
+                      onChange={(e) => setSelectedDate(e.target.value)}
+                      className="bg-white border-[#E8DCC8]"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <T as={Label}>Horário Preferido</T>
+                    <Select value={selectedTime} onValueChange={setSelectedTime}>
+                      <SelectTrigger className="bg-white border-[#E8DCC8]">
+                        <SelectValue placeholder="Selecione o horário" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="manha">Manhã (08h - 12h)</SelectItem>
+                        <SelectItem value="tarde">Tarde (12h - 18h)</SelectItem>
+                        <SelectItem value="noite">Noite (18h - 22h)</SelectItem>
+                        <SelectItem value="qualquer">Qualquer horário</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+              </TabsContent>
+              <TabsContent value="weekday" className="mt-4">
+                <div className="space-y-3">
+                  <T as="p" className="text-sm text-[#6B5D4F]">Selecione os dias da semana de sua preferência:</T>
+                  <div className="flex flex-wrap gap-2">
+                    {WEEKDAYS.map((day) => (
+                      <button
+                        key={day.value}
+                        onClick={() => toggleWeekday(day.value)}
+                        className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                          selectedWeekdays.includes(day.value)
+                            ? 'bg-[#D4A574] text-white shadow-md'
+                            : 'bg-white border border-[#E8DCC8] text-[#6B5D4F] hover:border-[#D4A574]'
+                        }`}
+                      >
+                        <T>{day.label}</T>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+
+          {/* Professional Type */}
+          <div className="space-y-3">
+            <T as={Label} className="text-[#2D2416] font-semibold">Tipo de Profissional</T>
+            <Select value={professionalType} onValueChange={setProfessionalType}>
+              <SelectTrigger className="bg-white border-[#E8DCC8]">
+                <SelectValue placeholder="Selecione o tipo de profissional" />
+              </SelectTrigger>
+              <SelectContent className="max-h-60">
+                {PROFESSIONAL_TYPES.map((prof) => (
+                  <SelectItem key={prof.value} value={prof.value}>
+                    {prof.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Location */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <T as={Label} className="text-[#2D2416] font-semibold flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#D4A574]" />
+                Localização
+              </T>
+              <Button 
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleUseMyLocation}
+                disabled={isLoadingLocation}
+                className="text-xs border-[#D4A574]/30 text-[#D4A574] hover:bg-[#FFF9F0]"
+              >
+                {isLoadingLocation ? (
+                  <Loader2 className="w-3 h-3 animate-spin mr-2" />
+                ) : (
+                  <Navigation className="w-3 h-3 mr-2" />
+                )}
+                <T>Usar minha localização</T>
+              </Button>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <Input 
+                placeholder="Cidade" 
+                value={locationInput.city}
+                onChange={(e) => setLocationInput({...locationInput, city: e.target.value})}
+                className="bg-white border-[#E8DCC8]"
+              />
+              <Input 
+                placeholder="Estado" 
+                value={locationInput.state}
+                onChange={(e) => setLocationInput({...locationInput, state: e.target.value})}
+                className="bg-white border-[#E8DCC8]"
+              />
+            </div>
+          </div>
+
+          {/* Price Range */}
+          <div className="space-y-3">
+            <T as={Label} className="text-[#2D2416] font-semibold flex items-center gap-2">
+              <DollarSign className="w-4 h-4 text-[#D4A574]" />
+              Faixa de Preço Média
+            </T>
+            <RadioGroup value={priceRange} onValueChange={setPriceRange} className="space-y-2">
+              {PRICE_RANGES.map((range) => (
+                <div 
+                  key={range.value}
+                  className={`flex items-center space-x-3 p-3 rounded-lg border transition-all cursor-pointer ${
+                    priceRange === range.value 
+                      ? 'border-[#D4A574] bg-[#FFF9F0]' 
+                      : 'border-[#E8DCC8] bg-white hover:border-[#D4A574]/50'
+                  }`}
+                  onClick={() => setPriceRange(range.value)}
+                >
+                  <RadioGroupItem value={range.value} id={`price-${range.value}`} />
+                  <Label htmlFor={`price-${range.value}`} className="flex-1 cursor-pointer">
+                    <span className="font-semibold text-[#2D2416]">{range.label}</span>
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
+
+          {/* Amenities */}
+          <div className="space-y-3">
+            <T as={Label} className="text-[#2D2416] font-semibold">Amenidades do Estabelecimento (Opcional)</T>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+              {AMENITIES.map((amenity) => (
+                <div 
+                  key={amenity.id}
+                  className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                    selectedAmenities.includes(amenity.id)
+                      ? 'border-[#D4A574] bg-[#FFF9F0]'
+                      : 'border-[#E8DCC8] bg-white hover:border-[#D4A574]/50'
+                  }`}
+                  onClick={() => toggleAmenity(amenity.id)}
+                >
+                  <Checkbox 
+                    checked={selectedAmenities.includes(amenity.id)}
+                    onCheckedChange={() => toggleAmenity(amenity.id)}
+                  />
+                  <amenity.icon className={`w-4 h-4 ${selectedAmenities.includes(amenity.id) ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
+                  <T as="span" className="text-sm text-[#2D2416]">{amenity.label}</T>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Verified Only */}
+          <div 
+            className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all ${
+              verifiedOnly 
+                ? 'border-[#D4A574] bg-[#FFF9F0]' 
+                : 'border-[#E8DCC8] bg-white hover:border-[#D4A574]/50'
+            }`}
+            onClick={() => setVerifiedOnly(!verifiedOnly)}
+          >
+            <Checkbox 
+              checked={verifiedOnly}
+              onCheckedChange={setVerifiedOnly}
+            />
+            <BadgeCheck className={`w-6 h-6 ${verifiedOnly ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
+            <div className="flex-1">
+              <T as="p" className="font-semibold text-[#2D2416]">Apenas Profissionais Verificados</T>
+              <T as="p" className="text-xs text-[#6B5D4F]">Mostrar apenas profissionais com Selo de Qualidade Clube da Beleza</T>
+            </div>
+          </div>
+
+          {/* Search Button */}
+          <Button 
+            className="w-full h-14 bg-[#D4A574] hover:bg-[#C49565] text-white text-lg font-semibold shadow-lg"
+            onClick={handleSearch}
+            disabled={isSearching}
+          >
+            {isSearching ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                <T>Buscando...</T>
+              </>
+            ) : (
+              <>
+                <Search className="w-5 h-5 mr-2" />
+                <T>Pesquisar</T>
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+
+      {/* My Appointments Section */}
+      <Card className="bg-[#FEFBF7] border-[#E8DCC8]">
+        <CardHeader className="border-b border-[#E8DCC8]">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <CardTitle className="text-[#2D2416] flex items-center gap-2">
+                <CalendarIcon className="w-5 h-5 text-[#D4A574]" />
+                <T>Meus Agendamentos</T>
+              </CardTitle>
+              <CardDescription className="text-[#6B5D4F]">
+                <T>Visualize e gerencie seus compromissos</T>
+              </CardDescription>
+            </div>
+            <div className="flex items-center bg-white border border-[#E8DCC8] rounded-lg p-1 shadow-sm">
+              <Button variant="ghost" size="icon" onClick={prevWeek}><ChevronLeft className="w-4 h-4" /></Button>
+              <span className="px-4 font-medium min-w-[140px] text-center capitalize text-[#6B5D4F]">
+                {format(currentDate, "MMMM yyyy", { locale: getDateLocale() })}
+              </span>
+              <Button variant="ghost" size="icon" onClick={nextWeek}><ChevronRight className="w-4 h-4" /></Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-4">
+          <div className="overflow-x-auto">
+            <div className="grid grid-cols-7 gap-4 min-w-[800px]">
+              {weekDays.map((day, i) => {
+                const dayEvents = getEventsForDay(day);
+                const isToday = isSameDay(day, new Date());
+                return (
+                  <div key={i} className={`flex flex-col min-h-[200px] ${isToday ? 'bg-[#FFF9F0] rounded-lg border border-[#D4A574]/30' : ''}`}>
+                    <div className="text-center py-3 border-b border-[#E8DCC8] mb-2">
+                      <div className="text-xs font-bold text-[#6B5D4F] uppercase tracking-wider">{format(day, 'EEE', { locale: getDateLocale() })}</div>
+                      <div className={`text-xl font-bold mt-1 ${isToday ? 'text-[#D4A574]' : 'text-[#2D2416]'}`}>{format(day, 'dd')}</div>
+                    </div>
+                    <div className="flex-1 space-y-2 p-2 overflow-y-auto">
+                      {dayEvents.map(evt => (
+                        <div key={evt.id} className={`p-2 rounded-lg text-xs border shadow-sm ${getTypeColor(evt.type)} hover:brightness-95 transition-all cursor-pointer`}>
+                          <div className="font-bold truncate mb-1" title={evt.title}>{evt.title}</div>
+                          <div className="flex items-center justify-between opacity-80">
+                            <span>{format(evt.start, 'HH:mm')}</span>
+                            {evt.modality === 'teleconsultation' && <Video className="w-3 h-3" />}
+                          </div>
+                          {evt.location_details && (
+                            <div className="flex items-center gap-1 mt-1 opacity-70 truncate">
+                              <MapPin className="w-3 h-3" /> {evt.location_details}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      {dayEvents.length === 0 && isToday && (
+                        <div className="flex flex-col items-center justify-center h-20 text-[#6B5D4F]/50 text-xs">
+                          <T as="span" className="block">Livre</T>
                         </div>
                       )}
                     </div>
-                  ))}
-                  {dayEvents.length === 0 && isToday && (
-                    <div className="flex flex-col items-center justify-center h-20 text-slate-300 text-xs">
-                      <T as="span" className="block">Livre</T>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

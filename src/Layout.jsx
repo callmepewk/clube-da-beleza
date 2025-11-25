@@ -282,7 +282,7 @@ export default function Layout({ children }) {
     const items = [
       { icon: LayoutDashboard, label: 'Início', path: '/', translationKey: 'Início' },
       { icon: Newspaper, label: 'Notícias', path: '/news', translationKey: 'Notícias' },
-      { icon: Calendar, label: 'Agendamentos', path: '/schedule', translationKey: 'Agendamentos' },
+      { icon: Calendar, label: 'Pesquisa Detalhada', path: '/schedule', translationKey: 'Pesquisa Detalhada' },
       { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse', translationKey: 'Bia - Cuidadora Virtual' },
       { icon: Bot, label: 'Crie Chatbots', path: '/chatbots', translationKey: 'Crie Chatbots' },
       { icon: Globe, label: 'Crie Sites', path: '/sites', translationKey: 'Crie Sites' },
