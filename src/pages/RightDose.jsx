@@ -184,7 +184,10 @@ export default function RightDosePage() {
           <T as="p" className="text-white/90 text-lg font-light mb-8 max-w-2xl mx-auto">
             Profissionais e pacientes: comprometam-se com tratamentos seguros e resultados naturais.
           </T>
-          <Button className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl">
+          <Button 
+            onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Gostaria de mais informações sobre a campanha Beleza na Dose Certa do Clube da Beleza.')}`, '_blank')}
+            className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl"
+          >
             <T>Saiba Mais</T>
           </Button>
         </div>

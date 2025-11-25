@@ -201,7 +201,10 @@ export default function BeautyTeaPage() {
           <p className="text-white/90 text-lg font-light mb-8 max-w-2xl mx-auto">
             Inscreva-se para receber convites exclusivos para os próximos encontros do Chá da Beleza.
           </p>
-          <Button className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl">
+          <Button 
+            onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Gostaria de participar dos próximos encontros do Chá da Beleza do Clube da Beleza.')}`, '_blank')}
+            className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl"
+          >
             Quero Participar
           </Button>
         </div>

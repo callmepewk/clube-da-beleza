@@ -150,7 +150,10 @@ export default function SkinCaretakersPage() {
             <p className="text-white/90 text-lg font-light mb-6">
               Junte-se à elite dos profissionais de estética do Brasil. Obtenha sua certificação e destaque-se no mercado.
             </p>
-            <Button className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl">
+            <Button 
+              onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Sou profissional e gostaria de solicitar a certificação para o programa Cuidadores da Pele do Clube da Beleza.')}`, '_blank')}
+              className="bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-xl shadow-xl"
+            >
               Solicitar Certificação
             </Button>
           </div>
@@ -168,7 +171,10 @@ export default function SkinCaretakersPage() {
         <p className="text-[#6B5D4F] font-light text-lg mb-8 max-w-2xl mx-auto">
           Encontre profissionais certificados perto de você e tenha a garantia de estar em mãos de especialistas comprometidos com sua satisfação.
         </p>
-        <Button className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-14 px-8 text-lg font-light rounded-xl shadow-xl">
+        <Button 
+          onClick={() => window.open('https://mapa-da-estetica.base44.app', '_blank')}
+          className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-14 px-8 text-lg font-light rounded-xl shadow-xl"
+        >
           Buscar Profissionais
         </Button>
       </div>

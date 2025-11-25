@@ -75,11 +75,17 @@ export default function SolidBeautyPage() {
             Transformando vidas através da beleza, oferecendo tratamentos estéticos gratuitos para quem mais precisa.
           </p>
           <div className="flex gap-4">
-            <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white h-14 px-8 text-lg font-light rounded-xl shadow-xl">
+            <Button 
+              onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Gostaria de fazer uma doação para o projeto Beleza Solidária do Clube da Beleza.')}`, '_blank')}
+              className="bg-[#D4A574] hover:bg-[#C49565] text-white h-14 px-8 text-lg font-light rounded-xl shadow-xl"
+            >
               <Gift className="w-5 h-5 mr-2" />
               Fazer uma Doação
             </Button>
-            <Button variant="outline" className="border-2 border-white text-white hover:bg-white/10 h-14 px-8 text-lg font-light rounded-xl backdrop-blur-sm">
+            <Button 
+              onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Gostaria de ser voluntário(a) no projeto Beleza Solidária do Clube da Beleza.')}`, '_blank')}
+              className="border-2 border-white bg-white/20 text-white hover:bg-white/30 h-14 px-8 text-lg font-light rounded-xl backdrop-blur-sm"
+            >
               Seja Voluntário
             </Button>
           </div>
@@ -165,7 +171,10 @@ export default function SolidBeautyPage() {
           <p className="text-[#6B5D4F] font-light leading-relaxed mb-6">
             Sua contribuição permite que mais pessoas tenham acesso a tratamentos que transformam vidas.
           </p>
-          <Button className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 px-8 rounded-xl font-light">
+          <Button 
+            onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Gostaria de fazer uma doação para o projeto Beleza Solidária do Clube da Beleza.')}`, '_blank')}
+            className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 px-8 rounded-xl font-light"
+          >
             Doar Agora
           </Button>
         </div>
@@ -175,7 +184,10 @@ export default function SolidBeautyPage() {
           <p className="text-[#6B5D4F] font-light leading-relaxed mb-6">
             Profissionais certificados podem doar suas habilidades e fazer a diferença na vida de alguém.
           </p>
-          <Button className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 px-8 rounded-xl font-light">
+          <Button 
+            onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Gostaria de ser voluntário(a) no projeto Beleza Solidária do Clube da Beleza.')}`, '_blank')}
+            className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 px-8 rounded-xl font-light"
+          >
             Quero Ajudar
           </Button>
         </div>

@@ -120,7 +120,10 @@ export default function QualitySealPage() {
               </li>
             ))}
           </ul>
-          <Button className="w-full mt-8 bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-12 rounded-xl font-light">
+          <Button 
+            onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Sou profissional e gostaria de solicitar a verificação de aplicabilidade para o Selo de Qualidade do Clube da Beleza.')}`, '_blank')}
+            className="w-full mt-8 bg-white text-[#D4A574] hover:bg-[#FFF9F0] h-12 rounded-xl font-light"
+          >
             <T>Solicitar Certificação</T>
           </Button>
         </div>
@@ -139,8 +142,11 @@ export default function QualitySealPage() {
               </li>
             ))}
           </ul>
-          <Button className="w-full mt-8 bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 rounded-xl font-light">
-            <T>Buscar Certificados</T>
+          <Button 
+            onClick={() => window.location.href = '/Tools'}
+            className="w-full mt-8 bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-12 rounded-xl font-light"
+          >
+            <T>Ver Ferramentas</T>
           </Button>
         </div>
       </div>
@@ -195,7 +201,10 @@ export default function QualitySealPage() {
         <T as="p" className="text-[#6B5D4F] font-light text-lg mb-8 max-w-2xl mx-auto">
           Junte-se à elite dos profissionais de medicina estética e eleve sua carreira a um novo patamar de reconhecimento e confiança.
         </T>
-        <Button className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-14 px-8 text-lg font-light rounded-xl shadow-xl">
+        <Button 
+          onClick={() => window.open(`https://wa.me/5531972595643?text=${encodeURIComponent('Olá! Sou profissional e gostaria de iniciar o processo de verificação para o Selo de Qualidade do Clube da Beleza.')}`, '_blank')}
+          className="bg-gradient-to-r from-[#D4A574] to-[#C9A868] hover:from-[#C49565] hover:to-[#B8935C] text-white h-14 px-8 text-lg font-light rounded-xl shadow-xl"
+        >
           <T>Iniciar Processo</T>
         </Button>
       </div>
