@@ -382,36 +382,36 @@ export default function Layout({ children }) {
       {user && <BannerDisplay userProfile={profile} />}
 
       {/* Left Sidebar Navigation (Desktop) */}
-      <aside className={`hidden lg:flex flex-col ${theme.sidebar} border-r ${theme.border} w-72 fixed left-0 top-0 bottom-0 z-50 overflow-y-auto`}>
+      <aside className={`hidden lg:flex flex-col ${theme.sidebar} border-r ${theme.border} w-64 xl:w-72 fixed left-0 top-0 bottom-0 z-50 overflow-y-auto`}>
         {/* Logo */}
-        <div className="p-8 border-b border-[#D4A574]/20">
+        <div className="p-4 lg:p-6 xl:p-8 border-b border-[#D4A574]/20">
           <Link to={createPageUrl('Dashboard')}>
-            <div className={`text-2xl font-light tracking-[0.2em] ${theme.textPrimary} text-center`}>
+            <div className={`text-lg lg:text-xl xl:text-2xl font-light tracking-[0.15em] lg:tracking-[0.2em] ${theme.textPrimary} text-center`}>
               CLUBE DA<br/>BELEZA
             </div>
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D4A574] to-transparent mt-4"></div>
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#D4A574] to-transparent mt-3 lg:mt-4"></div>
           </Link>
-          <div className="mt-4 flex justify-center">
+          <div className="mt-3 lg:mt-4 flex justify-center">
             <LanguageSelector />
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-6 space-y-2 overflow-y-auto min-h-0 pb-32">
+        <nav className="flex-1 p-4 lg:p-6 space-y-1 lg:space-y-2 overflow-y-auto min-h-0 pb-32">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.path}
                 to={createPageUrl(item.path.replace('/', ''))}
-                className={`flex items-center gap-4 px-4 py-4 rounded-xl font-light text-sm tracking-wide transition-all duration-300
+                className={`flex items-center gap-3 lg:gap-4 px-3 lg:px-4 py-3 lg:py-4 rounded-lg lg:rounded-xl font-light text-xs lg:text-sm tracking-wide transition-all duration-300
                   ${isActive 
                     ? `${theme.accentBg} text-white shadow-lg` 
                     : `${theme.textSecondary} ${theme.hover} hover:${theme.accent}`
                   }`}
               >
-                <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : theme.accent}`} />
-                <T>{item.translationKey}</T>
+                <item.icon className={`w-4 h-4 lg:w-5 lg:h-5 flex-shrink-0 ${isActive ? 'text-white' : theme.accent}`} />
+                <span className="truncate"><T>{item.translationKey}</T></span>
               </Link>
             );
           })}
@@ -512,7 +512,7 @@ export default function Layout({ children }) {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col lg:ml-72">
+      <div className="flex-1 flex flex-col lg:ml-64 xl:ml-72">
         {/* Mobile Header */}
         <header className={`lg:hidden h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 sticky top-0 z-40`}>
           <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
@@ -563,7 +563,7 @@ export default function Layout({ children }) {
 
         {/* Scrollable Page Content */}
         <main id="main-content" className={`flex-1 overflow-y-auto ${theme.bg}`}>
-          <div className="p-4 lg:p-12 max-w-7xl mx-auto">
+          <div className="p-3 sm:p-4 md:p-6 lg:p-8 xl:p-12 max-w-7xl mx-auto w-full">
             {children}
           </div>
           <Footer />
