@@ -1,25 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Users, Heart, Leaf, Star, Target, Eye } from 'lucide-react';
+import { Users, Heart, Leaf, Star, Target, Eye, Coffee, Shield, Activity, Package, Award } from 'lucide-react';
 import T from '@/components/TranslatedText';
 
-export default function AboutPage() {
+// Import section pages as components
+import BeautyTeaPage from './BeautyTea';
+import SkinCaretakersPage from './SkinCaretakers';
+import SolidBeautyPage from './SolidBeauty';
+import RightDosePage from './RightDose';
+import BeautyBoxPage from './BeautyBox';
+import QualitySealPage from './QualitySeal';
+
+const sections = [
+  { id: 'about', label: 'Sobre Nós', icon: Heart },
+  { id: 'beautytea', label: 'Chá da Beleza', icon: Coffee },
+  { id: 'skincaretakers', label: 'Cuidadores da Pele', icon: Users },
+  { id: 'solidbeauty', label: 'Beleza Solidária', icon: Heart },
+  { id: 'rightdose', label: 'Dose Certa', icon: Activity },
+  { id: 'beautybox', label: 'Beauty Box', icon: Package },
+  { id: 'qualityseal', label: 'Selo de Qualidade', icon: Shield },
+];
+
+function AboutSection() {
   return (
-    <div className="space-y-8 pb-10 text-[#0F172A]">
+    <div className="space-y-8 pb-10 text-[#2D2416]">
       {/* Hero Section */}
-      <div className="relative h-[400px] rounded-xl overflow-hidden shadow-2xl group bg-white border border-slate-100">
+      <div className="relative h-[400px] rounded-[2rem] overflow-hidden shadow-2xl group bg-[#FEFBF7] border border-[#D4A574]/20">
         <div className="absolute inset-0 bg-[url('https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_68ca933db3f173d5b5ee5174/424de1767_clubeimg.jpeg')] bg-cover bg-center opacity-20"></div>
         <div className="relative z-10 flex flex-col justify-end h-full p-8 max-w-4xl">
-           <T as="h1" className="text-5xl font-bold tracking-tight text-[#0F172A] mb-4">Sobre o Club da Beleza</T>
-           <T as="p" className="text-[#475569] text-lg font-medium leading-relaxed">
+           <T as="h1" className="text-5xl font-light tracking-tight text-[#2D2416] mb-4">Sobre o Clube da Beleza</T>
+           <T as="p" className="text-[#6B5D4F] text-lg font-light leading-relaxed">
              O maior clube de benefícios exclusivo para quem ama o autocuidado e um planeta mais feliz.
              Democratizando o acesso a serviços de beleza e estética de qualidade no Brasil.
            </T>
            <div className="mt-6">
               <Button 
                 onClick={() => window.open('https://clube-da-beleza.base44.app', '_blank')}
-                className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-6 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all"
+                className="bg-[#D4A574] hover:bg-[#C49565] text-white font-light px-8 py-6 rounded-xl text-lg shadow-lg"
                 >
                 <T>Conheça mais o nosso trabalho</T>
                 </Button>
@@ -30,15 +48,15 @@ export default function AboutPage() {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
          {[
-            { number: "500+", label: "Membros Ativos", key: "membros" },
-            { number: "100+", label: "Parceiros Certificados", key: "parceiros" },
-            { number: "50+", label: "Cidades Atendidas", key: "cidades" },
-            { number: "98%", label: "Satisfação", key: "satisfacao" }
+            { number: "500+", label: "Membros Ativos" },
+            { number: "100+", label: "Parceiros Certificados" },
+            { number: "50+", label: "Cidades Atendidas" },
+            { number: "98%", label: "Satisfação" }
          ].map((stat, i) => (
-            <Card key={i} className="bg-white border-slate-200 text-center py-6 shadow-sm">
+            <Card key={i} className="bg-[#FEFBF7] border-[#D4A574]/20 text-center py-6 shadow-sm">
                <CardContent className="p-0">
-                  <div className="text-3xl font-bold text-purple-600">{stat.number}</div>
-                  <T className="text-sm text-[#475569] uppercase tracking-wider mt-1 font-bold">{stat.label}</T>
+                  <div className="text-3xl font-light text-[#D4A574]">{stat.number}</div>
+                  <T className="text-sm text-[#6B5D4F] uppercase tracking-wider mt-1 font-light">{stat.label}</T>
                </CardContent>
             </Card>
          ))}
@@ -48,30 +66,30 @@ export default function AboutPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
          <div className="space-y-6">
             <div>
-               <T as="h2" className="text-3xl font-bold text-[#0F172A] mb-4">Nossa História</T>
-               <p className="text-[#475569] leading-relaxed font-medium">
-                 O <strong>Club da Beleza</strong> nasceu da visão de democratizar o acesso a serviços de beleza e estética de qualidade no Brasil.
+               <T as="h2" className="text-3xl font-light text-[#2D2416] mb-4">Nossa História</T>
+               <T as="p" className="text-[#6B5D4F] leading-relaxed font-light">
+                 O Clube da Beleza nasceu da visão de democratizar o acesso a serviços de beleza e estética de qualidade no Brasil.
                  Criamos uma plataforma inovadora que não apenas conecta clientes a profissionais certificados, mas também oferece benefícios exclusivos, descontos especiais e uma comunidade engajada em torno do bem-estar e da beleza sustentável.
-               </p>
+               </T>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-               <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                  <Target className="w-8 h-8 text-blue-600 mb-3" />
-                  <T as="h3" className="font-bold text-[#0F172A] mb-2">Nossa Missão</T>
-                  <p className="text-sm text-[#475569] font-medium">
+               <div className="bg-[#FEFBF7] p-6 rounded-xl border border-[#D4A574]/20 shadow-sm">
+                  <Target className="w-8 h-8 text-[#D4A574] mb-3" />
+                  <T as="h3" className="font-light text-[#2D2416] mb-2">Nossa Missão</T>
+                  <T as="p" className="text-sm text-[#6B5D4F] font-light">
                     Democratizar o acesso a serviços de beleza e estética de qualidade, conectando pessoas a profissionais qualificados e comprometidos com a excelência.
-                  </p>
+                  </T>
                </div>
-               <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-                  <Eye className="w-8 h-8 text-emerald-600 mb-3" />
-                  <T as="h3" className="font-bold text-[#0F172A] mb-2">Nossa Visão</T>
-                  <p className="text-sm text-[#475569] font-medium">
+               <div className="bg-[#FEFBF7] p-6 rounded-xl border border-[#D4A574]/20 shadow-sm">
+                  <Eye className="w-8 h-8 text-[#D4A574] mb-3" />
+                  <T as="h3" className="font-light text-[#2D2416] mb-2">Nossa Visão</T>
+                  <T as="p" className="text-sm text-[#6B5D4F] font-light">
                     Ser a maior e mais confiável rede de beleza e estética do Brasil, transformando a experiência de autocuidado em algo acessível e prazeroso.
-                  </p>
+                  </T>
                </div>
             </div>
          </div>
-         <div className="relative h-full min-h-[300px] rounded-xl overflow-hidden border border-slate-200 shadow-md">
+         <div className="relative h-full min-h-[300px] rounded-xl overflow-hidden border border-[#D4A574]/20 shadow-md">
             <img 
               src="https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=800&q=80" 
               alt="Beauty Salon" 
@@ -82,23 +100,72 @@ export default function AboutPage() {
 
       {/* Values */}
       <div>
-         <T as="h2" className="text-3xl font-bold text-[#0F172A] mb-6 text-center">Nossos Valores</T>
+         <T as="h2" className="text-3xl font-light text-[#2D2416] mb-6 text-center">Nossos Valores</T>
          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
-               { icon: Heart, title: "Autocuidado", desc: "Acreditamos que cuidar de si mesmo é um ato de amor próprio essencial.", color: "text-pink-600", key: "autocuidado" },
-               { icon: Leaf, title: "Sustentabilidade", desc: "Comprometidos com práticas sustentáveis e responsáveis.", color: "text-emerald-600", key: "sustentabilidade" },
-               { icon: Users, title: "Comunidade", desc: "Construímos uma rede forte de profissionais e clientes.", color: "text-blue-600", key: "comunidade" },
-               { icon: Star, title: "Excelência", desc: "Selecionamos apenas os melhores profissionais.", color: "text-yellow-500", key: "excelencia" }
+               { icon: Heart, title: "Autocuidado", desc: "Acreditamos que cuidar de si mesmo é um ato de amor próprio essencial.", color: "text-[#D4A574]" },
+               { icon: Leaf, title: "Sustentabilidade", desc: "Comprometidos com práticas sustentáveis e responsáveis.", color: "text-[#D4A574]" },
+               { icon: Users, title: "Comunidade", desc: "Construímos uma rede forte de profissionais e clientes.", color: "text-[#D4A574]" },
+               { icon: Star, title: "Excelência", desc: "Selecionamos apenas os melhores profissionais.", color: "text-[#D4A574]" }
             ].map((val, i) => (
-               <Card key={i} className="bg-white border-slate-200 hover:shadow-lg transition-all shadow-sm">
+               <Card key={i} className="bg-[#FEFBF7] border-[#D4A574]/20 hover:shadow-lg transition-all shadow-sm">
                   <CardContent className="p-6 flex flex-col items-center text-center">
                      <val.icon className={`w-12 h-12 ${val.color} mb-4`} />
-                     <T as="h3" className="font-bold text-[#0F172A] text-lg mb-2">{val.title}</T>
-                     <T as="p" className="text-sm text-[#475569] font-medium">{val.desc}</T>
+                     <T as="h3" className="font-light text-[#2D2416] text-lg mb-2">{val.title}</T>
+                     <T as="p" className="text-sm text-[#6B5D4F] font-light">{val.desc}</T>
                   </CardContent>
                </Card>
             ))}
          </div>
+      </div>
+    </div>
+  );
+}
+
+export default function AboutPage() {
+  const [activeSection, setActiveSection] = useState('about');
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'about': return <AboutSection />;
+      case 'beautytea': return <BeautyTeaPage />;
+      case 'skincaretakers': return <SkinCaretakersPage />;
+      case 'solidbeauty': return <SolidBeautyPage />;
+      case 'rightdose': return <RightDosePage />;
+      case 'beautybox': return <BeautyBoxPage />;
+      case 'qualityseal': return <QualitySealPage />;
+      default: return <AboutSection />;
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Section Selector */}
+      <div className="sticky top-0 z-30 bg-[#F5F1E8]/95 backdrop-blur-md py-4 -mx-4 px-4 lg:-mx-12 lg:px-12 border-b border-[#D4A574]/20">
+        <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+          {sections.map((section) => {
+            const isActive = activeSection === section.id;
+            return (
+              <button
+                key={section.id}
+                onClick={() => setActiveSection(section.id)}
+                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-light text-sm whitespace-nowrap transition-all duration-300 ${
+                  isActive 
+                    ? 'bg-[#D4A574] text-white shadow-lg scale-105' 
+                    : 'bg-[#FEFBF7] text-[#6B5D4F] hover:bg-[#FFF9F0] border border-[#D4A574]/20'
+                }`}
+              >
+                <section.icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#D4A574]'}`} />
+                <T>{section.label}</T>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Section Content */}
+      <div className="animate-in fade-in duration-300">
+        {renderSection()}
       </div>
     </div>
   );
