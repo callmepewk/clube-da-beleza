@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Users, Heart, Leaf, Star, Target, Eye, Coffee, Shield, Activity, Package, Award } from 'lucide-react';
+import { Users, Heart, Leaf, Star, Target, Eye, Coffee, Shield, Activity, Package, Award, Zap } from 'lucide-react';
 import T from '@/components/TranslatedText';
 
 // Import section pages as components
@@ -11,9 +11,13 @@ import SolidBeautyPage from './SolidBeauty';
 import RightDosePage from './RightDose';
 import BeautyBoxPage from './BeautyBox';
 import QualitySealPage from './QualitySeal';
+import OurMissionPage from './OurMission';
+import ToolsPage from './Tools';
 
 const sections = [
   { id: 'about', label: 'Sobre Nós', icon: Heart },
+  { id: 'mission', label: 'Nossa Missão', icon: Target },
+  { id: 'tools', label: 'Nossas Ferramentas', icon: Zap },
   { id: 'beautytea', label: 'Chá da Beleza', icon: Coffee },
   { id: 'skincaretakers', label: 'Cuidadores da Pele', icon: Users },
   { id: 'solidbeauty', label: 'Beleza Solidária', icon: Heart },
@@ -128,6 +132,8 @@ export default function AboutPage() {
   const renderSection = () => {
     switch (activeSection) {
       case 'about': return <AboutSection />;
+      case 'mission': return <OurMissionPage />;
+      case 'tools': return <ToolsPage />;
       case 'beautytea': return <BeautyTeaPage />;
       case 'skincaretakers': return <SkinCaretakersPage />;
       case 'solidbeauty': return <SolidBeautyPage />;
