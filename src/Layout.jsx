@@ -572,7 +572,27 @@ export default function Layout({ children }) {
         {/* Scrollable Page Content */}
         <main id="main-content" className={`flex-1 overflow-y-auto ${theme.bg}`}>
           <div className="p-3 sm:p-4 md:p-6 lg:p-8 xl:p-12 max-w-7xl mx-auto w-full">
-            {children}
+            {isPageBlocked(location.pathname) ? (
+              <div className="min-h-[60vh] flex items-center justify-center">
+                <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-8 max-w-md text-center shadow-lg">
+                  <div className="w-20 h-20 rounded-full bg-[#FFF9F0] flex items-center justify-center mx-auto mb-6">
+                    <Lock className="w-10 h-10 text-[#D4A574]" />
+                  </div>
+                  <T as="h2" className="text-2xl font-light text-[#2D2416] mb-3">Página em Manutenção</T>
+                  <T as="p" className="text-[#6B5D4F] font-light mb-6">
+                    Esta página está sendo atualizada. Em breve estará disponível novamente. Agradecemos a compreensão.
+                  </T>
+                  <Button 
+                    onClick={() => navigate(createPageUrl('Dashboard'))}
+                    className={`${theme.accentBg} hover:bg-[#C49565] text-white font-light rounded-xl`}
+                  >
+                    <T>Voltar ao Início</T>
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              children
+            )}
           </div>
           <Footer />
         </main>
