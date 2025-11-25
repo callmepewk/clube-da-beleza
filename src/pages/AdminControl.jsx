@@ -4,7 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { 
   Users, LayoutDashboard, DollarSign, Activity, Shield, Trash2, 
   BarChart3, UserCheck, Building2, Loader2, Search, Bell, Send,
-  User, Stethoscope, X, Globe, Bot, Palette, Calendar, Eye, MousePointer, BarChart2
+  User, Stethoscope, X, Globe, Bot, Palette, Calendar, Eye, MousePointer, BarChart2,
+  Lock, Unlock, AlertTriangle, Plus, Image
 } from 'lucide-react';
 import BeautyTeaAdmin from '@/components/admin/BeautyTeaAdmin';
 import { Button } from '@/components/ui/button';
@@ -14,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import {
   Table,
   TableBody,
@@ -26,6 +28,37 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { format } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import T from '@/components/TranslatedText';
+
+// Lista de páginas do sistema
+const SYSTEM_PAGES = [
+  { path: '/', name: 'Página Inicial' },
+  { path: '/news', name: 'Notícias' },
+  { path: '/schedule', name: 'Pesquisa Detalhada' },
+  { path: '/nurse', name: 'Bia - Cuidadora Virtual' },
+  { path: '/chatbots', name: 'Crie Chatbots' },
+  { path: '/beautyspace', name: 'Beauty Space' },
+  { path: '/sites', name: 'Crie Sites' },
+  { path: '/design', name: 'Faça Designs' },
+  { path: '/products', name: 'Crie Produtos' },
+  { path: '/plans', name: 'Planos' },
+  { path: '/about', name: 'Sobre Nós' },
+  { path: '/profile', name: 'Meu Perfil' },
+  { path: '/tools', name: 'Nossas Ferramentas' },
+];
+
+// Keywords de SEO simuladas
+const SEO_KEYWORDS = [
+  { keyword: 'clinica estetica', position: 1, volume: 12500, change: '+2' },
+  { keyword: 'dermatologista', position: 2, volume: 9800, change: '+1' },
+  { keyword: 'harmonização facial', position: 3, volume: 8500, change: '0' },
+  { keyword: 'botox preço', position: 4, volume: 7200, change: '+3' },
+  { keyword: 'preenchimento labial', position: 5, volume: 6800, change: '-1' },
+  { keyword: 'limpeza de pele', position: 6, volume: 5500, change: '+2' },
+  { keyword: 'peeling facial', position: 7, volume: 4900, change: '+1' },
+  { keyword: 'tratamento para acne', position: 8, volume: 4200, change: '0' },
+  { keyword: 'depilação a laser', position: 9, volume: 3800, change: '+4' },
+  { keyword: 'skincare rotina', position: 10, volume: 3500, change: '-2' },
+];
 
 function NotificationSender() {
    const [form, setForm] = useState({ title: '', message: '', link: '', image_url: '', target_type: 'all' });
