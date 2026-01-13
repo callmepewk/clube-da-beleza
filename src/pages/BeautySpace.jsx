@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Globe, Palette, ShoppingBag, Bot, Sparkles } from 'lucide-react';
 import T from '@/components/TranslatedText';
 import { base44 } from '@/api/base44Client';
+import { Button } from '@/components/ui/button';
 import PurchaseQRModal from '../components/purchase/PurchaseQRModal';
 
 // Import section pages as components
