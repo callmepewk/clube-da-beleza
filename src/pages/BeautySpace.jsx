@@ -36,7 +36,7 @@ export default function BeautySpacePage() {
         <div className="relative z-10">
           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
             <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
-            <T as="h1" className="text-xl sm:text-2xl md:text-3xl font-light tracking-wide">Beauty Space</T>
+            <T as="h1" className="text-xl sm:text-2xl md:text-3xl font-light tracking-wide">AI Doctor</T>
           </div>
           <T as="p" className="text-white/90 max-w-2xl font-light text-sm sm:text-base">
             O espaço criativo do Clube da Beleza. Crie sites profissionais, designs incríveis e produtos digitais com ajuda da inteligência artificial.

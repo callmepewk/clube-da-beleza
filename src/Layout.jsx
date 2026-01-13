@@ -300,7 +300,7 @@ export default function Layout({ children }) {
       { icon: Newspaper, label: 'Notícias', path: '/news', translationKey: 'Notícias' },
       { icon: MapPin, label: 'Pesquisa Detalhada', path: '/schedule', translationKey: 'Pesquisa Detalhada' },
       { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse', translationKey: 'Bia - Cuidadora Virtual' },
-      { icon: Palette, label: 'Beauty Space', path: '/beautyspace', translationKey: 'Beauty Space' },
+      { icon: Palette, label: 'AI Doctor', path: '/beautyspace', translationKey: 'AI Doctor' },
       { icon: CreditCard, label: 'Planos', path: '/plans', translationKey: 'Planos' },
       { icon: Heart, label: 'Sobre Nós', path: '/about', translationKey: 'Sobre Nós' },
       { icon: HelpCircle, label: 'Suporte', path: '/support', translationKey: 'Suporte' },
