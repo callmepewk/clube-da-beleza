@@ -21,10 +21,23 @@ const sections = [
 export default function BeautySpacePage() {
   const [activeSection, setActiveSection] = useState('chatbots');
   const [isAuth, setIsAuth] = useState(false);
+  const [canCreate, setCanCreate] = useState(false);
   const [showPurchase, setShowPurchase] = useState(false);
 
   useEffect(() => {
-    base44.auth.isAuthenticated().then(setIsAuth);
+    const check = async () => {
+      const auth = await base44.auth.isAuthenticated();
+      setIsAuth(auth);
+      if (auth) {
+        const user = await base44.auth.me();
+        const res = await base44.entities.UserProfile.list({ query: { user_email: user.email } });
+        const profile = res?.data?.[0];
+        setCanCreate(profile?.plan && profile.plan !== 'free');
+      } else {
+        setCanCreate(false);
+      }
+    };
+    check();
   }, []);
 
   const renderSection = () => {
@@ -83,11 +96,11 @@ export default function BeautySpacePage() {
 
       {/* Section Content */}
       <div className="animate-in fade-in duration-300">
-        {isAuth ? (
+        {canCreate ? (
           renderSection()
         ) : (
           <div className="bg-[#FEFBF7] border border-[#D4A574]/30 rounded-xl p-6 text-center">
-            <T as="p" className="text-[#2D2416] font-light mb-3">Apenas usuários logados podem criar conteúdos.</T>
+            <T as="p" className="text-[#2D2416] font-light mb-3">Apenas usuários com plano ativo podem criar. Você pode contratar a criação avulsa via QR.</T>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
               <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white" onClick={() => base44.auth.redirectToLogin()}>Fazer Login</Button>
               <Button variant="outline" onClick={() => setShowPurchase(true)}>Contratar Criação via QR</Button>
