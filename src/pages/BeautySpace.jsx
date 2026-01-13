@@ -32,7 +32,7 @@ export default function BeautySpacePage() {
         const user = await base44.auth.me();
         const res = await base44.entities.UserProfile.list({ query: { user_email: user.email } });
         const profile = res?.data?.[0];
-        setCanCreate(profile?.plan && profile.plan !== 'free');
+        setCanCreate(auth);
       } else {
         setCanCreate(false);
       }
@@ -100,7 +100,7 @@ export default function BeautySpacePage() {
           renderSection()
         ) : (
           <div className="bg-[#FEFBF7] border border-[#D4A574]/30 rounded-xl p-6 text-center">
-            <T as="p" className="text-[#2D2416] font-light mb-3">Apenas usuários com plano ativo podem criar. Você pode contratar a criação avulsa via QR.</T>
+            <T as="p" className="text-[#2D2416] font-light mb-3">Apenas usuários logados podem criar. Você pode contratar a criação avulsa via QR.</T>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
               <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white" onClick={() => base44.auth.redirectToLogin()}>Fazer Login</Button>
               <Button variant="outline" onClick={() => setShowPurchase(true)}>Contratar Criação via QR</Button>
