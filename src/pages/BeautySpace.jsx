@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Globe, Palette, ShoppingBag, Bot, Sparkles } from 'lucide-react';
 import T from '@/components/TranslatedText';
+import { base44 } from '@/api/base44Client';
+import PurchaseQRModal from '../components/purchase/PurchaseQRModal';
 
 // Import section pages as components
 import SitesPage from './Sites';
@@ -17,6 +19,12 @@ const sections = [
 
 export default function BeautySpacePage() {
   const [activeSection, setActiveSection] = useState('chatbots');
+  const [isAuth, setIsAuth] = useState(false);
+  const [showPurchase, setShowPurchase] = useState(false);
+
+  useEffect(() => {
+    base44.auth.isAuthenticated().then(setIsAuth);
+  }, []);
 
   const renderSection = () => {
     switch (activeSection) {
@@ -34,9 +42,12 @@ export default function BeautySpacePage() {
       <div className="bg-gradient-to-r from-[#D4A574] to-[#B8935C] rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
         <div className="relative z-10">
-          <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-            <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
-            <T as="h1" className="text-xl sm:text-2xl md:text-3xl font-light tracking-wide">AI Doctor</T>
+          <div className="flex items-center justify-between gap-2 sm:gap-3 mb-2 sm:mb-3">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0" />
+              <T as="h1" className="text-xl sm:text-2xl md:text-3xl font-light tracking-wide">AI Doctor</T>
+            </div>
+            <Button onClick={() => setShowPurchase(true)} className="bg-white/20 hover:bg-white/30 text-white rounded-lg h-9 sm:h-10 px-3 sm:px-4 font-light">Contratar Criação</Button>
           </div>
           <T as="p" className="text-white/90 max-w-2xl font-light text-sm sm:text-base">
             O espaço criativo do Clube da Beleza. Crie sites profissionais, designs incríveis e produtos digitais com ajuda da inteligência artificial.
@@ -71,8 +82,19 @@ export default function BeautySpacePage() {
 
       {/* Section Content */}
       <div className="animate-in fade-in duration-300">
-        {renderSection()}
+        {isAuth ? (
+          renderSection()
+        ) : (
+          <div className="bg-[#FEFBF7] border border-[#D4A574]/30 rounded-xl p-6 text-center">
+            <T as="p" className="text-[#2D2416] font-light mb-3">Apenas usuários logados podem criar conteúdos.</T>
+            <div className="flex flex-col sm:flex-row gap-2 justify-center">
+              <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white" onClick={() => base44.auth.redirectToLogin()}>Fazer Login</Button>
+              <Button variant="outline" onClick={() => setShowPurchase(true)}>Contratar Criação via QR</Button>
+            </div>
+          </div>
+        )}
       </div>
+      <PurchaseQRModal open={showPurchase} onOpenChange={setShowPurchase} />
     </div>
   );
 }

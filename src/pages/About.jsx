@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Users, Heart, Leaf, Star, Target, Eye, Coffee, Shield, Activity, Package, Award, Zap } from 'lucide-react';
 import T from '@/components/TranslatedText';
+import { base44 } from '@/api/base44Client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 // Import section pages as components
 import BeautyTeaPage from './BeautyTea';
@@ -27,6 +29,28 @@ const sections = [
 ];
 
 function AboutSection() {
+  const queryClient = useQueryClient();
+  const { data: nextEvent } = useQuery({
+    queryKey: ['nextBeautyTea'],
+    queryFn: async () => {
+      const res = await base44.entities.BeautyTeaEvent.list({ limit: 50 });
+      const events = res?.data || [];
+      const upcoming = events
+        .filter(e => e.status === 'active')
+        .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+      return upcoming || null;
+    }
+  });
+  const registerMutation = useMutation({
+    mutationFn: async () => {
+      if (!nextEvent) return;
+      const newCount = (nextEvent.reserved_slots || 0) + 1;
+      const max = nextEvent.total_slots || newCount;
+      if (newCount > max) return;
+      await base44.entities.BeautyTeaEvent.update(nextEvent.id, { reserved_slots: newCount });
+    },
+    onSuccess: () => queryClient.invalidateQueries(['nextBeautyTea'])
+  });
   return (
     <div className="space-y-8 pb-10 text-[#2D2416]">
       {/* Hero Section */}
@@ -122,6 +146,32 @@ function AboutSection() {
             ))}
          </div>
       </div>
+
+      {/* Próximo Chá da Beleza - Inscrição Pública */}
+      {nextEvent && (
+        <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-6 shadow-sm">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <T as="h3" className="text-2xl font-light text-[#2D2416] mb-1">Próximo Chá da Beleza</T>
+              <p className="text-[#6B5D4F] font-light text-sm">
+                {nextEvent.name} • {nextEvent.location} • {nextEvent.date} às {nextEvent.time}
+              </p>
+              <p className="text-[#B8935C] text-sm font-light mt-1">
+                Participantes: <span className="font-bold">{nextEvent.reserved_slots || 0}</span> / {nextEvent.total_slots}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                onClick={() => registerMutation.mutate()} 
+                disabled={(nextEvent.reserved_slots || 0) >= (nextEvent.total_slots || Infinity) || registerMutation.isPending}
+                className="bg-[#D4A574] hover:bg-[#C49565] text-white"
+              >
+                Participar Gratuitamente
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -147,17 +197,17 @@ export default function AboutPage() {
   return (
     <div className="space-y-6">
       {/* Section Selector */}
-      <div className="sticky top-0 z-30 bg-[#F5F1E8]/95 backdrop-blur-md py-4 -mx-4 px-4 lg:-mx-12 lg:px-12 border-b border-[#D4A574]/20">
-        <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+      <div className="sticky top-0 z-30 bg-[#F5F1E8]/95 backdrop-blur-md py-3 -mx-4 px-4 lg:-mx-12 lg:px-12 border-b border-[#D4A574]/20">
+        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
           {sections.map((section) => {
             const isActive = activeSection === section.id;
             return (
               <button
                 key={section.id}
                 onClick={() => setActiveSection(section.id)}
-                className={`flex items-center gap-2 px-5 py-3 rounded-xl font-light text-sm whitespace-nowrap transition-all duration-300 ${
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg font-light text-xs sm:text-sm whitespace-nowrap transition-all duration-300 ${
                   isActive 
-                    ? 'bg-[#D4A574] text-white shadow-lg scale-105' 
+                    ? 'bg-[#D4A574] text-white shadow' 
                     : 'bg-[#FEFBF7] text-[#6B5D4F] hover:bg-[#FFF9F0] border border-[#D4A574]/20'
                 }`}
               >
