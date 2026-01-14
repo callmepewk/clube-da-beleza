@@ -10,6 +10,9 @@ import SitesPage from './Sites';
 import DesignPage from './Design';
 import ProductsPage from './Products';
 import ChatbotsPage from './Chatbots';
+import { useQuery } from '@tanstack/react-query';
+import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
+import { getPlanLimits, canUseFeature } from '@/components/usage/usageLimits';
 
 const sections = [
   { id: 'chatbots', label: 'Crie Chatbots', icon: Bot },
@@ -28,17 +31,68 @@ export default function BeautySpacePage() {
     const check = async () => {
       const auth = await base44.auth.isAuthenticated();
       setIsAuth(auth);
-      if (auth) {
-        const user = await base44.auth.me();
-        const res = await base44.entities.UserProfile.list({ query: { user_email: user.email } });
-        const profile = res?.data?.[0];
-        setCanCreate(auth);
-      } else {
-        setCanCreate(false);
-      }
+      if (!auth) setCanCreate(false);
     };
     check();
   }, []);
+
+  const { data: me } = useQuery({
+    queryKey: ['me-ai-doctor'],
+    queryFn: () => base44.auth.me(),
+    enabled: isAuth
+  });
+
+  const { data: profile } = useQuery({
+    queryKey: ['profile-ai-doctor', me?.email],
+    queryFn: async () => {
+      if (!me?.email) return null;
+      const res = await base44.entities.UserProfile.list({ query: { user_email: me.email }, limit: 1 });
+      return res?.data?.[0] || null;
+    },
+    enabled: !!me?.email
+  });
+
+  const { data: counts } = useQuery({
+    queryKey: ['creation-counts', me?.email],
+    queryFn: async () => {
+      if (!me?.email) return { chatbots: 0, sites: 0, designs: 0, products: 0 };
+      const [chatbots, sites, designs, products] = await Promise.all([
+        base44.entities.AICreation.list({ query: { owner_email: me.email, type: 'chatbot' }, limit: 1000 }),
+        base44.entities.AICreation.list({ query: { owner_email: me.email, type: 'landing_page' }, limit: 1000 }),
+        base44.entities.AICreation.list({ query: { owner_email: me.email, type: 'design_project' }, limit: 1000 }),
+        base44.entities.Product.list({ query: { owner_email: me.email }, limit: 1000 })
+      ]);
+      return {
+        chatbots: chatbots?.data?.length || 0,
+        sites: sites?.data?.length || 0,
+        designs: designs?.data?.length || 0,
+        products: products?.data?.length || 0,
+      };
+    },
+    enabled: !!me?.email
+  });
+
+  const limits = getPlanLimits(profile?.plan || 'free');
+  const usageBySection = {
+    chatbots: counts?.chatbots || 0,
+    sites: counts?.sites || 0,
+    design: counts?.designs || 0,
+    products: counts?.products || 0,
+  };
+  const limitBySection = {
+    chatbots: limits.chatbots,
+    sites: limits.sites,
+    design: limits.designs,
+    products: limits.products,
+  };
+  const canUseMap = {
+    chatbots: canUseFeature(usageBySection.chatbots, limitBySection.chatbots),
+    sites: canUseFeature(usageBySection.sites, limitBySection.sites),
+    design: canUseFeature(usageBySection.design, limitBySection.designs),
+    products: canUseFeature(usageBySection.products, limitBySection.products),
+  };
+
+  const labels = { chatbots: 'Chatbots', sites: 'Sites', design: 'Designs', products: 'Produtos' };
 
   const renderSection = () => {
     switch (activeSection) {
@@ -96,14 +150,35 @@ export default function BeautySpacePage() {
 
       {/* Section Content */}
       <div className="animate-in fade-in duration-300">
-        {canCreate ? (
-          renderSection()
-        ) : (
+        {!isAuth ? (
           <div className="bg-[#FEFBF7] border border-[#D4A574]/30 rounded-xl p-6 text-center">
             <T as="p" className="text-[#2D2416] font-light mb-3">Apenas usuários logados podem criar. Você pode contratar a criação avulsa via QR.</T>
             <div className="flex flex-col sm:flex-row gap-2 justify-center">
               <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white" onClick={() => base44.auth.redirectToLogin()}>Fazer Login</Button>
               <Button variant="outline" onClick={() => setShowPurchase(true)}>Contratar Criação via QR</Button>
+            </div>
+          </div>
+        ) : canUseMap[activeSection] ? (
+          renderSection()
+        ) : (
+          <div className="space-y-4">
+            <UsageLimitBanner 
+              currentUsage={usageBySection[activeSection]}
+              limit={limitBySection[activeSection]}
+              resourceName={`Criações de ${labels[activeSection]}`}
+              planName={profile?.plan || 'free'}
+              isUnlimited={limitBySection[activeSection] === -1}
+            />
+            <div className="bg-[#FEFBF7] border border-[#D4A574]/30 rounded-xl p-6 text-center">
+              <T as="p" className="text-[#2D2416] font-light mb-3">Você atingiu o limite do seu plano para {labels[activeSection]}. Escolha uma opção:</T>
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                <Button className="bg-[#D4A574] hover:bg-[#C49565] text-white" onClick={() => setShowPurchase(true)}>
+                  Contratar criação avulsa via QR
+                </Button>
+                <Button variant="outline" onClick={() => window.location.href = '/plans'}>
+                  Ver Planos
+                </Button>
+              </div>
             </div>
           </div>
         )}
