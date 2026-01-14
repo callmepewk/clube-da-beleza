@@ -89,6 +89,7 @@ export default function BeautySpacePage() {
   }, [isAuth, me?.email]);
 
   const limits = getPlanLimits(profile?.plan || 'free');
+  const isAdmin = !!profile?.is_admin;
   const usageBySection = {
     chatbots: counts?.chatbots || 0,
     sites: counts?.sites || 0,
@@ -174,6 +175,8 @@ export default function BeautySpacePage() {
               <Button variant="outline" onClick={() => setShowPurchase(true)}>Contratar Criação via QR</Button>
             </div>
           </div>
+        ) : isAdmin ? (
+          renderSection()
         ) : canUseMap[activeSection] ? (
           renderSection()
         ) : (
