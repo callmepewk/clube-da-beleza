@@ -10,7 +10,7 @@ import SitesPage from './Sites';
 import DesignPage from './Design';
 import ProductsPage from './Products';
 import ChatbotsPage from './Chatbots';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
 import { getPlanLimits, canUseFeature } from '@/components/usage/usageLimits';
 
@@ -52,6 +52,8 @@ export default function BeautySpacePage() {
     enabled: !!me?.email
   });
 
+  const queryClient = useQueryClient();
+
   const { data: counts } = useQuery({
     queryKey: ['creation-counts', me?.email],
     queryFn: async () => {
@@ -71,6 +73,20 @@ export default function BeautySpacePage() {
     },
     enabled: !!me?.email
   });
+
+  useEffect(() => {
+    if (!isAuth) return;
+    const unsubAIC = base44.entities.AICreation.subscribe(() => {
+      queryClient.invalidateQueries({ queryKey: ['creation-counts', me?.email] });
+    });
+    const unsubProd = base44.entities.Product.subscribe(() => {
+      queryClient.invalidateQueries({ queryKey: ['creation-counts', me?.email] });
+    });
+    return () => {
+      unsubAIC && unsubAIC();
+      unsubProd && unsubProd();
+    };
+  }, [isAuth, me?.email]);
 
   const limits = getPlanLimits(profile?.plan || 'free');
   const usageBySection = {
