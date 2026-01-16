@@ -12,6 +12,7 @@ import ProductsPage from './Products';
 import ChatbotsPage from './Chatbots';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import UsageLimitBanner from '@/components/usage/UsageLimitBanner';
+import ServiceRequestBanner from '@/components/beautyspace/ServiceRequestBanner';
 import { getPlanLimits, canUseFeature } from '@/components/usage/usageLimits';
 
 const sections = [
@@ -142,7 +143,9 @@ export default function BeautySpacePage() {
         <div className="absolute -top-5 -right-20 w-20 sm:w-32 h-20 sm:h-32 bg-white/5 rounded-full"></div>
       </div>
 
-      {/* Section Selector */}
+      <ServiceRequestBanner me={me} />
+
+       {/* Section Selector */}
       <div className="sticky top-0 z-30 bg-[#F5F1E8]/95 backdrop-blur-md py-4 -mx-3 sm:-mx-4 px-3 sm:px-4 lg:-mx-8 xl:-mx-12 lg:px-8 xl:px-12 border-b border-[#D4A574]/20">
         <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
           {sections.map((section) => {
