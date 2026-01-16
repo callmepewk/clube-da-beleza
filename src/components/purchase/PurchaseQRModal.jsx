@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Copy, Check, QrCode, Timer } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 const SERVICES = [
   { key: 'chatbot', label: 'Criação de Chatbot', price: 500 },
@@ -197,7 +198,7 @@ export default function PurchaseQRModal({ open, onOpenChange }) {
               </div>
             ) : (
               <div className="w-full">
-                <img src={qrUrl} alt="QR" className="mx-auto rounded-lg border border-[#D4A574]/30 bg-white" />
+                <ImageWithFallback src={qrUrl} alt="QR" className="mx-auto rounded-lg border border-[#D4A574]/30 bg-white" />
                 <div className="mt-3 flex items-center gap-2 justify-center">
                   <Input value={ticket.token} readOnly className="w-40 h-9 text-center bg-white" />
                   <Button onClick={copyToken} variant="outline" className="h-9">
