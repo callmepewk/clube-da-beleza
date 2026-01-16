@@ -21,6 +21,7 @@ export default function PurchaseQRModal({ open, onOpenChange }) {
   const [secondsLeft, setSecondsLeft] = React.useState(0);
   const [copied, setCopied] = React.useState(false);
   const [status, setStatus] = React.useState('');
+  const [me, setMe] = React.useState(null);
 
   React.useEffect(() => {
     let interval;
@@ -38,6 +39,16 @@ export default function PurchaseQRModal({ open, onOpenChange }) {
     return () => clearInterval(interval);
   }, [ticket?.expires_at, ticket?.status]);
 
+  React.useEffect(() => {
+    const loadMe = async () => {
+      try {
+        const u = await base44.auth.me();
+        setMe(u || null);
+      } catch {}
+    };
+    loadMe();
+  }, []);
+
   const createTicket = async (serviceKey, price) => {
     const token = Math.random().toString(36).slice(2, 10).toUpperCase();
     const expiresAt = new Date(Date.now() + 60 * 1000).toISOString();
@@ -54,6 +65,74 @@ export default function PurchaseQRModal({ open, onOpenChange }) {
     setCopied(false);
   };
 
+  const processRevenueShare = async (current) => {
+    if (!current || current.status !== 'validated') return;
+    // Evita processamento duplicado
+    const existing = await base44.entities.RevenueShare.list({ query: { ticket_id: current.id }, limit: 1 });
+    if (existing?.data?.length) return;
+
+    const gross = Number(current.price || 0);
+    const providerAmount = Math.round(gross * 0.8 * 100) / 100;
+    const platformFee = Math.round((gross - providerAmount) * 100) / 100;
+
+    const provider_email = (current.metadata && (current.metadata.provider_email || current.metadata.assigned_to)) || (me && me.email) || null;
+    const buyer_email = (current.metadata && (current.metadata.buyer_email)) || current.created_by || null;
+
+    // Cria o registro de rateio
+    await base44.entities.RevenueShare.create({
+      ticket_id: current.id,
+      service_type: current.service_type,
+      provider_email,
+      buyer_email,
+      gross_amount: gross,
+      provider_amount: providerAmount,
+      platform_fee: platformFee,
+      status: 'recorded',
+      processed_at: new Date().toISOString(),
+      metadata: current.metadata || {}
+    });
+
+    // Atualiza carteira do provedor (80%)
+    if (provider_email) {
+      const wl = await base44.entities.Wallet.list({ query: { owner_email: provider_email }, limit: 1 });
+      const wallet = wl?.data?.[0];
+      if (!wallet) {
+        await base44.entities.Wallet.create({
+          owner_email: provider_email,
+          balance: providerAmount,
+          total_earned: providerAmount,
+          total_withdrawn: 0,
+          currency: 'BRL',
+          last_updated: new Date().toISOString()
+        });
+      } else {
+        await base44.entities.Wallet.update(wallet.id, {
+          balance: (wallet.balance || 0) + providerAmount,
+          total_earned: (wallet.total_earned || 0) + providerAmount,
+          last_updated: new Date().toISOString()
+        });
+      }
+    }
+
+    // Atualiza receita da plataforma (20%)
+    const pr = await base44.entities.PlatformRevenue.list({ limit: 1 });
+    const platform = pr?.data?.[0];
+    if (!platform) {
+      await base44.entities.PlatformRevenue.create({
+        total_revenue: platformFee,
+        available_balance: platformFee,
+        currency: 'BRL',
+        last_updated: new Date().toISOString()
+      });
+    } else {
+      await base44.entities.PlatformRevenue.update(platform.id, {
+        total_revenue: (platform.total_revenue || 0) + platformFee,
+        available_balance: (platform.available_balance || 0) + platformFee,
+        last_updated: new Date().toISOString()
+      });
+    }
+  };
+
   const verifyTicket = async () => {
     if (!ticket) return;
     const found = await base44.entities.PurchaseTicket.list({ query: { token: ticket.token }, limit: 1 });
@@ -68,7 +147,12 @@ export default function PurchaseQRModal({ open, onOpenChange }) {
       setTicket({ ...current, status: 'expired' });
       return;
     }
-    setStatus(current.status === 'validated' ? 'validado' : 'válido');
+    if (current.status === 'validated') {
+      await processRevenueShare(current);
+      setStatus('validado');
+    } else {
+      setStatus('válido');
+    }
     setTicket(current);
   };
 
