@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import T from '@/components/TranslatedText';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 export default function BeautyTeaPage() {
   const [user, setUser] = useState(null);
@@ -70,7 +71,7 @@ export default function BeautyTeaPage() {
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
       <div className="relative h-[70vh] rounded-[2rem] overflow-hidden shadow-2xl">
-        <img 
+        <ImageWithFallback 
           src="https://images.unsplash.com/photo-1544787219-7f47ccb76574?q=80&w=2000&auto=format&fit=crop"
           alt="Chá da Beleza"
           className="absolute inset-0 w-full h-full object-cover"
@@ -108,7 +109,7 @@ export default function BeautyTeaPage() {
           </p>
         </div>
         <div className="relative h-96 rounded-[2rem] overflow-hidden shadow-lg">
-          <img 
+          <ImageWithFallback 
             src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=800&auto=format&fit=crop"
             alt="Chá"
             className="w-full h-full object-cover"

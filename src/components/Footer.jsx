@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { Instagram, Facebook, Mail } from 'lucide-react';
 import T from '@/components/TranslatedText';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -34,7 +35,7 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <img 
+              <ImageWithFallback 
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/aee9cf465_clubeimg.jpeg" 
                 alt="Clube da Beleza"
                 className="h-12 w-12 rounded-full"

@@ -2,6 +2,7 @@ import React from 'react';
 import { Package, Gift, Star, Sparkles, Heart, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import T from '@/components/TranslatedText';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 export default function BeautyBoxPage() {
   const boxes = [
@@ -56,7 +57,7 @@ export default function BeautyBoxPage() {
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
       <div className="relative h-[70vh] rounded-[2rem] overflow-hidden shadow-2xl">
-        <img 
+        <ImageWithFallback 
           src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=2000&auto=format&fit=crop"
           alt="Beauty Box"
           className="absolute inset-0 w-full h-full object-cover"

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, Heart, Star, Award, Users, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 export default function SkinCaretakersPage() {
   const caretakerLevels = [
@@ -54,7 +55,7 @@ export default function SkinCaretakersPage() {
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
       <div className="relative h-[70vh] rounded-[2rem] overflow-hidden shadow-2xl">
-        <img 
+        <ImageWithFallback 
           src="https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=2000&auto=format&fit=crop"
           alt="Cuidadores da Pele"
           className="absolute inset-0 w-full h-full object-cover"

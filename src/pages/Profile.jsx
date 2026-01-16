@@ -22,6 +22,7 @@ import { createPageUrl } from '@/utils';
 import { getPlanLimits } from '@/components/usage/usageLimits';
 import { useNavigate } from 'react-router-dom';
 import T from '@/components/TranslatedText';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -282,7 +283,7 @@ export default function ProfilePage() {
               <div className="relative group">
                  <div className="w-32 h-32 rounded-full bg-white/20 backdrop-blur-sm border-4 border-white/30 shadow-xl overflow-hidden flex items-center justify-center">
                     {personalData.profile_picture ? (
-                       <img src={personalData.profile_picture} alt="Profile" className="w-full h-full object-cover" />
+                       <ImageWithFallback src={personalData.profile_picture} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
                        <UserIcon className="w-14 h-14 text-white" />
                     )}
