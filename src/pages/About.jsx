@@ -16,6 +16,7 @@ import QualitySealPage from './QualitySeal';
 import OurMissionPage from './OurMission';
 import ToolsPage from './Tools';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
+import { sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
 const sections = [
   { id: 'about', label: 'Sobre Nós', icon: Heart },
@@ -195,10 +196,10 @@ function AboutSection() {
             </ul>
           </div>
           <div className="flex flex-col sm:flex-row gap-2">
-            <Button onClick={() => (window.location.href = '/plans')} className="bg-[#D4A574] hover:bg-[#C49565] text-white font-light rounded-xl">
+            <Button onClick={() => sendWhatsAppMessage('Profissional', 'Beauty Safe — Seguro de Proteção Civil')} className="bg-[#D4A574] hover:bg-[#C49565] text-white font-light rounded-xl">
               <T>Sou Profissional</T>
             </Button>
-            <Button onClick={() => (window.location.href = '/support')} variant="outline" className="border-[#D4A574]/40 text-[#2D2416] hover:bg-[#FFF9F0] font-light rounded-xl">
+            <Button onClick={() => sendWhatsAppMessage('Interessado', 'Informações Beauty Safe — Seguro de Proteção Civil')} variant="outline" className="border-[#D4A574]/40 text-[#2D2416] hover:bg-[#FFF9F0] font-light rounded-xl">
               <T>Quero saber mais</T>
             </Button>
           </div>

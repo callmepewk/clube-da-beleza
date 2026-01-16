@@ -3,6 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { X } from 'lucide-react';
 // import { AnimatePresence, motion } from 'framer-motion';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 export default function BannerDisplay({ userProfile }) {
   const [closedBanners, setClosedBanners] = useState([]);
@@ -66,7 +67,7 @@ export default function BannerDisplay({ userProfile }) {
       {banner.media_type === 'video' ? (
         <video src={banner.media_url} autoPlay muted loop className="w-full h-full object-cover" />
       ) : (
-        <img src={banner.media_url} alt={banner.title} className="w-full h-full object-cover" />
+        <ImageWithFallback src={banner.media_url} alt={banner.title} className="w-full h-full object-cover" />
       )}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-2 opacity-0 group-hover:opacity-100 transition-opacity">
          <p className="text-white text-xs font-medium truncate">{banner.title}</p>

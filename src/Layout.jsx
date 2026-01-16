@@ -56,6 +56,7 @@ import CarolChat from '@/components/CarolChat';
 import LanguageSelector from '@/components/LanguageSelector';
 import TranslationProvider from '@/components/TranslationProvider';
 import T from '@/components/TranslatedText';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 export default function Layout({ children }) {
   const [user, setUser] = useState(null);
@@ -277,7 +278,7 @@ export default function Layout({ children }) {
                        <div key={n.id} className="p-4 hover:bg-slate-50 transition-colors">
                           <h5 className="font-bold text-sm text-slate-800 mb-1">{n.title}</h5>
                           <p className="text-xs text-slate-500 mb-2">{n.message}</p>
-                          {n.image_url && <img src={n.image_url} className="w-full h-24 object-cover rounded mb-2" />}
+                          {n.image_url && <ImageWithFallback src={n.image_url} alt={n.title || 'Notificação'} className="w-full h-24 object-cover rounded mb-2" />}
                           {n.link && (
                              <a href={n.link} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline font-medium">
                                 <T>Ver detalhes</T>

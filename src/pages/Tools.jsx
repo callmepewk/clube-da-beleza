@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Calendar, Stethoscope, Bot, Globe, Palette, ShoppingBag, MapPin, Zap, Heart, Sparkles, ExternalLink, ArrowRight } from 'lucide-react';
 import T from '@/components/TranslatedText';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 export default function ToolsPage() {
   const internalTools = [
@@ -234,7 +235,7 @@ export default function ToolsPage() {
             <div key={idx} className={`grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 lg:gap-8 items-center bg-[#FEFBF7] rounded-xl sm:rounded-2xl lg:rounded-[2rem] overflow-hidden border border-[#D4A574]/20 shadow-lg hover:shadow-2xl transition-all ${idx % 2 === 1 ? 'lg:grid-flow-dense' : ''}`}>
               {/* Image */}
               <div className={`relative h-48 sm:h-64 md:h-80 lg:h-full min-h-[200px] lg:min-h-[400px] ${idx % 2 === 1 ? 'lg:col-start-2' : ''}`}>
-                <img 
+                <ImageWithFallback
                   src={tool.image}
                   alt={tool.name}
                   className="w-full h-full object-contain object-center bg-white"

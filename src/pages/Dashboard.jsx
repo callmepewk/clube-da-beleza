@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { createPageUrl } from '@/utils';
 import T from '@/components/TranslatedText';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 import { sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
 const PatientNewsFeed = () => {
@@ -40,10 +41,10 @@ const PatientNewsFeed = () => {
                className="bg-[#FEFBF7] rounded-xl lg:rounded-2xl overflow-hidden shadow-md border border-[#D4A574]/20 hover:shadow-xl transition-all flex flex-col md:flex-row cursor-pointer group"
             >
                <div className="h-48 md:h-auto md:w-2/5 lg:w-1/3 bg-slate-100 relative overflow-hidden flex-shrink-0">
-                  <img 
-                     src={`https://source.unsplash.com/400x300/?${item.image_keyword || 'health,beauty'}`} 
-                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                  <ImageWithFallback
+                     src={`https://source.unsplash.com/400x300/?${item.image_keyword || 'health,beauty'}`}
                      alt={item.title}
+                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-2 left-2 bg-white/95 px-3 py-1 rounded-lg text-xs font-bold uppercase text-[#2D2416] shadow-sm">
                      {item.category}
@@ -237,7 +238,7 @@ export default function Dashboard() {
             </T>
           </div>
           <div className="relative h-64 lg:h-96">
-            <img 
+            <ImageWithFallback 
               src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=800&auto=format&fit=crop" 
               alt="Tecnologia em Estética"
               className="w-full h-full object-cover"
@@ -249,7 +250,7 @@ export default function Dashboard() {
         {/* Compromisso */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
           <div className="relative h-64 lg:h-96 order-2 lg:order-1">
-            <img 
+            <ImageWithFallback 
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800&auto=format&fit=crop" 
               alt="Profissionais Premium"
               className="w-full h-full object-cover"
@@ -282,7 +283,7 @@ export default function Dashboard() {
             </T>
           </div>
           <div className="relative h-64 lg:h-96">
-            <img 
+            <ImageWithFallback 
               src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop" 
               alt="Mais Pacientes"
               className="w-full h-full object-cover"
@@ -294,7 +295,7 @@ export default function Dashboard() {
         {/* Fidelize */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
           <div className="relative h-64 lg:h-96 order-2 lg:order-1">
-            <img 
+            <ImageWithFallback 
               src="https://images.unsplash.com/photo-1551836022-4c4c79ecde51?q=80&w=800&auto=format&fit=crop" 
               alt="Fidelização"
               className="w-full h-full object-cover"
@@ -340,7 +341,7 @@ export default function Dashboard() {
           </div>
         </div>
         <div className="relative h-64 lg:h-96">
-          <img 
+          <ImageWithFallback 
             src="https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=800&auto=format&fit=crop" 
             alt="Spa da Pele"
             className="w-full h-full object-cover"
@@ -371,7 +372,7 @@ export default function Dashboard() {
             >
               <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-all z-10"></div>
               <div className="absolute bottom-3 md:bottom-4 left-3 md:left-4 text-base md:text-lg lg:text-xl font-bold text-white z-20 drop-shadow-md">{cat.title}</div>
-              <img src={cat.img} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={cat.title} />
+              <ImageWithFallback src={cat.img} alt={cat.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
               <div className="absolute top-3 md:top-4 right-3 md:right-4 bg-white/20 backdrop-blur-md p-1.5 md:p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity z-20">
                 <ChevronRight className="text-white w-3 h-3 md:w-4 md:h-4" />
               </div>
