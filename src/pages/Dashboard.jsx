@@ -96,6 +96,7 @@ export default function Dashboard() {
                   CLUBE DA BELEZA
                 </div>
                 <div className="w-32 h-px bg-gradient-to-r from-[#D4A574] to-transparent mt-3"></div>
+                <div className="text-xs text-[#6B5D4F] font-light mt-2">Bandeira Oficial: Golden Circle</div>
               </div>
 
               <h1 className="text-5xl lg:text-7xl font-light tracking-tight text-[#2D2416] mb-6 leading-[1.1]">
@@ -122,6 +123,13 @@ export default function Dashboard() {
                     >
                       <T>Já uso o Mapa da Estética</T>
                     </Button>
+                    <Button 
+                      variant="outline"
+                      onClick={() => sendWhatsAppMessage(user?.full_name || 'Visitante', 'Parcerias - Quero ser parceiro')}
+                      className="border-2 border-[#D4A574]/40 text-[#B8935C] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-2xl"
+                    >
+                      <T>Quero ser parceiro</T>
+                    </Button>
                   </>
                 ) : (
                   <Button 
@@ -129,6 +137,13 @@ export default function Dashboard() {
                     className="bg-[#D4A574] hover:bg-[#C49565] text-white h-14 px-8 text-lg font-light shadow-xl rounded-2xl"
                   >
                     <T>Começar Agora</T>
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => sendWhatsAppMessage(user?.full_name || 'Visitante', 'Parcerias - Quero ser parceiro')}
+                    className="border-2 border-[#D4A574]/40 text-[#B8935C] hover:bg-[#FFF9F0] h-14 px-8 text-lg font-light rounded-2xl"
+                  >
+                    <T>Quero ser parceiro</T>
                   </Button>
                 )}
               </div>
@@ -305,6 +320,7 @@ export default function Dashboard() {
           <T as="h3" className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">Programa Spa da Pele</T>
           <T as="p" className="text-[#6B5D4F] font-light leading-relaxed mb-3">Um conjunto de tratamentos planejados para resultados reais. O Clube da Beleza é um clube de benefícios que facilita seu cuidado mês a mês.</T>
           <T as="p" className="text-[#6B5D4F] font-light leading-relaxed mb-6">Com o Beauty Pass você tem direito a banner e segmentação dentro da nossa rede, além de agendar pelo Mapa da Estética.</T>
+          <T as="p" className="text-[#6B5D4F] font-light leading-relaxed mb-6">O Beauty Pass é personalizado para problemas específicos: pele, emagrecimento, autoestima, saúde mental, performance e mais — modelo 80/20: 80% do valor fica com você e 20% com a plataforma.</T>
           <div className="flex flex-wrap gap-3">
             <Button 
               onClick={() => sendWhatsAppMessage(user?.full_name || 'Visitante', 'Beauty Pass - Spa da Pele')}
