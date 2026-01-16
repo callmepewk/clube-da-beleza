@@ -175,6 +175,35 @@ function AboutSection() {
         </div>
       </div>
 
+      {/* Beauty Safe - Seguro de Proteção Civil */}
+      <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-6 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              <Shield className="w-6 h-6 text-[#D4A574]" />
+              <T as="h3" className="text-2xl font-light text-[#2D2416]">Beauty Safe — Seguro de Proteção Civil</T>
+            </div>
+            <T as="p" className="text-[#6B5D4F] font-light text-sm">
+              Tranquilidade para quem cuida da beleza: cobertura de responsabilidade civil para profissionais credenciados.
+            </T>
+            <ul className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-[#6B5D4F] font-light">
+              <li className="flex items-start gap-2"><span className="mt-1 w-2 h-2 rounded-full bg-[#D4A574]"></span><T>Cobertura para eventos involuntários durante procedimentos</T></li>
+              <li className="flex items-start gap-2"><span className="mt-1 w-2 h-2 rounded-full bg-[#D4A574]"></span><T>Assistência jurídica básica</T></li>
+              <li className="flex items-start gap-2"><span className="mt-1 w-2 h-2 rounded-full bg-[#D4A574]"></span><T>Adesão simples e 100% digital</T></li>
+              <li className="flex items-start gap-2"><span className="mt-1 w-2 h-2 rounded-full bg-[#D4A574]"></span><T>Condições especiais para membros do Clube</T></li>
+            </ul>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <Button onClick={() => (window.location.href = '/plans')} className="bg-[#D4A574] hover:bg-[#C49565] text-white font-light rounded-xl">
+              <T>Sou Profissional</T>
+            </Button>
+            <Button onClick={() => (window.location.href = '/support')} variant="outline" className="border-[#D4A574]/40 text-[#2D2416] hover:bg-[#FFF9F0] font-light rounded-xl">
+              <T>Quero saber mais</T>
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Próximo Chá da Beleza - Inscrição Pública */}
       {nextEvent && (
         <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-6 shadow-sm">
