@@ -132,6 +132,7 @@ export default function Dashboard() {
                     </Button>
                   </>
                 ) : (
+                  <>
                   <Button 
                     onClick={() => setShowWizard(true)}
                     className="bg-[#D4A574] hover:bg-[#C49565] text-white h-14 px-8 text-lg font-light shadow-xl rounded-2xl"
@@ -145,6 +146,7 @@ export default function Dashboard() {
                   >
                     <T>Quero ser parceiro</T>
                   </Button>
+                  </>
                 )}
               </div>
             </div>
