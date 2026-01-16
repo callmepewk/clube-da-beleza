@@ -2,7 +2,6 @@ import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { Copy, Check, QrCode, Timer } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
@@ -21,8 +20,8 @@ export default function PurchaseQRModal({ open, onOpenChange }) {
   const [secondsLeft, setSecondsLeft] = React.useState(0);
   const [copied, setCopied] = React.useState(false);
   const [status, setStatus] = React.useState('');
-  const [me, setMe] = React.useState(null);
 
+  // Countdown for ticket expiry
   React.useEffect(() => {
     let interval;
     if (ticket?.expires_at) {
@@ -39,15 +38,18 @@ export default function PurchaseQRModal({ open, onOpenChange }) {
     return () => clearInterval(interval);
   }, [ticket?.expires_at, ticket?.status]);
 
+  // Listen to realtime updates for this ticket and auto-process revenue on validation
   React.useEffect(() => {
-    const loadMe = async () => {
-      try {
-        const u = await base44.auth.me();
-        setMe(u || null);
-      } catch {}
-    };
-    loadMe();
-  }, []);
+    if (!ticket?.id) return;
+    const unsubscribe = base44.entities.PurchaseTicket.subscribe(async (event) => {
+      if (event.id === ticket.id && event.type === 'update' && event.data?.status === 'validated') {
+        await processRevenueShare(event.data);
+        setStatus('validado');
+        setTicket(event.data);
+      }
+    });
+    return unsubscribe;
+  }, [ticket?.id]);
 
   const createTicket = async (serviceKey, price) => {
     const token = Math.random().toString(36).slice(2, 10).toUpperCase();
@@ -63,6 +65,75 @@ export default function PurchaseQRModal({ open, onOpenChange }) {
     setTicket(res);
     setStatus('pendente');
     setCopied(false);
+  };
+
+  // 80/20 automatic ledger
+  const processRevenueShare = async (current) => {
+    if (!current || current.status !== 'validated') return;
+    // Avoid duplicates
+    const existing = await base44.entities.RevenueShare.list({ query: { ticket_id: current.id }, limit: 1 });
+    if (existing?.data?.length) return;
+
+    const gross = Number(current.price || 0);
+    const providerAmount = Math.round(gross * 0.8 * 100) / 100;
+    const platformFee = Math.round((gross - providerAmount) * 100) / 100;
+
+    const provider_email = (current.metadata && (current.metadata.provider_email || current.metadata.assigned_to)) || null;
+    const buyer_email = (current.metadata && (current.metadata.buyer_email)) || current.created_by || null;
+
+    // Record revenue share
+    await base44.entities.RevenueShare.create({
+      ticket_id: current.id,
+      service_type: current.service_type,
+      provider_email,
+      buyer_email,
+      gross_amount: gross,
+      provider_amount: providerAmount,
+      platform_fee: platformFee,
+      status: 'recorded',
+      processed_at: new Date().toISOString(),
+      metadata: current.metadata || {}
+    });
+
+    // Update provider wallet (80%)
+    if (provider_email) {
+      const wl = await base44.entities.Wallet.list({ query: { owner_email: provider_email }, limit: 1 });
+      const wallet = wl?.data?.[0];
+      if (!wallet) {
+        await base44.entities.Wallet.create({
+          owner_email: provider_email,
+          balance: providerAmount,
+          total_earned: providerAmount,
+          total_withdrawn: 0,
+          currency: 'BRL',
+          last_updated: new Date().toISOString()
+        });
+      } else {
+        await base44.entities.Wallet.update(wallet.id, {
+          balance: (wallet.balance || 0) + providerAmount,
+          total_earned: (wallet.total_earned || 0) + providerAmount,
+          last_updated: new Date().toISOString()
+        });
+      }
+    }
+
+    // Update platform revenue (20%)
+    const pr = await base44.entities.PlatformRevenue.list({ limit: 1 });
+    const platform = pr?.data?.[0];
+    if (!platform) {
+      await base44.entities.PlatformRevenue.create({
+        total_revenue: platformFee,
+        available_balance: platformFee,
+        currency: 'BRL',
+        last_updated: new Date().toISOString()
+      });
+    } else {
+      await base44.entities.PlatformRevenue.update(platform.id, {
+        total_revenue: (platform.total_revenue || 0) + platformFee,
+        available_balance: (platform.available_balance || 0) + platformFee,
+        last_updated: new Date().toISOString()
+      });
+    }
   };
 
   const verifyTicket = async () => {
