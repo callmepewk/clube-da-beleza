@@ -147,6 +147,34 @@ function AboutSection() {
          </div>
       </div>
 
+      {/* Nossa Abordagem */}
+      <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-6 shadow-sm">
+        <T as="h2" className="text-3xl font-light text-[#2D2416] mb-6 text-center">Nossa Abordagem</T>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="bg-white/70 border-[#D4A574]/20">
+            <CardContent className="p-6 text-center">
+              <Heart className="w-8 h-8 text-[#D4A574] mx-auto mb-3" />
+              <T as="h3" className="font-light text-[#2D2416] mb-1">Beauty Lovers</T>
+              <T as="p" className="text-sm text-[#6B5D4F] font-light">Clientes que amam autocuidado e aproveitam os benefícios exclusivos do clube.</T>
+            </CardContent>
+          </Card>
+          <Card className="bg-white/70 border-[#D4A574]/20">
+            <CardContent className="p-6 text-center">
+              <Users className="w-8 h-8 text-[#D4A574] mx-auto mb-3" />
+              <T as="h3" className="font-light text-[#2D2416] mb-1">Beauty Doctors</T>
+              <T as="p" className="text-sm text-[#6B5D4F] font-light">Profissionais de estética e saúde da pele com foco em excelência e segurança.</T>
+            </CardContent>
+          </Card>
+          <Card className="bg-white/70 border-[#D4A574]/20">
+            <CardContent className="p-6 text-center">
+              <Award className="w-8 h-8 text-[#D4A574] mx-auto mb-3" />
+              <T as="h3" className="font-light text-[#2D2416] mb-1">Beauty Brands</T>
+              <T as="p" className="text-sm text-[#6B5D4F] font-light">Marcas parceiras do Clube da Beleza conectadas ao público certo.</T>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
       {/* Próximo Chá da Beleza - Inscrição Pública */}
       {nextEvent && (
         <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-6 shadow-sm">

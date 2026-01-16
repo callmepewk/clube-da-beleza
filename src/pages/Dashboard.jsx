@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { createPageUrl } from '@/utils';
 import T from '@/components/TranslatedText';
+import { sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
 const PatientNewsFeed = () => {
    const { data: news, isLoading } = useQuery({
@@ -292,6 +293,41 @@ export default function Dashboard() {
               Mantenha seus pacientes mais perto de você. O Selo Clube+ Clubdabeleza.com facilita em tudo o controle de seus pacientes mais fiéis e aproxima os pacientes novos em 98%.
             </T>
           </div>
+        </div>
+      </div>
+
+      {/* Programa Spa da Pele */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-[#FEFBF7] rounded-3xl overflow-hidden border border-[#D4A574]/20 shadow-lg">
+        <div className="p-8 lg:p-12">
+          <div className="inline-block bg-[#E8E05C] text-[#2D2416] px-6 py-2 rounded-full font-light text-sm mb-6 uppercase tracking-wider">
+            <T>Clube de Benefícios</T>
+          </div>
+          <T as="h3" className="text-2xl lg:text-3xl font-light text-[#2D2416] mb-4">Programa Spa da Pele</T>
+          <T as="p" className="text-[#6B5D4F] font-light leading-relaxed mb-3">Um conjunto de tratamentos planejados para resultados reais. O Clube da Beleza é um clube de benefícios que facilita seu cuidado mês a mês.</T>
+          <T as="p" className="text-[#6B5D4F] font-light leading-relaxed mb-6">Com o Beauty Pass você tem direito a banner e segmentação dentro da nossa rede, além de agendar pelo Mapa da Estética.</T>
+          <div className="flex flex-wrap gap-3">
+            <Button 
+              onClick={() => sendWhatsAppMessage(user?.full_name || 'Visitante', 'Beauty Pass - Spa da Pele')}
+              className="bg-[#D4A574] hover:bg-[#C49565] text-white"
+            >
+              <T>Solicitar Beauty Pass</T>
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={() => window.open('https://mapa-da-estetica.base44.app', '_blank')}
+              className="border-2 border-[#D4A574]/40 text-[#B8935C] hover:bg-[#FFF9F0]"
+            >
+              <T>Agendar pelo Mapa da Estética</T>
+            </Button>
+          </div>
+        </div>
+        <div className="relative h-64 lg:h-96">
+          <img 
+            src="https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=800&auto=format&fit=crop" 
+            alt="Spa da Pele"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#FEFBF7] to-transparent"></div>
         </div>
       </div>
 
