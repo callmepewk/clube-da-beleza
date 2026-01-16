@@ -15,6 +15,7 @@ import BeautyBoxPage from './BeautyBox';
 import QualitySealPage from './QualitySeal';
 import OurMissionPage from './OurMission';
 import ToolsPage from './Tools';
+import ImageWithFallback from '@/components/common/ImageWithFallback';
 
 const sections = [
   { id: 'about', label: 'Sobre Nós', icon: Heart },
@@ -118,9 +119,9 @@ function AboutSection() {
             </div>
          </div>
          <div className="relative h-full min-h-[300px] rounded-xl overflow-hidden border border-[#D4A574]/20 shadow-md">
-            <img 
-              src="https://images.unsplash.com/photo-1560750588-73207b1ef5b8?w=800&q=80" 
-              alt="Beauty Salon" 
+            <ImageWithFallback
+              src="https://images.unsplash.com/photo-1560750588-73207b1ef5b8?auto=format&fit=crop&w=1200&q=60"
+              alt="Beauty Salon"
               className="absolute inset-0 w-full h-full object-cover"
             />
          </div>
