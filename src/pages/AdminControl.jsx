@@ -5,7 +5,7 @@ import {
   Users, LayoutDashboard, DollarSign, Activity, Shield, Trash2, 
   BarChart3, UserCheck, Building2, Loader2, Search, Bell, Send,
   User, Stethoscope, X, Globe, Bot, Palette, Calendar, Eye, MousePointer, BarChart2,
-  Lock, Unlock, AlertTriangle, Plus, Image, Clock, CalendarClock
+  Lock, Unlock, AlertTriangle, Plus, Image, Clock, CalendarClock, ClipboardList
 } from 'lucide-react';
 import BeautyTeaAdmin from '@/components/admin/BeautyTeaAdmin';
 import { Button } from '@/components/ui/button';
@@ -750,6 +750,158 @@ function PageBlockManager() {
   );
 }
 
+function ServiceRequestsAdmin() {
+  const { useState } = React;
+  const queryClient = useQueryClient();
+  const { data: requests, isLoading } = useQuery({
+    queryKey: ['serviceRequests'],
+    queryFn: async () => (await base44.entities.ServiceRequest.list({ limit: 1000 })).data || []
+  });
+
+  const [searchEmail, setSearchEmail] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState('all'); // gratuito | pago
+  const [wlFilter, setWlFilter] = useState('all'); // all | true | false
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [areaFilter, setAreaFilter] = useState('');
+
+  const updateStatus = useMutation({
+    mutationFn: ({ id, status }) => base44.entities.ServiceRequest.update(id, { status }),
+    onSuccess: () => queryClient.invalidateQueries(['serviceRequests'])
+  });
+  const updatePriority = useMutation({
+    mutationFn: ({ id, priority }) => base44.entities.ServiceRequest.update(id, { priority }),
+    onSuccess: () => queryClient.invalidateQueries(['serviceRequests'])
+  });
+
+  const allCategories = Array.from(new Set((requests || []).flatMap(r => Array.isArray(r.categories) ? r.categories : [])));
+  const filtered = (requests || []).filter(r => {
+    const emailOk = !searchEmail || (r.user_email || '').toLowerCase().includes(searchEmail.toLowerCase());
+    const statusOk = statusFilter === 'all' || r.status === statusFilter;
+    const typeOk = typeFilter === 'all' || r.type === typeFilter;
+    const wlOk = wlFilter === 'all' || (!!r.white_label === (wlFilter === 'true'));
+    const catOk = categoryFilter === 'all' || (Array.isArray(r.categories) && r.categories.includes(categoryFilter));
+    const areaOk = !areaFilter || (r.area || '').toLowerCase().includes(areaFilter.toLowerCase());
+    return emailOk && statusOk && typeOk && wlOk && catOk && areaOk;
+  });
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-3 bg-[#FEFBF7] border border-[#D4A574]/20 p-3 rounded-xl">
+        <Input placeholder="Buscar por email" value={searchEmail} onChange={e => setSearchEmail(e.target.value)} className="bg-white" />
+        <Select value={statusFilter} onValueChange={setStatusFilter}>
+          <SelectTrigger className="bg-white"><SelectValue placeholder="Status" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos (Status)</SelectItem>
+            <SelectItem value="novo">Novo</SelectItem>
+            <SelectItem value="em_analise">Em Análise</SelectItem>
+            <SelectItem value="aprovado">Aprovado</SelectItem>
+            <SelectItem value="concluido">Concluído</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={typeFilter} onValueChange={setTypeFilter}>
+          <SelectTrigger className="bg-white"><SelectValue placeholder="Tipo" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todos (Tipo)</SelectItem>
+            <SelectItem value="gratuito">Gratuito</SelectItem>
+            <SelectItem value="pago">Pago</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={wlFilter} onValueChange={setWlFilter}>
+          <SelectTrigger className="bg-white"><SelectValue placeholder="White Label" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">WL: Todos</SelectItem>
+            <SelectItem value="true">WL: Sim</SelectItem>
+            <SelectItem value="false">WL: Não</SelectItem>
+          </SelectContent>
+        </Select>
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="bg-white"><SelectValue placeholder="Categoria" /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Todas (Categorias)</SelectItem>
+            {allCategories.map(c => (<SelectItem key={c} value={c}>{c}</SelectItem>))}
+          </SelectContent>
+        </Select>
+        <Input placeholder="Área de atuação" value={areaFilter} onChange={e => setAreaFilter(e.target.value)} className="bg-white md:col-span-2" />
+      </div>
+
+      <div className="bg-[#FFF9F0] border border-[#D4A574]/20 rounded-xl p-3 text-sm text-[#6B5D4F]">
+        Total: <Badge className="bg-white text-[#2D2416] border-[#D4A574]/20">{filtered.length}</Badge>{' '}
+        | Novos: {filtered.filter(r=>r.status==='novo').length} | Em Análise: {filtered.filter(r=>r.status==='em_analise').length}
+      </div>
+
+      {isLoading ? (
+        <div className="py-6 text-center text-[#6B5D4F]">Carregando solicitações...</div>
+      ) : filtered.length === 0 ? (
+        <div className="py-10 text-center text-[#6B5D4F]">Nenhuma solicitação encontrada.</div>
+      ) : (
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Data</TableHead>
+                <TableHead>Usuário</TableHead>
+                <TableHead>Categorias</TableHead>
+                <TableHead>Área</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead>WL</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Prioridade</TableHead>
+                <TableHead>Notas</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map(r => (
+                <TableRow key={r.id} className="hover:bg-[#FEFBF7]">
+                  <TableCell>{new Date(r.created_date).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    <div className="font-medium text-[#2D2416]">{r.user_email}</div>
+                    {r.user_name && <div className="text-xs text-[#6B5D4F]">{r.user_name}</div>}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1 max-w-[220px]">
+                      {(r.categories || []).map(c => (<Badge key={c} className="bg-white text-[#2D2416] border-[#D4A574]/30">{c}</Badge>))}
+                    </div>
+                  </TableCell>
+                  <TableCell className="max-w-[200px] truncate">{r.area}</TableCell>
+                  <TableCell>
+                    <Badge className={r.type === 'pago' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-700'}>{r.type}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge className={r.white_label ? 'bg-purple-100 text-purple-800' : 'bg-slate-100 text-slate-700'}>{r.white_label ? 'Sim' : 'Não'}</Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Select defaultValue={r.status} onValueChange={(v) => updateStatus.mutate({ id: r.id, status: v })}>
+                      <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="novo">Novo</SelectItem>
+                        <SelectItem value="em_analise">Em Análise</SelectItem>
+                        <SelectItem value="aprovado">Aprovado</SelectItem>
+                        <SelectItem value="concluido">Concluído</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    <Select defaultValue={r.priority || 'media'} onValueChange={(v) => updatePriority.mutate({ id: r.id, priority: v })}>
+                      <SelectTrigger className="bg-white"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="baixa">Baixa</SelectItem>
+                        <SelectItem value="media">Média</SelectItem>
+                        <SelectItem value="alta">Alta</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell className="max-w-[260px] truncate" title={r.notes || ''}>{r.notes || '-'}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AdminControlPage() {
   const [activeTab, setActiveTab] = useState('overview');
   const [searchTerm, setSearchTerm] = useState('');
@@ -917,6 +1069,7 @@ export default function AdminControlPage() {
           <TabsTrigger value="page-blocks" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Bloqueio</TabsTrigger>
           <TabsTrigger value="banners" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Anúncios</TabsTrigger>
           <TabsTrigger value="notifications" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Notificações</TabsTrigger>
+          <TabsTrigger value="service-requests" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Solicitações</TabsTrigger>
           <TabsTrigger value="beauty-tea" className="data-[state=active]:bg-[#D4A574] data-[state=active]:text-white text-[#6B5D4F] font-light text-xs sm:text-sm">Chá da Beleza</TabsTrigger>
         </TabsList>
 
@@ -1394,6 +1547,19 @@ export default function AdminControlPage() {
                  <NotificationSender />
               </CardContent>
            </Card>
+        </TabsContent>
+
+        {/* Service Requests Tab */}
+        <TabsContent value="service-requests" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2"><ClipboardList className="w-5 h-5 text-[#D4A574]" /> Solicitações de Serviços</CardTitle>
+              <CardDescription>Veja todos os tickets criados pelos usuários, filtre por status, tipo, white label, categoria e área de atuação.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ServiceRequestsAdmin />
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Beauty Tea Tab */}
