@@ -31,7 +31,8 @@ import {
   Plus, ChevronLeft, ChevronRight, Video, MapPin, Sparkles, Calendar as CalendarIcon, 
   Loader2, Globe, ExternalLink, Navigation, Search, ShieldCheck, Car, PawPrint, Sofa, 
   Wine, Music, Shield, Package, Wrench, Building, Scissors, BadgeCheck, DollarSign,
-  Info, Lightbulb, HelpCircle, Star, Clock
+  Info, Lightbulb, HelpCircle, Star, Clock,
+  Accessibility, Wifi, Baby, Home, CreditCard, QrCode, Handshake, Snowflake, Coffee, Moon, Siren, Gem, Languages, Bed, Crown
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ClubRegistration from '@/components/ClubRegistration';
@@ -68,11 +69,29 @@ const PRICE_RANGES = [
   { value: '5001', label: '$$$$$ - Acima de R$ 5.000', description: 'Ultra Premium' },
 ];
 
-// Amenidades
+// Amenidades (20+)
 const AMENITIES = [
   { id: 'estacionamento', label: 'Estacionamento', icon: Car },
-  { id: 'valet', label: 'Estacionamento com Valet', icon: Car },
-  { id: 'aceita_pets', label: 'Aceita Pets', icon: PawPrint },
+  { id: 'valet', label: 'Valet', icon: Car },
+  { id: 'acessibilidade', label: 'Acessibilidade', icon: Accessibility },
+  { id: 'wifi', label: 'Wi‑Fi', icon: Wifi },
+  { id: 'sala_vip', label: 'Sala VIP', icon: Crown },
+  { id: 'atendimento_infantil', label: 'Atendimento infantil', icon: Baby },
+  { id: 'atendimento_domiciliar', label: 'Atendimento domiciliar', icon: Home },
+  { id: 'parcelamento', label: 'Parcelamento', icon: CreditCard },
+  { id: 'pix', label: 'Pix', icon: QrCode },
+  { id: 'convenios', label: 'Convênios', icon: Handshake },
+  { id: 'ambiente_climatizado', label: 'Ambiente climatizado', icon: Snowflake },
+  { id: 'aceita_pets', label: 'Pet friendly', icon: PawPrint },
+  { id: 'cafe_lounge', label: 'Café / lounge', icon: Coffee },
+  { id: 'telemedicina', label: 'Telemedicina', icon: Video },
+  { id: 'atendimento_noturno', label: 'Atendimento noturno', icon: Moon },
+  { id: 'emergencia', label: 'Emergência', icon: Siren },
+  { id: 'equipamentos_premium', label: 'Equipamentos premium', icon: Gem },
+  { id: 'certificacoes', label: 'Certificações', icon: BadgeCheck },
+  { id: 'multilingue', label: 'Atendimento multilíngue', icon: Languages },
+  { id: 'area_recuperacao', label: 'Área de recuperação', icon: Bed },
+  // Extras que já existiam
   { id: 'lounge', label: 'Lounge', icon: Sofa },
   { id: 'lounge_bar', label: 'Lounge Bar', icon: Wine },
   { id: 'musica_ambiente', label: 'Música Ambiente', icon: Music },
