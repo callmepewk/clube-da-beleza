@@ -1,53 +1,74 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo, useDeferredValue } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Loader2, ExternalLink, Newspaper, TrendingUp, Stethoscope, Laptop } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import T from '@/components/TranslatedText';
+import PerformanceMetrics from '@/components/perf/PerformanceMetrics';
 
 export default function NewsPage() {
   const [activeTab, setActiveTab] = useState('all');
+  const deferredTab = useDeferredValue(activeTab);
+  const [fetchMs, setFetchMs] = useState(0);
+  const queryClient = useQueryClient();
 
   const { data: news, isLoading } = useQuery({
-    queryKey: ['professionalNews', activeTab],
+    queryKey: ['professionalNews', deferredTab],
     queryFn: async () => {
-      const categories = activeTab === 'all' 
+      const cacheKey = `news_cache_${deferredTab}`;
+      const now = Date.now();
+      try {
+        const cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+        if (cached && now - cached.ts < 1000 * 60 * 60) {
+          return cached.data;
+        }
+      } catch {}
+
+      const categoriesStr = deferredTab === 'all' 
         ? "saúde, tecnologia, medicina, estética, beleza, moda, tendências"
-        : activeTab;
+        : deferredTab;
 
       const prompt = `
-        Busque e gere 6 notícias REAIS e ATUAIS (da última semana) sobre: ${categories}.
+        Busque e gere 6 notícias REAIS e ATUAIS (da última semana) sobre: ${categoriesStr}.
         Para cada notícia, retorne: titulo, resumo, categoria, nome da fonte (ex: TechCrunch, Vogue, CNN) e uma data recente.
         Retorne JSON array.
       `;
 
+      const start = performance.now();
       const res = await base44.integrations.Core.InvokeLLM({
-        prompt: prompt,
+        prompt,
         add_context_from_internet: true,
         response_json_schema: {
           type: "object",
           properties: {
-             news: {
-               type: "array",
-               items: {
-                 type: "object",
-                 properties: {
-                   title: { type: "string" },
-                   summary: { type: "string" },
-                   category: { type: "string" },
-                   source: { type: "string" },
-                   date: { type: "string" }
-                 }
-               }
-             }
+            news: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  title: { type: "string" },
+                  summary: { type: "string" },
+                  category: { type: "string" },
+                  source: { type: "string" },
+                  date: { type: "string" }
+                }
+              }
+            }
           }
         }
       });
-      return res.news || [];
+      setFetchMs(performance.now() - start);
+      const data = res.news || [];
+      try { localStorage.setItem(cacheKey, JSON.stringify({ ts: now, data })); } catch {}
+      return data;
     },
-    staleTime: 1000 * 60 * 60 // Cache for 1 hour
+    staleTime: 1000 * 60 * 60, // 1h
+    gcTime: 1000 * 60 * 60 * 6, // 6h in cache
+    refetchOnWindowFocus: false,
+    retry: 1,
+    keepPreviousData: true
   });
 
   const categories = [
@@ -57,6 +78,64 @@ export default function NewsPage() {
     { id: 'estetica', label: 'Estética', translationKey: 'Estética' },
     { id: 'negocios', label: 'Negócios', translationKey: 'Negócios' }
   ];
+
+  // Prefetch other categories in idle time to warm cache without blocking UI
+  useEffect(() => {
+    const ids = ['all', 'medicina', 'tecnologia', 'estetica', 'negocios'].filter(id => id !== deferredTab);
+    const now = Date.now();
+    const needs = ids.filter(id => {
+      try {
+        const c = JSON.parse(localStorage.getItem(`news_cache_${id}`) || 'null');
+        return !(c && now - c.ts < 1000 * 60 * 60);
+      } catch { return true; }
+    });
+    if (needs.length === 0) return;
+
+    const timer = setTimeout(() => {
+      needs.forEach((id) => {
+        queryClient.prefetchQuery({
+          queryKey: ['professionalNews', id],
+          queryFn: async () => {
+            const categoriesStr = id === 'all' ? "saúde, tecnologia, medicina, estética, beleza, moda, tendências" : id;
+            const prompt = `
+              Busque e gere 6 notícias REAIS e ATUAIS (da última semana) sobre: ${categoriesStr}.
+              Para cada notícia, retorne: titulo, resumo, categoria, nome da fonte (ex: TechCrunch, Vogue, CNN) e uma data recente.
+              Retorne JSON array.
+            `;
+            const res = await base44.integrations.Core.InvokeLLM({
+              prompt,
+              add_context_from_internet: true,
+              response_json_schema: {
+                type: 'object',
+                properties: {
+                  news: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      properties: {
+                        title: { type: 'string' },
+                        summary: { type: 'string' },
+                        category: { type: 'string' },
+                        source: { type: 'string' },
+                        date: { type: 'string' }
+                      }
+                    }
+                  }
+                }
+              }
+            });
+            const data = res.news || [];
+            try { localStorage.setItem(`news_cache_${id}`, JSON.stringify({ ts: Date.now(), data })); } catch {}
+            return data;
+          },
+          staleTime: 1000 * 60 * 60,
+          gcTime: 1000 * 60 * 60 * 6
+        });
+      });
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [deferredTab, queryClient]);
 
   return (
     <div className="space-y-8 pb-10">
@@ -118,6 +197,7 @@ export default function NewsPage() {
            )}
         </TabsContent>
       </Tabs>
+      <PerformanceMetrics pageName="news" fetchTimeMs={fetchMs} />
     </div>
   );
 }
