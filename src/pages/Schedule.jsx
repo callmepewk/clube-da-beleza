@@ -37,6 +37,9 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import ClubRegistration from '@/components/ClubRegistration';
 import T from '@/components/TranslatedText';
+import VerifiedInfoModal from '@/components/common/VerifiedInfoModal';
+import VerifiedBadge from '@/components/common/VerifiedBadge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 // Tipos de profissionais de estética
 const PROFESSIONAL_TYPES = [
@@ -136,6 +139,7 @@ export default function SchedulePage() {
   const [priceRange, setPriceRange] = useState('');
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const [verifiedOnly, setVerifiedOnly] = useState(false);
+  const [verifiedModalOpen, setVerifiedModalOpen] = useState(false);
   const [locationInput, setLocationInput] = useState({ city: '', state: '' });
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
@@ -846,12 +850,29 @@ export default function SchedulePage() {
               onCheckedChange={setVerifiedOnly}
               className="flex-shrink-0"
             />
-            <BadgeCheck className={`w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 ${verifiedOnly ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <BadgeCheck className={`w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0 ${verifiedOnly ? 'text-[#D4A574]' : 'text-[#6B5D4F]'}`} />
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs">
+                  <T>Profissional Verificado: documentação validada, identidade confirmada, registro ativo, checagens por IA e auditorias periódicas.</T>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <div className="flex-1 min-w-0">
               <T as="p" className="font-semibold text-[#2D2416] text-sm sm:text-base">Apenas Profissionais Verificados</T>
               <T as="p" className="text-xs text-[#6B5D4F] line-clamp-1">Mostrar apenas profissionais com Selo de Qualidade Clube da Beleza</T>
             </div>
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setVerifiedModalOpen(true); }}
+              className="text-xs text-[#D4A574] hover:underline"
+            >
+              <T>Entenda o selo</T>
+            </button>
           </div>
+          <VerifiedInfoModal open={verifiedModalOpen} onOpenChange={setVerifiedModalOpen} />
 
           {/* Search Button */}
           <Button 

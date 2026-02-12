@@ -72,6 +72,7 @@ import SkinCaretakers from './pages/SkinCaretakers';
 import SolidBeauty from './pages/SolidBeauty';
 import Support from './pages/Support';
 import Tools from './pages/Tools';
+import VerifiedProfessionals from './pages/VerifiedProfessionals';
 import __Layout from './Layout.jsx';
 
 
@@ -101,6 +102,7 @@ export const PAGES = {
     "SolidBeauty": SolidBeauty,
     "Support": Support,
     "Tools": Tools,
+    "VerifiedProfessionals": VerifiedProfessionals,
 }
 
 export const pagesConfig = {
