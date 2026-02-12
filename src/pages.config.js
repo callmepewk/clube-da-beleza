@@ -73,6 +73,7 @@ import SolidBeauty from './pages/SolidBeauty';
 import Support from './pages/Support';
 import Tools from './pages/Tools';
 import VerifiedProfessionals from './pages/VerifiedProfessionals';
+import OurProducts from './pages/OurProducts';
 import __Layout from './Layout.jsx';
 
 
@@ -103,6 +104,7 @@ export const PAGES = {
     "Support": Support,
     "Tools": Tools,
     "VerifiedProfessionals": VerifiedProfessionals,
+    "OurProducts": OurProducts,
 }
 
 export const pagesConfig = {

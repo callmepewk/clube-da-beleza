@@ -57,6 +57,7 @@ import LanguageSelector from '@/components/LanguageSelector';
 import TranslationProvider from '@/components/TranslationProvider';
 import T from '@/components/TranslatedText';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
+import VerifiedBadge from '@/components/common/VerifiedBadge';
 
 export default function Layout({ children }) {
   const [user, setUser] = useState(null);
@@ -303,6 +304,7 @@ export default function Layout({ children }) {
       { icon: Stethoscope, label: 'Bia - Cuidadora Virtual', path: '/nurse', translationKey: 'Bia - Cuidadora Virtual' },
       { icon: Palette, label: 'AI Doctor', path: '/beautyspace', translationKey: 'AI Doctor' },
       { icon: CreditCard, label: 'Planos', path: '/plans', translationKey: 'Planos' },
+      { icon: ShoppingBag, label: 'Nossos Produtos', path: '/ourproducts', translationKey: 'Nossos Produtos' },
       { icon: Heart, label: 'Sobre Nós', path: '/about', translationKey: 'Sobre Nós' },
       { icon: HelpCircle, label: 'Suporte', path: '/support', translationKey: 'Suporte' },
       { icon: Shield, label: 'Controle', path: '/admincontrol', translationKey: 'Controle' },
@@ -450,7 +452,7 @@ export default function Layout({ children }) {
                       {user.full_name?.[0]?.toUpperCase() || 'U'}
                     </div>
                     <div>
-                      <p className={`font-medium ${theme.textPrimary}`}>{user.full_name}</p>
+                      <p className={`font-medium ${theme.textPrimary} flex items-center gap-2`}>{user.full_name} {profile?.is_admin && (<VerifiedBadge size={14} />)}</p>
                       <p className={`text-xs ${theme.textSecondary} font-light`}>{user.email}</p>
                     </div>
                   </div>
