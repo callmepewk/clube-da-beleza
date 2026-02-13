@@ -104,6 +104,15 @@ export default function Layout({ children }) {
     }
   });
 
+  // Platform Settings (GA/Trends)
+  const { data: platformSettings } = useQuery({
+    queryKey: ['platformSettingsPublic'],
+    queryFn: async () => {
+      const res = await base44.entities.PlatformSettings.list({ limit: 1 });
+      return res?.data?.[0] || null;
+    }
+  });
+
   const isPageBlocked = (path) => {
     if (profile?.is_admin) return false; // Admins can access all pages
     const block = pageBlocks?.find(p => p.page_path === path);
@@ -163,6 +172,29 @@ export default function Layout({ children }) {
         }
      }
   }, [user, isLoading, isProfileComplete]);
+
+  // Inject GA4 if configured
+  useEffect(() => {
+    if (!platformSettings?.ga_measurement_id) return;
+    if (window.__gaLoaded) return;
+    const id = platformSettings.ga_measurement_id;
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+    document.head.appendChild(s);
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){window.dataLayer.push(arguments);} // eslint-disable-line
+    window.gtag = gtag;
+    gtag('js', new Date());
+    gtag('config', id);
+    window.__gaLoaded = true;
+  }, [platformSettings?.ga_measurement_id]);
+
+  // Track page views
+  useEffect(() => {
+    if (!window.gtag || !platformSettings?.ga_measurement_id) return;
+    window.gtag('event', 'page_view', { page_path: location.pathname + location.search });
+  }, [location.pathname, location.search, platformSettings?.ga_measurement_id]);
 
   const handleLogout = async () => {
     await base44.auth.logout();

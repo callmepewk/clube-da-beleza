@@ -29,6 +29,8 @@ import { format } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import T from '@/components/TranslatedText';
 import GenerateProfessionalReport from '@/components/admin/GenerateProfessionalReport';
+import PlatformSettingsCard from '@/components/admin/PlatformSettingsCard';
+import TrendsRealtime from '@/components/admin/TrendsRealtime';
 
 // Lista de páginas do sistema
 const SYSTEM_PAGES = [
@@ -1467,6 +1469,7 @@ export default function AdminControlPage() {
 
         {/* SEO Tab */}
         <TabsContent value="seo" className="space-y-6">
+          <PlatformSettingsCard />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader><CardTitle>Métricas de Tráfego</CardTitle></CardHeader>
@@ -1499,29 +1502,7 @@ export default function AdminControlPage() {
               </CardContent>
             </Card>
 
-            <Card>
-              <CardHeader><CardTitle>Top 10 Keywords</CardTitle></CardHeader>
-              <CardContent>
-                <div className="space-y-2 max-h-[400px] overflow-y-auto">
-                  {SEO_KEYWORDS.map((kw, idx) => (
-                    <div key={kw.keyword} className="flex items-center justify-between p-2 bg-slate-50 rounded-lg text-sm">
-                      <div className="flex items-center gap-2">
-                        <span className="w-5 h-5 rounded-full bg-[#D4A574] text-white text-xs font-bold flex items-center justify-center">{idx + 1}</span>
-                        <span className="font-medium text-slate-700">{kw.keyword}</span>
-                      </div>
-                      <span className={`font-bold text-xs ${kw.change.startsWith('+') ? 'text-green-600' : kw.change.startsWith('-') ? 'text-red-600' : 'text-slate-500'}`}>
-                        {kw.change}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 p-3 bg-orange-50 rounded-lg">
-                  <div className="font-bold text-orange-800 mb-1">Backlinks Ativos</div>
-                  <div className="text-2xl font-black text-orange-900">142</div>
-                  <div className="text-xs text-orange-600">Domínios de alta autoridade</div>
-                </div>
-              </CardContent>
-            </Card>
+            <TrendsRealtime />
           </div>
         </TabsContent>
 
