@@ -196,6 +196,11 @@ export default function Layout({ children }) {
     window.gtag('event', 'page_view', { page_path: location.pathname + location.search });
   }, [location.pathname, location.search, platformSettings?.ga_measurement_id]);
 
+  // Always scroll to top on route change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [location.pathname, location.search]);
+
   const handleLogout = async () => {
     await base44.auth.logout();
   };

@@ -149,6 +149,17 @@ function AboutSection() {
          </div>
       </div>
 
+      {/* Golden Circle */}
+      <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-6 shadow-sm mb-8">
+        <T as="h2" className="text-3xl font-light text-[#2D2416] mb-3 text-center">Golden Circle</T>
+        <p className="text-center text-[#6B5D4F] max-w-3xl mx-auto mb-4">Por que existimos (Why): democratizar o acesso à estética segura e de qualidade. Como fazemos (How): tecnologia, curadoria e comunidade. O que entregamos (What): experiências, profissionais verificados e benefícios reais.</p>
+        <div className="text-center">
+          <Button asChild className="bg-[#D4A574] hover:bg-[#C49565] text-white">
+            <a href="https://clube-mais.base44.app/goldendoctors" target="_blank" rel="noopener noreferrer">Conheça mais</a>
+          </Button>
+        </div>
+      </div>
+
       {/* Nossa Abordagem */}
       <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-6 shadow-sm">
         <T as="h2" className="text-3xl font-light text-[#2D2416] mb-6 text-center">Nossa Abordagem</T>

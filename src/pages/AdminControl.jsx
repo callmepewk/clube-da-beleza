@@ -1129,10 +1129,8 @@ export default function AdminControlPage() {
             </Card>
           </div>
           
+          <TrendsRealtime />
           <Card className="p-6">
-             <CardHeader><CardTitle>Relatório de SEO (Simulado)</CardTitle></CardHeader>
-             <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                    <div className="bg-green-50 p-4 rounded-lg">
                       <div className="text-sm text-green-700 font-bold">Tráfego Orgânico</div>
                       <div className="text-2xl font-bold text-green-900">+15%</div>
@@ -1382,21 +1380,20 @@ export default function AdminControlPage() {
             </Card>
 
             <Card>
-              <CardHeader><CardTitle>Páginas Mais Frequentadas</CardTitle></CardHeader>
+              <CardHeader><CardTitle>Uso por Ferramenta</CardTitle></CardHeader>
               <CardContent>
-                <div className="space-y-2">
-                  {[
-                    { page: 'Dashboard', visits: 1250 },
-                    { page: 'Agendamentos', visits: 980 },
-                    { page: 'Enfermeira Virtual', visits: 756 },
-                    { page: 'Chatbots', visits: 543 },
-                    { page: 'Sites', visits: 421 }
-                  ].map((item) => (
-                    <div key={item.page} className="flex justify-between items-center p-2 hover:bg-slate-50 rounded">
-                      <span className="font-medium">{item.page}</span>
-                      <span className="text-sm font-bold text-blue-600">{item.visits} visitas</span>
-                    </div>
-                  ))}
+                <div className="space-y-3">
+                  {[{label:'Enfermeira Virtual', key:'nurse', color:'bg-teal-500'}, {label:'Sites', key:'sites', color:'bg-purple-500'}, {label:'Chatbots', key:'chatbots', color:'bg-green-500'}, {label:'Designs', key:'designs', color:'bg-orange-500'}, {label:'Produtos', key:'products', color:'bg-pink-500'}].map(item => {
+                    const total = (analytics?.toolUsage?.nurse||0)+(analytics?.toolUsage?.sites||0)+(analytics?.toolUsage?.chatbots||0)+(analytics?.toolUsage?.designs||0)+(analytics?.toolUsage?.products||0) || 1;
+                    const count = analytics?.toolUsage?.[item.key] || 0;
+                    const pct = Math.round((count/total)*100);
+                    return (
+                      <div key={item.key} className="">
+                        <div className="flex justify-between text-sm text-slate-600 mb-1"><span>{item.label}</span><span className="font-bold">{count}</span></div>
+                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden"><div className={`${item.color} h-2`} style={{width: `${pct}%`}}></div></div>
+                      </div>
+                    );
+                  })}
                 </div>
               </CardContent>
             </Card>

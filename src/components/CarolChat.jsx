@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, Send, Loader2 } from 'lucide-react';
+import { X, Send, Loader2, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { base44 } from '@/api/base44Client';
@@ -50,6 +50,9 @@ export default function CarolChat() {
   const chatRef = useRef(null);
   const scrollRef = useRef(null);
   const location = useLocation();
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const [closingIn, setClosingIn] = useState(null);
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -115,12 +118,27 @@ export default function CarolChat() {
     }
   });
 
-  const handleSend = (messageText = null) => {
+  const handleSend = async (messageText = null) => {
     const msg = messageText || input;
     if (!msg.trim()) return;
 
     setMessages(prev => [...prev, { role: 'user', content: msg }]);
     setInput('');
+    // Off-topic detection
+    const cls = await base44.integrations.Core.InvokeLLM({
+      prompt: `Classifique a mensagem a seguir como 'site' ou 'off_topic'. Responda apenas com uma palavra. Mensagem: ${msg}`,
+      response_json_schema: { type: 'object', properties: { label: { type: 'string' } } }
+    });
+    const label = (cls?.label || '').toLowerCase();
+    if (label.includes('off')) {
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Adoraria conversar, mas fui treinada para ajudar apenas com o nosso site e serviços. Se já ajudou, vou fechar o chat em 10 segundos. Clique em "Tenho mais dúvidas" para continuar.' }]);
+      let secs = 10; setClosingIn(secs);
+      const timer = setInterval(() => {
+        secs -= 1; setClosingIn(secs);
+        if (secs <= 0) { clearInterval(timer); setIsOpen(false); setClosingIn(null); }
+      }, 1000);
+      return;
+    }
     sendMessageMutation.mutate(msg);
   };
 
@@ -193,7 +211,7 @@ export default function CarolChat() {
             
             {sendMessageMutation.isPending && (
               <div className="flex justify-start">
-                <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-[#D4A574]/20 shadow-sm flex gap-1">
+                <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-[#D4A574]/20 shadow-sm flex gap-2 items-center">
                   <span className="w-2 h-2 bg-[#D4A574] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                   <span className="w-2 h-2 bg-[#D4A574] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                   <span className="w-2 h-2 bg-[#D4A574] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -241,6 +259,36 @@ export default function CarolChat() {
                 )}
               </Button>
             </form>
+            <div className="mt-2 flex gap-2">
+              <Button type="button" variant="outline" className="border-[#D4A574]/40" onClick={async()=>{
+                if (isRecording) { mediaRecorderRef.current?.stop(); setIsRecording(false); return; }
+                if (!navigator.mediaDevices?.getUserMedia) return alert('Áudio não suportado');
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const chunks = []; const mr = new MediaRecorder(stream); mediaRecorderRef.current = mr;
+                mr.ondataavailable = (e)=>chunks.push(e.data);
+                mr.onstop = async ()=>{
+                  const blob = new Blob(chunks, { type: 'audio/webm' });
+                  const file = new File([blob], 'carol_audio.webm', { type: 'audio/webm' });
+                  const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                  const tr = await base44.integrations.Core.InvokeLLM({
+                    prompt: 'Transcreva o áudio anexado e retorne apenas o texto da pergunta do usuário em pt-BR.',
+                    file_urls: [file_url],
+                    response_json_schema: { type: 'object', properties: { text: { type: 'string' } } }
+                  });
+                  const text = tr?.text || 'Áudio recebido, mas não foi possível transcrever.';
+                  handleSend(text);
+                };
+                mr.start(); setIsRecording(true);
+              }}>
+                <Mic className="w-4 h-4 mr-2" /> {isRecording ? 'Parar Áudio' : 'Enviar Áudio'}
+              </Button>
+              {closingIn !== null && (
+                <div className="text-xs text-[#6B5D4F] flex items-center gap-2">
+                  Fechando em {closingIn}s
+                  <Button size="sm" variant="ghost" className="h-6" onClick={()=> setClosingIn(null)}>Tenho mais dúvidas</Button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

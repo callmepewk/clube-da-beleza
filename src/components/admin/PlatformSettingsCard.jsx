@@ -27,7 +27,14 @@ export default function PlatformSettingsCard() {
 
   return (
     <Card className="bg-[#FEFBF7] border-[#D4A574]/20">
-      <CardHeader><CardTitle className="text-[#2D2416]">Configurações da Plataforma (Analytics/Trends)</CardTitle></CardHeader>
+      <CardHeader>
+        <CardTitle className="text-[#2D2416]">Configurações da Plataforma (Analytics/Trends)</CardTitle>
+        <p className="text-sm text-[#6B5D4F] mt-2">
+          • Funcionalidade: conecte seu GA4 (G-XXXX) para pageviews/engajamento em tempo real e defina termos-base para o módulo de Tendências. <br />
+          • O que inserir: seu Measurement ID do Google Analytics e 3–10 termos estratégicos (ex: “estética facial, harmonização, depilação a laser”). <br />
+          • Inserção automática por IA: clique abaixo e sugerimos termos conforme seu posicionamento e público.
+        </p>
+      </CardHeader>
       <CardContent className="space-y-4">
         <div>
           <label className="text-sm text-[#6B5D4F]">GA4 Measurement ID</label>
@@ -37,7 +44,17 @@ export default function PlatformSettingsCard() {
           <label className="text-sm text-[#6B5D4F]">Termos para Trends (separe por vírgula)</label>
           <Input value={form.trends_terms.join(', ')} onChange={e=>setForm({...form, trends_terms: e.target.value.split(',').map(s=>s.trim()).filter(Boolean)})} className="bg-white" />
         </div>
-        <Button onClick={()=>save.mutate()} className="bg-[#D4A574] hover:bg-[#C49565] text-white" disabled={save.isPending}>
+        <div className="flex flex-wrap gap-2">
+          <Button onClick={async()=>{
+            const suggestion = await base44.integrations.Core.InvokeLLM({
+              prompt: `Sugira de 5 a 10 termos de tendências para um ecossistema de estética/dermatologia focado em Brasil. Retorne JSON array de strings, sem comentários.`,
+              add_context_from_internet: true,
+              response_json_schema: { type: 'object', properties: { terms: { type: 'array', items: { type: 'string' } } } }
+            });
+            const terms = suggestion?.terms || [];
+            if (terms.length) setForm(prev => ({ ...prev, trends_terms: terms }));
+          }} variant="outline" className="border-[#D4A574]/40 text-[#2D2416] hover:bg-[#FFF9F0]">Sugerir termos com IA</Button>
+          <Button onClick={()=>save.mutate()} className="bg-[#D4A574] hover:bg-[#C49565] text-white" disabled={save.isPending}>
           {save.isPending ? 'Salvando...' : 'Salvar'}
         </Button>
       </CardContent>

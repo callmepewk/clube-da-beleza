@@ -95,6 +95,10 @@ export default function SupportPage() {
   ]);
   const [input, setInput] = useState('');
   const scrollRef = useRef(null);
+  const chatCardRef = useRef(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const mediaRecorderRef = useRef(null);
+  const [unresolvedCount, setUnresolvedCount] = useState(0);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -146,12 +150,32 @@ export default function SupportPage() {
     }
   });
 
-  const handleSend = (customMessage) => {
+  const handleSend = async (customMessage) => {
     const msg = customMessage || input;
     if (!msg.trim()) return;
     setMessages(prev => [...prev, { role: 'user', content: msg }]);
     setInput('');
+    // Classify off-topic/site-related first
+    const cls = await base44.integrations.Core.InvokeLLM({
+      prompt: `Classifique a mensagem a seguir como 'site' ou 'off_topic'. Responda apenas com uma palavra. Mensagem: ${msg}`,
+      response_json_schema: { type: 'object', properties: { label: { type: 'string' } } }
+    });
+    const label = (cls?.label || '').toLowerCase();
+    if (label.includes('off')) {
+      setMessages(prev => [...prev, { role: 'assistant', content: 'Eu adoro conversar, mas fui treinado para responder apenas sobre o nosso site e serviços. Se suas dúvidas foram sanadas, encerramos em 10 segundos. Caso contrário, clique em "Tenho mais dúvidas" para continuar.' }]);
+      let secs = 10;
+      const interval = setInterval(() => {
+        secs -= 1;
+        setMessages(prev => [...prev, { role: 'assistant', content: `Encerrando em ${secs}s...` }]);
+        if (secs <= 0) {
+          clearInterval(interval);
+          // no modal here, only stop accepting until user types again
+        }
+      }, 1000);
+      return;
+    }
     chatMutation.mutate(msg);
+    setUnresolvedCount(c => Math.min(6, c + 1));
   };
 
   const handleTutorial = () => {
@@ -160,10 +184,12 @@ export default function SupportPage() {
       { role: 'user', content: 'Quero um tutorial completo da plataforma' },
       { role: 'assistant', content: TUTORIAL_CONTENT }
     ]);
+    if (chatCardRef.current) chatCardRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   const handleSuggestionClick = (question) => {
     handleSend(question);
+    if (chatCardRef.current) chatCardRef.current.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -241,7 +267,7 @@ export default function SupportPage() {
       </div>
 
       {/* Chat Interface */}
-      <Card className="bg-[#FEFBF7] border-[#E8DCC8] shadow-lg">
+      <Card ref={chatCardRef} className="bg-[#FEFBF7] border-[#E8DCC8] shadow-lg">
         <CardHeader className="border-b border-[#E8DCC8] bg-gradient-to-r from-[#FFF9F0] to-white">
           <CardTitle className="flex items-center gap-3 text-[#2D2416]">
             <div className="bg-[#D4A574] p-2 rounded-full">
@@ -300,23 +326,83 @@ export default function SupportPage() {
             </div>
           </ScrollArea>
           <div className="p-4 bg-white border-t border-[#E8DCC8]">
-            <form 
-              onSubmit={(e) => { e.preventDefault(); handleSend(); }}
-              className="flex gap-2"
-            >
-              <Input 
-                placeholder="Digite sua dúvida aqui..." 
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                className="flex-1 bg-[#FEFBF7] border-[#E8DCC8] focus:border-[#D4A574]"
-              />
-              <Button 
-                type="submit" 
-                disabled={!input.trim() || chatMutation.isPending} 
-                className="bg-[#D4A574] hover:bg-[#C49565] text-white"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
+           <div className="flex items-center justify-between mb-2">
+             <div className="text-xs text-[#6B5D4F]">Envie texto, áudio ou um print (PNG) para receber ajuda.</div>
+             {unresolvedCount >= 5 && (
+               <Button variant="outline" className="border-red-300 text-red-600 hover:bg-red-50" onClick={async()=>{
+                 const admins = (await base44.entities.UserProfile.list({ query: { is_admin: true }, limit: 1000 })).data || [];
+                 const toList = admins.map(a=>a.user_email).filter(Boolean);
+                 const body = `Usuário solicitou suporte humano. Últimas mensagens (máx 10):\n\n${messages.slice(-10).map(m => `${m.role}: ${m.content}`).join('\n')}`;
+                 for (const to of toList) {
+                   await base44.integrations.Core.SendEmail({ to, subject: 'Escalonamento de Suporte - Clube da Beleza', body });
+                 }
+                 alert('Solicitação enviada ao time admin.');
+               }}>Solicitar suporte humano</Button>
+             )}
+           </div>
+           <form 
+             onSubmit={(e) => { e.preventDefault(); handleSend(); }}
+             className="flex flex-col gap-2"
+           >
+              <div className="flex gap-2">
+                <Input 
+                  placeholder="Digite sua dúvida aqui..." 
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  className="flex-1 bg-[#FEFBF7] border-[#E8DCC8] focus:border-[#D4A574]"
+                />
+                <Button 
+                  type="submit" 
+                  disabled={!input.trim() || chatMutation.isPending} 
+                  className="bg-[#D4A574] hover:bg-[#C49565] text-white"
+                >
+                  <Send className="w-4 h-4" />
+                </Button>
+                <Button type="button" variant="outline" className="border-[#D4A574]/40" onClick={async()=>{
+                  if (isRecording) {
+                    mediaRecorderRef.current && mediaRecorderRef.current.stop();
+                    setIsRecording(false);
+                    return;
+                  }
+                  if (!navigator.mediaDevices?.getUserMedia) return alert('Áudio não suportado');
+                  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                  const chunks = [];
+                  const mr = new MediaRecorder(stream);
+                  mediaRecorderRef.current = mr;
+                  mr.ondataavailable = (e)=> chunks.push(e.data);
+                  mr.onstop = async ()=>{
+                    const blob = new Blob(chunks, { type: 'audio/webm' });
+                    const file = new File([blob], 'audio.webm', { type: 'audio/webm' });
+                    const { file_url } = await base44.integrations.Core.UploadFile({ file });
+                    const tr = await base44.integrations.Core.InvokeLLM({
+                      prompt: 'Transcreva o áudio anexado, identifique o idioma e retorne apenas o texto claro da pergunta do usuário.',
+                      file_urls: [file_url],
+                      response_json_schema: { type: 'object', properties: { text: { type: 'string' } } }
+                    });
+                    const text = tr?.text || 'Áudio recebido, mas não foi possível transcrever. Tente novamente.';
+                    handleSend(text);
+                  };
+                  mr.start();
+                  setIsRecording(true);
+                }}>{isRecording ? 'Parar Áudio' : 'Enviar Áudio'}</Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <input type="file" accept="image/png" onChange={async(e)=>{
+                  const f = e.target.files?.[0];
+                  if (!f) return;
+                  if (f.type !== 'image/png') { alert('Envie apenas PNG.'); return; }
+                  const { file_url } = await base44.integrations.Core.UploadFile({ file: f });
+                  setMessages(prev => [...prev, { role: 'user', content: '[Print PNG enviado]' }]);
+                  const res = await base44.integrations.Core.InvokeLLM({
+                    prompt: 'Analise a captura de tela anexada. 1) Ela pertence visualmente ao site Clube da Beleza (sim/não)? 2) Extraia o texto principal. 3) Responda de forma objetiva para resolver o problema descrito pelo usuário, se houver. Responda em pt-BR. Retorne campos json: {pertence:boolean, resumo:string, resposta:string}',
+                    file_urls: [file_url],
+                    response_json_schema: { type: 'object', properties: { pertence: {type:'boolean'}, resumo: {type:'string'}, resposta: {type:'string'} } }
+                  });
+                  const reply = res?.resposta || 'Não foi possível analisar o print. Poderia descrever o problema?';
+                  setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
+                }} />
+                <span className="text-xs text-[#6B5D4F]">Aceita apenas PNG</span>
+              </div>
             </form>
           </div>
         </CardContent>

@@ -31,9 +31,9 @@ export default function NewsPage() {
         : deferredTab;
 
       const prompt = `
-        Busque e gere 6 notícias REAIS e ATUAIS (da última semana) sobre: ${categoriesStr}.
-        Para cada notícia, retorne: titulo, resumo, categoria, nome da fonte (ex: TechCrunch, Vogue, CNN) e uma data recente.
-        Retorne JSON array.
+       Busque e gere 6 notícias REAIS e ATUAIS (da última semana) sobre: ${categoriesStr}.
+       Para cada notícia, retorne: titulo, resumo, categoria, nome da fonte (ex: TechCrunch, Vogue, CNN), uma data recente, url do artigo (https) e uma imagem representativa (image_url https) que corresponda ao conteúdo da notícia.
+       Retorne JSON.
       `;
 
       const start = performance.now();
@@ -43,22 +43,24 @@ export default function NewsPage() {
         response_json_schema: {
           type: "object",
           properties: {
-            news: {
-              type: "array",
-              items: {
-                type: "object",
-                properties: {
-                  title: { type: "string" },
-                  summary: { type: "string" },
-                  category: { type: "string" },
-                  source: { type: "string" },
-                  date: { type: "string" }
-                }
+          news: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                title: { type: "string" },
+                summary: { type: "string" },
+                category: { type: "string" },
+                source: { type: "string" },
+                date: { type: "string" },
+                url: { type: "string" },
+                image_url: { type: "string" }
               }
             }
           }
-        }
-      });
+          }
+          }
+          });
       setFetchMs(performance.now() - start);
       const data = res.news || [];
       try { localStorage.setItem(cacheKey, JSON.stringify({ ts: now, data })); } catch {}
@@ -173,6 +175,11 @@ export default function NewsPage() {
                 {news?.map((item, i) => (
                    <Card key={i} className="hover:shadow-lg transition-shadow border-slate-200 flex flex-col overflow-hidden group">
                       <div className="h-2 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                      {item.image_url && (
+                         <div className="h-40 w-full overflow-hidden">
+                           <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                         </div>
+                       )}
                       <CardHeader>
                          <div className="flex justify-between items-start mb-2">
                             <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded uppercase">{item.category}</span>
@@ -186,8 +193,8 @@ export default function NewsPage() {
                       <CardFooter className="border-t bg-slate-50 pt-4">
                          <div className="flex justify-between w-full items-center">
                             <span className="text-xs font-bold text-slate-500">{item.source}</span>
-                            <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 p-0 hover:bg-transparent">
-                               <T>Ler Completo</T> <ExternalLink className="w-3 h-3 ml-1" />
+                            <Button asChild variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800 p-0 hover:bg-transparent">
+                              <a href={item.url || '#'} target="_blank" rel="noopener noreferrer"><T>Ler Completo</T> <ExternalLink className="w-3 h-3 ml-1" /></a>
                             </Button>
                          </div>
                       </CardFooter>

@@ -165,12 +165,22 @@ export default function PlansPage() {
              </Card>
              <Card className="bg-white border-purple-500 shadow-lg">
                 <CardHeader><T as={CardTitle} className="text-purple-600">Growth</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(199.00)}</div></CardHeader>
-                <CardContent><T as="p" className="text-sm text-[#64748B]">IA de atendimento, Chatbots e Sites ilimitados.</T></CardContent>
+                <CardContent>
+                  <T as="p" className="text-sm text-[#64748B]">IA de atendimento, Chatbots e Sites ilimitados.</T>
+                  <div className="mt-3 p-3 rounded-lg bg-purple-50 text-purple-800 text-xs">
+                    Relatórios por IA: envio <strong>semanal</strong> por e-mail com insights de crescimento e retenção.
+                  </div>
+                </CardContent>
                 <CardFooter><Button className="w-full bg-purple-600 hover:bg-purple-700 text-white"><T>Escolher</T></Button></CardFooter>
              </Card>
              <Card className="bg-white border-slate-200 shadow-sm hover:shadow-md">
                 <CardHeader><T as={CardTitle} className="text-[#0F172A]">Clinic</T><div className="text-3xl font-bold mt-2 text-[#0F172A]">{formatPrice(499.00)}</div></CardHeader>
-                <CardContent><T as="p" className="text-sm text-[#64748B]">Gestão multi-profissional e relatórios avançados.</T></CardContent>
+                <CardContent>
+                  <T as="p" className="text-sm text-[#64748B]">Gestão multi-profissional e relatórios avançados.</T>
+                  <div className="mt-3 p-3 rounded-lg bg-indigo-50 text-indigo-800 text-xs">
+                    Relatórios por IA: envio <strong>diário</strong> por e-mail com análise executiva da clínica.
+                  </div>
+                </CardContent>
                 <CardFooter><Button className="w-full border-slate-200 text-[#0F172A] hover:bg-slate-50" variant="outline"><T>Escolher</T></Button></CardFooter>
              </Card>
            </div>
