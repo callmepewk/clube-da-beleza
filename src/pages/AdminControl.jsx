@@ -1172,8 +1172,9 @@ export default function AdminControlPage() {
                     ))}
                   </div>
                   </div>
+                  </div>
                   </CardContent>
-            </Card>
+                  </Card>
             <Card className="p-6">
             <CardTitle className="mb-4">Fluxo de Agendamentos</CardTitle>
             <div className="h-[300px]">
