@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import OnboardingWizard from '@/components/OnboardingWizard';
 import { createPageUrl } from '@/utils';
 import T from '@/components/TranslatedText';
+import TrendsRealtime from '@/components/admin/TrendsRealtime';
 import ImageWithFallback from '@/components/common/ImageWithFallback';
 import { sendWhatsAppMessage } from '@/components/usage/usageLimits';
 
@@ -14,7 +15,7 @@ const PatientNewsFeed = () => {
       queryKey: ['patientNews'],
       queryFn: async () => {
          const res = await base44.integrations.Core.InvokeLLM({
-            prompt: "Gere 4 notícias recentes e interessantes sobre saúde, estética, beleza e moda. Para cada notícia, retorne JSON com 'title', 'category', 'image_keyword', 'summary' e 'url' (link real de artigo ou notícia sobre o tema).",
+            prompt: "Gere exatamente 10 notícias recentes e interessantes sobre saúde, estética, beleza e moda. Para cada notícia, retorne JSON com 'title', 'category', 'image_keyword', 'summary' e 'url' (link real de artigo ou notícia sobre o tema). Retorne no objeto raiz {news:[...]}",
             add_context_from_internet: true,
             response_json_schema: {
                type: "object",
@@ -388,6 +389,7 @@ export default function Dashboard() {
           <T>Notícias & Tendências</T>
         </h2>
         <PatientNewsFeed />
+        <TrendsRealtime />
       </div>
     </div>
   );
