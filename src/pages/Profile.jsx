@@ -46,6 +46,7 @@ export default function ProfilePage() {
      registry: '', specialties: ''
   });
   const [servicesCatalog, setServicesCatalog] = useState([]);
+  const [reportPrefs, setReportPrefs] = useState({ enabled: false, frequency: 'weekly', weekday: 'sexta-feira', time: '20:00', notify_site: true, max_reports_per_day: 1 });
   const [newService, setNewService] = useState({ category: 'consultation', name: '', price: '', is_free: false });
   const [aiSuggestions, setAiSuggestions] = useState([]);
   const [isAiLoading, setIsAiLoading] = useState(false);
@@ -115,6 +116,14 @@ export default function ProfilePage() {
         });
 
         if (profile.address) setAddress(prev => ({ ...prev, ...profile.address }));
+        if (profile.report_preferences) setReportPrefs({
+           enabled: !!profile.report_preferences.enabled,
+           frequency: profile.report_preferences.frequency || 'weekly',
+           weekday: profile.report_preferences.weekday || 'sexta-feira',
+           time: profile.report_preferences.time || '20:00',
+           notify_site: profile.report_preferences.notify_site !== false,
+           max_reports_per_day: profile.report_preferences.max_reports_per_day || 1
+        });
         
         if (profile.medical_history) {
             setMedicalData({ 
@@ -220,6 +229,7 @@ export default function ProfilePage() {
          cpf: personalData.cpf,
          profile_picture: personalData.profile_picture,
          address: address,
+         report_preferences: reportPrefs,
       };
 
       if (profile.type === 'patient') {
@@ -703,6 +713,59 @@ export default function ProfilePage() {
                  Salvar Alterações
               </Button>
               </CardContent>
+              </Card>
+
+              {/* Relatórios & Notificações */}
+              <Card className={cardClass}>
+                <CardHeader className="border-b border-[#D4A574]/20 pb-6 pt-6 px-8">
+                  <CardTitle className="text-[#2D2416] text-xl">Relatórios Individuais</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6 pt-8 px-8 pb-8">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#6B5D4F]">Receber relatórios por e-mail</span>
+                    <input type="checkbox" className="w-5 h-5" checked={reportPrefs.enabled} onChange={e=>setReportPrefs({...reportPrefs, enabled: e.target.checked})} />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className={labelClass}>Frequência</label>
+                      <select
+                        className={inputClass + ' px-4'}
+                        value={reportPrefs.frequency}
+                        onChange={e=>setReportPrefs({...reportPrefs, frequency: e.target.value})}
+                        disabled={profile?.plan?.toLowerCase() === 'growth' ? false : false}
+                      >
+                        <option value="weekly">Semanal</option>
+                        {profile?.plan?.toLowerCase() === 'clinic' && <option value="daily">Diária</option>}
+                      </select>
+                      <p className="text-xs text-[#6B5D4F] mt-1">Growth: semanal (sexta 20:00). Clinic: diária (20:00) — você pode reduzir para semanal.</p>
+                    </div>
+                    <div>
+                      <label className={labelClass}>Dia da Semana</label>
+                      <select className={inputClass + ' px-4'} value={reportPrefs.weekday} onChange={e=>setReportPrefs({...reportPrefs, weekday: e.target.value})} disabled={reportPrefs.frequency !== 'weekly'}>
+                        {['segunda-feira','terça-feira','quarta-feira','quinta-feira','sexta-feira','sábado','domingo'].map(d=> <option key={d} value={d}>{d}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className={labelClass}>Horário (HH:MM)</label>
+                      <Input className={inputClass} value={reportPrefs.time} onChange={e=>setReportPrefs({...reportPrefs, time: e.target.value})} />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-[#6B5D4F]">Notificar no site</span>
+                    <input type="checkbox" className="w-5 h-5" checked={reportPrefs.notify_site} onChange={e=>setReportPrefs({...reportPrefs, notify_site: e.target.checked})} />
+                  </div>
+
+                  {profile?.plan?.toLowerCase() === 'clinic' && (
+                    <div>
+                      <label className={labelClass}>Máx. relatórios por dia</label>
+                      <Input type="number" min={1} max={3} className={inputClass} value={reportPrefs.max_reports_per_day} onChange={e=>setReportPrefs({...reportPrefs, max_reports_per_day: Math.max(1, Math.min(3, parseInt(e.target.value)||1))})} />
+                    </div>
+                  )}
+
+                  <Button onClick={() => saveMutation.mutate()} className="bg-[#D4A574] hover:bg-[#C49565] text-white">Salvar Preferências</Button>
+                </CardContent>
               </Card>
 
               {/* Action Buttons Outside Card */}

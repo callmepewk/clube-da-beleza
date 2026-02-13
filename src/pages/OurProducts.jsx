@@ -10,13 +10,15 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Loader2, Plus, Image as ImageIcon, Wand2 } from 'lucide-react';
 import T from '@/components/TranslatedText';
 import ProductCard from '@/components/products/ProductCard';
+import ProductHeroCarousel from '@/components/products/ProductHeroCarousel';
 
 const DEFAULT_LINKS = [
   { 
     title: 'Dermahelp', 
     link_url: 'https://dermahelp.base44.app',
     description: 'Protocolos inteligentes, triagem e orientações clínicas para um cuidado mais seguro e ágil.',
-    image_url: 'https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=1600&auto=format&fit=crop',
+    image_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/f220ef32d_dermahelp.jpeg',
+    is_featured: true,
     features: [
       'Protocolos baseados em evidências',
       'Triagem inteligente com IA',
@@ -27,7 +29,8 @@ const DEFAULT_LINKS = [
     title: 'Mapa da Estética', 
     link_url: 'https://mapa-da-estetica.base44.app',
     description: 'Encontre clínicas e profissionais com filtros avançados, avaliações e agendamento rápido.',
-    image_url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1600&auto=format&fit=crop',
+    image_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/ea0355f08_mapadaestetica.jpeg',
+    is_featured: true,
     features: [
       'Filtros de busca detalhados',
       'Avaliações verificadas',
@@ -49,7 +52,8 @@ const DEFAULT_LINKS = [
     title: 'Clube+', 
     link_url: 'https://clube-mais.base44.app',
     description: 'Assinaturas e benefícios exclusivos para fidelizar pacientes com recorrência e vantagens reais.',
-    image_url: 'https://images.unsplash.com/photo-1555435025-1644f68e6613?q=80&w=1600&auto=format&fit=crop',
+    image_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/917675700_clubmais.jpeg',
+    is_featured: true,
     features: [
       'Planos de assinatura flexíveis',
       'Benefícios progressivos',
@@ -60,7 +64,7 @@ const DEFAULT_LINKS = [
     title: 'Beauty Banking', 
     link_url: 'https://beautybanking.base44.app',
     description: 'Carteira digital e split de pagamentos com relatórios claros e repasses automáticos.',
-    image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1600&auto=format&fit=crop',
+    image_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/d455c6ee4_beautybanking.png',
     features: [
       'Split e repasse automático',
       'Relatórios financeiros claros',
@@ -71,7 +75,7 @@ const DEFAULT_LINKS = [
     title: 'Eccellenza', 
     link_url: 'https://eccellenza.base44.app',
     description: 'Academia de cursos e atualizações premium para elevar a excelência clínica.',
-    image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop',
+    image_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/a2626bf1b_eccelenza.png',
     features: [
       'Catálogo de cursos premium',
       'Certificados e trilhas',
@@ -82,7 +86,7 @@ const DEFAULT_LINKS = [
     title: 'LaserCode Pro', 
     link_url: 'https://laser-code-pro.base44.app',
     description: 'Rastreabilidade de lasers e dispositivos, laudos, protocolos e manutenção sob controle.',
-    image_url: 'https://images.unsplash.com/photo-1606165588091-795c3a0f9c09?q=80&w=1600&auto=format&fit=crop',
+    image_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/dc44ccd88_lasercode.jpg',
     features: [
       'Controle de dispositivos',
       'Laudos e protocolos',
@@ -173,6 +177,16 @@ export default function OurProductsPage() {
           )}
         </div>
       </div>
+
+      {/* Hero carousel with featured products */}
+      {(() => {
+        const featuredTitles = ['Dermahelp','Mapa da Estética','Clube+'];
+        const featured = (dataToShow || []).filter(p => p.is_featured || featuredTitles.includes(p.title));
+        if (!featured.length) return null;
+        return (
+          <ProductHeroCarousel items={featured} />
+        );
+      })()}
 
       {isLoading ? (
         <div className="flex items-center gap-2 text-[#6B5D4F]"><Loader2 className="w-4 h-4 animate-spin" /><T>Carregando...</T></div>

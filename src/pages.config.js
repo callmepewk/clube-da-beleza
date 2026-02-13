@@ -61,6 +61,7 @@ import MyPlan from './pages/MyPlan';
 import News from './pages/News';
 import Nurse from './pages/Nurse';
 import OurMission from './pages/OurMission';
+import OurProducts from './pages/OurProducts';
 import Plans from './pages/Plans';
 import Products from './pages/Products';
 import Profile from './pages/Profile';
@@ -73,7 +74,6 @@ import SolidBeauty from './pages/SolidBeauty';
 import Support from './pages/Support';
 import Tools from './pages/Tools';
 import VerifiedProfessionals from './pages/VerifiedProfessionals';
-import OurProducts from './pages/OurProducts';
 import __Layout from './Layout.jsx';
 
 
@@ -92,6 +92,7 @@ export const PAGES = {
     "News": News,
     "Nurse": Nurse,
     "OurMission": OurMission,
+    "OurProducts": OurProducts,
     "Plans": Plans,
     "Products": Products,
     "Profile": Profile,
@@ -104,7 +105,6 @@ export const PAGES = {
     "Support": Support,
     "Tools": Tools,
     "VerifiedProfessionals": VerifiedProfessionals,
-    "OurProducts": OurProducts,
 }
 
 export const pagesConfig = {

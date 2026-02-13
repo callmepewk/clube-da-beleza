@@ -28,6 +28,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { format } from 'date-fns';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import T from '@/components/TranslatedText';
+import GenerateProfessionalReport from '@/components/admin/GenerateProfessionalReport';
 
 // Lista de páginas do sistema
 const SYSTEM_PAGES = [
