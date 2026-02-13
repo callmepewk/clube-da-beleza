@@ -32,7 +32,7 @@ import GenerateProfessionalReport from '@/components/admin/GenerateProfessionalR
 import PlatformSettingsCard from '@/components/admin/PlatformSettingsCard';
 import TrendsRealtime from '@/components/admin/TrendsRealtime';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import html2canvas from 'html2canvas'; // using a lightweight import alias; the package is html2canvas
 import OnePageReport from '@/components/admin/OnePageReport';
 
 // Lista de páginas do sistema
