@@ -343,8 +343,7 @@ function BannerAdminList() {
               <Button onClick={() => createBannerMutation.mutate()} disabled={!newBanner.title || !newBanner.media_url || !newBanner.link_url || createBannerMutation.isPending} className="bg-[#D4A574] hover:bg-[#C49565] text-white">
                 {createBannerMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : <T>Criar Banner</T>}
               </Button>
-            </div>
-          </CardContent>
+            </CardContent>
         </Card>
       )}
 
