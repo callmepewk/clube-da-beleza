@@ -1169,8 +1169,6 @@ export default function AdminControlPage() {
                     ))}
                   </div>
                   </div>
-                  </div>
-                  </div>
                   </CardContent>
             </Card>
             <Card className="p-6">
