@@ -46,18 +46,10 @@ export default function PlatformSettingsCard() {
         </div>
         <div className="flex flex-wrap gap-2">
           <Button onClick={async()=>{
-            const suggestion = await base44.integrations.Core.InvokeLLM({
-              prompt: `Sugira de 5 a 10 termos de tendências para um ecossistema de estética/dermatologia focado em Brasil. Retorne JSON array de strings, sem comentários.`,
-              add_context_from_internet: true,
-              response_json_schema: { type: 'object', properties: { terms: { type: 'array', items: { type: 'string' } } } }
-            });
-            const terms = suggestion?.terms || [];
-            if (terms.length) setForm(prev => ({ ...prev, trends_terms: terms }));
-          }} variant="outline" className="border-[#D4A574]/40 text-[#2D2416] hover:bg-[#FFF9F0]">Sugerir termos com IA</Button>
-          <Button onClick={()=>save.mutate()} className="bg-[#D4A574] hover:bg-[#C49565] text-white" disabled={save.isPending}>
-          {save.isPending ? 'Salvando...' : 'Salvar'}
-        </Button>
-      </CardContent>
+        ...
+          </Button>
+        </div>
+        </CardContent>
     </Card>
   );
 }
