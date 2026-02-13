@@ -390,6 +390,23 @@ export default function Layout({ children }) {
   return (
     <TranslationProvider>
     <div className={`min-h-screen ${theme.bg} flex font-serif ${theme.textPrimary}`}>
+      <style>{`
+        /* Global Mobile UX tightening (keeps Clube da Beleza palette) */
+        @media (max-width: 480px) {
+          html { font-size: 14px; }
+          #main-content > div { padding-left: 10px !important; padding-right: 10px !important; }
+          header.lg\\:hidden { height: 56px !important; }
+          img, video { max-width: 100% !important; height: auto !important; }
+          .text-3xl { font-size: 1.5rem !important; }
+          .text-2xl { font-size: 1.25rem !important; }
+          .text-xl { font-size: 1.125rem !important; }
+          .p-6 { padding: 16px !important; }
+          .p-8 { padding: 18px !important; }
+          .h-12 { height: 44px !important; }
+        }
+        /* Prevent horizontal scroll globally */
+        html, body, #main-content { overflow-x: hidden; }
+      `}</style>
 
       {/* Club Registration Modal */}
       <ClubRegistration open={clubDialogOpen} onOpenChange={setClubDialogOpen} />
@@ -562,7 +579,7 @@ export default function Layout({ children }) {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col lg:ml-64 xl:ml-72">
         {/* Mobile Header */}
-        <header className={`lg:hidden h-16 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 sticky top-0 z-40`}>
+        <header className={`lg:hidden h-14 ${theme.sidebar} border-b ${theme.border} flex items-center justify-between px-4 sticky top-0 z-40`}>
           <Link to={createPageUrl('Dashboard')} className="flex items-center gap-2">
             <div className={`text-lg font-light tracking-wider ${theme.textPrimary}`}>CLUBE DA BELEZA</div>
           </Link>
@@ -611,7 +628,7 @@ export default function Layout({ children }) {
 
         {/* Scrollable Page Content */}
         <main id="main-content" className={`flex-1 overflow-y-auto ${theme.bg}`}>
-          <div className="p-3 sm:p-4 md:p-6 lg:p-8 xl:p-12 max-w-7xl mx-auto w-full">
+          <div className="p-2 sm:p-4 md:p-6 lg:p-8 xl:p-12 max-w-7xl mx-auto w-full">
             {isPageBlocked(location.pathname) ? (
               <div className="min-h-[60vh] flex items-center justify-center">
                 <div className="bg-[#FEFBF7] border border-[#D4A574]/20 rounded-2xl p-8 max-w-md text-center shadow-lg">
