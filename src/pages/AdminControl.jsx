@@ -31,6 +31,9 @@ import T from '@/components/TranslatedText';
 import GenerateProfessionalReport from '@/components/admin/GenerateProfessionalReport';
 import PlatformSettingsCard from '@/components/admin/PlatformSettingsCard';
 import TrendsRealtime from '@/components/admin/TrendsRealtime';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+import OnePageReport from '@/components/admin/OnePageReport';
 
 // Lista de páginas do sistema
 const SYSTEM_PAGES = [
@@ -1058,8 +1061,11 @@ export default function AdminControlPage() {
           <p className="text-[#6B5D4F] mt-1 font-light">Gestão completa da plataforma</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => window.print()} className="border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0] font-light">
-             <BarChart3 className="w-4 h-4 mr-2" /> Gerar Relatório PDF
+          <Button variant="outline" onClick={() => generatePdf('admin')} className="border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0] font-light">
+             <BarChart3 className="w-4 h-4 mr-2" /> PDF Admin (1 pág.)
+          </Button>
+          <Button variant="outline" onClick={() => generatePdf('professional')} className="border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0] font-light">
+             <BarChart3 className="w-4 h-4 mr-2" /> PDF Profissional (1 pág.)
           </Button>
         </div>
       </div>
@@ -1555,7 +1561,17 @@ export default function AdminControlPage() {
         </TabsContent>
       </Tabs>
 
-      {/* User Details Modal */}
+      {/* Hidden PDF Reports */}
+      <div className="fixed -left-[9999px] top-0">
+        <div ref={adminReportRef}>
+          <OnePageReport mode="admin" data={kpis} />
+        </div>
+        <div ref={professionalReportRef}>
+          <OnePageReport mode="professional" data={kpis} />
+        </div>
+      </div>
+
+       {/* User Details Modal */}
       {editingUser && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setEditingUser(null)}>
           <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
