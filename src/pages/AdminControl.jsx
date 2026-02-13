@@ -1134,7 +1134,6 @@ export default function AdminControlPage() {
             <CardHeader><CardTitle>SEO & Palavras‑chave</CardTitle></CardHeader>
             <CardContent>
               <div className="space-y-4">
-              <div className="space-y-4">
                 <div className="bg-green-50 p-4 rounded-lg">
                   <div className="text-sm text-green-700 font-bold">Tráfego Orgânico</div>
                   <div className="text-2xl font-bold text-green-900">+15%</div>
