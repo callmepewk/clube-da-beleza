@@ -1171,8 +1171,8 @@ export default function AdminControlPage() {
                   </div>
                 </div>
              </CardContent>
-          </Card>
-          <Card className="p-6">
+             </Card>
+             <Card className="p-6">
             <CardTitle className="mb-4">Fluxo de Agendamentos</CardTitle>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
