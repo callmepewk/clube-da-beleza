@@ -918,6 +918,32 @@ export default function AdminControlPage() {
   const [editingUser, setEditingUser] = useState(null);
   const queryClient = useQueryClient();
 
+  const adminReportRef = React.useRef(null);
+  const professionalReportRef = React.useRef(null);
+
+  const kpis = React.useMemo(() => {
+    const usersCount = allUsers?.length || 0;
+    const appointmentsCount = analytics?.appointments?.length || 0;
+    const nurseCount = analytics?.nurse?.length || 0;
+    const estimatedRevenue = appointmentsCount * 250;
+    const bannerViews = (analytics?.banners || []).reduce((acc, b) => acc + (b.views || 0), 0);
+    const bannerClicks = (analytics?.banners || []).reduce((acc, b) => acc + (b.clicks || 0), 0);
+    const bannerCTR = bannerViews ? (bannerClicks / bannerViews) * 100 : 0;
+    return { usersCount, appointmentsCount, nurseCount, estimatedRevenue, bannerViews, bannerClicks, bannerCTR };
+  }, [allUsers?.length, analytics?.appointments, analytics?.nurse, analytics?.banners]);
+
+  const generatePdf = async (mode) => {
+    const node = mode === 'admin' ? adminReportRef.current : professionalReportRef.current;
+    if (!node) return;
+    const canvas = await html2canvas(node, { scale: 2, backgroundColor: '#ffffff' });
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF({ orientation: 'p', unit: 'pt', format: 'a4' });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+    pdf.save(mode === 'admin' ? 'relatorio_admin.pdf' : 'relatorio_profissional.pdf');
+  };
+
   // 1. Fetch All Users
   const { data: allUsers, isLoading: usersLoading } = useQuery({
     queryKey: ['adminAllUsers'],
