@@ -5,6 +5,7 @@ import T from '@/components/TranslatedText';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BadgeCheck, FileCheck, ShieldCheck, RefreshCw, Bot, IdCard, HelpCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function VerifiedProfessionals() {
   const navigate = useNavigate();
@@ -24,7 +25,7 @@ export default function VerifiedProfessionals() {
   ];
 
   return (
-    <div className="space-y-8">
+    <motion.div className="space-y-8" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }}>
       <div className="flex items-center justify-between">
         <Button variant="outline" onClick={() => navigate(-1)} className="border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0]">
           <T>Voltar</T>
@@ -89,6 +90,6 @@ export default function VerifiedProfessionals() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

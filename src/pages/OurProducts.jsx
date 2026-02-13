@@ -16,43 +16,78 @@ const DEFAULT_LINKS = [
     title: 'Dermahelp', 
     link_url: 'https://dermahelp.base44.app',
     description: 'Protocolos inteligentes, triagem e orientações clínicas para um cuidado mais seguro e ágil.',
-    image_url: 'https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=1600&auto=format&fit=crop'
+    image_url: 'https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=1600&auto=format&fit=crop',
+    features: [
+      'Protocolos baseados em evidências',
+      'Triagem inteligente com IA',
+      'Orientações seguras para pacientes'
+    ]
   },
   { 
     title: 'Mapa da Estética', 
     link_url: 'https://mapa-da-estetica.base44.app',
     description: 'Encontre clínicas e profissionais com filtros avançados, avaliações e agendamento rápido.',
-    image_url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1600&auto=format&fit=crop'
+    image_url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1600&auto=format&fit=crop',
+    features: [
+      'Filtros de busca detalhados',
+      'Avaliações verificadas',
+      'Agendamento simplificado'
+    ]
   },
   { 
     title: 'Dr. da Beleza AI', 
     link_url: 'https://dr-da-beleza-ai.base44.app',
     description: 'Assistente de IA para recomendações estéticas personalizadas, dúvidas e planos de cuidado.',
-    image_url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop'
+    image_url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop',
+    features: [
+      'Análise personalizada por IA',
+      'Planos de cuidado sugeridos',
+      'Tradução multi-idioma'
+    ]
   },
   { 
     title: 'Clube+', 
     link_url: 'https://clube-mais.base44.app',
     description: 'Assinaturas e benefícios exclusivos para fidelizar pacientes com recorrência e vantagens reais.',
-    image_url: 'https://images.unsplash.com/photo-1555435025-1644f68e6613?q=80&w=1600&auto=format&fit=crop'
+    image_url: 'https://images.unsplash.com/photo-1555435025-1644f68e6613?q=80&w=1600&auto=format&fit=crop',
+    features: [
+      'Planos de assinatura flexíveis',
+      'Benefícios progressivos',
+      'Relatórios de retenção'
+    ]
   },
   { 
     title: 'Beauty Banking', 
     link_url: 'https://beautybanking.base44.app',
     description: 'Carteira digital e split de pagamentos com relatórios claros e repasses automáticos.',
-    image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1600&auto=format&fit=crop'
+    image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1600&auto=format&fit=crop',
+    features: [
+      'Split e repasse automático',
+      'Relatórios financeiros claros',
+      'Carteira digital integrada'
+    ]
   },
   { 
     title: 'Eccellenza', 
     link_url: 'https://eccellenza.base44.app',
     description: 'Academia de cursos e atualizações premium para elevar a excelência clínica.',
-    image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop'
+    image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop',
+    features: [
+      'Catálogo de cursos premium',
+      'Certificados e trilhas',
+      'Eventos exclusivos'
+    ]
   },
   { 
     title: 'LaserCode Pro', 
     link_url: 'https://laser-code-pro.base44.app',
     description: 'Rastreabilidade de lasers e dispositivos, laudos, protocolos e manutenção sob controle.',
-    image_url: 'https://images.unsplash.com/photo-1606165588091-795c3a0f9c09?q=80&w=1600&auto=format&fit=crop'
+    image_url: 'https://images.unsplash.com/photo-1606165588091-795c3a0f9c09?q=80&w=1600&auto=format&fit=crop',
+    features: [
+      'Controle de dispositivos',
+      'Laudos e protocolos',
+      'Manutenção e rastreabilidade'
+    ]
   },
 ];
 

@@ -534,7 +534,7 @@ export default function NursePage() {
                 {sendMessageMutation.isPending && (
                   <div className="flex gap-3">
                     <Avatar className="w-8 h-8 bg-emerald-100 border border-emerald-200">
-                      <AvatarImage src={NURSE_IMAGE} className="object-cover scale-150 pt-1" />
+                      <AvatarImage src={NURSE_IMAGE} className="object-cover scale-150 pt-1" loading="eager" fetchpriority="high" referrerPolicy="no-referrer" />
                     </Avatar>
                     <div className="bg-white p-3 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm flex gap-1 items-center">
                       <span className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />

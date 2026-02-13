@@ -20,6 +20,11 @@ export default function ProductCard({ product, onEdit, isAdmin }) {
             )}
           </div>
         </div>
+        {Array.isArray(product.features) && product.features.length > 0 && (
+          <ul className="list-disc pl-5 space-y-1 text-xs text-[#6B5D4F]">
+            {product.features.map((f, i) => (<li key={i}><T>{f}</T></li>))}
+          </ul>
+        )}
         <div className="flex items-center gap-2 mt-2">
           <Button asChild className="bg-[#D4A574] hover:bg-[#C49565] text-white">
             <a href={product.link_url} target="_blank" rel="noopener noreferrer">
