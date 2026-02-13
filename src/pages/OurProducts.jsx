@@ -41,7 +41,7 @@ const DEFAULT_LINKS = [
     title: 'Dr. da Beleza AI', 
     link_url: 'https://dr-da-beleza-ai.base44.app',
     description: 'Assistente de IA para recomendações estéticas personalizadas, dúvidas e planos de cuidado.',
-    image_url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop',
+    image_url: 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/691e6fc102be2b10ba4e6392/b228b9c33_drdabeleza.png',
     features: [
       'Análise personalizada por IA',
       'Planos de cuidado sugeridos',
@@ -184,7 +184,9 @@ export default function OurProductsPage() {
         const featured = (dataToShow || []).filter(p => p.is_featured || featuredTitles.includes(p.title));
         if (!featured.length) return null;
         return (
-          <ProductHeroCarousel items={featured} />
+          <div className="-mt-2">
+            <ProductHeroCarousel items={featured} />
+          </div>
         );
       })()}
 

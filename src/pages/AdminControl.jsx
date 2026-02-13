@@ -1185,6 +1185,9 @@ export default function AdminControlPage() {
               </ResponsiveContainer>
             </div>
           </Card>
+        <div className="mt-6">
+          <GenerateProfessionalReport />
+        </div>
         </TabsContent>
 
         {/* Users Tab */}

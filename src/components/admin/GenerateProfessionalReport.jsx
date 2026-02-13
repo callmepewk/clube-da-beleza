@@ -21,6 +21,10 @@ export default function GenerateProfessionalReport() {
     mutationFn: async () => {
       const p = pros.find(x => x.id === selected);
       if (!p) throw new Error('Selecione um profissional');
+      const allowedPlans = ['growth','clinic'];
+      if (!allowedPlans.includes((p.plan || '').toLowerCase())) {
+        throw new Error('Disponível apenas para planos Growth ou Clinic');
+      }
       const [appts, nurse, creations, products] = await Promise.all([
         base44.entities.Appointment.list({ query: { professional_email: p.user_email }, limit: 2000 }),
         base44.entities.NurseInteraction.list({ query: { user_email: p.user_email }, limit: 2000 }),
