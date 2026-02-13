@@ -48,6 +48,9 @@ export default function VerifiedInfoModal({ open, onOpenChange }) {
             Importante: nenhum selo substitui a consulta médica adequada. Ele indica maior confiabilidade
             com base em critérios objetivos e revisões contínuas.
           </T>
+          <div className="mt-3 text-right">
+            <a href="/verifiedprofessionals" className="text-sm text-[#D4A574] hover:underline"><T>Ver página de transparência</T></a>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

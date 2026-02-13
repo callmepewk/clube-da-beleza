@@ -452,7 +452,7 @@ export default function Layout({ children }) {
                       {user.full_name?.[0]?.toUpperCase() || 'U'}
                     </div>
                     <div>
-                      <p className={`font-medium ${theme.textPrimary} flex items-center gap-2`}>{user.full_name} {profile?.is_admin && (<VerifiedBadge size={14} />)}</p>
+                      <p className={`font-medium ${theme.textPrimary} flex items-center gap-2`}>{user.full_name} {(profile?.is_verified || profile?.is_admin) && (<VerifiedBadge size={14} />)}</p>
                       <p className={`text-xs ${theme.textSecondary} font-light`}>{user.email}</p>
                     </div>
                   </div>
