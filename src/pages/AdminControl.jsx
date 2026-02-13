@@ -280,6 +280,7 @@ function BannerAdminList() {
 
       {/* Create Banner Form */}
       {showCreateBanner && (
+        <>
         <Card className="bg-[#FFF9F0] border-[#D4A574]/30">
           <CardHeader>
             <CardTitle className="text-[#2D2416]"><T>Novo Banner</T></CardTitle>
