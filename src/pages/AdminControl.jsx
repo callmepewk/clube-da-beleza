@@ -1133,23 +1133,23 @@ export default function AdminControlPage() {
           <Card className="p-6">
             <CardHeader><CardTitle>SEO & Palavras‑chave</CardTitle></CardHeader>
             <CardContent>
-                   <div className="bg-green-50 p-4 rounded-lg">
-                      <div className="text-sm text-green-700 font-bold">Tráfego Orgânico</div>
-                      <div className="text-2xl font-bold text-green-900">+15%</div>
-                      <div className="text-xs text-green-600">Últimos 30 dias</div>
-                   </div>
-                   <div className="bg-blue-50 p-4 rounded-lg">
-                      <div className="text-sm text-blue-700 font-bold">Keywords Top 10</div>
-                      <div className="text-2xl font-bold text-blue-900">10</div>
-                      <div className="text-xs text-blue-600">Palavras rankeadas</div>
-                   </div>
-                   <div className="bg-orange-50 p-4 rounded-lg">
-                      <div className="text-sm text-orange-700 font-bold">Backlinks Ativos</div>
-                      <div className="text-2xl font-bold text-orange-900">142</div>
-                      <div className="text-xs text-orange-600">Domínios de alta autoridade</div>
-                   </div>
+              <div className="space-y-4">
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <div className="text-sm text-green-700 font-bold">Tráfego Orgânico</div>
+                  <div className="text-2xl font-bold text-green-900">+15%</div>
+                  <div className="text-xs text-green-600">Últimos 30 dias</div>
                 </div>
-                
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <div className="text-sm text-blue-700 font-bold">Keywords Top 10</div>
+                  <div className="text-2xl font-bold text-blue-900">10</div>
+                  <div className="text-xs text-blue-600">Palavras rankeadas</div>
+                </div>
+                <div className="bg-orange-50 p-4 rounded-lg">
+                  <div className="text-sm text-orange-700 font-bold">Backlinks Ativos</div>
+                  <div className="text-2xl font-bold text-orange-900">142</div>
+                  <div className="text-xs text-orange-600">Domínios de alta autoridade</div>
+                </div>
+
                 {/* Top 10 Keywords Table */}
                 <div className="bg-slate-50 rounded-xl p-4">
                   <h4 className="font-bold text-slate-800 mb-4">Top 10 Palavras-Chave</h4>
@@ -1170,9 +1170,10 @@ export default function AdminControlPage() {
                     ))}
                   </div>
                 </div>
-                </CardContent>
-                </Card>
-                <Card className="p-6">
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="p-6">
             <CardTitle className="mb-4">Fluxo de Agendamentos</CardTitle>
             <div className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
