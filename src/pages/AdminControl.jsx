@@ -346,9 +346,10 @@ function BannerAdminList() {
             </div>
             </CardContent>
         </Card>
-      )}
+        </>
+        )}
 
-      {/* Banner List */}
+        {/* Banner List */}
       <Table>
         <TableHeader><TableRow><TableHead>Título</TableHead><TableHead>Dono</TableHead><TableHead>Posição</TableHead><TableHead>Público</TableHead><TableHead>Views/Clicks</TableHead><TableHead>Ações</TableHead></TableRow></TableHeader>
         <TableBody>
