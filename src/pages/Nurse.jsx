@@ -357,6 +357,7 @@ export default function NursePage() {
                src={NURSE_IMAGE} 
                alt="Nurse" 
                className="w-auto max-h-[60vh] object-contain drop-shadow-2xl relative z-10" 
+               loading="eager" fetchpriority="high" referrerPolicy="no-referrer"
              />
              
              {/* Speech Bubble */}
@@ -412,7 +413,7 @@ export default function NursePage() {
             <div className="p-4 border-b flex items-center justify-between gap-3 bg-white shadow-sm z-10">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-emerald-500 overflow-hidden">
-                  <img src={NURSE_IMAGE} alt="Icon" className="w-full h-full object-cover scale-150 pt-2" />
+                  <img src={NURSE_IMAGE} alt="Icon" className="w-full h-full object-cover scale-150 pt-2" loading="eager" fetchpriority="high" referrerPolicy="no-referrer" />
                 </div>
                 <div>
                  <T as="h2" className="font-bold text-slate-800">Bia - Cuidadora Virtual</T>

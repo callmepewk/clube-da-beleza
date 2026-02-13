@@ -12,13 +12,48 @@ import T from '@/components/TranslatedText';
 import ProductCard from '@/components/products/ProductCard';
 
 const DEFAULT_LINKS = [
-  { title: 'Dermahelp', link_url: 'https://dermahelp.base44.app' },
-  { title: 'Mapa da Estética', link_url: 'https://mapa-da-estetica.base44.app' },
-  { title: 'Dr. da Beleza AI', link_url: 'https://dr-da-beleza-ai.base44.app' },
-  { title: 'Clube+', link_url: 'https://clube-mais.base44.app' },
-  { title: 'Beauty Banking', link_url: 'https://beautybanking.base44.app' },
-  { title: 'Eccellenza', link_url: 'https://eccellenza.base44.app' },
-  { title: 'LaserCode Pro', link_url: 'https://laser-code-pro.base44.app' },
+  { 
+    title: 'Dermahelp', 
+    link_url: 'https://dermahelp.base44.app',
+    description: 'Protocolos inteligentes, triagem e orientações clínicas para um cuidado mais seguro e ágil.',
+    image_url: 'https://images.unsplash.com/photo-1584982751601-97dcc096659c?q=80&w=1600&auto=format&fit=crop'
+  },
+  { 
+    title: 'Mapa da Estética', 
+    link_url: 'https://mapa-da-estetica.base44.app',
+    description: 'Encontre clínicas e profissionais com filtros avançados, avaliações e agendamento rápido.',
+    image_url: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1600&auto=format&fit=crop'
+  },
+  { 
+    title: 'Dr. da Beleza AI', 
+    link_url: 'https://dr-da-beleza-ai.base44.app',
+    description: 'Assistente de IA para recomendações estéticas personalizadas, dúvidas e planos de cuidado.',
+    image_url: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop'
+  },
+  { 
+    title: 'Clube+', 
+    link_url: 'https://clube-mais.base44.app',
+    description: 'Assinaturas e benefícios exclusivos para fidelizar pacientes com recorrência e vantagens reais.',
+    image_url: 'https://images.unsplash.com/photo-1555435025-1644f68e6613?q=80&w=1600&auto=format&fit=crop'
+  },
+  { 
+    title: 'Beauty Banking', 
+    link_url: 'https://beautybanking.base44.app',
+    description: 'Carteira digital e split de pagamentos com relatórios claros e repasses automáticos.',
+    image_url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=1600&auto=format&fit=crop'
+  },
+  { 
+    title: 'Eccellenza', 
+    link_url: 'https://eccellenza.base44.app',
+    description: 'Academia de cursos e atualizações premium para elevar a excelência clínica.',
+    image_url: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?q=80&w=1600&auto=format&fit=crop'
+  },
+  { 
+    title: 'LaserCode Pro', 
+    link_url: 'https://laser-code-pro.base44.app',
+    description: 'Rastreabilidade de lasers e dispositivos, laudos, protocolos e manutenção sob controle.',
+    image_url: 'https://images.unsplash.com/photo-1606165588091-795c3a0f9c09?q=80&w=1600&auto=format&fit=crop'
+  },
 ];
 
 export default function OurProductsPage() {

@@ -1,10 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 import T from '@/components/TranslatedText';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BadgeCheck, FileCheck, ShieldCheck, RefreshCw, Bot, IdCard, HelpCircle } from 'lucide-react';
 
 export default function VerifiedProfessionals() {
+  const navigate = useNavigate();
   const criteria = [
     { icon: FileCheck, title: 'Documentação profissional validada', desc: 'Diplomas, certificados e comprovantes revisados e autenticados.' },
     { icon: IdCard, title: 'Identidade confirmada', desc: 'Verificação de identidade com múltiplos fatores.' },
@@ -22,6 +25,11 @@ export default function VerifiedProfessionals() {
 
   return (
     <div className="space-y-8">
+      <div className="flex items-center justify-between">
+        <Button variant="outline" onClick={() => navigate(-1)} className="border-[#D4A574]/30 text-[#6B5D4F] hover:bg-[#FFF9F0]">
+          <T>Voltar</T>
+        </Button>
+      </div>
       <div className="bg-gradient-to-r from-[#D4A574] to-[#B8935C] rounded-2xl p-8 text-white">
         <div className="flex items-center gap-3 mb-2">
           <BadgeCheck className="w-8 h-8" />
@@ -59,7 +67,7 @@ export default function VerifiedProfessionals() {
             <ul className="list-disc pl-5 space-y-2 text-sm text-[#6B5D4F]">
               {tips.map((t, i) => (<li key={i}><T>{t}</T></li>))}
             </ul>
-            <Button onClick={() => window.open('/QualitySeal', '_self')} className="w-full bg-[#D4A574] hover:bg-[#C49565] text-white">
+            <Button onClick={() => navigate(createPageUrl('QualitySeal'))} className="w-full bg-[#D4A574] hover:bg-[#C49565] text-white whitespace-normal break-words text-center leading-snug py-3">
               <T>Conheça também o Selo de Qualidade</T>
             </Button>
           </CardContent>

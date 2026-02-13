@@ -49,6 +49,16 @@ export default function ServiceRequestBanner({ me }) {
         status: 'novo',
         priority: 'media'
       });
+      const phone = '5554991554136';
+      const msg = `Olá! Solicitação de Proposta Personalizada%0A%0A` +
+        `Nome: ${encodeURIComponent(user?.full_name || '')}%0A` +
+        `Email: ${encodeURIComponent(user?.email || '')}%0A` +
+        `Soluções: ${encodeURIComponent(selected.join(', '))}%0A` +
+        `Área: ${encodeURIComponent(area)}%0A` +
+        `Tipo: ${encodeURIComponent(type)}%0A` +
+        `White Label: ${whiteLabel ? 'Sim' : 'Não'}%0A` +
+        `Notas: ${encodeURIComponent(notes)}`;
+      window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
       setDone(true);
       setSelected(['CRM', 'Site']);
     } finally {
