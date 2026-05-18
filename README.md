@@ -1,184 +1,204 @@
-💄 Club da Beleza
+# Club da Beleza
 
-Plataforma premium voltada ao ecossistema da estética.
+Plataforma Premium do Ecossistema da Estética
 
-🌐 Produção: https://clubdabeleza.com
+---
 
-Ambiente: Produção
-Status: Ativo
+## Visão Geral
 
-📌 1. Visão Estratégica
+O **Club da Beleza** é uma plataforma digital concebida para atuar como núcleo estratégico dentro do ecossistema da estética, reunindo comunidade, educação, benefícios e networking profissional em um único ambiente.
 
-O Club da Beleza é um ativo com potencial de se tornar:
+O projeto possui estrutura e posicionamento para se consolidar como uma plataforma central de crescimento, capacitação e conexão entre profissionais do setor.
 
-Comunidade premium da estética
+---
 
-Plataforma educacional especializada
+## Posicionamento Estratégico
 
-Clube de benefícios para profissionais
+O Club da Beleza foi estruturado para operar como:
 
-Ecossistema fechado de networking e crescimento
+* Comunidade premium da estética
+* Plataforma educacional especializada
+* Clube de benefícios para profissionais
+* Ecossistema fechado de networking e desenvolvimento
 
-Posicionamento estratégico:
+Atua como uma central exclusiva voltada a:
 
-Uma central exclusiva para:
+* Médicos estetas
+* Biomédicos
+* Esteticistas
+* Profissionais da harmonização
 
-Médicos estetas
+---
 
-Biomédicos
+## Arquitetura Estratégica
 
-Esteticistas
+### Modelo Técnico (Atual e Evolutivo)
 
-Profissionais da harmonização
+**Frontend**
 
-🏗 2. Arquitetura Estratégica
+* React / Next.js / Vite
+* TailwindCSS
+* Arquitetura modular baseada em componentes
 
-Modelo possível (atual ou evolutivo):
+**Backend**
 
-Frontend:
+* API modular
+* Controle de acesso baseado em planos
+* Integração com gateways de pagamento
 
-React / Next / Vite
+**Infraestrutura**
 
-TailwindCSS
+* CDN
+* SSL
+* Escalabilidade sob demanda
+* Possibilidade de banco de dados dedicado
 
-Componentização modular
+---
 
-Backend:
+## Estrutura Conceitual
 
-API modular
+A plataforma é organizada para suportar:
 
-Controle de acesso por planos
+* Área de membros
+* Trilhas educacionais
+* Benefícios e descontos
+* Networking entre profissionais
+* Eventos e mentorias
 
-Integração com gateway de pagamento
+Preparada para:
 
-Infraestrutura:
+* Expansão nacional
+* Modelos white-label
+* Licenciamento institucional
 
-CDN
+---
 
-SSL
+## Objetivos Operacionais
 
-Escalabilidade sob demanda
+**Curto Prazo**
 
-Banco externo dedicado (futuro)
+* Consolidação da proposta de valor
+* Definição de planos e benefícios
+* Estruturação inicial da comunidade
 
-📂 3. Estrutura Conceitual
+**Médio Prazo**
 
-Organizado para:
+* Plataforma educacional própria
+* Comunidade privada ativa
+* Eventos exclusivos online
 
-Área de membros
+**Longo Prazo**
 
-Trilhas educacionais
+* Aplicativo dedicado
+* Parcerias com indústria
+* Congresso proprietário
+* Consolidação como referência nacional
 
-Benefícios e descontos
+---
 
-Networking entre profissionais
+## Perfis de Usuário
 
-Eventos e mentorias
+* Visitante
+* Membro Básico
+* Membro Premium
+* Parceiro Comercial
+* Administrador
 
-Preparado para:
+Estrutura compatível com controle de acesso por permissões (RBAC) e segmentação por especialidade.
 
-Expansão nacional
+---
 
-White-label regional
+## Modelo de Monetização
 
-Licenciamento institucional
+Possibilidades estratégicas incluem:
 
-🎯 4. Objetivos Operacionais
+* Assinatura mensal
+* Assinatura anual
+* Planos corporativos para clínicas
+* Patrocínio de marcas
+* Eventos pagos
+* Certificações
 
-Curto Prazo:
+Projetado para geração de alto valor recorrente (LTV), especialmente quando integrado ao ecossistema completo.
 
-Consolidação da proposta de valor
+---
 
-Definição clara de planos
+## Integração com Ecossistema
 
-Estruturação de benefícios reais
+O Club da Beleza pode atuar como:
 
-Médio Prazo:
+* Hub central da comunidade profissional
+* Porta de entrada para plataformas educacionais
+* Camada premium de sistemas de recorrência
+* Canal estratégico para soluções de inteligência e automação
+* Braço comunitário de estruturas corporativas digitais
 
-Plataforma educacional interna
+---
 
-Comunidade privada
+## Potencial Estratégico
 
-Eventos online exclusivos
+O projeto apresenta:
 
-Longo Prazo:
+* Domínio próprio e posicionamento de marca
+* Alta capacidade de escala
+* Potencial de consolidação como empresa independente
+* Estrutura para se tornar marca-mãe de uma vertical de mercado
 
-App próprio
+---
 
-Parcerias com indústrias
+## Governança
 
-Congresso proprietário
+Estrutura preparada para:
 
-Marca referência nacional
+* Constituição de entidade jurídica própria
+* Separação contábil e operacional
+* Modelo SaaS ou comunidade fechada
+* Expansão internacional futura
 
-👥 5. Perfis de Usuário
+---
 
-Visitante
+## Gestão Técnica e Operacional
 
-Membro Básico
+Responsável técnico e operacional:
 
-Membro Premium
+**Pedro Henrique Brezolin de Freitas — CTO**
 
-Parceiro Comercial
+A gestão do projeto segue diretrizes estruturadas de engenharia de software:
 
-Administrador
+* Versionamento de código via Git
+* Controle de releases e evolução contínua
+* Arquitetura modular escalável
+* Documentação técnica estruturada
+* Padronização de tecnologias e processos
+* Monitoramento e manutenção contínua
 
-Estrutura ideal para RBAC e segmentação por especialidade.
+Toda a condução técnica, arquitetural e evolutiva do sistema é centralizada sob responsabilidade do autor.
 
-💰 6. Modelo de Monetização
+---
 
-Possibilidades estratégicas:
+## Propriedade Intelectual e Proteção Legal
 
-Assinatura mensal
+Este software e sua estrutura conceitual são protegidos pelas legislações vigentes:
 
-Assinatura anual
+* **Lei nº 9.609/1998 (Lei do Software)**
+* **Lei nº 9.610/1998 (Lei de Direitos Autorais)**
+* **Convenção de Berna (proteção internacional automática)**
 
-Plano corporativo (clínicas)
+---
 
-Patrocínio de marcas
+### Declaração de Autoria
 
-Eventos pagos
+Toda a concepção, estrutura de comunidade, arquitetura funcional, lógica de monetização, organização do ecossistema e posicionamento estratégico do Club da Beleza são de autoria exclusiva do desenvolvedor responsável.
 
-Certificações
+O projeto integra um conjunto maior de sistemas interdependentes, compondo um ecossistema tecnológico proprietário, com relações de dependência e evolução entre plataformas.
 
-Potencial de forte LTV se integrado ao restante do ecossistema.
+Registros técnicos, versionamento, documentação e histórico de desenvolvimento constituem prova de anterioridade e titularidade intelectual.
 
-🌐 7. Integração com Ecossistema
+---
 
-Pode atuar como:
+## Licença
 
-Hub oficial da comunidade médica
+Proprietário – uso interno e comercial restrito.
+É proibida a reprodução, modificação, distribuição ou exploração sem autorização expressa do autor.
 
-Porta de entrada para TechFlix
-
-Camada premium do Clube Mais
-
-Canal estratégico para Dr. da Beleza AI
-
-Braço comunitário da Porto Firme Digital
-
-📈 8. Potencial Estratégico
-
-Esse ativo tem:
-
-Domínio próprio (.com)
-
-Potencial de marca forte
-
-Alta escalabilidade
-
-Capacidade de virar empresa independente
-
-É o tipo de ativo que pode se transformar em:
-
-Marca-mãe da vertical estética.
-
-🛡 9. Governança
-
-Estrutura ideal para CNPJ próprio
-
-Separação contábil
-
-Modelo SaaS ou comunidade fechada
-
-Expansão internacional futura
+---
